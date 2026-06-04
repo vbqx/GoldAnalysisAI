@@ -9,6 +9,9 @@ from typing import TYPE_CHECKING
 import pandas as pd
 
 from src.config import TV_EXCHANGE, TV_PASSWORD, TV_SYMBOL, TV_USERNAME
+from src.log import get_logger
+
+log = get_logger(__name__)
 
 if TYPE_CHECKING:
     from tvDatafeed import Interval
@@ -51,6 +54,7 @@ def _setup_proxy() -> None:
     if proxy:
         os.environ.setdefault("http_proxy", proxy)
         os.environ.setdefault("https_proxy", proxy)
+        log.info("using proxy %s", proxy)
 
 
 # Apply proxy at module import time (before tvDatafeed/websocket-client is loaded)
@@ -63,6 +67,7 @@ def get_last_error() -> str | None:
 
 def reset_client() -> None:
     global _tv_client, _last_error
+    log.debug("TradingView client reset")
     _tv_client = None
     _last_error = None
 
@@ -73,8 +78,10 @@ def _get_client():
         from tvDatafeed import TvDatafeed
 
         if TV_USERNAME and TV_PASSWORD:
+            log.info("TradingView client: authenticated user")
             _tv_client = TvDatafeed(TV_USERNAME, TV_PASSWORD)
         else:
+            log.info("TradingView client: anonymous access")
             _tv_client = TvDatafeed()
     return _tv_client
 
@@ -117,16 +124,42 @@ def _fetch_bars(interval: "Interval", n_bars: int, retries: int = 2) -> pd.DataF
 
     for attempt in range(retries + 1):
         try:
+            log.debug(
+                "fetch %s:%s interval=%s n_bars=%d attempt=%d",
+                TV_EXCHANGE,
+                TV_SYMBOL,
+                interval,
+                n_bars,
+                attempt + 1,
+            )
             df = tv.get_hist(
                 symbol=TV_SYMBOL,
                 exchange=TV_EXCHANGE,
                 interval=interval,
                 n_bars=n_bars,
             )
-            return _normalize(df)
+            result = _normalize(df)
+            log.info(
+                "fetch ok %s:%s interval=%s bars=%d range=%s → %s",
+                TV_EXCHANGE,
+                TV_SYMBOL,
+                interval,
+                len(result),
+                result.index[0].strftime("%Y-%m-%d"),
+                result.index[-1].strftime("%Y-%m-%d"),
+            )
+            return result
         except Exception as exc:
             last_exc = exc
             _last_error = str(exc)
+            log.warning(
+                "fetch failed %s:%s interval=%s attempt=%d: %s",
+                TV_EXCHANGE,
+                TV_SYMBOL,
+                interval,
+                attempt + 1,
+                exc,
+            )
             if attempt < retries:
                 time.sleep(1.5 * (attempt + 1))
 
@@ -140,19 +173,25 @@ def fetch_multi_timeframe() -> dict[str, pd.DataFrame]:
     """Fetch all timeframes with minimal TradingView requests (2 calls)."""
     from tvDatafeed import Interval
 
-    # Intraday: one 5m pull, resample locally
+    log.info("fetch_multi_timeframe start %s:%s", TV_EXCHANGE, TV_SYMBOL)
     df_5m = _fetch_bars(Interval.in_5_minute, n_bars=5000)
     time.sleep(0.8)
 
     df_1d = _fetch_bars(Interval.in_daily, n_bars=365)
 
-    return {
+    out = {
         "5m": df_5m,
         "15m": _resample(df_5m, "15min"),
         "1h": _resample(df_5m, "1h"),
         "4h": _resample(df_5m, "4h"),
         "1d": df_1d,
     }
+    log.info(
+        "fetch_multi_timeframe done close_5m=%.2f bars=%s",
+        float(df_5m["Close"].iloc[-1]),
+        {k: len(v) for k, v in out.items()},
+    )
+    return out
 
 
 def source_label() -> str:
