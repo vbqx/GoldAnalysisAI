@@ -8,11 +8,15 @@ from typing import Literal
 import pandas as pd
 
 from src.data import tradingview
+from src.log import get_logger
+
+log = get_logger(__name__)
 
 Timeframe = Literal["5m", "15m", "1h", "4h", "1d"]
 
 
 def clear_cache() -> None:
+    log.debug("clearing TradingView client cache")
     tradingview.reset_client()
 
 

@@ -26,6 +26,46 @@ TF_LABELS = {
     "4h": "4H周期 (宏观结构)",
 }
 
+CHART_VARIANTS: dict[str, dict[str, Any]] = {
+    "main": {
+        "height": 520,
+        "bars": 120,
+        "volume": True,
+        "overlay_header": True,
+        "line_labels": True,
+        "zone_labels": True,
+        "top_margin": 0.10,
+        "bottom_margin": 0.28,
+        "header_lines": 3,
+    },
+    "mini": {
+        "height": 172,
+        "bars": 40,
+        "volume": False,
+        "overlay_header": False,
+        "line_labels": False,
+        "zone_labels": False,
+        "show_indicators": False,
+        "show_overlays": False,
+        "top_margin": 0.06,
+        "bottom_margin": 0.05,
+        "header_lines": 1,
+    },
+    "strategy": {
+        "height": 292,
+        "bars": 52,
+        "volume": False,
+        "overlay_header": False,
+        "line_labels": False,
+        "zone_labels": True,
+        "show_indicators": False,
+        "show_overlays": True,
+        "top_margin": 0.07,
+        "bottom_margin": 0.06,
+        "header_lines": 1,
+    },
+}
+
 
 def _zone_title(kind: str, direction: str, low: float, high: float, *, strong: bool = False) -> str:
     lo, hi = int(round(low)), int(round(high))
@@ -272,7 +312,32 @@ def _serialize_overlays(
                 }
             )
 
-    return {"priceLines": price_lines, "zones": zones, "markers": markers}
+    return {"priceLines": price_lines, "zones": zones, "markers": markers, "projections": _build_projections(plot_df, report)}
+
+
+def _build_projections(plot_df: pd.DataFrame, report: dict[str, Any] | None) -> list[dict[str, Any]]:
+    """Future dashed paths like the reference chart (red/green/black + probability)."""
+    if not report or "projections" not in report:
+        return []
+
+    last_ts = plot_df.index[-1]
+    step = pd.Timedelta(minutes=5)
+    lines: list[dict[str, Any]] = []
+
+    for proj in report["projections"]:
+        points: list[dict[str, float | int]] = []
+        t = last_ts
+        for i, step_info in enumerate(proj["steps"]):
+            if i > 0:
+                t = t + step * 12
+            points.append({"time": _to_unix(t), "value": float(step_info["price"])})
+        if len(points) >= 2:
+            lines.append({
+                "color": proj["color"],
+                "label": f"{proj['probability']}%",
+                "data": points,
+            })
+    return lines
 
 
 def build_lightweight_chart_html(
@@ -285,10 +350,26 @@ def build_lightweight_chart_html(
     symbol: str = "XAUUSD",
     symbol_name: str = "黄金/美元",
     exchange: str = "OANDA",
-    height: int = 520,
-    bars: int = 120,
+    height: int | None = None,
+    bars: int | None = None,
+    variant: str = "main",
+    watermark: str | None = None,
+    show_projections: bool = True,
 ) -> str:
     """Build HTML/JS for TradingView Lightweight Charts with volume + SMC zones."""
+    preset = CHART_VARIANTS.get(variant, CHART_VARIANTS["main"])
+    height = height if height is not None else int(preset["height"])
+    bars = bars if bars is not None else int(preset["bars"])
+    show_volume = bool(preset["volume"])
+    overlay_header = bool(preset["overlay_header"])
+    show_line_labels = bool(preset["line_labels"])
+    show_zone_labels = bool(preset["zone_labels"])
+    show_indicators = bool(preset.get("show_indicators", True))
+    show_overlays = bool(preset.get("show_overlays", True))
+    top_margin = float(preset["top_margin"])
+    bottom_margin = float(preset["bottom_margin"])
+    header_lines = int(preset["header_lines"])
+
     plot_df = df.tail(bars).copy()
     last = plot_df.iloc[-1]
     prev = plot_df.iloc[-2] if len(plot_df) > 1 else last
@@ -318,23 +399,65 @@ def build_lightweight_chart_html(
         volumes.append({"time": ts, "value": vol, "color": "rgba(34,197,94,0.5)" if c >= o else "rgba(239,68,68,0.5)"})
 
     line_series: dict[str, dict[str, Any]] = {}
-    for col, color in LINE_COLORS.items():
-        if col not in plot_df.columns:
-            continue
-        points: list[dict[str, float | int]] = []
-        for idx, row in plot_df.iterrows():
-            val = row[col]
-            if pd.notna(val):
-                points.append({"time": _to_unix(idx), "value": round(float(val), 2)})
-        if points:
-            line_series[col] = {"color": color, "data": points}
+    if show_indicators:
+        for col, color in LINE_COLORS.items():
+            if col not in plot_df.columns:
+                continue
+            points: list[dict[str, float | int]] = []
+            for idx, row in plot_df.iterrows():
+                val = row[col]
+                if pd.notna(val):
+                    points.append({"time": _to_unix(idx), "value": round(float(val), 2)})
+            if points:
+                line_series[col] = {"color": color, "data": points}
 
     overlays = (
         _serialize_overlays(
             analysis, report, plot_df, timeframe=timeframe, macro_analysis=macro_analysis,
         )
-        if analysis is not None and report is not None
-        else {"priceLines": [], "zones": [], "markers": []}
+        if analysis is not None and report is not None and show_overlays
+        else {"priceLines": [], "zones": [], "markers": [], "projections": []}
+    )
+    if not show_projections:
+        overlays["projections"] = []
+
+    last_bar = candles[-1] if candles else {"open": 0, "high": 0, "low": 0, "close": 0}
+    last_o, last_h, last_l, last_c = last_bar["open"], last_bar["high"], last_bar["low"], last_bar["close"]
+    if header_lines == 1:
+        default_ohlc_html = (
+            f"{tf_label} · {symbol} 收={last_c:.2f} "
+            f"<span class=\"{chg_cls}\" style=\"font-weight:700;\">{chg_sign}{chg:.2f} ({chg_sign}{chg_pct:.2f}%)</span>"
+        )
+    else:
+        default_ohlc_html = (
+            f"【{tf_label}】 {symbol} {symbol_name} · {tf_num} · {exchange} "
+            f"开={last_o:.2f} 高={last_h:.2f} 低={last_l:.2f} 收={last_c:.2f} "
+            f"<span class=\"{chg_cls}\" style=\"font-weight:700;\">{chg_sign}{chg:.2f} ({chg_sign}{chg_pct:.2f}%)</span>"
+        )
+
+    legend_html = ""
+    if header_lines >= 3:
+        legend_html = f"""
+    <div style="font-size:11px;color:#64748b;margin-top:1px;">
+      <span style="color:#a855f7;">EMA20(紫)</span>
+      <span style="margin-left:8px;color:#eab308;">EMA50(黄)</span>
+      <span style="margin-left:8px;color:#3b82f6;">VWAP(蓝)</span>
+      <span style="margin-left:8px;color:#ef4444;">EMA610(红)</span>
+    </div>
+    <div style="font-size:11px;color:#94a3b8;margin-top:1px;">{smc_note}</div>"""
+
+    header_inner = f'<div id="tv-ohlc-line" class="tv-ohlc-line">{default_ohlc_html}</div>{legend_html}'
+    overlay_cls = " overlay" if overlay_header else ""
+    show_header = overlay_header or header_lines >= 3
+    header_html = f'<div id="tv-chart-header" class="tv-chart-header{overlay_cls}">{header_inner}</div>' if show_header else ""
+
+    wm = watermark or ""
+    wm_size = "28px" if variant == "main" else "18px"
+    wm_html = (
+        f'<div style="position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);'
+        f'font-size:{wm_size};font-weight:700;color:rgba(148,163,184,0.22);pointer-events:none;'
+        f'z-index:12;white-space:nowrap;letter-spacing:2px;">{wm}</div>'
+        if wm else ""
     )
 
     candles_json = json.dumps(candles)
@@ -343,41 +466,48 @@ def build_lightweight_chart_html(
     overlays_json = json.dumps(overlays)
     candle_times_json = json.dumps([c["time"] for c in candles])
     candle_map_json = json.dumps({c["time"]: c for c in candles})
-    last_bar = candles[-1] if candles else {"open": 0, "high": 0, "low": 0, "close": 0}
-    last_o, last_h, last_l, last_c = last_bar["open"], last_bar["high"], last_bar["low"], last_bar["close"]
-    default_ohlc_html = (
-        f"【{tf_label}】 {symbol} {symbol_name} · {tf_num} · {exchange} "
-        f"开={last_o:.2f} 高={last_h:.2f} 低={last_l:.2f} 收={last_c:.2f} "
-        f"<span class=\"{chg_cls}\" style=\"font-weight:700;\">{chg_sign}{chg:.2f} ({chg_sign}{chg_pct:.2f}%)</span>"
-    )
+    zone_font = "11px" if variant == "main" else "10px"
+    zone_right = "78px" if variant == "main" else "62px"
+    scale_min_width = 72 if variant == "main" else 56
+
+    body_parts = [header_html] if overlay_header else []
+    body_parts.extend([
+        f'<div id="zone-labels" style="position:absolute;left:0;top:0;bottom:0;right:{scale_min_width}px;pointer-events:none;z-index:15;overflow:hidden;"></div>',
+        wm_html,
+        f'<div id="tv-chart-container" style="width:100%;height:{height}px;touch-action:none;"></div>',
+    ])
+    body_html = "\n  ".join(body_parts)
+
+    outer_header = header_html if not overlay_header else ""
 
     return f"""
-<div class="tv-chart-wrap" style="position:relative;width:100%;font-family:system-ui,-apple-system,sans-serif;">
-  <div id="tv-chart-header" style="position:absolute;top:6px;left:10px;z-index:20;pointer-events:none;line-height:1.45;">
-    <div id="tv-ohlc-line" style="font-size:12px;color:#334155;font-weight:600;">{default_ohlc_html}</div>
-    <div style="font-size:11px;color:#64748b;margin-top:1px;">
-      <span style="color:#a855f7;">EMA20(紫)</span>
-      <span style="margin-left:8px;color:#eab308;">EMA50(黄)</span>
-      <span style="margin-left:8px;color:#3b82f6;">VWAP(蓝)</span>
-      <span style="margin-left:8px;color:#ef4444;">EMA610(红)</span>
-    </div>
-    <div style="font-size:11px;color:#94a3b8;margin-top:1px;">{smc_note}</div>
+<div class="tv-chart-wrap tv-{variant}" style="position:relative;width:100%;font-family:system-ui,-apple-system,sans-serif;">
+  {outer_header}
+  <div class="tv-chart-body" style="position:relative;">
+  {body_html}
   </div>
-  <div id="zone-labels" style="position:absolute;inset:0;pointer-events:none;z-index:15;overflow:hidden;"></div>
-  <div id="tv-chart-container" style="width:100%;height:{height}px;"></div>
 </div>
 <style>
   .tv-chart-wrap .up {{ color:#16a34a; }}
   .tv-chart-wrap .down {{ color:#dc2626; }}
+  .tv-chart-header {{ padding:6px 10px 4px; line-height:1.4; pointer-events:none; background:#fff; }}
+  .tv-chart-header.overlay {{ position:absolute; top:0; left:0; right:0; z-index:20; }}
+  .tv-chart-wrap.tv-mini .tv-chart-header,
+  .tv-chart-wrap.tv-strategy .tv-chart-header {{ border:none; border-radius:0; background:transparent; padding:4px 10px 2px; }}
+  .tv-chart-wrap.tv-mini .tv-ohlc-line,
+  .tv-chart-wrap.tv-strategy .tv-ohlc-line {{ font-size:11px; color:#334155; font-weight:600; }}
+  .tv-chart-wrap.tv-main .tv-ohlc-line {{ font-size:12px; color:#334155; font-weight:600; }}
+  .tv-chart-wrap.tv-mini .tv-chart-body,
+  .tv-chart-wrap.tv-strategy .tv-chart-body {{ border:1px solid #e2e8f0; border-radius:0 0 6px 6px; overflow:hidden; }}
   .zone-label {{
     position:absolute;
-    right:78px;
+    right:{zone_right};
     transform:translateY(-50%);
-    font-size:11px;
+    font-size:{zone_font};
     font-weight:600;
     color:#334155;
     background:rgba(255,255,255,0.92);
-    padding:2px 7px 2px 5px;
+    padding:2px 6px 2px 4px;
     border-left:3px solid var(--zone-color, #94a3b8);
     white-space:nowrap;
     box-shadow:0 1px 2px rgba(15,23,42,0.06);
@@ -391,15 +521,40 @@ def build_lightweight_chart_html(
   const ohlcEl = document.getElementById('tv-ohlc-line');
   const candleMap = {candle_map_json};
   const candleTimes = {candle_times_json};
-  const headerPrefix = '【{tf_label}】 {symbol} {symbol_name} · {tf_num} · {exchange}';
+  const headerPrefix = '{tf_label} · {symbol}';
+  const headerPrefixFull = '【{tf_label}】 {symbol} {symbol_name} · {tf_num} · {exchange}';
+  const showIndicators = {json.dumps(show_indicators)};
+  const showVolume = {json.dumps(show_volume)};
+  const showLineLabels = {json.dumps(show_line_labels)};
+  const showZoneLabels = {json.dumps(show_zone_labels)};
+  const showOverlays = {json.dumps(show_overlays)};
+  const compactHeader = {json.dumps(header_lines == 1)};
+  const enablePriceScaleDrag = {json.dumps(variant == "main")};
 
   const chart = LightweightCharts.createChart(container, {{
     width: container.clientWidth,
     height: {height},
     layout: {{ background: {{ color: '#ffffff' }}, textColor: '#334155' }},
     grid: {{ vertLines: {{ color: '#f1f5f9' }}, horzLines: {{ color: '#f1f5f9' }} }},
-    rightPriceScale: {{ borderColor: '#e2e8f0', minimumWidth: 72 }},
+    rightPriceScale: {{
+      borderColor: '#e2e8f0',
+      minimumWidth: {scale_min_width},
+      autoScale: true,
+      alignLabels: true,
+    }},
     timeScale: {{ borderColor: '#e2e8f0', timeVisible: true, secondsVisible: false }},
+    handleScale: {{
+      mouseWheel: true,
+      pinch: true,
+      axisPressedMouseMove: {{ time: true, price: enablePriceScaleDrag }},
+      axisDoubleClickReset: {{ time: true, price: enablePriceScaleDrag }},
+    }},
+    handleScroll: {{
+      mouseWheel: true,
+      pressedMouseMove: true,
+      horzTouchDrag: true,
+      vertTouchDrag: true,
+    }},
   }});
 
   const overlays = {overlays_json};
@@ -411,7 +566,11 @@ def build_lightweight_chart_html(
     const pct = prevClose ? (chg / prevClose * 100) : 0;
     const sign = chg >= 0 ? '+' : '';
     const cls = chg >= 0 ? 'up' : 'down';
-    return `${{headerPrefix}} 开=${{c.open.toFixed(2)}} 高=${{c.high.toFixed(2)}} 低=${{c.low.toFixed(2)}} 收=${{c.close.toFixed(2)}} `
+    if (compactHeader) {{
+      return `${{headerPrefix}} 收=${{c.close.toFixed(2)}} `
+        + `<span class="${{cls}}" style="font-weight:700;">${{sign}}${{chg.toFixed(2)}} (${{sign}}${{pct.toFixed(2)}}%)</span>`;
+    }}
+    return `${{headerPrefixFull}} 开=${{c.open.toFixed(2)}} 高=${{c.high.toFixed(2)}} 低=${{c.low.toFixed(2)}} 收=${{c.close.toFixed(2)}} `
       + `<span class="${{cls}}" style="font-weight:700;">${{sign}}${{chg.toFixed(2)}} (${{sign}}${{pct.toFixed(2)}}%)</span>`;
   }}
 
@@ -419,14 +578,15 @@ def build_lightweight_chart_html(
 
   function positionZoneLabels(candleSeries) {{
     labelsEl.innerHTML = '';
+    if (!showZoneLabels) return;
     const placed = [];
     const sorted = [...overlays.zones].sort((a, b) => (a.high + a.low) / 2 - (b.high + b.low) / 2);
     for (const zone of sorted) {{
       const mid = (zone.low + zone.high) / 2;
       let y = candleSeries.priceToCoordinate(mid);
-      if (y == null || y < 48 || y > {height} - 36) continue;
+      if (y == null || y < 24 || y > {height} - 16) continue;
       for (const py of placed) {{
-        if (Math.abs(py - y) < 22) y = py - 24;
+        if (Math.abs(py - y) < 18) y = py - 20;
       }}
       placed.push(y);
       const el = document.createElement('div');
@@ -438,9 +598,8 @@ def build_lightweight_chart_html(
     }}
   }}
 
-  // 1) SMC zones first (background layers) — BaselineSeries fills between low & high
   for (const zone of overlays.zones) {{
-    if (!zone.data || !zone.data.length) continue;
+    if (!showOverlays || !zone.data || !zone.data.length) continue;
     const band = chart.addBaselineSeries({{
       baseValue: {{ type: 'price', price: zone.low }},
       relativeGradient: false,
@@ -459,58 +618,78 @@ def build_lightweight_chart_html(
     band.setData(zone.data);
   }}
 
-  // 2) Candles on top of zones
   const candleSeries = chart.addCandlestickSeries({{
     upColor: '#22c55e', downColor: '#ef4444', borderVisible: false,
     wickUpColor: '#22c55e', wickDownColor: '#ef4444',
-    priceLineVisible: true, lastValueVisible: true,
+    priceLineVisible: {json.dumps(variant == "main")},
+    lastValueVisible: true,
   }});
   candleSeries.setData({candles_json});
-  candleSeries.priceScale().applyOptions({{ scaleMargins: {{ top: 0.10, bottom: 0.28 }} }});
+  candleSeries.priceScale().applyOptions({{ scaleMargins: {{ top: {top_margin}, bottom: {bottom_margin} }} }});
 
-  const volSeries = chart.addHistogramSeries({{
-    priceFormat: {{ type: 'volume' }},
-    priceScaleId: 'volume',
-  }});
-  volSeries.setData({volumes_json});
-  chart.priceScale('volume').applyOptions({{ scaleMargins: {{ top: 0.78, bottom: 0 }} }});
+  if (showVolume) {{
+    const volSeries = chart.addHistogramSeries({{
+      priceFormat: {{ type: 'volume' }},
+      priceScaleId: 'volume',
+    }});
+    volSeries.setData({volumes_json});
+    chart.priceScale('volume').applyOptions({{ scaleMargins: {{ top: 0.78, bottom: 0 }} }});
+  }}
 
-  // 3) EMA / VWAP — all show colored last-value labels on the right (like reference)
   const lines = {lines_json};
-  for (const [name, cfg] of Object.entries(lines)) {{
-    const s = chart.addLineSeries({{
-      color: cfg.color, lineWidth: 2, title: name,
-      priceLineVisible: false,
-      lastValueVisible: true,
-    }});
-    s.setData(cfg.data);
+  const lineWidth = showLineLabels ? 2 : 1;
+  if (showIndicators) {{
+    for (const [name, cfg] of Object.entries(lines)) {{
+      const s = chart.addLineSeries({{
+        color: cfg.color, lineWidth: lineWidth, title: name,
+        priceLineVisible: false,
+        lastValueVisible: showLineLabels,
+      }});
+      s.setData(cfg.data);
+    }}
   }}
 
-  // Minimal reference lines (EQ only)
-  for (const pl of overlays.priceLines) {{
-    candleSeries.createPriceLine({{
-      price: pl.price, color: pl.color, lineWidth: 1,
-      lineStyle: pl.style || 0,
-      axisLabelVisible: !!pl.label,
-      title: pl.title || '',
-    }});
-  }}
+  if (showOverlays) {{
+    for (const pl of overlays.priceLines) {{
+      candleSeries.createPriceLine({{
+        price: pl.price, color: pl.color, lineWidth: 1,
+        lineStyle: pl.style || 0,
+        axisLabelVisible: !!pl.label,
+        title: pl.title || '',
+      }});
+    }}
 
-  if (overlays.markers.length) {{
-    candleSeries.setMarkers(overlays.markers);
+    if (overlays.markers.length) {{
+      candleSeries.setMarkers(overlays.markers);
+    }}
+
+    for (const proj of overlays.projections || []) {{
+      const s = chart.addLineSeries({{
+        color: proj.color,
+        lineWidth: 2,
+        lineStyle: LightweightCharts.LineStyle.Dashed,
+        priceLineVisible: false,
+        lastValueVisible: showLineLabels,
+        title: proj.label || '',
+        crosshairMarkerVisible: false,
+      }});
+      s.setData(proj.data);
+    }}
   }}
 
   chart.timeScale().fitContent();
   positionZoneLabels(candleSeries);
 
-  chart.subscribeCrosshairMove(param => {{
-    if (!param.time || !param.point) {{
-      ohlcEl.innerHTML = defaultOhlcHtml;
-      return;
-    }}
-    const c = candleMap[param.time];
-    if (c) ohlcEl.innerHTML = formatOhlc(c, param.time);
-  }});
+  if (ohlcEl) {{
+    chart.subscribeCrosshairMove(param => {{
+      if (!param.time || !param.point) {{
+        ohlcEl.innerHTML = defaultOhlcHtml;
+        return;
+      }}
+      const c = candleMap[param.time];
+      if (c) ohlcEl.innerHTML = formatOhlc(c, param.time);
+    }});
+  }}
 
   new ResizeObserver(() => {{
     chart.applyOptions({{ width: container.clientWidth }});
@@ -519,3 +698,11 @@ def build_lightweight_chart_html(
 }})();
 </script>
 """
+
+
+def chart_iframe_height(variant: str = "main", height: int | None = None) -> int:
+    preset = CHART_VARIANTS.get(variant, CHART_VARIANTS["main"])
+    height = height if height is not None else int(preset["height"])
+    if variant == "main":
+        return height + 20
+    return height + 4
