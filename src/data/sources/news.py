@@ -10,10 +10,12 @@ class NewsDataSource:
     name = "news"
 
     def fetch_external(self) -> ExternalFactors:
-        headlines, risk_events, _refs = fetch_news_bundle()
+        headlines, risk_events, refs = fetch_news_bundle()
+        sources = list(refs.get("sources") or [])
         return ExternalFactors(
             risk_events=risk_events,
             news_headlines=headlines,
+            sources=sources,
         )
 
     def fetch_evidence(self) -> list[EvidenceItem]:
@@ -37,7 +39,7 @@ class NewsDataSource:
                     category="external",
                     summary=risk_events if risk_events.startswith("近") else f"事件风险：{risk_events}",
                     strength=0.45 if is_live else 0.3,
-                    refs={"source": "calendar" if "finnhub" in str(refs.get("sources")) else "placeholder"},
+                    refs={"source": "te_calendar_scrape" if "te_calendar" in str(refs.get("sources")) else refs.get("source", "news"), **refs},
                 )
             )
 
