@@ -17,8 +17,9 @@ log = get_logger(__name__)
 T = TypeVar("T")
 
 # Fix #4 [Bug] LLM 阶段 JSON 解析偶发失败，hybrid 模式回退规则引擎
-# 原因：流式输出偶发截断/格式错误导致 json.loads 失败；允许有限次重试。
-_MAX_JSON_RETRIES = 2
+# 解析或传输失败时自动重试；传输错误使用指数退避（整次 SSE 请求重打，非流内续传）。
+_MAX_STAGE_RETRIES = 2
+_TRANSPORT_BACKOFF_BASE_S = 1.0
 
 
 def _parse_llm_json(raw: str) -> dict[str, Any]:
@@ -53,6 +54,42 @@ def _parse_llm_json(raw: str) -> dict[str, Any]:
 
     assert last_err is not None
     raise last_err
+
+
+def _backoff_seconds(attempt: int) -> float:
+    return _TRANSPORT_BACKOFF_BASE_S * (2**attempt)
+
+
+def stream_llm_json(
+    client: LLMClient,
+    messages: list[dict[str, str]],
+    *,
+    stage: str,
+    temperature: float = 0.2,
+) -> str:
+    """Stream an LLM JSON response with transport retries. Raises LLMClientError on exhaustion."""
+    last_exc: LLMClientError | None = None
+    for attempt in range(_MAX_STAGE_RETRIES + 1):
+        temp = temperature if attempt == 0 else min(temperature + 0.1, 0.5)
+        try:
+            return _stream_json_response(client, messages, stage=stage, temperature=temp)
+        except LLMClientError as exc:
+            last_exc = exc
+            if attempt < _MAX_STAGE_RETRIES:
+                wait = _backoff_seconds(attempt)
+                log.warning(
+                    "llm stage %s transport retry %d/%d after %.1fs: %s",
+                    stage,
+                    attempt + 1,
+                    _MAX_STAGE_RETRIES,
+                    wait,
+                    exc,
+                )
+                time.sleep(wait)
+                continue
+            raise
+    assert last_exc is not None
+    raise last_exc
 
 
 def _stream_json_response(
@@ -96,12 +133,10 @@ def run_llm_stage(
     t0 = time.perf_counter()
     last_exc: Exception | None = None
 
-    # Fix #4 [Bug] LLM 阶段 JSON 解析偶发失败，hybrid 模式回退规则引擎
-    # 原因：单次 JSON 解析失败即放弃 LLM 结果；解析失败时自动重试最多 _MAX_JSON_RETRIES 次。
-    for attempt in range(_MAX_JSON_RETRIES + 1):
+    for attempt in range(_MAX_STAGE_RETRIES + 1):
         try:
             temp = temperature if attempt == 0 else min(temperature + 0.1, 0.5)
-            raw = _stream_json_response(client, messages, stage=stage, temperature=temp)
+            raw = stream_llm_json(client, messages, stage=stage, temperature=temp)
             data = _parse_llm_json(raw)
             result = parse(data)
             elapsed = int((time.perf_counter() - t0) * 1000)
@@ -113,12 +148,19 @@ def run_llm_stage(
             return result, trace
         except LLMClientError as exc:
             elapsed = int((time.perf_counter() - t0) * 1000)
-            log.warning("llm stage %s failed: %s", stage, exc)
+            log.warning("llm stage %s failed after retries: %s", stage, exc)
             return None, LLMStageTrace(stage=stage, model=model, latency_ms=elapsed, error=str(exc))
         except (ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
             last_exc = exc
-            if attempt < _MAX_JSON_RETRIES:
-                log.warning("llm stage %s json retry %d/%d: %s", stage, attempt + 1, _MAX_JSON_RETRIES, exc)
+            if attempt < _MAX_STAGE_RETRIES:
+                log.warning(
+                    "llm stage %s json retry %d/%d: %s",
+                    stage,
+                    attempt + 1,
+                    _MAX_STAGE_RETRIES,
+                    exc,
+                )
+                time.sleep(_backoff_seconds(attempt))
                 continue
 
     elapsed = int((time.perf_counter() - t0) * 1000)
