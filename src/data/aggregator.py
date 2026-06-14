@@ -30,6 +30,7 @@ def merge_external(*parts: ExternalFactors) -> ExternalFactors:
         if p.social_sentiment != "—":
             merged.social_sentiment = p.social_sentiment
         merged.social_posts.extend(p.social_posts)
+        merged.fetch_errors.extend(p.fetch_errors)
         for src in p.sources:
             if src and src not in merged.sources:
                 merged.sources.append(src)
@@ -45,35 +46,37 @@ def collect_evidence(enriched: dict[str, pd.DataFrame]) -> list[EvidenceItem]:
     return items
 
 
-def build_market_context(
+def assemble_market_context(
     enriched: dict[str, pd.DataFrame],
     analyses: dict[str, TimeframeAnalysis],
+    external: ExternalFactors,
+    source_label: str,
 ) -> MarketContext:
-    prog = get_progress()
+    """Bind pre-fetched external data with enriched bars and ICT analyses."""
     metrics = daily_metrics(enriched["1d"])
-
-    prog.update("context", detail="新闻 · Finnhub / RSS")
-    news_ext = NewsDataSource().fetch_external()
-
-    prog.update("context", detail="DXY · TradingView")
-    fund_ext = FundamentalsDataSource().fetch_external()
-
-    prog.update("context", detail="社媒 · TradingView")
-    social_ext = SocialDataSource().fetch_external()
-
-    external = merge_external(news_ext, fund_ext, social_ext)
     ctx = MarketContext(
         enriched=enriched,
         analyses=analyses,
         metrics=metrics,
         price=float(metrics["current_price"]),
         external=external,
-        source_label=get_active_source(),
+        source_label=source_label,
     )
     log.debug(
-        "external factors dxy=%r risk=%r evidence_items=%d",
+        "market context assembled price=%.2f dxy=%r headlines=%d",
+        ctx.price,
         external.dxy_impact,
-        external.risk_events,
-        len(collect_evidence(enriched)),
+        len(external.news_headlines),
     )
     return ctx
+
+
+def build_market_context(
+    enriched: dict[str, pd.DataFrame],
+    analyses: dict[str, TimeframeAnalysis],
+) -> MarketContext:
+    """Legacy entry — fetches external again. Prefer fetch_all_data + assemble_market_context."""
+    from src.data.fetch_pipeline import fetch_external_bundle
+
+    external = fetch_external_bundle(parallel_http=False)
+    return assemble_market_context(enriched, analyses, external, get_active_source())
