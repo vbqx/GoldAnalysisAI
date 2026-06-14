@@ -113,7 +113,7 @@
 src/
 ├── core/
 │   ├── types.py          # AnalystReport, AnalystTeam, AgentTrace…
-│   ├── progress.py       # 生成进度 + LLM I/O 记录
+│   ├── progress.py       # 生成步骤 + stage_io / llm_io 记录
 │   └── orchestrator.py   # run_trade_agent_pipeline()
 ├── agents/
 │   ├── factory.py          # 统一调度 rule / llm / hybrid
@@ -156,6 +156,7 @@ report, data, analyses = run_analysis()
 |--------|------|--------|
 | **P0** | Analyst Team 规则版 + 接入流水线 | ✅ `agents/analysts/` |
 | **P0** | LLM 研究 + 辩论 + 流式 I/O | ✅ 见 [llm-agents.md](./llm-agents.md) |
+| **P1** | 信号生成去重（trader 与 build_report 共用一次 `generate_trading_signals`） | 🔲 |
 | **P1** | Analyst Team LLM 双轨（每分析师独立 Prompt） | `agents/llm/stages/analysts/` |
 | **P1** | 真实 News / DXY / 社媒 API | `data/sources/` |
 | **P2** | LLM 交易员 / 风控 / 经理 | `agents/llm/stages/` |
@@ -175,4 +176,6 @@ print(team["fundamentals"]["bias"])
 print(report["agent_trace"]["debate"]["discussion_notes"])
 ```
 
-可在 Streamlit「LLM决策链」页「智能体决策」Tab 查看 Analyst Team 四列摘要与完整 JSON。
+可在 Streamlit「LLM决策链」页查看：
+- **智能体决策** — Analyst Team 四列 + 辩论/风控/经理
+- **生成与 LLM I/O** — `analyst_team` 规则 I/O + LLM 阶段整理摘要

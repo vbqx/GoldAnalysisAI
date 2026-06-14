@@ -10,7 +10,7 @@ GoldAnalysisAI 是一个 **XAUUSD 分析报告生成器**：
 
 1. 从 TradingView 拉多周期 OHLCV；
 2. 计算 EMA/VWAP/Fib，做 ICT/PA 结构检测（BOS、CHoCH、OB、FVG）；
-3. 经多阶段「智能体」流水线（研究 → 辩论 → 交易 → 风控 → 经理）产出交易提案；
+3. 经 **Analyst Team**（技术/基本面/新闻/情绪）与多空研究 → 辩论 → 交易 → 风控 → 经理 流水线产出交易提案；
 4. 组装为 JSON 报告，由 Streamlit 渲染为网页仪表盘。
 
 **对外稳定接口**（重构内部时尽量保持不变）：
@@ -32,7 +32,7 @@ report, data, analyses = run_analysis()
 **设计约束**：
 
 - UI 只依赖 `report` dict，不直接依赖 agents 层；
-- 内部流水线参考 [TradeAgent](https://github.com/TauricResearch/TradingAgents)；
+- 内部流水线参考 [TradingAgents](https://github.com/TauricResearch/TradingAgents)（两阶段研究：Analyst Team → Bull/Bear）；
 - 数据源通过 Protocol 解耦，便于替换实现。
 
 ---
@@ -94,7 +94,8 @@ streamlit run app.py    # http://localhost:8501
 
 ```bash
 pip install -r requirements-dev.txt
-python tests/run.py              # 快速：单元 + 回归
+python tests/run.py              # 快速：单元 + 回归（约 44 项）
+python tests/run.py --financial  # 金融 Review FIN-*
 python tests/run.py --full       # 含完整流水线（约 2–3 分钟）
 ```
 
@@ -116,14 +117,14 @@ fetch_multi_timeframe()  →  dict[str, DataFrame]  raw
 enrich() × 各周期  →  dict[str, DataFrame]  enriched（+EMA/VWAP）
         │
         ▼  [analysis/ict_pa.py]
-analyze_timeframe() × 4  →  dict[str, TimeframeAnalysis]  analyses
+analyze_timeframe() × 5  →  dict[str, TimeframeAnalysis]  analyses
         │
         ▼  [data/aggregator.py]
 build_market_context()  →  MarketContext  ctx
         │
-        ▼  [agents/factory.py]
-bullish / bearish → debate → trader → risk → manager
-  (rule / llm / hybrid，经 factory 调度)
+        ▼  [agents/analysts/ + agents/factory.py]
+analyst_team → bullish / bearish → debate → trader → risk → manager
+  (Analyst Team 规则；研究/辩论 rule / llm / hybrid)
         │
         ▼  [llm/analyst.py]  （可选，LLM_ENABLED）
 报告文案层
@@ -484,7 +485,7 @@ GoldAnalysisAI/
 | `lightweight_chart.py` | TradingView Lightweight Charts iframe |
 | `dashboard_components.py` | HTML/CSS 组件 |
 | `agent_trace_view.py` | 决策链 + 来源徽章 |
-| `pipeline_progress.py` | 生成进度 + LLM 流式面板 |
+| `pipeline_progress.py` | 生成进度 + 智能体 I/O（规则 `stage_io` + LLM 流式） |
 | `source_labels.py` | 规则/LLM 来源条 |
 | `llm_view.py` | LLM 文案侧边栏 |
 
@@ -544,9 +545,10 @@ Trader agent 自动消费；Manager 按 index 重排。
 完整设计见 **[llm-agents.md](./llm-agents.md)**。
 
 - **调度**：`agents/factory.py`，`AGENT_MODE=rule|llm|hybrid`
-- **分阶段开关**：`LLM_STAGE_RESEARCH`、`LLM_STAGE_DEBATE` 等
-- **规则兜底**：LLM 失败自动回退 `agents/bullish.py` 等规则实现
-- **报告文案层**（流水线末尾）：`llm/analyst.py`，`LLM_ENABLED` 独立开关
+- **分阶段开关**：`LLM_STAGE_RESEARCH`、`LLM_STAGE_DEBATE`（`LLM_STAGE_ICT/TRADER/RISK/MANAGER` 已在 config 定义，factory 尚未接入）
+- **传输重试**：`agents/llm/base.py` 的 `stream_llm_json()` — SSE 断流时整次重打，最多 3 次、退避 1s/2s；`llm/client.py` 将 `ChunkedEncodingError` 等包装为 `LLMClientError`
+- **规则兜底**：重试耗尽或 JSON 解析失败 → hybrid 回退 `agents/bullish.py` 等规则实现；流水线不崩溃
+- **报告文案层**（流水线末尾）：`llm/analyst.py`，同样经 `stream_llm_json()`，`LLM_ENABLED` 独立开关
 - 配置统一在 `config.py` + `.env.example`
 
 ### 7.5 代码约定
@@ -576,8 +578,10 @@ LOG_FILE=logs/goldanalysisai.log
 
 ```python
 trace = report["agent_trace"]
+trace["analyst_team"]["technical"]["summary"]   # Analyst Team
 trace["debate"]["discussion_notes"]
 trace["decision"]   # action, selected_signal_indices, summary
+report["meta"]["llm_io"]   # Analyst Team 规则 I/O + LLM 阶段
 ```
 
 ### 8.3 其他
@@ -594,7 +598,7 @@ python tests/tools/chart_compare.py
 |------|------|
 | 报告生成 | 首次进入或「刷新报告」时全量执行，约 2–3 分钟 |
 | 切换页面 | 复用 `session_state` 缓存，秒开 |
-| LLM 耗时 | 研究阶段 30–90s/次属正常（V4-Pro）；UI 统一显示秒，并去重 JSON 重试记录 |
+| LLM 耗时 | 研究阶段 30–90s/次属正常（V4-Pro）；传输断流自动重试，不拖垮整条 pipeline |
 | 数据拉取 | 2 次 TV 请求 + resample，典型 3–15s |
 
 ---
@@ -607,6 +611,8 @@ python tests/tools/chart_compare.py
 | EMA610 异常 | 历史 bar 不足；增大 `n_bars` 或登录 TV |
 | 改了代码 UI 不变 | 重启 Streamlit；已缓存报告需点「刷新报告」 |
 | LLM 模型名不对 | `config.py` import 时读 `.env`；各阶段见 `stage_sources.llm.model` |
+| LLM 阶段报错但报告仍有内容 | hybrid 已回退规则；查看 `stage_sources` 与 `llm_io` 中 `error` 字段 |
+| SSE 断流 / ChunkedEncoding | `stream_llm_json` 自动整次重打（最多 3 次）；仍失败则 hybrid 用规则 |
 | 看多/看空耗时差大 | 同模型下 Prompt 体量不同，30–90s/次属正常 |
 | 胜率 % | **非回测**；`sentiment_score()` 多周期趋势加权 |
 | DXY/新闻占位 | `sources/news.py` 等待接 API；orchestrator 写入 `report["external"]` |
@@ -618,20 +624,22 @@ python tests/tools/chart_compare.py
 自动化测试见 [`tests/`](../tests/README.md) 与 [`tests/cases/catalog.yaml`](../tests/cases/catalog.yaml)。
 
 ```bash
-python tests/run.py --fast       # 日常 / CI
+python tests/run.py --fast       # 日常 / CI（约 44 项）
+python tests/run.py --financial  # FIN-* 金融 Review
 python tests/run.py --full       # 发版前（含流水线）
 ```
 
-手工检查（尚未自动化，见 catalog `UI-*`）：
+手工检查（尚未自动化，见 catalog `UI-*` / `FIN-UI-*`）：
 
-- [ ] 生成进度与 LLM 流式 I/O 正常显示
-- [ ] 侧边栏「LLM 输入/输出」有完整记录
-- [ ] 顶栏来源条与决策链徽章正确
-- [ ] 两种报告模式渲染正常
+- [ ] 生成步骤含 `Analyst Team`；智能体 I/O 含规则输出 + LLM 记录
+- [ ] 「LLM决策链」三 Tab：智能体决策 / LLM 文案 / 生成与 LLM I/O
+- [ ] 顶栏来源条与 Analyst Team 四列摘要正确
+- [ ] 两种报告模式渲染正常；结构权重标注「非回测胜率」
 
 | 优先级 | 任务 | 状态 |
 |--------|------|------|
-| P0 | factory + LLM 研究 + 辩论 + 流式 I/O | ✅ |
+| P0 | Analyst Team 规则版 + 智能体 I/O | ✅ |
+| P0 | factory + LLM 研究 + 辩论 + 流式 I/O + 传输重试 | ✅ |
 | P4 | 报告文案层 | ✅ |
 | P1 | LLM 交易员 | 🔲 |
 | P2 | LLM 风控 + 经理 | 🔲 |
@@ -645,9 +653,11 @@ python tests/run.py --full       # 发版前（含流水线）
 
 | 文档 | 内容 |
 |------|------|
-| [architecture.md](./architecture.md) | TradeAgent 对照、分层图 |
-| [llm-agents.md](./llm-agents.md) | LLM 双轨、流式 I/O、硅基流动配置 |
+| [architecture.md](./architecture.md) | TradingAgents 对照、Analyst Team、分层图 |
+| [llm-agents.md](./llm-agents.md) | LLM 双轨、传输重试、智能体 I/O、硅基流动配置 |
+| [financial-review.md](./financial-review.md) | 金融逻辑评审与 FIN-* 用例追溯 |
 | [reverse-engineering.md](./reverse-engineering.md) | 报告各区块算法反推 |
+| [tests/README.md](../tests/README.md) | 测试套件与面板 |
 | [README.md](../README.md) | 快速开始 |
 
 ---

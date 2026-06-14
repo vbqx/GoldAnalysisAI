@@ -46,7 +46,7 @@ streamlit run app.py
 
 | 短线策略 | `views/2_短线策略.py` | 短线策略图，**切换不重新生成** |
 
-| LLM决策链 | `views/3_LLM决策链.py` | 智能体决策、LLM 文案、完整 I/O |
+| LLM决策链 | `views/3_LLM决策链.py` | 智能体决策、LLM 文案、生成与智能体 I/O |
 
 
 
@@ -67,6 +67,8 @@ streamlit run app.py
 | [docs/architecture.md](docs/architecture.md) | 架构设计 |
 
 | [docs/llm-agents.md](docs/llm-agents.md) | LLM 多智能体 |
+
+| [docs/financial-review.md](docs/financial-review.md) | 金融逻辑评审 |
 
 | [docs/reverse-engineering.md](docs/reverse-engineering.md) | 报告结构反推 |
 
@@ -126,7 +128,9 @@ GoldAnalysisAI/
 
 | LLM 双轨 + 来源标识 | ✅ |
 
-| LLM 完整 I/O 记录 | ✅ LLM决策链页 |
+| 智能体 I/O（Analyst Team + LLM） | ✅ LLM决策链页 |
+
+| LLM 传输重试 + hybrid 规则兜底 | ✅ |
 
 | 主图日线 (1d) | ✅ |
 
@@ -163,7 +167,7 @@ LLM_ENABLED=true
 ```bash
 pip install -r requirements-dev.txt
 
-# 快速：单元 + 回归（无网络，推荐 CI / 日常，约 41 项）
+# 快速：单元 + 回归（无网络，推荐 CI / 日常，约 44 项）
 python tests/run.py
 
 # 金融 Review：FIN-* 单测
