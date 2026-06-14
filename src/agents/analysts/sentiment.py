@@ -1,9 +1,9 @@
-"""Sentiment Analyst — structure vote + Reddit social mood."""
+"""Sentiment Analyst — structure vote + TradingView community mood."""
 
 from __future__ import annotations
 
 from src.analysis.ict_pa import sentiment_score
-from src.config import REDDIT_ENABLED
+from src.config import TV_SOCIAL_ENABLED
 from src.core.types import AnalystReport, Bias, EvidenceItem, MarketContext
 from src.data.sources.social import SocialDataSource
 
@@ -15,10 +15,10 @@ def _social_note(ext, social_items: list) -> str:
     if social and social != "—":
         return social[:60] + ("…" if len(social) > 60 else "")
     if social_items:
-        return f"Reddit {len(social_items)} 条样本"
-    if not REDDIT_ENABLED:
-        return "Reddit 未启用"
-    return "Reddit 暂无数据（接口限流或未返回）"
+        return f"TV {len(social_items)} 条样本"
+    if not TV_SOCIAL_ENABLED:
+        return "TV 社媒未启用"
+    return "TV Ideas/Minds 暂无数据"
 
 
 def run_sentiment_analyst(ctx: MarketContext) -> AnalystReport:
@@ -45,7 +45,7 @@ def run_sentiment_analyst(ctx: MarketContext) -> AnalystReport:
                     category="sentiment",
                     summary=f"社媒情绪：{ext.social_sentiment}",
                     strength=0.45,
-                    refs={"source": "reddit"},
+                    refs={"source": "tradingview_social"},
                 )
             )
 
