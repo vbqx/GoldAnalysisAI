@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from src.analysis.ict_pa import TimeframeAnalysis
-from src.core.types import AgentEvidence, MarketContext
+from src.core.types import AgentEvidence, AnalystTeam, MarketContext
 
 
 def _tf_block(tf: str, analysis: TimeframeAnalysis) -> dict[str, Any]:
@@ -37,8 +37,28 @@ def _tf_block(tf: str, analysis: TimeframeAnalysis) -> dict[str, Any]:
     }
 
 
-def market_payload(ctx: MarketContext) -> dict[str, Any]:
+def analyst_team_payload(team: AnalystTeam) -> dict[str, Any]:
     return {
+        role: {
+            "bias": getattr(team, role).bias,
+            "confidence": getattr(team, role).confidence,
+            "summary": getattr(team, role).summary,
+            "items": [
+                {
+                    "category": i.category,
+                    "summary": i.summary,
+                    "strength": i.strength,
+                    "timeframe": i.timeframe,
+                }
+                for i in getattr(team, role).items[:8]
+            ],
+        }
+        for role in ("technical", "fundamentals", "news", "sentiment")
+    }
+
+
+def market_payload(ctx: MarketContext, team: AnalystTeam | None = None) -> dict[str, Any]:
+    payload = {
         "symbol": "XAUUSD",
         "price": ctx.price,
         "metrics": ctx.metrics,
@@ -50,6 +70,9 @@ def market_payload(ctx: MarketContext) -> dict[str, Any]:
             if tf in ctx.analyses
         ],
     }
+    if team:
+        payload["analyst_team"] = analyst_team_payload(team)
+    return payload
 
 
 def evidence_payload(evidence: AgentEvidence) -> dict[str, Any]:

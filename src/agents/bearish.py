@@ -1,9 +1,10 @@
-"""Bearish researcher — extracts sell-side evidence from structure + data."""
+"""Bearish researcher — structure + Analyst Team evidence for sell side."""
 
 from __future__ import annotations
 
+from src.agents.analysts.base import items_for_direction
 from src.analysis.ict_pa import TimeframeAnalysis
-from src.core.types import AgentEvidence, EvidenceItem, MarketContext
+from src.core.types import AgentEvidence, AnalystTeam, EvidenceItem, MarketContext
 
 _TF_WEIGHT = {"4h": 0.35, "1h": 0.30, "15m": 0.20, "5m": 0.15}
 
@@ -75,8 +76,10 @@ def _structure_items(analyses: dict[str, TimeframeAnalysis]) -> list[EvidenceIte
     return items
 
 
-def run_bearish_researcher(ctx: MarketContext) -> AgentEvidence:
+def run_bearish_researcher(ctx: MarketContext, team: AnalystTeam | None = None) -> AgentEvidence:
     items = _structure_items(ctx.analyses)
+    if team:
+        items = items + items_for_direction(team.reports, "bearish")
     score = sum(i.strength for i in items) / max(len(items), 1)
     summary = f"共 {len(items)} 条看空证据，加权强度 {score:.2f}" if items else "暂无明确看空结构证据"
     return AgentEvidence(

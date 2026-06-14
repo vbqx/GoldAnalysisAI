@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+import json
+import time
+
+from src.agents.analysts import run_analyst_team as rule_analyst_team
 from src.agents.bearish import run_bearish_researcher as rule_bearish
 from src.agents.bullish import run_bullish_researcher as rule_bullish
 from src.agents.debate import run_debate as rule_debate
+from src.agents.llm.payload import market_payload
 from src.agents.llm.stages.bearish import run_llm_bearish
 from src.agents.llm.stages.bullish import run_llm_bullish
 from src.agents.llm.stages.debate import run_llm_debate
@@ -21,6 +26,7 @@ from src.core.progress import get_progress
 from src.core.types import (
     AgentEvidence,
     AgentPipelineMeta,
+    AnalystTeam,
     ManagerDecision,
     MarketContext,
     ResearchDebate,
@@ -77,27 +83,43 @@ def _pick_evidence(
     return rule_result
 
 
-def run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta) -> AgentEvidence:
-    rule_result = rule_bullish(ctx)
+def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> AnalystTeam:
+    prog = get_progress()
+    prog.update("analyst_team", detail="技术 · 基本面 · 新闻 · 情绪")
+    t0 = time.perf_counter()
+    team = rule_analyst_team(ctx)
+    elapsed = int((time.perf_counter() - t0) * 1000)
+    prog.stage_io(
+        "analyst_team",
+        input_text=json.dumps(market_payload(ctx), ensure_ascii=False, indent=2),
+        output_text=json.dumps(team.to_dict(), ensure_ascii=False, indent=2),
+        latency_ms=elapsed,
+    )
+    pipeline.record("analyst_team", StageMeta(source="rule"))
+    return team
+
+
+def run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam) -> AgentEvidence:
+    rule_result = rule_bullish(ctx, team)
     if not _use_llm_stage(LLM_STAGE_RESEARCH):
         get_progress().update("bullish", detail="规则引擎")
         pipeline.record("bullish", StageMeta(source="rule"))
         return rule_result
 
     get_progress().update("bullish", detail="LLM 推理中…")
-    llm_result, trace = run_llm_bullish(ctx)
+    llm_result, trace = run_llm_bullish(ctx, team)
     return _pick_evidence("bullish", rule_result, llm_result, trace, pipeline)
 
 
-def run_bearish(ctx: MarketContext, pipeline: AgentPipelineMeta) -> AgentEvidence:
-    rule_result = rule_bearish(ctx)
+def run_bearish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam) -> AgentEvidence:
+    rule_result = rule_bearish(ctx, team)
     if not _use_llm_stage(LLM_STAGE_RESEARCH):
         get_progress().update("bearish", detail="规则引擎")
         pipeline.record("bearish", StageMeta(source="rule"))
         return rule_result
 
     get_progress().update("bearish", detail="LLM 推理中…")
-    llm_result, trace = run_llm_bearish(ctx)
+    llm_result, trace = run_llm_bearish(ctx, team)
     return _pick_evidence("bearish", rule_result, llm_result, trace, pipeline)
 
 
@@ -135,8 +157,9 @@ def run_debate(
     bearish: AgentEvidence,
     analyses,
     pipeline: AgentPipelineMeta,
+    team: AnalystTeam,
 ) -> ResearchDebate:
-    rule_result = rule_debate(bullish, bearish, analyses)
+    rule_result = rule_debate(bullish, bearish, analyses, team)
     if not _use_llm_stage(LLM_STAGE_DEBATE):
         get_progress().update("debate", detail="规则引擎")
         pipeline.record("debate", StageMeta(source="rule"))

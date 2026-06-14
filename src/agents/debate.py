@@ -3,10 +3,15 @@
 from __future__ import annotations
 
 from src.analysis.ict_pa import sentiment_score
-from src.core.types import AgentEvidence, Bias, ResearchDebate
+from src.core.types import AgentEvidence, AnalystTeam, Bias, ResearchDebate
 
 
-def run_debate(bullish: AgentEvidence, bearish: AgentEvidence, analyses) -> ResearchDebate:
+def run_debate(
+    bullish: AgentEvidence,
+    bearish: AgentEvidence,
+    analyses,
+    team: AnalystTeam | None = None,
+) -> ResearchDebate:
     notes: list[str] = []
     bull_score = bullish.confidence * max(len(bullish.items), 1)
     bear_score = bearish.confidence * max(len(bearish.items), 1)
@@ -14,6 +19,11 @@ def run_debate(bullish: AgentEvidence, bearish: AgentEvidence, analyses) -> Rese
     sentiment = sentiment_score(analyses)
     bull_pct = sentiment.get("bullish", 33)
     bear_pct = sentiment.get("bearish", 33)
+
+    if team:
+        notes.append("── Analyst Team 摘要 ──")
+        for report in team.reports:
+            notes.append(f"{report.agent}: {report.summary}（{report.bias} · {report.confidence:.0%}）")
 
     notes.append(f"看多研究员：{bullish.summary}")
     notes.append(f"看空研究员：{bearish.summary}")
