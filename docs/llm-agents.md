@@ -50,7 +50,7 @@ TradingView → enrich → ict_pa.analyze (规则事实)
 
               ┌───────────────────────────────────┐
 
-              │  Analyst Team（规则，P1 可加 LLM）   │
+              │  Analyst Team（rule / llm / hybrid，`LLM_STAGE_ANALYSTS`） │
 
               │  技术 · 基本面 · 新闻 · 情绪          │
 
@@ -134,7 +134,7 @@ TradingView → enrich → ict_pa.analyze (规则事实)
 
 |------|------|--------|
 
-| `LLM_MODEL_FAST` | 研究阶段（看多/看空） | `llm/router.get_fast_client()` |
+| `LLM_MODEL_FAST` | Analyst Team + 研究阶段（四位分析师 / 看多/看空） | `llm/router.get_fast_client()` |
 
 | `LLM_MODEL_STRONG` | 辩论 | `get_strong_client()` |
 
@@ -177,6 +177,8 @@ LLM_OVERRIDE_THRESHOLD=0.65
 
 
 # 分阶段开关
+
+LLM_STAGE_ANALYSTS=true
 
 LLM_STAGE_RESEARCH=true
 
@@ -276,7 +278,7 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 
 | ICT 结构事实 | `ict_pa.py` | P3 解读 | 事实 ✅ / LLM 🔲 |
 
-| **Analyst Team** | `analysts/*.py` | P1 每分析师 LLM | ✅ 规则 / 🔲 LLM |
+| **Analyst Team** | `analysts/*.py` + `llm/stages/analysts/` | 每分析师独立 Prompt | ✅ rule / llm / hybrid |
 
 | 看多/看空研究 | `bullish.py` / `bearish.py` | `llm/stages/*` | ✅ P0（含 analyst_team payload） |
 
@@ -373,8 +375,9 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 
 | **P4** | 报告文案层 | ✅ |
 
-| **P1** | Analyst Team LLM 双轨 + 真实 News/DXY API | 🔲 |
-
+| **P1** | Analyst Team LLM 双轨（`LLM_STAGE_ANALYSTS`） | ✅ |
+| **P1** | 真实 News/DXY/社媒 API | ✅ |
+| **P1** | 流水线并行（bull/bear、Analyst×4） | 🔲 |
 | **P1** | LLM 交易员 | 🔲 |
 
 | **P2** | LLM 风控 + 经理 | 🔲 |

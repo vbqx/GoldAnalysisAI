@@ -11,9 +11,9 @@
 |-----------------|---------------------|----------|
 | **Market** (Yahoo 等) | `data/sources/market.py` → TradingView OANDA:XAUUSD | ✅ 已接入 |
 | **Technical Analyst** | `agents/analysts/technical.py` | ✅ 规则版（EMA + ICT 结构） |
-| **Fundamentals Analyst** | `agents/analysts/fundamentals.py` | ✅ 规则版（DXY 占位） |
-| **News Analyst** | `agents/analysts/news.py` | ✅ 规则版（事件风险占位） |
-| **Sentiment Analyst** | `agents/analysts/sentiment.py` | ✅ 规则版（结构投票 + 社媒占位） |
+| **Fundamentals Analyst** | `agents/analysts/fundamentals.py` | ✅ 规则版（DXY via TradingView） |
+| **News Analyst** | `agents/analysts/news.py` | ✅ 规则版（Finnhub + Google RSS） |
+| **Sentiment Analyst** | `agents/analysts/sentiment.py` | ✅ 规则版（结构投票 + Reddit） |
 | **Bullish Researcher** | `agents/factory.py` → rule / `llm/stages/bullish` | ✅ 整合 Analyst Team 输出 |
 | **Bearish Researcher** | `agents/factory.py` → rule / `llm/stages/bearish` | ✅ 整合 Analyst Team 输出 |
 | **Discussion** | `agents/factory.py` → rule / `llm/stages/debate` | ✅ 双轨（P0） |
@@ -59,7 +59,7 @@
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                     TRADER AGENT                                 │
-│   generate_trading_signals + debate → TransactionProposal        │
+│   compute_trading_signals(ctx) → 选 index · debate → Proposal    │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -74,14 +74,14 @@
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                   REPORT BUILDER                                 │
-│   analysis/report_engine.build_report (JSON schema 不变)         │
+│   analysis/report_engine.build_report(signals=…) (JSON schema 不变) │
 │   + report["agent_trace"]["analyst_team"] + stage_sources      │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
                       app.py + views/* + viz/*
 ```
 
-\* News / Social / Fundamentals 数据源仍为占位，Analyst 层已接入并在 `agent_trace` 中可审计；接真实 API 时不改 UI schema。
+\* News / Social / Fundamentals 已接入真实数据源（TradingView DXY、Finnhub/RSS、Reddit）；失败时回退占位文案，UI schema 不变。
 
 ---
 
@@ -90,9 +90,9 @@
 | 分析师 | 文件 | 输入 | 输出 |
 |--------|------|------|------|
 | Technical | `analysts/technical.py` | EMA/VWAP、ICT 多周期结构 | `AnalystReport(bias, items, summary)` |
-| Fundamentals | `analysts/fundamentals.py` | DXY / 宏观占位 | 黄金多空宏观偏向 |
-| News | `analysts/news.py` | 头条 + 事件日历占位 | 波动/事件风险（通常 neutral） |
-| Sentiment | `analysts/sentiment.py` | 结构情绪投票 + 社媒占位 | 短期情绪偏向 |
+| Fundamentals | `analysts/fundamentals.py` | DXY / TradingView | 黄金多空宏观偏向 |
+| News | `analysts/news.py` | Finnhub + Google RSS | 波动/事件风险（通常 neutral） |
+| Sentiment | `analysts/sentiment.py` | 结构情绪投票 + Reddit | 短期情绪偏向 |
 
 **类型**（`core/types.py`）：
 
@@ -156,9 +156,10 @@ report, data, analyses = run_analysis()
 |--------|------|--------|
 | **P0** | Analyst Team 规则版 + 接入流水线 | ✅ `agents/analysts/` |
 | **P0** | LLM 研究 + 辩论 + 流式 I/O | ✅ 见 [llm-agents.md](./llm-agents.md) |
-| **P1** | 信号生成去重（trader 与 build_report 共用一次 `generate_trading_signals`） | 🔲 |
-| **P1** | Analyst Team LLM 双轨（每分析师独立 Prompt） | `agents/llm/stages/analysts/` |
-| **P1** | 真实 News / DXY / 社媒 API | `data/sources/` |
+| **P1** | 信号生成去重（trader 与 build_report 共用一次 `generate_trading_signals`） | ✅ |
+| **P1** | Analyst Team LLM 双轨（每分析师独立 Prompt） | ✅ `agents/llm/stages/analysts/` |
+| **P1** | 真实 News / DXY / 社媒 API | ✅ `data/sources/` |
+| **P1** | 流水线并行（bull/bear、Analyst×4） | 🔲 见 development.md §11 |
 | **P2** | LLM 交易员 / 风控 / 经理 | `agents/llm/stages/` |
 | **P3** | ICT Interpreter | `ict_pa.py` |
 

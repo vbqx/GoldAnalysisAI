@@ -102,7 +102,7 @@ score_bear = 0.35×4H_bear + 0.30×1H_bear + ...
 
 SL/TP 按 zone 宽度或 swing 极值推算，RR 1:2~1:4。
 
-MVP: `report_engine.generate_trading_signals()`
+MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；`build_report` 与 trader 共用）
 
 ### 2.6 底部区域
 
