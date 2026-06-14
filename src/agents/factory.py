@@ -69,7 +69,11 @@ def _pick_evidence(
         return llm_result
 
     reason = trace.error or f"confidence {llm_result.confidence:.2f} < {LLM_OVERRIDE_THRESHOLD}"
-    pipeline.record(stage, StageMeta(source="rule", fallback_reason=reason, llm=trace))
+    # hybrid 且 LLM 已参与：source=hybrid + fallback，UI 显示「混合·规则」而非纯「规则」
+    pipeline.record(
+        stage,
+        StageMeta(source="hybrid", fallback_reason=f"采用规则输出：{reason}", llm=trace),
+    )
     return rule_result
 
 
@@ -119,7 +123,10 @@ def _pick_debate(
         return llm_result
 
     reason = trace.error or f"strength {llm_result.consensus_strength:.2f} < {LLM_OVERRIDE_THRESHOLD}"
-    pipeline.record("debate", StageMeta(source="rule", fallback_reason=reason, llm=trace))
+    pipeline.record(
+        "debate",
+        StageMeta(source="hybrid", fallback_reason=f"采用规则输出：{reason}", llm=trace),
+    )
     return rule_result
 
 
