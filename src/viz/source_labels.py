@@ -5,6 +5,11 @@ from __future__ import annotations
 from src.config import short_model_name
 
 STAGE_LABELS = {
+    "analyst_team": "Analyst Team",
+    "technical": "技术分析师",
+    "fundamentals": "基本面分析师",
+    "news": "新闻分析师",
+    "sentiment": "情绪分析师",
     "bullish": "看多研究",
     "bearish": "看空研究",
     "debate": "辩论共识",
@@ -96,7 +101,19 @@ def render_agent_source_banner(report: dict) -> str:
         )
 
     chips = [f'<span class="agent-mode-tag">模式：{mode_label}</span>']
-    for key in ("bullish", "bearish", "debate", "trader", "risk", "manager"):
+    for key in (
+        "analyst_team",
+        "technical",
+        "fundamentals",
+        "news",
+        "sentiment",
+        "bullish",
+        "bearish",
+        "debate",
+        "trader",
+        "risk",
+        "manager",
+    ):
         if key not in sources:
             continue
         entry = sources[key]

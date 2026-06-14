@@ -132,6 +132,30 @@ def _fmt_generic(data: dict[str, Any]) -> str:
     return f"<ul>{_lines_to_html(lines[:10])}</ul>"
 
 
+def _fmt_analyst_team(data: dict[str, Any]) -> str:
+    labels = {
+        "technical": "技术分析师",
+        "fundamentals": "基本面分析师",
+        "news": "新闻分析师",
+        "sentiment": "情绪分析师",
+    }
+    parts: list[str] = []
+    for key, title in labels.items():
+        report = data.get(key) or {}
+        if not isinstance(report, dict):
+            continue
+        bias = _BIAS_CN.get(str(report.get("bias", "")).lower(), "中性")
+        summary = str(report.get("summary", "")).strip() or "—"
+        confidence = _pct(report.get("confidence"))
+        items = report.get("items") or []
+        count = len(items) if isinstance(items, list) else 0
+        parts.append(
+            f"<p><b>{escape(title)}</b>：{escape(bias)}（置信 {confidence}，{count} 条证据）"
+            f"<br>{escape(summary)}</p>"
+        )
+    return "\n".join(parts) if parts else "<p>（无 Analyst Team 数据）</p>"
+
+
 def format_llm_narrative(stage: str, raw: str) -> str:
     """Return HTML for the human-readable summary box."""
     if not raw.strip():
@@ -149,6 +173,8 @@ def format_llm_narrative(stage: str, raw: str) -> str:
         body = _fmt_evidence("看空", data)
     elif stage == "debate":
         body = _fmt_debate(data)
+    elif stage == "analyst_team":
+        body = _fmt_analyst_team(data)
     elif stage in ("llm_narrative", "narrative"):
         body = _fmt_narrative(data)
     else:

@@ -24,6 +24,7 @@ def render_agent_trace_panel(report: dict) -> None:
         return
 
     stage_meta = trace.get("stage_meta") or {}
+    analyst_team = trace.get("analyst_team") or {}
     decision = trace.get("decision", {})
     debate = trace.get("debate", {})
     proposal = trace.get("proposal", {})
@@ -45,6 +46,24 @@ def render_agent_trace_panel(report: dict) -> None:
 
     st.markdown("**经理摘要**")
     st.write(decision.get("summary", "—"))
+
+    if analyst_team:
+        team_meta = stage_meta.get("analyst_team") or {}
+        st.markdown(f"**Analyst Team** {_badge_md(team_meta)}")
+        cols = st.columns(4)
+        labels = {
+            "technical": "技术",
+            "fundamentals": "基本面",
+            "news": "新闻",
+            "sentiment": "情绪",
+        }
+        for col, (key, title) in zip(cols, labels.items()):
+            report = analyst_team.get(key) or {}
+            with col:
+                st.markdown(f"**{title}**")
+                st.caption(report.get("bias", "—"))
+                st.caption(report.get("summary", "—")[:120])
+                st.caption(f"{len(report.get('items', []))} 条证据")
 
     st.markdown("**辩论要点**")
     for note in debate.get("discussion_notes", [])[:6]:
