@@ -12,26 +12,51 @@ from src.viz.source_labels import render_agent_source_banner
 from src.viz.streamlit_common import render_page_hero
 
 
+def _render_generation_and_llm_io(
+    *,
+    steps: list[dict],
+    records: list[dict],
+    stage_sources: dict | None = None,
+    expand_last: bool = False,
+    empty_steps_msg: str = "暂无生成步骤记录",
+    empty_io_msg: str = "暂无 LLM 调用记录",
+) -> None:
+    """Single panel: pipeline steps on top, LLM I/O below."""
+    if steps:
+        render_progress_steps(steps, title="生成步骤")
+    else:
+        st.info(empty_steps_msg)
+
+    st.divider()
+
+    if records:
+        merged = (
+            merge_llm_io_with_stage_sources(records, stage_sources)
+            if stage_sources
+            else records
+        )
+        render_llm_io_history(merged, title="LLM 输入/输出", expand_last=expand_last)
+    else:
+        st.info(empty_io_msg)
+
+
 def render_live_generation_panel(live: dict) -> None:
     """Same tab layout as the decision page, fed by in-flight pipeline snapshots."""
     steps = live.get("steps") or []
     records = live.get("llm_io") or []
 
-    tab_steps, tab_io, tab_trace, tab_llm = st.tabs(
-        ["生成步骤", "LLM 输入/输出", "智能体决策", "LLM 文案"]
+    tab_gen, tab_trace, tab_llm = st.tabs(
+        ["生成与 LLM I/O", "智能体决策", "LLM 文案"]
     )
 
-    with tab_steps:
-        if steps:
-            render_progress_steps(steps, title="生成步骤")
-        else:
-            st.info("流水线启动中，即将显示各阶段进度…")
-
-    with tab_io:
-        if records:
-            render_llm_io_history(records, title="LLM 调用记录", expand_last=True)
-        else:
-            st.info("数据拉取与规则分析完成后，将在此展示 LLM Prompt 与流式输出。")
+    with tab_gen:
+        _render_generation_and_llm_io(
+            steps=steps,
+            records=records,
+            expand_last=True,
+            empty_steps_msg="流水线启动中，即将显示各阶段进度…",
+            empty_io_msg="数据拉取与规则分析完成后，将在此展示 LLM Prompt 与整理摘要。",
+        )
 
     with tab_trace:
         st.info("智能体决策链将在多空研究、辩论阶段完成后自动出现。")
@@ -47,8 +72,8 @@ def render_llm_decision_page(report: dict) -> None:
     )
     st.markdown(render_agent_source_banner(report), unsafe_allow_html=True)
 
-    tab_trace, tab_llm, tab_steps, tab_io = st.tabs(
-        ["智能体决策", "LLM 文案", "生成步骤", "LLM 输入/输出"]
+    tab_trace, tab_llm, tab_gen = st.tabs(
+        ["智能体决策", "LLM 文案", "生成与 LLM I/O"]
     )
 
     with tab_trace:
@@ -57,20 +82,11 @@ def render_llm_decision_page(report: dict) -> None:
     with tab_llm:
         render_llm_panel(report)
 
-    with tab_steps:
-        steps = report.get("meta", {}).get("generation_steps", [])
-        if steps:
-            render_progress_steps(steps, title="生成步骤")
-        else:
-            st.info("暂无生成步骤记录")
-
-    with tab_io:
-        records = report.get("meta", {}).get("llm_io", [])
-        stage_sources = report.get("meta", {}).get("stage_sources", {})
-        if not records:
-            st.info("暂无 LLM 调用记录。请确认 `.env` 中已启用 `LLM_STAGE_*` 或 `LLM_ENABLED`。")
-        else:
-            render_llm_io_history(
-                merge_llm_io_with_stage_sources(records, stage_sources),
-                title="LLM 调用记录",
-            )
+    with tab_gen:
+        meta = report.get("meta", {})
+        _render_generation_and_llm_io(
+            steps=meta.get("generation_steps", []),
+            records=meta.get("llm_io", []),
+            stage_sources=meta.get("stage_sources", {}),
+            empty_io_msg="暂无 LLM 调用记录。请确认 `.env` 中已启用 `LLM_STAGE_*` 或 `LLM_ENABLED`。",
+        )

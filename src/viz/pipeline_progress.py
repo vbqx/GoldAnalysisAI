@@ -6,6 +6,7 @@ import streamlit as st
 
 from src.core.progress import PipelineProgressStep, ProgressReporter, StepStatus
 from src.llm.format_io import format_llm_output, format_messages
+from src.llm.narrative_output import format_llm_narrative
 from src.viz.llm_meta import format_latency_ms
 
 _STATUS_ICONS: dict[StepStatus, str] = {
@@ -47,6 +48,23 @@ def render_progress_steps(steps: list[dict], *, title: str = "生成步骤") -> 
         st.markdown(_format_step(step))
 
 
+def _render_llm_output_panel(*, stage: str, output: str, error: str | None = None, json_height: int = 220) -> None:
+    if error:
+        st.error(error)
+        return
+    raw = output or ""
+    st.caption("原始输出（JSON）")
+    st.text_area(
+        f"llm_out_{stage}",
+        format_llm_output(raw)[:16000] + ("…" if len(raw) > 16000 else ""),
+        height=json_height,
+        disabled=True,
+        label_visibility="collapsed",
+    )
+    st.caption("整理摘要")
+    st.markdown(format_llm_narrative(stage, raw), unsafe_allow_html=True)
+
+
 def render_llm_io_history(
     records: list[dict], *, title: str = "LLM 输入/输出", expand_last: bool = False
 ) -> None:
@@ -74,21 +92,28 @@ def render_llm_io_history(
                 st.text_area(
                     f"llm_in_{stage}",
                     format_messages(msgs),
-                    height=320,
+                    height=280,
                     disabled=True,
                     label_visibility="collapsed",
                 )
             with out_col:
-                st.markdown("**输出**")
+                st.markdown("**输出（JSON）**")
                 if rec.get("error"):
                     st.error(rec["error"])
-                out = format_llm_output(rec.get("output") or "")
-                st.text_area(
-                    f"llm_out_{stage}",
-                    out[:16000] + ("…" if len(out) > 16000 else ""),
-                    height=320,
-                    disabled=True,
-                    label_visibility="collapsed",
+                else:
+                    raw = rec.get("output") or ""
+                    st.text_area(
+                        f"llm_out_{stage}",
+                        format_llm_output(raw)[:16000] + ("…" if len(raw) > 16000 else ""),
+                        height=280,
+                        disabled=True,
+                        label_visibility="collapsed",
+                    )
+            if not rec.get("error"):
+                st.markdown("**整理摘要**")
+                st.markdown(
+                    format_llm_narrative(stage, rec.get("output") or ""),
+                    unsafe_allow_html=True,
                 )
 
 
@@ -170,13 +195,8 @@ class StreamlitProgressReporter(ProgressReporter):
         if error:
             block["output_box"].error(error)
         elif output:
-            block["output_box"].text_area(
-                f"llm_out_{stage}",
-                format_llm_output(output),
-                height=260,
-                disabled=True,
-                label_visibility="collapsed",
-            )
+            with block["output_box"].container():
+                _render_llm_output_panel(stage=stage, output=output, json_height=180)
 
     def complete(self, *, ok: bool = True) -> None:
         if not self.state.steps:

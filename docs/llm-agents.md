@@ -210,7 +210,7 @@ LLM_ENHANCE_CONCLUSION=true
 
 | `views/2_短线策略.py` | 短线策略图 |
 
-| `views/3_LLM决策链.py` | 四 Tab：智能体决策 / LLM 文案 / 生成步骤 / LLM 输入输出 |
+| `views/3_LLM决策链.py` | 三 Tab：智能体决策 / LLM 文案 / 生成与 LLM I/O |
 
 
 
@@ -226,7 +226,7 @@ LLM_ENHANCE_CONCLUSION=true
 
 - Tab **智能体决策** — `agent_trace` + 来源徽章
 
-- Tab **LLM 输入/输出** — `meta.llm_io` 双栏 Prompt / 响应
+- Tab **生成与 LLM I/O** — 上方 `generation_steps`，下方 `meta.llm_io`（Prompt + 整理摘要）
 
 
 
