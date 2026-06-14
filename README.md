@@ -2,7 +2,7 @@
 
 
 
-基于 Price Action + ICT + SMC 方法论，自动生成 XAUUSD 机构级分析仪表盘。内部流水线参考 [TradeAgent](https://github.com/TauricResearch/TradingAgents) 多智能体架构，支持规则引擎与 LLM 双轨。
+基于 Price Action + ICT + SMC 方法论，自动生成 XAUUSD 机构级分析仪表盘。内部流水线参考 [TradingAgents](https://github.com/TauricResearch/TradingAgents)：**Analyst Team**（技术/基本面/新闻/情绪）→ 多空研究 → 辩论 → 交易 → 风控 → 经理；支持规则引擎与 LLM 双轨。
 
 
 
@@ -98,7 +98,9 @@ GoldAnalysisAI/
 │   └── regression/
 └── src/
     ├── core/orchestrator.py
-    ├── agents/factory.py
+    ├── agents/
+    │   ├── analysts/           # Analyst Team（TradingAgents 对齐）
+    │   └── factory.py
     ├── llm/
     └── viz/
         ├── streamlit_common.py  # 共享 bootstrap + session 缓存
@@ -115,6 +117,8 @@ GoldAnalysisAI/
 | 模块 | 状态 |
 
 |------|------|
+
+| Analyst Team | ✅ 技术/基本面/新闻/情绪（规则版） |
 
 | 多页面 UI | ✅ 机构 / 短线 / LLM 决策 |
 
@@ -159,8 +163,11 @@ LLM_ENABLED=true
 ```bash
 pip install -r requirements-dev.txt
 
-# 快速：单元 + 回归（无网络，推荐 CI / 日常）
+# 快速：单元 + 回归（无网络，推荐 CI / 日常，约 41 项）
 python tests/run.py
+
+# 金融 Review：FIN-* 单测
+python tests/run.py --financial
 
 # 完整：含流水线集成（需 .env + TradingView，约 2–3 分钟）
 python tests/run.py --full
