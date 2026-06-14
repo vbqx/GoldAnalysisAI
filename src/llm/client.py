@@ -7,6 +7,7 @@ from collections.abc import Iterator
 from typing import Any
 
 import requests
+from requests.exceptions import ChunkedEncodingError, ConnectionError, RequestException, Timeout
 
 from src.log import get_logger
 
@@ -92,13 +93,16 @@ class LLMClient:
         if resp.status_code >= 400:
             raise LLMClientError(f"LLM HTTP {resp.status_code}: {resp.text[:500]}")
 
-        for raw in resp.iter_lines():
-            if not raw:
-                continue
-            line = raw.decode("utf-8", errors="replace") if isinstance(raw, bytes) else str(raw)
-            chunk = self._parse_sse_line(line)
-            if chunk:
-                yield chunk
+        try:
+            for raw in resp.iter_lines():
+                if not raw:
+                    continue
+                line = raw.decode("utf-8", errors="replace") if isinstance(raw, bytes) else str(raw)
+                chunk = self._parse_sse_line(line)
+                if chunk:
+                    yield chunk
+        except (ChunkedEncodingError, ConnectionError, Timeout, RequestException) as exc:
+            raise LLMClientError(f"LLM 流式读取失败: {exc}") from exc
 
     def chat(
         self,

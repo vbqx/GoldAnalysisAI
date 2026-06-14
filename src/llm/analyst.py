@@ -87,15 +87,15 @@ def run_llm_analysis(
         messages = build_messages(context)
         log.info("llm analysis start model=%s", LLM_MODEL)
 
-        from src.agents.llm.base import _stream_json_response
+        from src.agents.llm.base import _parse_llm_json, stream_llm_json
 
-        raw = _stream_json_response(
+        raw = stream_llm_json(
             client,
             messages,
             stage="llm_narrative",
             temperature=0.3,
         )
-        data = json.loads(raw)
+        data = _parse_llm_json(raw)
         result = _parse_result(data, model=LLM_MODEL, provider=LLM_BASE_URL)
         log.info(
             "llm analysis done confidence=%.2f summary_len=%d",

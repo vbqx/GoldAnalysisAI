@@ -71,7 +71,7 @@ def test_llm_json_retry_helpers_present() -> None:
     """RG-06: LLM JSON parse + retry (#4)."""
     base_src = (ROOT / "src" / "agents" / "llm" / "base.py").read_text(encoding="utf-8")
     assert "_parse_llm_json" in base_src
-    assert "_MAX_JSON_RETRIES" in base_src
+    assert "_MAX_STAGE_RETRIES" in base_src
 
 
 @pytest.mark.regression
