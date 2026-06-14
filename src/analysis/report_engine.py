@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import asdict, dataclass
 from typing import Any
 
@@ -14,6 +15,11 @@ from src.indicators.technical import ema_relation, fibonacci_levels
 from src.log import get_logger
 
 log = get_logger(__name__)
+
+_CAL_EVENT_RE = re.compile(
+    r"^(?P<date>\d{4}-\d{2}-\d{2})\s+(?P<time>\d{1,2}:\d{2}\s+[AP]M)\s+(?P<body>.+)$",
+    re.I,
+)
 
 
 @dataclass
@@ -308,8 +314,33 @@ def invalidation_rules(
     return rules
 
 
+def parse_risk_events_calendar(risk_events: str) -> list[dict[str, str]]:
+    """Turn scraped calendar text into sidebar calendar rows."""
+    if not risk_events or risk_events == "—" or "占位" in risk_events:
+        return []
+    events: list[dict[str, str]] = []
+    for part in risk_events.split("；"):
+        chunk = part.strip()
+        if not chunk:
+            continue
+        m = _CAL_EVENT_RE.match(chunk)
+        if m:
+            body = m.group("body").strip()
+            flag = "🇺🇸" if "united states" in body.lower() or body.upper().startswith("US ") else "🌍"
+            events.append(
+                {
+                    "time": f"{m.group('date')} {m.group('time')}",
+                    "flag": flag,
+                    "event": body,
+                }
+            )
+        else:
+            events.append({"time": "—", "flag": "📅", "event": chunk})
+    return events
+
+
 def build_calendar_events() -> list[dict[str, str]]:
-    """US-session event placeholders (MVP). Replace with real calendar API later."""
+    """Fallback placeholders when live calendar is unavailable."""
     return [
         {"time": "20:15", "flag": "🇺🇸", "event": "ADP 就业 / 制造业数据"},
         {"time": "22:30", "flag": "🇺🇸", "event": "EIA 原油库存"},
