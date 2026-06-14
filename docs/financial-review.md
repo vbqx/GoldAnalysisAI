@@ -76,8 +76,8 @@ TradingView OHLCV → 技术指标 → ICT/PA 结构识别 → 多 Agent 决策 
 
 | 文件 | 关键函数 | 金融职责 |
 |------|----------|----------|
-| `src/analysis/report_engine.py` | `generate_trading_signals()`, `build_report()` | 入场/止损/止盈、路径推演、报告 JSON |
-| `src/agents/trader.py` | `run_trader_agent()` | 信号选择与交易提案 |
+| `src/analysis/report_engine.py` | `compute_trading_signals()`, `generate_trading_signals()`, `build_report()` | 入场/止损/止盈、路径推演、报告 JSON |
+| `src/agents/trader.py` | `run_trader_agent(ctx, debate, signals)` | 信号选择与交易提案（不重复生成） |
 | `src/agents/risk.py` | `run_risk_team()` | 三档仓位缩放 |
 | `src/agents/manager.py` | `run_manager()` | 最终 execute/reduce/wait |
 
@@ -265,7 +265,8 @@ TradingView OHLCV → 技术指标 → ICT/PA 结构识别 → 多 Agent 决策 
 | 三模板 | 与 reverse-engineering §2.5 一致 |
 | SL/TP 几何 | 基于 zone 宽度，方向性基本合理 |
 | position_size | 描述性字符串，与 2% 风险规则未联动 — UI 须说明 |
-| 信号去重 | 5m+15m FVG 合并可能重复 — P2 优化 |
+| 信号去重（pipeline） | ✅ trader 与 report 共用 `compute_trading_signals(ctx)` |
+| FVG 模板合并 | 5m+15m 同向 zone 仍可能产出相似信号 — P2 算法优化 |
 
 ### 5.4 风控与经理（规则版）
 

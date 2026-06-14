@@ -31,7 +31,7 @@ tests/
 # 安装开发依赖（含 pytest）
 pip install -r requirements-dev.txt
 
-# 快速测试：单元 + 回归（默认，无网络，约 44 项）
+# 快速测试：单元 + 回归（默认，无网络，约 61 项）
 python tests/run.py
 
 # 金融 Review 单测（FIN-*）
@@ -49,8 +49,11 @@ python tests/run.py --integration
 等价 pytest 命令：
 
 ```bash
-pytest tests/unit tests/regression -q          # 快速（含 Analyst Team + FIN + 传输重试）
-pytest tests/unit/test_analyst_team.py -v
+pytest tests/unit tests/regression -q          # 快速（含外部源 + Analyst LLM + 信号去重 + TV 重试）
+pytest tests/unit/test_external_sources.py -v
+pytest tests/unit/test_signal_dedup.py -v
+pytest tests/unit/test_analyst_team_llm.py -v
+pytest tests/unit/test_tradingview_retry.py -v
 pytest tests/unit/test_financial_review.py -m financial -v
 pytest tests/integration -m integration -q   # slow
 ```

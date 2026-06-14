@@ -142,6 +142,64 @@ cases:
 
 
 
+  - id: UT-05
+
+    suite: unit
+
+    title: 外部数据源 DXY / 新闻 / Reddit（mock）
+
+    module: tests.unit.test_external_sources
+
+    priority: P1
+
+    automated: true
+
+    maps_to: [FIN-10]
+
+
+
+  - id: UT-06
+
+    suite: unit
+
+    title: 交易信号生成去重（trader 与 report 共用）
+
+    module: tests.unit.test_signal_dedup
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-07
+
+    suite: unit
+
+    title: Analyst Team LLM 双轨 hybrid 调度
+
+    module: tests.unit.test_analyst_team_llm
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-08
+
+    suite: unit
+
+    title: TradingView 拉数重试与整轮回退
+
+    module: tests.unit.test_tradingview_retry
+
+    priority: P1
+
+    automated: true
+
+
+
   # ── 指标单元（IND）────────────────────────────────────────
 
   - id: IND-01
@@ -972,7 +1030,7 @@ cases:
 
     layer: functional
 
-    title: meta.llm_io 与阶段调用数一致
+    title: meta.llm_io 与阶段调用数一致（含 context / 四位分析师 LLM）
 
     page: LLM决策链
 
@@ -1261,11 +1319,11 @@ cases:
   - id: FIN-10
     suite: unit
     layer: financial
-    title: external 占位数据 source 标识
-    module: tests.unit.test_external
+    title: external 数据源 live/placeholder 标识
+    module: tests.unit.test_external_sources
     finding: F-010
     priority: P2
-    automated: false
+    automated: true
 
   - id: FIN-11
     suite: unit
@@ -1305,7 +1363,7 @@ cases:
   - id: FIN-UI-02
     suite: manual
     layer: financial
-    title: DXY/日历/新闻显示占位或模拟
+    title: DXY/新闻/社媒显示 live 或回退说明
     page: 机构级分析报告
     finding: F-010
     priority: P2

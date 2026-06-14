@@ -94,7 +94,7 @@ streamlit run app.py    # http://localhost:8501
 
 ```bash
 pip install -r requirements-dev.txt
-python tests/run.py              # 快速：单元 + 回归（约 44 项）
+python tests/run.py              # 快速：单元 + 回归（约 49 项）
 python tests/run.py --financial  # 金融 Review FIN-*
 python tests/run.py --full       # 含完整流水线（约 2–3 分钟）
 ```
@@ -123,14 +123,19 @@ analyze_timeframe() × 5  →  dict[str, TimeframeAnalysis]  analyses
 build_market_context()  →  MarketContext  ctx
         │
         ▼  [agents/analysts/ + agents/factory.py]
-analyst_team → bullish / bearish → debate → trader → risk → manager
+analyst_team → bullish / bearish → debate
+        │
+        ▼  [report_engine.compute_trading_signals(ctx)]  ← 信号唯一生成点
+        │
+        ▼  [agents/factory.py]
+trader(signals) → risk → manager
   (Analyst Team 规则；研究/辩论 rule / llm / hybrid)
         │
         ▼  [llm/analyst.py]  （可选，LLM_ENABLED）
 报告文案层
         │
         ▼  [analysis/report_engine.py]
-build_report()  →  dict  report
+build_report(signals=…)  →  dict  report
         │
         ▼  [core/orchestrator.py]
 注入 external、agent_trace、stage_sources、generation_steps、llm_io
@@ -215,9 +220,10 @@ build_report()  →  dict  report
 | 2 | `daily_metrics(enriched["1d"])` | `src/data/fetcher.py` | 现价、日涨跌、日高日低 |
 | 3 | `get_active_source()` | `src/data/fetcher.py` | → `tradingview.source_label()` |
 | 4 | `merge_external()` | `src/data/aggregator.py` | 合并外部因子 |
-| 5 | `NewsDataSource().fetch_external()` | `src/data/sources/news.py` | 新闻 / 风险事件（占位） |
-| 6 | `FundamentalsDataSource().fetch_external()` | `src/data/sources/fundamentals.py` | DXY 等（占位） |
-| 7 | `collect_evidence()` | `src/data/aggregator.py` | 调各 DataSource（日志用） |
+| 5 | `NewsDataSource().fetch_external()` | `src/data/sources/news.py` | Finnhub + Google RSS |
+| 6 | `FundamentalsDataSource().fetch_external()` | `src/data/sources/fundamentals.py` | DXY via TradingView |
+| 7 | `SocialDataSource().fetch_external()` | `src/data/sources/social.py` | Reddit r/Gold + r/Forex |
+| 8 | `collect_evidence()` | `src/data/aggregator.py` | 调各 DataSource（日志用） |
 
 **输出变量**：`ctx: MarketContext`（含 `enriched`、`analyses`、`metrics`、`price`、`external`）。
 
@@ -231,8 +237,8 @@ build_report()  →  dict  report
 | 1 | `agent_factory.run_bullish(ctx, pipeline_meta, team)` | `src/agents/factory.py` | → `AgentEvidence`（整合 Analyst 同向证据 + ICT） |
 | 2 | `agent_factory.run_bearish(...)` | 同上 | → `AgentEvidence` |
 | 3 | `agent_factory.run_debate(..., team)` | 同上 | → `ResearchDebate`（含 Analyst 摘要） |
-| 4 | `agent_factory.run_trader(...)` | 同上 | → `(TransactionProposal, signals[])` |
-| 5 | `generate_trading_signals(...)` | `src/analysis/report_engine.py` | trader 内部调用 |
+| 4 | `compute_trading_signals(ctx)` | `src/analysis/report_engine.py` | → `list[TradingSignal]`（pipeline 唯一生成点） |
+| 5 | `agent_factory.run_trader(..., signals)` | 同上 | → `(TransactionProposal, signals[])` |
 | 6 | `agent_factory.run_risk(...)` | `src/agents/factory.py` | → `RiskReview[3]` |
 | 7 | `agent_factory.run_manager(...)` | 同上 | → `ManagerDecision` |
 
@@ -242,14 +248,14 @@ build_report()  →  dict  report
 
 ### 3.8 阶段七：报告组装与 orchestrator 收尾
 
-**`build_report(enriched, analyses)`**（`src/analysis/report_engine.py`）内部调用：
+**`build_report(enriched, analyses, signals=...)`**（`src/analysis/report_engine.py`）内部调用：
 
 | 函数 | 产出字段 |
 |------|----------|
 | `daily_metrics(data["1d"])` | `metrics` |
 | `sentiment_score(analyses)` | `sentiment` |
 | `fibonacci_levels(...)` | `fibonacci` |
-| `generate_trading_signals(...)` | `signals` |
+| （传入 `signals` 或内部 `generate_trading_signals`） | `signals` |
 | `build_conclusion(...)` | `conclusion` |
 | `ema_relation(...)` | `timeframes[*].ema_relation` |
 | `trend_projections(...)` | `projections` |
@@ -427,10 +433,10 @@ GoldAnalysisAI/
 
 | 分析师 | 规则实现 | 数据源 | LLM |
 |--------|----------|--------|-----|
-| Technical | `analysts/technical.py` | EMA/VWAP + ICT 结构 | P1 |
-| Fundamentals | `analysts/fundamentals.py` | `sources/fundamentals.py`（DXY 占位） | P1 |
-| News | `analysts/news.py` | `sources/news.py`（占位） | P1 |
-| Sentiment | `analysts/sentiment.py` | 结构投票 + `sources/social.py` | P1 |
+| Technical | `analysts/technical.py` | EMA/VWAP + ICT 结构 | ✅ `llm/stages/analysts/technical.py` |
+| Fundamentals | `analysts/fundamentals.py` | `sources/dxy.py` + TradingView | ✅ `llm/stages/analysts/fundamentals.py` |
+| News | `analysts/news.py` | `sources/news_feed.py`（Finnhub/RSS） | ✅ `llm/stages/analysts/news.py` |
+| Sentiment | `analysts/sentiment.py` | 结构投票 + `sources/social_feed.py`（Reddit） | ✅ `llm/stages/analysts/sentiment.py` |
 
 输出 `AnalystTeam` → 写入 `agent_trace.analyst_team`。
 
@@ -448,7 +454,9 @@ GoldAnalysisAI/
 
 ### 5.6 报告引擎 `analysis/report_engine.py`
 
-`build_report(data, analyses) -> dict` 生成 UI schema。Orchestrator 随后注入：
+`build_report(data, analyses, *, signals=None) -> dict` 生成 UI schema。Orchestrator 传入已生成的 `signals`，避免与 trader 重复计算。
+
+Orchestrator 随后注入：
 
 - `report["meta"]["data_source"]`
 - `report["external"]`（来自 aggregator）
@@ -529,9 +537,13 @@ AgentTrace            # 全链路审计（含 analyst_team）
 
 ### 7.2 修改交易信号
 
-文件：`src/analysis/report_engine.py` → `generate_trading_signals()`
+文件：`src/analysis/report_engine.py`
 
-Trader agent 自动消费；Manager 按 index 重排。
+- `generate_trading_signals()` — 信号几何与模板逻辑
+- `compute_trading_signals(ctx)` — 从 `MarketContext` 组装参数（orchestrator 入口）
+- `build_report(..., signals=...)` — 传入则跳过内部生成
+
+Trader 只消费 orchestrator 传入的 `signals`；Manager 按 index 重排 `report["signals"]`。
 
 ### 7.3 新增 pipeline 阶段
 
@@ -545,7 +557,7 @@ Trader agent 自动消费；Manager 按 index 重排。
 完整设计见 **[llm-agents.md](./llm-agents.md)**。
 
 - **调度**：`agents/factory.py`，`AGENT_MODE=rule|llm|hybrid`
-- **分阶段开关**：`LLM_STAGE_RESEARCH`、`LLM_STAGE_DEBATE`（`LLM_STAGE_ICT/TRADER/RISK/MANAGER` 已在 config 定义，factory 尚未接入）
+- **分阶段开关**：`LLM_STAGE_ANALYSTS`、`LLM_STAGE_RESEARCH`、`LLM_STAGE_DEBATE`（`LLM_STAGE_ICT/TRADER/RISK/MANAGER` 已在 config 定义，factory 尚未接入）
 - **传输重试**：`agents/llm/base.py` 的 `stream_llm_json()` — SSE 断流时整次重打，最多 3 次、退避 1s/2s；`llm/client.py` 将 `ChunkedEncodingError` 等包装为 `LLMClientError`
 - **规则兜底**：重试耗尽或 JSON 解析失败 → hybrid 回退 `agents/bullish.py` 等规则实现；流水线不崩溃
 - **报告文案层**（流水线末尾）：`llm/analyst.py`，同样经 `stream_llm_json()`，`LLM_ENABLED` 独立开关
@@ -615,7 +627,7 @@ python tests/tools/chart_compare.py
 | SSE 断流 / ChunkedEncoding | `stream_llm_json` 自动整次重打（最多 3 次）；仍失败则 hybrid 用规则 |
 | 看多/看空耗时差大 | 同模型下 Prompt 体量不同，30–90s/次属正常 |
 | 胜率 % | **非回测**；`sentiment_score()` 多周期趋势加权 |
-| DXY/新闻占位 | `sources/news.py` 等待接 API；orchestrator 写入 `report["external"]` |
+| DXY/新闻/社媒 | `sources/dxy.py`、`news_feed.py`、`social_feed.py`；失败回退占位；见 `.env.example` |
 
 ---
 
@@ -624,22 +636,28 @@ python tests/tools/chart_compare.py
 自动化测试见 [`tests/`](../tests/README.md) 与 [`tests/cases/catalog.yaml`](../tests/cases/catalog.yaml)。
 
 ```bash
-python tests/run.py --fast       # 日常 / CI（约 44 项）
+python tests/run.py --fast       # 日常 / CI（约 49 项）
 python tests/run.py --financial  # FIN-* 金融 Review
 python tests/run.py --full       # 发版前（含流水线）
 ```
 
 手工检查（尚未自动化，见 catalog `UI-*` / `FIN-UI-*`）：
 
-- [ ] 生成步骤含 `Analyst Team`；智能体 I/O 含规则输出 + LLM 记录
+- [ ] 生成步骤含「构建市场上下文」与 external 子步骤；I/O 含 context 规则记录
+- [ ] 生成步骤含 `Analyst Team`；I/O 含四位分析师 LLM 或规则输出
 - [ ] 「LLM决策链」三 Tab：智能体决策 / LLM 文案 / 生成与 LLM I/O
-- [ ] 顶栏来源条与 Analyst Team 四列摘要正确
+- [ ] 顶栏 DXY/新闻/社媒为 live 或明确回退文案（非「待接入」）
+- [ ] Analyst Team 四列 badge 与 stage_sources 一致
 - [ ] 两种报告模式渲染正常；结构权重标注「非回测胜率」
 
 | 优先级 | 任务 | 状态 |
 |--------|------|------|
 | P0 | Analyst Team 规则版 + 智能体 I/O | ✅ |
 | P0 | factory + LLM 研究 + 辩论 + 流式 I/O + 传输重试 | ✅ |
+| P1 | Analyst Team LLM 双轨（`LLM_STAGE_ANALYSTS`） | ✅ |
+| P1 | 信号生成去重（trader / report 共用） | ✅ |
+| P1 | 真实 News / DXY / 社媒 API | ✅ |
+| P1 | 流水线并行（bull/bear、Analyst×4、risk×3） | 🔲 |
 | P4 | 报告文案层 | ✅ |
 | P1 | LLM 交易员 | 🔲 |
 | P2 | LLM 风控 + 经理 | 🔲 |

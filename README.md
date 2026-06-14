@@ -156,6 +156,8 @@ LLM_STAGE_RESEARCH=true
 
 LLM_STAGE_DEBATE=true
 
+LLM_STAGE_ANALYSTS=true
+
 LLM_ENABLED=true
 
 ```
@@ -167,7 +169,7 @@ LLM_ENABLED=true
 ```bash
 pip install -r requirements-dev.txt
 
-# 快速：单元 + 回归（无网络，推荐 CI / 日常，约 44 项）
+# 快速：单元 + 回归（无网络，推荐 CI / 日常，约 49 项）
 python tests/run.py
 
 # 金融 Review：FIN-* 单测
