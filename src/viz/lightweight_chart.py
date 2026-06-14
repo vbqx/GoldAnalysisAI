@@ -24,12 +24,13 @@ TF_LABELS = {
     "15m": "15min周期 (中间结构)",
     "1h": "1H周期 (宏观结构)",
     "4h": "4H周期 (宏观结构)",
+    "1d": "日线周期 (主结构)",
 }
 
 CHART_VARIANTS: dict[str, dict[str, Any]] = {
     "main": {
         "height": 520,
-        "bars": 120,
+        "bars": 365,
         "volume": True,
         "overlay_header": True,
         "line_labels": True,
@@ -312,16 +313,26 @@ def _serialize_overlays(
                 }
             )
 
-    return {"priceLines": price_lines, "zones": zones, "markers": markers, "projections": _build_projections(plot_df, report)}
+    return {
+        "priceLines": price_lines,
+        "zones": zones,
+        "markers": markers,
+        "projections": _build_projections(plot_df, report, timeframe=timeframe),
+    }
 
 
-def _build_projections(plot_df: pd.DataFrame, report: dict[str, Any] | None) -> list[dict[str, Any]]:
-    """Future dashed paths like the reference chart (red/green/black + probability)."""
+def _build_projections(
+    plot_df: pd.DataFrame,
+    report: dict[str, Any] | None,
+    *,
+    timeframe: str = "5m",
+) -> list[dict[str, Any]]:
+    """Future dashed path overlays — no probability labels (shown in path cards / Plotly only)."""
     if not report or "projections" not in report:
         return []
 
     last_ts = plot_df.index[-1]
-    step = pd.Timedelta(minutes=5)
+    point_gap = pd.Timedelta(days=5) if timeframe == "1d" else pd.Timedelta(minutes=60)
     lines: list[dict[str, Any]] = []
 
     for proj in report["projections"]:
@@ -329,12 +340,11 @@ def _build_projections(plot_df: pd.DataFrame, report: dict[str, Any] | None) -> 
         t = last_ts
         for i, step_info in enumerate(proj["steps"]):
             if i > 0:
-                t = t + step * 12
+                t = t + point_gap
             points.append({"time": _to_unix(t), "value": float(step_info["price"])})
         if len(points) >= 2:
             lines.append({
                 "color": proj["color"],
-                "label": f"{proj['probability']}%",
                 "data": points,
             })
     return lines
@@ -380,7 +390,7 @@ def build_lightweight_chart_html(
     chg_cls = "up" if chg >= 0 else "down"
 
     tf_label = TF_LABELS.get(timeframe, f"{timeframe}周期")
-    tf_num = {"5m": "5", "15m": "15", "1h": "60", "4h": "240"}.get(timeframe, timeframe)
+    tf_num = {"5m": "5", "15m": "15", "1h": "60", "4h": "240", "1d": "D"}.get(timeframe, timeframe)
 
     smc_note = ""
     if analysis is not None:
@@ -663,14 +673,19 @@ def build_lightweight_chart_html(
       candleSeries.setMarkers(overlays.markers);
     }}
 
+    chart.priceScale('proj').applyOptions({{
+      visible: false,
+      autoScale: true,
+    }});
     for (const proj of overlays.projections || []) {{
       const s = chart.addLineSeries({{
         color: proj.color,
         lineWidth: 2,
         lineStyle: LightweightCharts.LineStyle.Dashed,
+        priceScaleId: 'proj',
         priceLineVisible: false,
-        lastValueVisible: showLineLabels,
-        title: proj.label || '',
+        lastValueVisible: false,
+        title: '',
         crosshairMarkerVisible: false,
       }});
       s.setData(proj.data);

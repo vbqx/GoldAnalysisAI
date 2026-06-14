@@ -5,17 +5,56 @@ from __future__ import annotations
 from typing import Any
 
 from src.config import GITHUB_REPO, PROJECT_NAME
+from src.viz.source_labels import render_source_badge, stage_source
 
 DASHBOARD_CSS = """
 <style>
-.block-container { padding-top: 0.75rem; max-width: 100%; background: #fff; }
+/* ── Streamlit 全局 ── */
+.block-container { padding-top: 1rem; padding-bottom: 2rem; max-width: 1320px; }
+[data-testid="stSidebar"] { background: #f8fafc; }
+[data-testid="stSidebar"] .block-container { padding-top: 1.25rem; }
+
+/* ── 页面标题区 ── */
+.page-hero {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffffff 55%);
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+.page-hero h1 { font-size: 1.45rem; font-weight: 700; color: #0f172a; margin: 0 0 4px 0; }
+.page-hero p { font-size: 0.88rem; color: #64748b; margin: 0; }
+
+/* ── Tabs ── */
+.stTabs [data-baseweb="tab-list"] { gap: 6px; background: transparent; border-bottom: 1px solid #e2e8f0; }
+.stTabs [data-baseweb="tab"] {
+  height: 38px; padding: 0 14px; border-radius: 8px 8px 0 0;
+  font-size: 0.88rem; font-weight: 600; color: #64748b;
+}
+.stTabs [aria-selected="true"] { color: #0f172a; background: #fff7ed; border: 1px solid #fed7aa; border-bottom-color: #fff7ed; }
+
+/* ── 卡片分区 ── */
+.section-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.section-card h3 { font-size: 1rem; font-weight: 700; color: #0f172a; margin: 0 0 10px 0; }
+
 .report-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin: 0 0 4px 0; }
 .report-title.center { color: #0f172a; text-align: center; font-size: 1.5rem; }
 .report-subtitle { text-align: center; color: #64748b; font-size: 0.85rem; margin: 0 0 12px; }
-.report-meta { font-size: 0.8rem; color: #64748b; margin-bottom: 10px; }
-.header-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 10px; }
-.top-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
-.hbox { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; min-height: 68px; }
+.report-meta { font-size: 0.8rem; color: #64748b; margin-bottom: 12px; }
+.header-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.top-grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.hbox { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; min-height: 72px; box-shadow: 0 1px 2px rgba(15,23,42,0.04); }
 .hbox.panel { border: 1px solid #e2e8f0; }
 .hbox .lbl { font-size: 11px; color: #64748b; margin: 0; }
 .hbox .val { font-size: 1.15rem; font-weight: 700; margin: 2px 0 0; line-height: 1.2; color: #0f172a; }
@@ -53,6 +92,20 @@ DASHBOARD_CSS = """
 .star-list li::before { content: "★ "; color: #eab308; }
 .chart-box-title { font-size: 12px; font-weight: 700; color: #0f172a; margin: 0 0 4px; padding: 6px 10px; border: 1px solid #e2e8f0; border-bottom: none; border-radius: 6px 6px 0 0; background: #f8fafc; }
 .chart-stack { margin-bottom: 10px; }
+.agent-source-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 11px; }
+.agent-mode-tag { color: #64748b; font-weight: 600; margin-right: 4px; }
+.stage-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; color: #334155; }
+.src-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 700; line-height: 1.4; }
+.src-badge.sm { font-size: 9px; padding: 0 5px; }
+.src-badge.rule { background: #e2e8f0; color: #475569; }
+.src-badge.llm { background: #ede9fe; color: #6d28d9; }
+.stage-model { font-size: 10px; color: #64748b; margin-left: 4px; }
+.val-with-badge { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; }
+
+/* ── 决策链页 ── */
+.trace-block { padding: 8px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 8px; }
+.trace-block:last-child { border-bottom: none; }
+.step-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 6px 16px; font-size: 0.9rem; }
 </style>
 """
 
@@ -74,17 +127,31 @@ def render_header(report: dict[str, Any]) -> str:
     c = report["conclusion"]
     ext = report.get("external", {})
     cls = _chg_class(m["daily_change"])
+
+    debate_src = stage_source(report, "debate")
+    debate_badge = render_source_badge(debate_src, small=True)
+    conclusion_text = c.get("header_conclusion", c["action"])
+    if c.get("llm_trade_thesis"):
+        conclusion_badge = render_source_badge("llm", small=True)
+    else:
+        conclusion_badge = debate_badge
+
     boxes = [
-        ("当前价格", f"{m['current_price']:.2f}", cls),
-        ("日涨跌", f"{m['daily_change']:+.2f} ({m['daily_change_pct']:+.2f}%)", cls),
-        ("日高/日低", f"{m['daily_high']:.2f} / {m['daily_low']:.2f}", ""),
-        ("市场情绪", c["market_sentiment"], cls),
-        ("美元指数影响", ext.get("dxy_impact", "—"), ""),
-        ("风险事件影响", ext.get("risk_events", "—"), "sm"),
-        ("当前结论", c.get("header_conclusion", c["action"]), "sm"),
+        ("当前价格", f"{m['current_price']:.2f}", cls, ""),
+        ("日涨跌", f"{m['daily_change']:+.2f} ({m['daily_change_pct']:+.2f}%)", cls, ""),
+        ("日高/日低", f"{m['daily_high']:.2f} / {m['daily_low']:.2f}", "", ""),
+        ("市场情绪", c["market_sentiment"], cls, ""),
+        ("美元指数影响", ext.get("dxy_impact", "—"), "", ""),
+        ("风险事件影响", ext.get("risk_events", "—"), "sm", ""),
+        (
+            "当前结论",
+            f'<span class="val-with-badge">{conclusion_badge}<span>{conclusion_text}</span></span>',
+            "sm",
+            "",
+        ),
     ]
     parts = ['<div class="header-grid">']
-    for label, val, vcls in boxes:
+    for label, val, vcls, _extra in boxes:
         vc = f" {vcls}" if vcls in ("bear", "bull") else (" sm" if vcls == "sm" else "")
         parts.append(f'<div class="hbox"><p class="lbl">{label}</p><p class="val{vc}">{val}</p></div>')
     parts.append("</div>")
