@@ -138,6 +138,7 @@ class ExternalFactors:
     social_sentiment: str = "—"
     social_posts: list[dict] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
+    fetch_errors: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -147,6 +148,7 @@ class ExternalFactors:
             "social_sentiment": self.social_sentiment,
             "social_posts": self.social_posts[:5],
             "sources": self.sources,
+            "fetch_errors": self.fetch_errors[:5],
         }
 
 

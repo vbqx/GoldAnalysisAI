@@ -2,17 +2,16 @@
 
 from __future__ import annotations
 
-import json
 import time
 
 from src.agents import factory as agent_factory
-from src.config import AGENT_MODE, LLM_ENABLED, TV_EXCHANGE, TV_SYMBOL
+from src.config import AGENT_MODE, LLM_ENABLED
 from src.analysis.ict_pa import analyze_timeframe
 from src.analysis.report_engine import build_report, compute_trading_signals, parse_risk_events_calendar
 from src.core.progress import get_progress
 from src.core.types import AgentPipelineMeta, AgentTrace
-from src.data.aggregator import build_market_context
-from src.data.fetcher import fetch_multi_timeframe
+from src.data.aggregator import assemble_market_context
+from src.data.fetch_pipeline import fetch_all_data
 from src.indicators.technical import enrich
 from src.llm.analyst import apply_llm_to_report, run_llm_analysis
 from src.log import get_logger
@@ -24,7 +23,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     """
     End-to-end pipeline mirroring TradeAgent flow:
 
-    1. Data layer      — market (+ news/social/fundamentals stubs)
+    1. 数据拉取        — K 线 + 新闻 / DXY / 社媒（fetch_pipeline）
     2. Enrich + ICT    — indicators + structure analysis
     3. Research team   — bullish / bearish → debate
     4. Trader agent    — transaction proposal
@@ -36,13 +35,11 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     log.info("pipeline start")
     prog = get_progress()
 
-    prog.start("fetch", "拉取多周期行情", f"TradingView · {TV_EXCHANGE}:{TV_SYMBOL}")
     try:
-        raw = fetch_multi_timeframe()
-    except RuntimeError as exc:
-        prog.fail("fetch", str(exc)[:240])
+        fetched = fetch_all_data()
+    except RuntimeError:
         raise
-    prog.done("fetch", f"{len(raw)} 个周期 · 5m {len(raw['5m'])} 根")
+    raw = fetched.raw
     log.debug(
         "raw bars: %s",
         {tf: len(df) for tf, df in raw.items()},
@@ -73,37 +70,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
             len(a.order_blocks),
         )
 
-    prog.start("context", "构建市场上下文", "新闻 · DXY · 社媒")
-    t_ctx = time.perf_counter()
-    ctx = build_market_context(enriched, analyses)
-    ctx_elapsed = int((time.perf_counter() - t_ctx) * 1000)
-    ext = ctx.external
-    ext_bits: list[str] = [f"现价 {ctx.price:.2f}"]
-    if ext.dxy_impact != "—":
-        ext_bits.append("DXY")
-    if ext.news_headlines:
-        ext_bits.append(f"{len(ext.news_headlines)} 条新闻")
-    if ext.social_sentiment != "—":
-        ext_bits.append("社媒")
-    prog.stage_io(
-        "context",
-        input_text=json.dumps(
-            {
-                "timeframes": list(analyses.keys()),
-                "bars": {tf: len(enriched[tf]) for tf in enriched},
-                "metrics_preview": {
-                    k: ctx.metrics[k]
-                    for k in ("current_price", "daily_change_pct")
-                    if k in ctx.metrics
-                },
-            },
-            ensure_ascii=False,
-            indent=2,
-        ),
-        output_text=json.dumps(ctx.to_dict(), ensure_ascii=False, indent=2),
-        latency_ms=ctx_elapsed,
-    )
-    prog.done("context", " · ".join(ext_bits))
+    ctx = assemble_market_context(enriched, analyses, fetched.external, fetched.source_label)
     log.info(
         "market context price=%.2f source=%s",
         ctx.price,
@@ -195,10 +162,11 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     report["external"] = {
         "dxy_impact": ctx.external.dxy_impact,
         "risk_events": ctx.external.risk_events,
-        "news_headlines": ctx.external.news_headlines[:8],
+        "news_headlines": ctx.external.news_headlines[:12],
         "social_sentiment": ctx.external.social_sentiment,
-        "social_posts": ctx.external.social_posts[:5],
+        "social_posts": ctx.external.social_posts[:8],
         "sources": ctx.external.sources,
+        "fetch_errors": ctx.external.fetch_errors[:5],
     }
 
     live_cal = parse_risk_events_calendar(ctx.external.risk_events)

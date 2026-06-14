@@ -28,6 +28,13 @@ def fetch_multi_timeframe() -> dict[Timeframe, pd.DataFrame]:
     return tradingview.fetch_multi_timeframe()
 
 
+def fetch_all() -> "DataFetchResult":
+    """Unified fetch: bars + external. See ``src.data.fetch_pipeline``."""
+    from src.data.fetch_pipeline import fetch_all_data
+
+    return fetch_all_data()
+
+
 def daily_metrics(df_1d: pd.DataFrame) -> dict:
     if len(df_1d) < 2:
         latest = df_1d.iloc[-1]
