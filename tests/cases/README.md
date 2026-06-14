@@ -4,7 +4,8 @@
 
 | 文件 | 说明 |
 |------|------|
-| [test-plan.md](./test-plan.md) | 分层测试设计（UI → 指标 → 功能 → 性能） |
+| [test-plan.md](./test-plan.md) | 分层测试设计（UI → 指标 → 功能 → 性能 → 金融） |
+| [financial-review-cases.md](./financial-review-cases.md) | **金融 Review** Finding→用例追溯（FIN-*） |
 | [catalog.yaml](./catalog.yaml) | 用例 ID、优先级、套件、自动化状态、关联 Issue |
 
 ## 用例 ID 规则
@@ -15,6 +16,8 @@
 | `IND-*` | 指标显示 | 顶栏 metrics、侧边栏校验、图表、报告 JSON |
 | `FN-*` | 整体功能 | 流水线、缓存、刷新、LLM、模式 |
 | `PERF-*` | 性能 | 耗时阈值、缓存切换、并发 |
+| `FIN-*` | 金融逻辑 | Review F-001～F-011（信号/风控/数据语义） |
+| `FIN-UI-*` | 金融合规 UI | 胜率标注、占位数据、免责声明 |
 | `UT-*` | — | 单元测试（快速、无网络） |
 | `IT-*` | — | 集成测试（流水线、外部服务） |
 | `RG-*` | — | 回归测试（Issue 修复、约定检查） |
