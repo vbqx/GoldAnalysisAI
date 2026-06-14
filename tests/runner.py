@@ -28,15 +28,17 @@ class Suite(str, Enum):
     UNIT = "unit"
     REGRESSION = "regression"
     INTEGRATION = "integration"
+    FINANCIAL = "financial"
     FULL = "full"
 
     @property
     def label(self) -> str:
         return {
-            Suite.FAST: "快速（单元 + 回归）",
+            Suite.FAST: "快速（单元 + 回归，含 FIN）",
             Suite.UNIT: "单元测试",
             Suite.REGRESSION: "回归测试",
             Suite.INTEGRATION: "集成测试（慢，~3min/条）",
+            Suite.FINANCIAL: "金融 Review（FIN-*，~1s）",
             Suite.FULL: "完整（全部）",
         }[self]
 
@@ -94,6 +96,8 @@ def build_phases(suite: Suite) -> list[PhaseSpec]:
         return [regression]
     if suite == Suite.INTEGRATION:
         return [integration]
+    if suite == Suite.FINANCIAL:
+        return [PhaseSpec("financial", [str(TESTS / "unit" / "test_financial_review.py"), *common, "-m", "financial"])]
     if suite == Suite.FULL:
         return [unit, regression, integration]
     return [unit, regression]
@@ -285,9 +289,13 @@ def load_catalog_summary() -> list[dict[str, str]]:
             continue
         if not current:
             continue
-        for key in ("suite", "title", "priority", "layer", "automated"):
+        for key in ("suite", "title", "priority", "layer", "automated", "finding", "issue", "deprecated"):
             if m := re.match(rf"\s*{key}:\s*(.+)", line):
-                current[key] = m.group(1).strip().strip('"').strip("'")
+                val = m.group(1).strip().strip('"').strip("'")
+                if key == "deprecated":
+                    current[key] = val == "true"
+                else:
+                    current[key] = val
     if current.get("id"):
         cases.append(current)
     return cases
