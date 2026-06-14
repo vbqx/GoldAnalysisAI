@@ -8,10 +8,13 @@
 tests/
 ├── README.md                 # 本文件
 ├── run.py                    # 统一入口：自动测试脚本
+├── dashboard.py              # Streamlit 测试面板 UI
+├── runner.py                 # 测试运行引擎（CLI + UI 共用）
 ├── conftest.py               # pytest 配置
 ├── _bootstrap.py             # 路径 / .env 引导
 ├── cases/
 │   ├── README.md             # 用例维护说明
+│   ├── test-plan.md          # 分层测试设计（UI→指标→功能→性能）
 │   └── catalog.yaml          # 用例目录（ID、优先级、是否自动化）
 ├── unit/                     # 单元测试（无网络，秒级）
 ├── integration/              # 集成测试（完整流水线，~2–3 分钟）
@@ -48,9 +51,19 @@ pytest tests/regression -m regression -q
 pytest tests/integration -m integration -q   # slow
 ```
 
+## 测试面板 UI
+
+浏览器中实时查看 pytest 进度、通过/失败统计与流水线日志：
+
+```bash
+streamlit run tests/dashboard.py --server.port 8502
+```
+
+打开 http://localhost:8502 ，选择套件后点击「开始」。界面约 1 秒刷新；集成测试每条约 3 分钟。
+
 ## 用例维护
 
-1. 在 [`cases/catalog.yaml`](cases/catalog.yaml) 登记用例（`UT-*` / `IT-*` / `RG-*` / `UI-*`）
+1. 在 [`cases/test-plan.md`](cases/test-plan.md) 设计场景，在 [`cases/catalog.yaml`](cases/catalog.yaml) 登记用例（`UIL-*` / `IND-*` / `FN-*` / `PERF-*` / `UT-*` / `IT-*` / `RG-*`）
 2. 在对应子目录实现测试代码
 3. 本地 `python tests/run.py` 验证
 4. 关 Issue 时在评论中引用用例 ID（如 `RG-03`）
@@ -59,6 +72,7 @@ pytest tests/integration -m integration -q   # slow
 
 | 命令 | 说明 |
 |------|------|
+| `streamlit run tests/dashboard.py --server.port 8502` | **测试面板 UI**（实时进度与日志） |
 | `python tests/tools/chart_compare.py` | 跑流水线并输出 `_chart_test.html` |
 | `python tests/tools/github/create_issues.py` | 从系统测试报告批量创建 GitHub Issue |
 | `python tests/tools/github/close_issues.py` | 关单并附评论（维护用） |
