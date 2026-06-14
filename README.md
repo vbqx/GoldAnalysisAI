@@ -90,24 +90,20 @@ GoldAnalysisAI/
 
 │   └── 3_LLM决策链.py
 
-├── scripts/run_pipeline_test.py
-
+├── tests/                      # 测试体系（用例 / 单元 / 集成 / 回归 / 工具）
+│   ├── run.py                  # 统一入口
+│   ├── cases/catalog.yaml      # 用例目录
+│   ├── unit/
+│   ├── integration/
+│   └── regression/
 └── src/
-
     ├── core/orchestrator.py
-
     ├── agents/factory.py
-
     ├── llm/
-
     └── viz/
-
         ├── streamlit_common.py  # 共享 bootstrap + session 缓存
-
         ├── decision_page.py
-
         └── pipeline_progress.py
-
 ```
 
 
@@ -160,13 +156,17 @@ LLM_ENABLED=true
 
 ## 测试
 
-
-
 ```bash
+pip install -r requirements-dev.txt
 
-python scripts/run_pipeline_test.py
+# 快速：单元 + 回归（无网络，推荐 CI / 日常）
+python tests/run.py
 
+# 完整：含流水线集成（需 .env + TradingView，约 2–3 分钟）
+python tests/run.py --full
 ```
+
+用例目录与维护说明见 [tests/README.md](tests/README.md)、[tests/cases/catalog.yaml](tests/cases/catalog.yaml)。
 
 
 

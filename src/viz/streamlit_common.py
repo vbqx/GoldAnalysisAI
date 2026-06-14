@@ -9,7 +9,6 @@ from pathlib import Path
 
 import streamlit as st
 
-from src.config import llm_sidebar_models
 from src.core.progress import ProgressReporter, reset_progress, set_progress
 from src.indicators.verify import indicator_snapshot, indicator_table_rows
 from src.log import get_logger
@@ -128,7 +127,17 @@ def render_page_hero(title: str, subtitle: str = "") -> None:
 def render_sidebar_header() -> None:
     st.sidebar.markdown("**GoldAnalysisAI**")
     st.sidebar.caption("数据源: TradingView · OANDA:XAUUSD")
-    st.sidebar.caption(f"LLM: {llm_sidebar_models()}")
+    # Fix #7 [Improvement] 侧边栏仅显示 STRONG 模型，与研究阶段 FAST 模型不一致
+    from src.config import LLM_MODEL, LLM_MODEL_FAST, LLM_MODEL_STRONG, short_model_name
+
+    fast = short_model_name(LLM_MODEL_FAST)
+    strong = short_model_name(LLM_MODEL_STRONG)
+    report = short_model_name(LLM_MODEL)
+    if fast == strong == report:
+        st.sidebar.caption(f"LLM: {fast}")
+    else:
+        st.sidebar.caption(f"LLM 研究: {fast}")
+        st.sidebar.caption(f"LLM 辩论/文案: {strong}" + (f" · 报告 {report}" if report not in (fast, strong) else ""))
     st.sidebar.caption("切换页面不重新生成；点「刷新报告」才重跑流水线")
 
 
@@ -205,7 +214,12 @@ def _render_waiting_ui(counter: int, *, show_generation_ui: bool) -> None:
                 "约 2–3 分钟 · 下方可实时查看生成步骤与 LLM 输入/输出",
             )
         else:
-            st.info("报告尚未生成，正在跑流水线…下方展示实时进度。")
+            # Fix #8 [Improvement] 子页面首次加载缺少流水线进度 UI
+            # 原因：子页面 waiting 仅 st.info，无分步进度；与主页共用 hero + live panel。
+            render_page_hero(
+                "正在生成报告…",
+                "约 2–3 分钟 · 下方可实时查看生成步骤与 LLM 输入/输出",
+            )
 
     @st.fragment(run_every=timedelta(seconds=1))
     def _live_poll() -> None:

@@ -56,7 +56,11 @@ def short_model_name(model: str) -> str:
 
 
 def llm_sidebar_models() -> str:
-    """Sidebar caption: show actual fast/strong models from .env."""
+    """Sidebar caption: show actual fast/strong models from .env.
+
+    Fix #7 [Improvement] 侧边栏仅显示 STRONG 模型，与研究阶段 FAST 模型不一致
+    原因：研究阶段用 LLM_MODEL_FAST、辩论/文案用 STRONG/REPORT，侧边栏需分别展示。
+    """
     fast = short_model_name(LLM_MODEL_FAST)
     strong = short_model_name(LLM_MODEL_STRONG)
     report = short_model_name(LLM_MODEL)

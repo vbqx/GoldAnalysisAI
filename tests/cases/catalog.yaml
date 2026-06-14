@@ -1,0 +1,146 @@
+# GoldAnalysisAI 测试用例目录
+# 维护说明：新增/变更测试时同步更新此文件与对应 tests/ 下的实现。
+# 运行：python tests/run.py [--fast|--full]
+
+meta:
+  project: GoldAnalysisAI
+  last_review: "2026-06-14"
+  owner: qa
+
+suites:
+  unit:
+    description: 快速单元测试，无网络，< 5s
+    path: tests/unit/
+  regression:
+    description: 回归检查（源码约定、导入、Issue 修复项）
+    path: tests/regression/
+  integration:
+    description: 完整流水线，需 TradingView + 可选 LLM（slow）
+    path: tests/integration/
+
+cases:
+  - id: UT-01
+    suite: unit
+    title: LLM JSON 合法对象解析
+    module: tests.unit.test_llm_json
+    priority: P1
+    automated: true
+
+  - id: UT-02
+    suite: unit
+    title: LLM JSON 包裹文本提取
+    module: tests.unit.test_llm_json
+    priority: P1
+    automated: true
+
+  - id: UT-03
+    suite: unit
+    title: LLM JSON 尾随逗号修复
+    module: tests.unit.test_llm_json
+    priority: P2
+    automated: true
+
+  - id: UT-04
+    suite: unit
+    title: LLM JSON 拒绝非 object 根节点
+    module: tests.unit.test_llm_json
+    priority: P2
+    automated: true
+
+  - id: IT-01
+    suite: integration
+    title: 完整流水线 run_analysis
+    module: tests.integration.test_pipeline
+    priority: P0
+    automated: true
+    markers: [slow, integration]
+    acceptance:
+      - 返回 report/data/analyses
+      - meta.generation_steps 全部 done
+      - 现价在合理区间
+
+  - id: IT-02
+    suite: integration
+    title: 五周期 K 线数据齐全
+    module: tests.integration.test_pipeline
+    priority: P0
+    automated: true
+    markers: [slow, integration]
+
+  - id: RG-01
+    suite: regression
+    title: run_pipeline 脚本无需 PYTHONPATH (#5)
+    module: tests.regression.test_fixes
+    issue: "#5"
+    priority: P2
+    automated: true
+
+  - id: RG-02
+    suite: regression
+    title: 无 use_container_width 弃用 API (#6)
+    module: tests.regression.test_fixes
+    issue: "#6"
+    priority: P2
+    automated: true
+
+  - id: RG-03
+    suite: regression
+    title: 侧边栏展示研究/辩论模型 (#7)
+    module: tests.regression.test_fixes
+    issue: "#7"
+    priority: P2
+    automated: true
+
+  - id: RG-04
+    suite: regression
+    title: 子页面 waiting hero + live panel (#8)
+    module: tests.regression.test_fixes
+    issue: "#8"
+    priority: P2
+    automated: true
+
+  - id: RG-05
+    suite: regression
+    title: ensure_report 完成后统一 rerun (#3)
+    module: tests.regression.test_fixes
+    issue: "#3"
+    priority: P1
+    automated: true
+
+  - id: RG-06
+    suite: regression
+    title: LLM JSON 重试与 _parse_llm_json (#4)
+    module: tests.regression.test_fixes
+    issue: "#4"
+    priority: P1
+    automated: true
+
+  - id: RG-07
+    suite: regression
+    title: 核心 viz/agents 模块可导入
+    module: tests.regression.test_fixes
+    priority: P1
+    automated: true
+
+  # 以下用例尚未自动化，记录在案供手工/UI 测试
+  - id: UI-01
+    suite: manual
+    title: 三页导航与 Session 缓存
+    priority: P1
+    automated: false
+    steps:
+      - 首次加载机构报告页
+      - 切换短线策略 / LLM决策链
+      - 确认时间戳不变、无重新跑流水线
+
+  - id: UI-02
+    suite: manual
+    title: 刷新报告按钮
+    priority: P1
+    automated: false
+
+  - id: UI-03
+    suite: manual
+    title: AGENT_MODE=rule 纯规则模式
+    priority: P2
+    automated: false
