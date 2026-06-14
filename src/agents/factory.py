@@ -1,0 +1,155 @@
+"""Agent factory — rule / llm / hybrid dispatch for each pipeline stage."""
+
+from __future__ import annotations
+
+from src.agents.bearish import run_bearish_researcher as rule_bearish
+from src.agents.bullish import run_bullish_researcher as rule_bullish
+from src.agents.debate import run_debate as rule_debate
+from src.agents.llm.stages.bearish import run_llm_bearish
+from src.agents.llm.stages.bullish import run_llm_bullish
+from src.agents.llm.stages.debate import run_llm_debate
+from src.agents.manager import run_manager as rule_manager
+from src.agents.risk import run_risk_team as rule_risk
+from src.agents.trader import run_trader_agent as rule_trader
+from src.config import (
+    AGENT_MODE,
+    LLM_OVERRIDE_THRESHOLD,
+    LLM_STAGE_DEBATE,
+    LLM_STAGE_RESEARCH,
+)
+from src.core.progress import get_progress
+from src.core.types import (
+    AgentEvidence,
+    AgentPipelineMeta,
+    ManagerDecision,
+    MarketContext,
+    ResearchDebate,
+    RiskReview,
+    StageMeta,
+    TransactionProposal,
+)
+from src.llm.router import llm_configured
+from src.log import get_logger
+
+log = get_logger(__name__)
+
+
+def _use_llm_stage(stage_enabled: bool) -> bool:
+    if AGENT_MODE == "rule":
+        return False
+    if not stage_enabled:
+        return False
+    if not llm_configured():
+        log.warning("AGENT_MODE=%s but LLM_API_KEY missing — fallback to rule", AGENT_MODE)
+        return False
+    return True
+
+
+def _pick_evidence(
+    stage: str,
+    rule_result: AgentEvidence,
+    llm_result: AgentEvidence | None,
+    trace,
+    pipeline: AgentPipelineMeta,
+) -> AgentEvidence:
+    if AGENT_MODE == "rule" or llm_result is None:
+        pipeline.record(stage, StageMeta(source="rule", llm=trace if trace and trace.error else None))
+        return rule_result
+
+    if AGENT_MODE == "llm":
+        if llm_result and not trace.error:
+            pipeline.record(stage, StageMeta(source="llm", llm=trace))
+            return llm_result
+        pipeline.record(stage, StageMeta(source="rule", fallback_reason=trace.error, llm=trace))
+        return rule_result
+
+    # hybrid
+    if llm_result and not trace.error and llm_result.confidence >= LLM_OVERRIDE_THRESHOLD:
+        pipeline.record(stage, StageMeta(source="hybrid", llm=trace))
+        return llm_result
+
+    reason = trace.error or f"confidence {llm_result.confidence:.2f} < {LLM_OVERRIDE_THRESHOLD}"
+    pipeline.record(stage, StageMeta(source="rule", fallback_reason=reason, llm=trace))
+    return rule_result
+
+
+def run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta) -> AgentEvidence:
+    rule_result = rule_bullish(ctx)
+    if not _use_llm_stage(LLM_STAGE_RESEARCH):
+        get_progress().update("bullish", detail="规则引擎")
+        pipeline.record("bullish", StageMeta(source="rule"))
+        return rule_result
+
+    get_progress().update("bullish", detail="LLM 推理中…")
+    llm_result, trace = run_llm_bullish(ctx)
+    return _pick_evidence("bullish", rule_result, llm_result, trace, pipeline)
+
+
+def run_bearish(ctx: MarketContext, pipeline: AgentPipelineMeta) -> AgentEvidence:
+    rule_result = rule_bearish(ctx)
+    if not _use_llm_stage(LLM_STAGE_RESEARCH):
+        get_progress().update("bearish", detail="规则引擎")
+        pipeline.record("bearish", StageMeta(source="rule"))
+        return rule_result
+
+    get_progress().update("bearish", detail="LLM 推理中…")
+    llm_result, trace = run_llm_bearish(ctx)
+    return _pick_evidence("bearish", rule_result, llm_result, trace, pipeline)
+
+
+def _pick_debate(
+    rule_result: ResearchDebate,
+    llm_result: ResearchDebate | None,
+    trace,
+    pipeline: AgentPipelineMeta,
+) -> ResearchDebate:
+    if AGENT_MODE == "rule" or llm_result is None:
+        pipeline.record("debate", StageMeta(source="rule", llm=trace if trace and trace.error else None))
+        return rule_result
+
+    if AGENT_MODE == "llm":
+        if llm_result and not trace.error:
+            pipeline.record("debate", StageMeta(source="llm", llm=trace))
+            return llm_result
+        pipeline.record("debate", StageMeta(source="rule", fallback_reason=trace.error, llm=trace))
+        return rule_result
+
+    if llm_result and not trace.error and llm_result.consensus_strength >= LLM_OVERRIDE_THRESHOLD:
+        pipeline.record("debate", StageMeta(source="hybrid", llm=trace))
+        return llm_result
+
+    reason = trace.error or f"strength {llm_result.consensus_strength:.2f} < {LLM_OVERRIDE_THRESHOLD}"
+    pipeline.record("debate", StageMeta(source="rule", fallback_reason=reason, llm=trace))
+    return rule_result
+
+
+def run_debate(
+    bullish: AgentEvidence,
+    bearish: AgentEvidence,
+    analyses,
+    pipeline: AgentPipelineMeta,
+) -> ResearchDebate:
+    rule_result = rule_debate(bullish, bearish, analyses)
+    if not _use_llm_stage(LLM_STAGE_DEBATE):
+        get_progress().update("debate", detail="规则引擎")
+        pipeline.record("debate", StageMeta(source="rule"))
+        return rule_result
+
+    get_progress().update("debate", detail="LLM 辩论中…")
+    llm_result, trace = run_llm_debate(bullish, bearish, analyses)
+    return _pick_debate(rule_result, llm_result, trace, pipeline)
+
+
+def run_trader(ctx: MarketContext, debate: ResearchDebate, pipeline: AgentPipelineMeta):
+    pipeline.record("trader", StageMeta(source="rule"))
+    return rule_trader(ctx, debate)
+
+
+def run_risk(proposal: TransactionProposal, signal_count: int, pipeline: AgentPipelineMeta) -> list[RiskReview]:
+    pipeline.record("risk", StageMeta(source="rule"))
+    return rule_risk(proposal, signal_count)
+
+
+def run_manager(proposal: TransactionProposal, reviews: list[RiskReview], pipeline: AgentPipelineMeta) -> ManagerDecision:
+    pipeline.record("manager", StageMeta(source="rule"))
+    return rule_manager(proposal, reviews)
