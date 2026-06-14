@@ -13,7 +13,7 @@
 | **Technical Analyst** | `agents/analysts/technical.py` | ✅ 规则版（EMA + ICT 结构） |
 | **Fundamentals Analyst** | `agents/analysts/fundamentals.py` | ✅ 规则版（DXY via TradingView） |
 | **News Analyst** | `agents/analysts/news.py` | ✅ 规则版（Finnhub + Google RSS） |
-| **Sentiment Analyst** | `agents/analysts/sentiment.py` | ✅ 规则版（结构投票 + Reddit） |
+| **Sentiment Analyst** | `agents/analysts/sentiment.py` | ✅ 规则版（结构投票 + TV Ideas/Minds） |
 | **Bullish Researcher** | `agents/factory.py` → rule / `llm/stages/bullish` | ✅ 整合 Analyst Team 输出 |
 | **Bearish Researcher** | `agents/factory.py` → rule / `llm/stages/bearish` | ✅ 整合 Analyst Team 输出 |
 | **Discussion** | `agents/factory.py` → rule / `llm/stages/debate` | ✅ 双轨（P0） |
@@ -81,7 +81,7 @@
                       app.py + views/* + viz/*
 ```
 
-\* News / Social / Fundamentals 已接入真实数据源（TradingView DXY、Finnhub/RSS、Reddit）；失败时回退占位文案，UI schema 不变。
+\* News / Social / Fundamentals 已接入真实数据源（TradingView DXY、Finnhub/RSS、TE 经济日历、TV Ideas/Minds）；失败时回退占位文案，UI schema 不变。
 
 ---
 
@@ -92,7 +92,7 @@
 | Technical | `analysts/technical.py` | EMA/VWAP、ICT 多周期结构 | `AnalystReport(bias, items, summary)` |
 | Fundamentals | `analysts/fundamentals.py` | DXY / TradingView | 黄金多空宏观偏向 |
 | News | `analysts/news.py` | Finnhub + Google RSS | 波动/事件风险（通常 neutral） |
-| Sentiment | `analysts/sentiment.py` | 结构情绪投票 + Reddit | 短期情绪偏向 |
+| Sentiment | `analysts/sentiment.py` | 结构情绪投票 + TV Ideas/Minds | 短期情绪偏向 |
 
 **类型**（`core/types.py`）：
 

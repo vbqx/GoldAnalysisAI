@@ -67,6 +67,13 @@ copy .env.example .env          # Windows
 | `TV_SYMBOL` | `XAUUSD` | TradingView 品种 |
 | `TV_EXCHANGE` | `OANDA` | 交易所 |
 | `TV_USERNAME` / `TV_PASSWORD` | 空 | 可选；登录后历史 bar 更多 |
+| `TV_FETCH_RETRIES` / `TV_FETCH_ROUND_RETRIES` | `3` / `1` | TradingView 拉数重试 |
+| `FINNHUB_API_KEY` | 空 | Finnhub 新闻；无 key 时可用 RSS |
+| `TE_CALENDAR_ENABLED` | `true` | Trading Economics 日历 HTML 抓取（免费） |
+| `TE_CALENDAR_COUNTRY` / `TE_CALENDAR_DAYS` | `united states` / `2` | 日历国家与天数 |
+| `TV_SOCIAL_ENABLED` | `true` | TradingView Ideas + Minds 社区情绪 |
+| `TV_SOCIAL_SYMBOL` | `XAUUSD` | 社媒抓取品种 |
+| `NEWS_RSS_ENABLED` | `true` | Google News RSS 兜底 |
 | `LOG_LEVEL` | `INFO` | `DEBUG` 可跟踪流水线 |
 | `LOG_FILE` | 空 | 如 `logs/goldanalysisai.log` |
 | `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](./llm-agents.md) |
@@ -94,7 +101,8 @@ streamlit run app.py    # http://localhost:8501
 
 ```bash
 pip install -r requirements-dev.txt
-python tests/run.py              # 快速：单元 + 回归（约 49 项）
+python tests/run.py              # 快速：单元 + 回归（约 55+ 项）
+python tests/run.py --external   # 外部 API 冒烟（DXY/新闻/TE 日历/TV 社媒）
 python tests/run.py --financial  # 金融 Review FIN-*
 python tests/run.py --full       # 含完整流水线（约 2–3 分钟）
 ```
@@ -220,9 +228,9 @@ build_report(signals=…)  →  dict  report
 | 2 | `daily_metrics(enriched["1d"])` | `src/data/fetcher.py` | 现价、日涨跌、日高日低 |
 | 3 | `get_active_source()` | `src/data/fetcher.py` | → `tradingview.source_label()` |
 | 4 | `merge_external()` | `src/data/aggregator.py` | 合并外部因子 |
-| 5 | `NewsDataSource().fetch_external()` | `src/data/sources/news.py` | Finnhub + Google RSS |
+| 5 | `NewsDataSource().fetch_external()` | `src/data/sources/news.py` | Finnhub/RSS 新闻 + **Trading Economics** 日历 |
 | 6 | `FundamentalsDataSource().fetch_external()` | `src/data/sources/fundamentals.py` | DXY via TradingView |
-| 7 | `SocialDataSource().fetch_external()` | `src/data/sources/social.py` | Reddit r/Gold + r/Forex |
+| 7 | `SocialDataSource().fetch_external()` | `src/data/sources/social.py` | TradingView Ideas + Minds 社区情绪 |
 | 8 | `collect_evidence()` | `src/data/aggregator.py` | 调各 DataSource（日志用） |
 
 **输出变量**：`ctx: MarketContext`（含 `enriched`、`analyses`、`metrics`、`price`、`external`）。
@@ -277,6 +285,8 @@ build_report(signals=…)  →  dict  report
 | `report["meta"]["generation_steps"]` | 生成步骤与耗时（含 `analyst_team`） |
 | `report["meta"]["llm_io"]` | 智能体 I/O：规则阶段（`stage_io`，如 Analyst Team）+ LLM 调用 |
 | `AgentTrace(...).to_dict()` → `report["agent_trace"]` | 决策审计链（含 `analyst_team` 四位分析师） |
+| `report["external"]` | DXY、新闻、日历、TV 社媒 + `sources` 标签 |
+| `parse_risk_events_calendar()` → `report["calendar_events"]` | 有 TE 日历时覆盖占位日历 |
 | `run_llm_analysis` + `apply_llm_to_report` | `report["llm_analysis"]`、增强 `conclusion` |
 | 按 `decision.selected_signal_indices` 重排 | `report["signals"]` |
 
@@ -296,6 +306,7 @@ build_report(signals=…)  →  dict  report
 | `build_lightweight_chart_html()` | `src/viz/lightweight_chart.py` | K 线、EMA/VWAP、OB/FVG  overlay |
 | `_serialize_overlays()` | `src/viz/lightweight_chart.py` | 结构区、投影线 |
 | `render_header()` 等 | `src/viz/dashboard_components.py` | `report` 各字段 → HTML |
+| `render_external_data_panel()` | `src/viz/dashboard_components.py` | 外部拉取数据面板（DXY/新闻/日历/社媒） |
 | `build_sentiment_donut()` | `src/viz/charts.py` | `report["sentiment"]` |
 | `build_projection_chart()` | `src/viz/charts.py` | `report["projections"]` |
 | `render_agent_source_banner()` | `src/viz/source_labels.py` | 顶栏 规则/LLM 来源 |
@@ -404,6 +415,17 @@ GoldAnalysisAI/
 
 **扩展数据源**：在 `sources/` 实现 `fetch_external()` / `fetch_evidence()`，注册到 `aggregator.py`；不必改 `run_analysis()` 签名。
 
+**外部数据源**（`src/data/sources/`）：
+
+| 模块 | 数据源 | 说明 |
+|------|--------|------|
+| `dxy.py` | TradingView `TVC:DXY` | 日涨跌 → 黄金影响文案 |
+| `news_feed.py` | Finnhub + Google RSS | 新闻头条 |
+| `te_calendar_scraper.py` | Trading Economics HTML | 经济日历（免费抓取，优先于 Finnhub 日历） |
+| `social_feed.py` | TradingView Ideas/Minds | XAUUSD 社区多空加权情绪 |
+
+合并后写入 `ExternalFactors`（`social_posts`、`sources`），UI 经 `report["external"]` 展示；失败时回退占位文案，不中断流水线。
+
 ### 5.3 指标层 `indicators/technical.py`
 
 对 DataFrame **原地追加列**：`EMA_20`, `EMA_50`, `EMA_610`, `VWAP`。
@@ -436,7 +458,7 @@ GoldAnalysisAI/
 | Technical | `analysts/technical.py` | EMA/VWAP + ICT 结构 | ✅ `llm/stages/analysts/technical.py` |
 | Fundamentals | `analysts/fundamentals.py` | `sources/dxy.py` + TradingView | ✅ `llm/stages/analysts/fundamentals.py` |
 | News | `analysts/news.py` | `sources/news_feed.py`（Finnhub/RSS） | ✅ `llm/stages/analysts/news.py` |
-| Sentiment | `analysts/sentiment.py` | 结构投票 + `sources/social_feed.py`（Reddit） | ✅ `llm/stages/analysts/sentiment.py` |
+| Sentiment | `analysts/sentiment.py` | 结构投票 + `sources/social_feed.py`（TV Ideas/Minds） | ✅ `llm/stages/analysts/sentiment.py` |
 
 输出 `AnalystTeam` → 写入 `agent_trace.analyst_team`。
 
@@ -627,7 +649,7 @@ python tests/tools/chart_compare.py
 | SSE 断流 / ChunkedEncoding | `stream_llm_json` 自动整次重打（最多 3 次）；仍失败则 hybrid 用规则 |
 | 看多/看空耗时差大 | 同模型下 Prompt 体量不同，30–90s/次属正常 |
 | 胜率 % | **非回测**；`sentiment_score()` 多周期趋势加权 |
-| DXY/新闻/社媒 | `sources/dxy.py`、`news_feed.py`、`social_feed.py`；失败回退占位；见 `.env.example` |
+| DXY/新闻/社媒 | `dxy.py`、`news_feed.py`、`te_calendar_scraper.py`、`social_feed.py` |
 
 ---
 
@@ -636,7 +658,8 @@ python tests/tools/chart_compare.py
 自动化测试见 [`tests/`](../tests/README.md) 与 [`tests/cases/catalog.yaml`](../tests/cases/catalog.yaml)。
 
 ```bash
-python tests/run.py --fast       # 日常 / CI（约 49 项）
+python tests/run.py --fast       # 日常 / CI（约 55+ 项）
+python tests/run.py --external   # 外部 API 冒烟（需网络）
 python tests/run.py --financial  # FIN-* 金融 Review
 python tests/run.py --full       # 发版前（含流水线）
 ```
@@ -646,7 +669,7 @@ python tests/run.py --full       # 发版前（含流水线）
 - [ ] 生成步骤含「构建市场上下文」与 external 子步骤；I/O 含 context 规则记录
 - [ ] 生成步骤含 `Analyst Team`；I/O 含四位分析师 LLM 或规则输出
 - [ ] 「LLM决策链」三 Tab：智能体决策 / LLM 文案 / 生成与 LLM I/O
-- [ ] 顶栏 DXY/新闻/社媒为 live 或明确回退文案（非「待接入」）
+- [ ] 顶栏与「外部数据 · 实时拉取」面板展示 DXY/新闻/日历/TV 社媒（live 或明确回退文案）
 - [ ] Analyst Team 四列 badge 与 stage_sources 一致
 - [ ] 两种报告模式渲染正常；结构权重标注「非回测胜率」
 

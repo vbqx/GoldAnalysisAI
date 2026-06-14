@@ -311,7 +311,7 @@ TradingView OHLCV → 技术指标 → ICT/PA 结构识别 → 多 Agent 决策 
 | ID | 验收项 |
 |----|--------|
 | FIN-UI-01 | 「胜率/概率」须标注非回测 |
-| FIN-UI-02 | DXY/日历/新闻显示「占位/模拟」 |
+| FIN-UI-02 | DXY/新闻/日历/TV 社媒显示 live 或回退说明 |
 | FIN-UI-03 | manager reduce 时展示 position_scale |
 | FIN-UI-04 | EMA610 不足时报告有警告 |
 | FIN-UI-05 | 免责声明可见 |
