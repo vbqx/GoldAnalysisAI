@@ -1,24 +1,27 @@
-"""Macro / fundamentals for gold — DXY, rates placeholder."""
+"""Macro / fundamentals for gold — DXY via TradingView."""
 
 from __future__ import annotations
 
 from src.core.types import EvidenceItem, ExternalFactors
+from src.data.sources.dxy import fetch_dxy_impact
 
 
 class FundamentalsDataSource:
     name = "fundamentals"
 
     def fetch_external(self) -> ExternalFactors:
-        # TODO: DXY live feed, real yields, COT
-        return ExternalFactors(dxy_impact="偏强 → 利空黄金")
+        impact, _refs = fetch_dxy_impact()
+        return ExternalFactors(dxy_impact=impact)
 
     def fetch_evidence(self) -> list[EvidenceItem]:
-        ext = self.fetch_external()
+        impact, refs = fetch_dxy_impact()
+        is_live = refs.get("source") == "tradingview"
+        strength = 0.6 if is_live and refs.get("bias") in ("bullish", "bearish") else 0.35
         return [
             EvidenceItem(
                 category="external",
-                summary=f"美元指数影响：{ext.dxy_impact}",
-                strength=0.35,
-                refs={"dxy_impact": ext.dxy_impact},
+                summary=f"美元指数影响：{impact}",
+                strength=strength,
+                refs=refs,
             )
         ]
