@@ -59,6 +59,18 @@ class _ModuleSyncProgressReporter(ProgressReporter):
         super().llm_end(stage, output, error=error, latency_ms=latency_ms)
         self._sync()
 
+    def fail(self, step_id: str, detail: str = "") -> None:
+        super().fail(step_id, detail)
+        self._sync()
+
+    def done(self, step_id: str, detail: str = "") -> None:
+        super().done(step_id, detail)
+        self._sync()
+
+    def update(self, step_id: str, *, detail: str | None = None, label: str | None = None) -> None:
+        super().update(step_id, detail=detail, label=label)
+        self._sync()
+
     def stage_io(self, stage: str, *, input_text: str, output_text: str, latency_ms: int | None = None, label: str | None = None) -> None:
         super().stage_io(stage, input_text=input_text, output_text=output_text, latency_ms=latency_ms, label=label)
         self._sync()
@@ -257,8 +269,16 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
 
     if counter in _GEN_ERRORS:
         exc = _GEN_ERRORS.pop(counter)
+        live = _LIVE_GEN_STATE.pop(counter, {})
+        steps = live.get("steps") or []
         log.exception("report generation failed")
+        if steps:
+            from src.viz.pipeline_progress import render_progress_steps
+
+            st.markdown("**生成进度（失败前）**")
+            render_progress_steps(steps, title="")
         st.error(f"数据获取失败: {exc}")
+        st.caption("可在 `.env` 调整 `TV_FETCH_RETRIES` / `TV_FETCH_ROUND_RETRIES`；确认代理可用后点「刷新报告」重试。")
         st.stop()
 
     _start_generation(counter)
