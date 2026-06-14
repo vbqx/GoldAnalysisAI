@@ -1,580 +1,1334 @@
-# GoldAnalysisAI 测试用例目录
-# 维护说明：新增/变更测试时同步更新此文件、test-plan.md 与 tests/ 实现。
-# 设计文档：tests/cases/test-plan.md
-# 运行：python tests/run.py [--fast|--full]
-
-meta:
-  project: GoldAnalysisAI
-  last_review: "2026-06-14"
-  owner: qa
-  layers:
-    - id: ui_layout
-      prefix: UIL
-      doc_section: "2"
-    - id: indicators
-      prefix: IND
-      doc_section: "3"
-    - id: functional
-      prefix: FN
-      doc_section: "4"
-    - id: performance
-      prefix: PERF
-      doc_section: "5"
-
-suites:
-  unit:
-    description: 快速单元测试，无网络，< 5s
-    path: tests/unit/
-  regression:
-    description: 回归检查（源码约定、导入、Issue 修复项）
-    path: tests/regression/
-  integration:
-    description: 完整流水线，需 TradingView + 可选 LLM（slow）
-    path: tests/integration/
-  manual:
-    description: 手工 / 浏览器 UI 测试
-    path: null
-
-cases:
-  # ── 单元（LLM JSON）────────────────────────────────────────
-  - id: UT-01
-    suite: unit
-    layer: functional
-    title: LLM JSON 合法对象解析
-    module: tests.unit.test_llm_json
-    priority: P1
-    automated: true
-
-  - id: UT-02
-    suite: unit
-    title: LLM JSON 包裹文本提取
-    module: tests.unit.test_llm_json
-    priority: P1
-    automated: true
-
-  - id: UT-03
-    suite: unit
-    title: LLM JSON 尾随逗号修复
-    module: tests.unit.test_llm_json
-    priority: P2
-    automated: true
-
-  - id: UT-04
-    suite: unit
-    title: LLM JSON 拒绝非 object 根节点
-    module: tests.unit.test_llm_json
-    priority: P2
-    automated: true
-
-  # ── 指标单元（IND）────────────────────────────────────────
-  - id: IND-01
-    suite: unit
-    layer: indicators
-    title: metrics.current_price 与 5m 最新 Close 一致
-    module: tests.unit.test_indicators
-    priority: P1
-    automated: true
-    acceptance:
-      - abs(metrics.current_price - df_5m.Close.iloc[-1]) <= 0.01
-
-  - id: IND-02
-    suite: unit
-    layer: indicators
-    title: daily_change / daily_change_pct 自洽
-    module: tests.unit.test_indicators
-    priority: P1
-    automated: true
-
-  - id: IND-03
-    suite: unit
-    layer: indicators
-    title: daily_high >= current_price >= daily_low
-    module: tests.unit.test_indicators
-    priority: P1
-    automated: true
-
-  - id: IND-10
-    suite: unit
-    layer: indicators
-    title: indicator_snapshot 输出 EMA/VWAP 字段
-    module: tests.unit.test_indicators
-    priority: P1
-    automated: true
-
-  - id: IND-11
-    suite: unit
-    layer: indicators
-    title: 多周期 snapshot 现价一致
-    module: tests.unit.test_indicators
-    priority: P1
-    automated: true
-
-  - id: IND-12
-    suite: unit
-    layer: indicators
-    title: bars<610 时 EMA610 历史不足提示
-    module: tests.unit.test_indicators
-    priority: P2
-    automated: true
-
-  - id: IND-13
-    suite: unit
-    layer: indicators
-    title: VWAP 偏离>5% 时 notes 警告
-    module: tests.unit.test_indicators
-    priority: P2
-    automated: true
-
-  # ── 集成（流水线）────────────────────────────────────────
-  - id: IT-01
-    suite: integration
-    layer: functional
-    title: 完整流水线 run_analysis
-    module: tests.integration.test_pipeline
-    priority: P0
-    automated: true
-    markers: [slow, integration]
-    maps_to: [FN-01, FN-03, FN-04, PERF-01]
-    acceptance:
-      - 返回 report/data/analyses
-      - meta.generation_steps 全部 done
-      - 现价在合理区间
-
-  - id: IT-02
-    suite: integration
-    layer: functional
-    title: 五周期 K 线数据齐全
-    module: tests.integration.test_pipeline
-    priority: P0
-    automated: true
-    markers: [slow, integration]
-    maps_to: [FN-01, FN-02]
-
-  - id: IT-03
-    suite: integration
-    layer: indicators
-    title: 报告 signals 字段完整
-    module: tests.integration.test_pipeline
-    priority: P1
-    automated: true
-    markers: [slow, integration]
-    maps_to: [IND-33]
-
-  - id: IT-04
-    suite: integration
-    layer: performance
-    title: 首次流水线耗时 ≤ 240s
-    module: tests.integration.test_pipeline
-    priority: P2
-    automated: true
-    markers: [slow, integration]
-    maps_to: [PERF-01]
-
-  # ── 回归（Issue 修复）────────────────────────────────────
-  - id: RG-01
-    suite: regression
-    title: run_pipeline 脚本无需 PYTHONPATH (#5)
-    module: tests.regression.test_fixes
-    issue: "#5"
-    priority: P2
-    automated: true
-
-  - id: RG-02
-    suite: regression
-    title: 无 use_container_width 弃用 API (#6)
-    module: tests.regression.test_fixes
-    issue: "#6"
-    priority: P2
-    automated: true
-
-  - id: RG-03
-    suite: regression
-    title: 侧边栏展示研究/辩论模型 (#7)
-    module: tests.regression.test_fixes
-    issue: "#7"
-    priority: P2
-    automated: true
-
-  - id: RG-04
-    suite: regression
-    title: 子页面 waiting hero + live panel (#8)
-    module: tests.regression.test_fixes
-    issue: "#8"
-    priority: P2
-    automated: true
-
-  - id: RG-05
-    suite: regression
-    title: ensure_report 完成后统一 rerun (#3)
-    module: tests.regression.test_fixes
-    issue: "#3"
-    priority: P1
-    automated: true
-
-  - id: RG-06
-    suite: regression
-    title: LLM JSON 重试与 _parse_llm_json (#4)
-    module: tests.regression.test_fixes
-    issue: "#4"
-    priority: P1
-    automated: true
-
-  - id: RG-07
-    suite: regression
-    title: 核心 viz/agents 模块可导入
-    module: tests.regression.test_fixes
-    priority: P1
-    automated: true
-
-  # ── UI 布局（UIL）手工 ────────────────────────────────────
-  - id: UIL-01
-    suite: manual
-    layer: ui_layout
-    title: 应用入口 wide 布局与三页导航
-    page: app
-    priority: P1
-    automated: false
-    steps:
-      - 启动 streamlit run app.py
-      - 确认 layout 宽屏、侧边栏三页链接可见
-      - 默认页为机构级分析报告
-
-  - id: UIL-02
-    suite: manual
-    layer: ui_layout
-    title: 侧边栏结构（标题/数据源/模型/刷新/指标校验）
-    page: all
-    priority: P1
-    automated: false
-
-  - id: UIL-03
-    suite: manual
-    layer: ui_layout
-    title: 三页 page-hero 区域
-    page: all
-    priority: P2
-    automated: false
-
-  - id: UIL-04
-    suite: manual
-    layer: ui_layout
-    title: CSS 主题卡片与网格无错位
-    page: all
-    priority: P2
-    automated: false
-
-  - id: UIL-10
-    suite: manual
-    layer: ui_layout
-    title: 机构页顶栏 6 格 header-grid
-    page: 机构级分析报告
-    priority: P1
-    automated: false
-    acceptance:
-      - 现价/日涨跌/日高低/情绪/美元/结论六格齐全
-
-  - id: UIL-11
-    suite: manual
-    layer: ui_layout
-    title: 机构页 agent-source-bar 来源 chip
-    page: 机构级分析报告
-    priority: P2
-    automated: false
-
-  - id: UIL-12
-    suite: manual
-    layer: ui_layout
-    title: 机构页总览四格 top-grid-4
-    page: 机构级分析报告
-    priority: P1
-    automated: false
-
-  - id: UIL-13
-    suite: manual
-    layer: ui_layout
-    title: 机构页三列主区（迷你图+日线+右栏）
-    page: 机构级分析报告
-    priority: P1
-    automated: false
-
-  - id: UIL-14
-    suite: manual
-    layer: ui_layout
-    title: 机构页底部四列（Fib/投影/风控/结论）
-    page: 机构级分析报告
-    priority: P2
-    automated: false
-
-  - id: UIL-15
-    suite: manual
-    layer: ui_layout
-    title: 机构页 footer-bar
-    page: 机构级分析报告
-    priority: P3
-    automated: false
-
-  - id: UIL-20
-    suite: manual
-    layer: ui_layout
-    title: 短线页标题区（报告就绪后）
-    page: 短线策略
-    priority: P1
-    automated: false
-
-  - id: UIL-21
-    suite: manual
-    layer: ui_layout
-    title: 短线页三列（15m+5m / 价位 / 策略文字）
-    page: 短线策略
-    priority: P1
-    automated: false
-
-  - id: UIL-22
-    suite: manual
-    layer: ui_layout
-    title: 短线页无双标题（waiting 与完成态互斥）
-    page: 短线策略
-    priority: P1
-    automated: false
-    maps_to: [RG-04]
-
-  - id: UIL-30
-    suite: manual
-    layer: ui_layout
-    title: LLM 页四 Tab（决策/文案/步骤/I-O）
-    page: LLM决策链
-    priority: P1
-    automated: false
-
-  - id: UIL-31
-    suite: manual
-    layer: ui_layout
-    title: LLM 页决策面板 metric + 风控表
-    page: LLM决策链
-    priority: P1
-    automated: false
-
-  - id: UIL-32
-    suite: manual
-    layer: ui_layout
-    title: LLM I/O 可展开 Prompt/Response
-    page: LLM决策链
-    priority: P2
-    automated: false
-
-  - id: UIL-40
-    suite: manual
-    layer: ui_layout
-    title: 机构页 waiting hero + live panel
-    page: 机构级分析报告
-    priority: P1
-    automated: false
-
-  - id: UIL-41
-    suite: manual
-    layer: ui_layout
-    title: 子页 waiting 无残留「报告尚未生成」
-    page: 短线策略, LLM决策链
-    priority: P0
-    automated: false
-    maps_to: [RG-05]
-
-  - id: UIL-42
-    suite: manual
-    layer: ui_layout
-    title: 生成进度 fragment 约 1s 刷新
-    page: all
-    priority: P2
-    automated: false
-
-  # ── 指标显示（IND）手工 ───────────────────────────────────
-  - id: IND-04
-    suite: manual
-    layer: indicators
-    title: market_sentiment 非空且与投票一致
-    page: 机构级分析报告
-    priority: P2
-    automated: false
-
-  - id: IND-05
-    suite: manual
-    layer: indicators
-    title: 结论区 LLM 来源 badge
-    page: 机构级分析报告
-    priority: P2
-    automated: false
-
-  - id: IND-20
-    suite: manual
-    layer: indicators
-    title: 4H/1H/15m tf-panel 趋势与 OB/FVG
-    page: 机构级分析报告
-    priority: P1
-    automated: false
-
-  - id: IND-21
-    suite: manual
-    layer: indicators
-    title: timeframes JSON 与 ICT trend 一致
-    priority: P2
-    automated: false
-
-  - id: IND-30
-    suite: manual
-    layer: indicators
-    title: 日线主图 iframe 高度与水印
-    page: 机构级分析报告
-    priority: P2
-    automated: false
-
-  - id: IND-31
-    suite: manual
-    layer: indicators
-    title: 情绪甜甜圈三分类合计 100%
-    page: 机构级分析报告
-    priority: P2
-    automated: false
-
-  - id: IND-32
-    suite: manual
-    layer: indicators
-    title: Fibonacci 表 4 行完整
-    page: 机构级分析报告
-    priority: P2
-    automated: false
-
-  # ── 整体功能（FN）────────────────────────────────────────
-  - id: FN-10
-    suite: manual
-    layer: functional
-    title: 三页导航 Session 缓存不重跑
-    priority: P0
-    automated: false
-    maps_to: [UI-01]
-    steps:
-      - 首次加载机构报告页并等待完成
-      - 切换短线策略 / LLM决策链
-      - 确认 updated_at 不变、无重新跑流水线
-
-  - id: FN-11
-    suite: manual
-    layer: functional
-    title: 刷新报告按钮重新生成
-    priority: P1
-    automated: false
-    maps_to: [UI-02]
-
-  - id: FN-12
-    suite: manual
-    layer: functional
-    title: 冷启动直接打开子页触发 waiting UI
-    priority: P1
-    automated: false
-
-  - id: FN-20
-    suite: manual
-    layer: functional
-    title: hybrid 模式 LLM 失败 rule 回退
-    priority: P1
-    automated: false
-
-  - id: FN-21
-    suite: manual
-    layer: functional
-    title: meta.llm_io 与阶段调用数一致
-    page: LLM决策链
-    priority: P2
-    automated: false
-
-  - id: FN-22
-    suite: manual
-    layer: functional
-    title: llm_analysis 文案层 enabled 无 error
-    priority: P2
-    automated: false
-
-  - id: FN-30
-    suite: manual
-    layer: functional
-    title: AGENT_MODE=rule 全 rule 来源
-    priority: P2
-    automated: false
-    maps_to: [UI-03]
-
-  - id: FN-31
-    suite: manual
-    layer: functional
-    title: LLM_ENABLED=false 仍生成规则报告
-    priority: P2
-    automated: false
-
-  - id: FN-32
-    suite: manual
-    layer: functional
-    title: 无 API Key 友好降级不崩溃
-    priority: P1
-    automated: false
-
-  # ── 性能（PERF）──────────────────────────────────────────
-  - id: PERF-02
-    suite: manual
-    layer: performance
-    title: 纯规则流水线 ≤ 30s
-    priority: P2
-    automated: false
-    env:
-      LLM_ENABLED: "false"
-      AGENT_MODE: rule
-
-  - id: PERF-03
-    suite: manual
-    layer: performance
-    title: 数据拉取阶段 ≤ 20s
-    priority: P2
-    automated: false
-
-  - id: PERF-04
-    suite: manual
-    layer: performance
-    title: 已缓存页面切换 ≤ 3s 可交互
-    priority: P1
-    automated: false
-
-  - id: PERF-05
-    suite: manual
-    layer: performance
-    title: 单张图表 HTML 生成 ≤ 2s
-    priority: P3
-    automated: false
-
-  - id: PERF-06
-    suite: manual
-    layer: performance
-    title: waiting 期间 sidebar 操作不重启流水线
-    priority: P1
-    automated: false
-
-  # ── 遗留 ID（兼容引用）────────────────────────────────────
-  - id: UI-01
-    suite: manual
-    title: "[已映射 FN-10] 三页导航与 Session 缓存"
-    priority: P1
-    automated: false
-    deprecated: true
-    maps_to: [FN-10]
-
-  - id: UI-02
-    suite: manual
-    title: "[已映射 FN-11] 刷新报告按钮"
-    priority: P1
-    automated: false
-    deprecated: true
-    maps_to: [FN-11]
-
-  - id: UI-03
-    suite: manual
-    title: "[已映射 FN-30] AGENT_MODE=rule 纯规则模式"
-    priority: P2
-    automated: false
-    deprecated: true
-    maps_to: [FN-30]
+# GoldAnalysisAI 测试用例目录
+
+# 维护说明：新增/变更测试时同步更新此文件、test-plan.md 与 tests/ 实现。
+
+# 设计文档：tests/cases/test-plan.md
+
+# 运行：python tests/run.py [--fast|--full]
+
+
+
+meta:
+
+  project: GoldAnalysisAI
+
+  last_review: "2026-06-14"
+
+  owner: qa
+
+  layers:
+
+    - id: ui_layout
+
+      prefix: UIL
+
+      doc_section: "2"
+
+    - id: indicators
+
+      prefix: IND
+
+      doc_section: "3"
+
+    - id: functional
+
+      prefix: FN
+
+      doc_section: "4"
+
+    - id: performance
+
+      prefix: PERF
+
+      doc_section: "5"
+
+    - id: financial
+
+      prefix: FIN
+
+      doc_section: "8"
+
+      doc: tests/cases/financial-review-cases.md
+
+
+
+suites:
+
+  unit:
+
+    description: 快速单元测试，无网络，< 5s
+
+    path: tests/unit/
+
+  regression:
+
+    description: 回归检查（源码约定、导入、Issue 修复项）
+
+    path: tests/regression/
+
+  integration:
+
+    description: 完整流水线，需 TradingView + 可选 LLM（slow）
+
+    path: tests/integration/
+
+  manual:
+
+    description: 手工 / 浏览器 UI 测试
+
+    path: null
+
+
+
+cases:
+
+  # ── 单元（LLM JSON）────────────────────────────────────────
+
+  - id: UT-01
+
+    suite: unit
+
+    layer: functional
+
+    title: LLM JSON 合法对象解析
+
+    module: tests.unit.test_llm_json
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-02
+
+    suite: unit
+
+    title: LLM JSON 包裹文本提取
+
+    module: tests.unit.test_llm_json
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-03
+
+    suite: unit
+
+    title: LLM JSON 尾随逗号修复
+
+    module: tests.unit.test_llm_json
+
+    priority: P2
+
+    automated: true
+
+
+
+  - id: UT-04
+
+    suite: unit
+
+    title: LLM JSON 拒绝非 object 根节点
+
+    module: tests.unit.test_llm_json
+
+    priority: P2
+
+    automated: true
+
+
+
+  # ── 指标单元（IND）────────────────────────────────────────
+
+  - id: IND-01
+
+    suite: unit
+
+    layer: indicators
+
+    title: metrics.current_price 与 5m 最新 Close 一致
+
+    module: tests.unit.test_indicators
+
+    priority: P1
+
+    automated: true
+
+    acceptance:
+
+      - abs(metrics.current_price - df_5m.Close.iloc[-1]) <= 0.01
+
+
+
+  - id: IND-02
+
+    suite: unit
+
+    layer: indicators
+
+    title: daily_change / daily_change_pct 自洽
+
+    module: tests.unit.test_indicators
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: IND-03
+
+    suite: unit
+
+    layer: indicators
+
+    title: daily_high >= current_price >= daily_low
+
+    module: tests.unit.test_indicators
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: IND-10
+
+    suite: unit
+
+    layer: indicators
+
+    title: indicator_snapshot 输出 EMA/VWAP 字段
+
+    module: tests.unit.test_indicators
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: IND-11
+
+    suite: unit
+
+    layer: indicators
+
+    title: 多周期 snapshot 现价一致
+
+    module: tests.unit.test_indicators
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: IND-12
+
+    suite: unit
+
+    layer: indicators
+
+    title: bars<610 时 EMA610 历史不足提示
+
+    module: tests.unit.test_indicators
+
+    priority: P2
+
+    automated: true
+
+
+
+  - id: IND-13
+
+    suite: unit
+
+    layer: indicators
+
+    title: VWAP 偏离>5% 时 notes 警告
+
+    module: tests.unit.test_indicators
+
+    priority: P2
+
+    automated: true
+
+
+
+  # ── 集成（流水线）────────────────────────────────────────
+
+  - id: IT-01
+
+    suite: integration
+
+    layer: functional
+
+    title: 完整流水线 run_analysis
+
+    module: tests.integration.test_pipeline
+
+    priority: P0
+
+    automated: true
+
+    markers: [slow, integration]
+
+    maps_to: [FN-01, FN-03, FN-04, PERF-01]
+
+    acceptance:
+
+      - 返回 report/data/analyses
+
+      - meta.generation_steps 全部 done
+
+      - 现价在合理区间
+
+
+
+  - id: IT-02
+
+    suite: integration
+
+    layer: functional
+
+    title: 五周期 K 线数据齐全
+
+    module: tests.integration.test_pipeline
+
+    priority: P0
+
+    automated: true
+
+    markers: [slow, integration]
+
+    maps_to: [FN-01, FN-02]
+
+
+
+  - id: IT-03
+
+    suite: integration
+
+    layer: indicators
+
+    title: 报告 signals 字段完整
+
+    module: tests.integration.test_pipeline
+
+    priority: P1
+
+    automated: true
+
+    markers: [slow, integration]
+
+    maps_to: [IND-33]
+
+
+
+  - id: IT-04
+
+    suite: integration
+
+    layer: performance
+
+    title: 首次流水线耗时 ≤ 240s
+
+    module: tests.integration.test_pipeline
+
+    priority: P2
+
+    automated: true
+
+    markers: [slow, integration]
+
+    maps_to: [PERF-01]
+
+
+
+  # ── 回归（Issue 修复）────────────────────────────────────
+
+  - id: RG-01
+
+    suite: regression
+
+    title: run_pipeline 脚本无需 PYTHONPATH (#5)
+
+    module: tests.regression.test_fixes
+
+    issue: "#5"
+
+    priority: P2
+
+    automated: true
+
+
+
+  - id: RG-02
+
+    suite: regression
+
+    title: 无 use_container_width 弃用 API (#6)
+
+    module: tests.regression.test_fixes
+
+    issue: "#6"
+
+    priority: P2
+
+    automated: true
+
+
+
+  - id: RG-03
+
+    suite: regression
+
+    title: 侧边栏展示研究/辩论模型 (#7)
+
+    module: tests.regression.test_fixes
+
+    issue: "#7"
+
+    priority: P2
+
+    automated: true
+
+
+
+  - id: RG-04
+
+    suite: regression
+
+    title: 子页面 waiting hero + live panel (#8)
+
+    module: tests.regression.test_fixes
+
+    issue: "#8"
+
+    priority: P2
+
+    automated: true
+
+
+
+  - id: RG-05
+
+    suite: regression
+
+    title: ensure_report 完成后统一 rerun (#3)
+
+    module: tests.regression.test_fixes
+
+    issue: "#3"
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: RG-06
+
+    suite: regression
+
+    title: LLM JSON 重试与 _parse_llm_json (#4)
+
+    module: tests.regression.test_fixes
+
+    issue: "#4"
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: RG-07
+
+    suite: regression
+
+    title: 核心 viz/agents 模块可导入
+
+    module: tests.regression.test_fixes
+
+    priority: P1
+
+    automated: true
+
+
+
+  # ── UI 布局（UIL）手工 ────────────────────────────────────
+
+  - id: UIL-01
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 应用入口 wide 布局与三页导航
+
+    page: app
+
+    priority: P1
+
+    automated: false
+
+    steps:
+
+      - 启动 streamlit run app.py
+
+      - 确认 layout 宽屏、侧边栏三页链接可见
+
+      - 默认页为机构级分析报告
+
+
+
+  - id: UIL-02
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 侧边栏结构（标题/数据源/模型/刷新/指标校验）
+
+    page: all
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: UIL-03
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 三页 page-hero 区域
+
+    page: all
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: UIL-04
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: CSS 主题卡片与网格无错位
+
+    page: all
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: UIL-10
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 机构页顶栏 6 格 header-grid
+
+    page: 机构级分析报告
+
+    priority: P1
+
+    automated: false
+
+    acceptance:
+
+      - 现价/日涨跌/日高低/情绪/美元/结论六格齐全
+
+
+
+  - id: UIL-11
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 机构页 agent-source-bar 来源 chip
+
+    page: 机构级分析报告
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: UIL-12
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 机构页总览四格 top-grid-4
+
+    page: 机构级分析报告
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: UIL-13
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 机构页三列主区（迷你图+日线+右栏）
+
+    page: 机构级分析报告
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: UIL-14
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 机构页底部四列（Fib/投影/风控/结论）
+
+    page: 机构级分析报告
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: UIL-15
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 机构页 footer-bar
+
+    page: 机构级分析报告
+
+    priority: P3
+
+    automated: false
+
+
+
+  - id: UIL-20
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 短线页标题区（报告就绪后）
+
+    page: 短线策略
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: UIL-21
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 短线页三列（15m+5m / 价位 / 策略文字）
+
+    page: 短线策略
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: UIL-22
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 短线页无双标题（waiting 与完成态互斥）
+
+    page: 短线策略
+
+    priority: P1
+
+    automated: false
+
+    maps_to: [RG-04]
+
+
+
+  - id: UIL-30
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: LLM 页四 Tab（决策/文案/步骤/I-O）
+
+    page: LLM决策链
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: UIL-31
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: LLM 页决策面板 metric + 风控表
+
+    page: LLM决策链
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: UIL-32
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: LLM I/O 可展开 Prompt/Response
+
+    page: LLM决策链
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: UIL-40
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 机构页 waiting hero + live panel
+
+    page: 机构级分析报告
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: UIL-41
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 子页 waiting 无残留「报告尚未生成」
+
+    page: 短线策略, LLM决策链
+
+    priority: P0
+
+    automated: false
+
+    maps_to: [RG-05]
+
+
+
+  - id: UIL-42
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 生成进度 fragment 约 1s 刷新
+
+    page: all
+
+    priority: P2
+
+    automated: false
+
+
+
+  # ── 指标显示（IND）手工 ───────────────────────────────────
+
+  - id: IND-04
+
+    suite: manual
+
+    layer: indicators
+
+    title: market_sentiment 非空且与投票一致
+
+    page: 机构级分析报告
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: IND-05
+
+    suite: manual
+
+    layer: indicators
+
+    title: 结论区 LLM 来源 badge
+
+    page: 机构级分析报告
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: IND-20
+
+    suite: manual
+
+    layer: indicators
+
+    title: 4H/1H/15m tf-panel 趋势与 OB/FVG
+
+    page: 机构级分析报告
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: IND-21
+
+    suite: manual
+
+    layer: indicators
+
+    title: timeframes JSON 与 ICT trend 一致
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: IND-30
+
+    suite: manual
+
+    layer: indicators
+
+    title: 日线主图 iframe 高度与水印
+
+    page: 机构级分析报告
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: IND-31
+
+    suite: manual
+
+    layer: indicators
+
+    title: 情绪甜甜圈三分类合计 100%
+
+    page: 机构级分析报告
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: IND-32
+
+    suite: manual
+
+    layer: indicators
+
+    title: Fibonacci 表 4 行完整
+
+    page: 机构级分析报告
+
+    priority: P2
+
+    automated: false
+
+
+
+  # ── 整体功能（FN）────────────────────────────────────────
+
+  - id: FN-10
+
+    suite: manual
+
+    layer: functional
+
+    title: 三页导航 Session 缓存不重跑
+
+    priority: P0
+
+    automated: false
+
+    maps_to: [UI-01]
+
+    steps:
+
+      - 首次加载机构报告页并等待完成
+
+      - 切换短线策略 / LLM决策链
+
+      - 确认 updated_at 不变、无重新跑流水线
+
+
+
+  - id: FN-11
+
+    suite: manual
+
+    layer: functional
+
+    title: 刷新报告按钮重新生成
+
+    priority: P1
+
+    automated: false
+
+    maps_to: [UI-02]
+
+
+
+  - id: FN-12
+
+    suite: manual
+
+    layer: functional
+
+    title: 冷启动直接打开子页触发 waiting UI
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: FN-20
+
+    suite: manual
+
+    layer: functional
+
+    title: hybrid 模式 LLM 失败 rule 回退
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: FN-21
+
+    suite: manual
+
+    layer: functional
+
+    title: meta.llm_io 与阶段调用数一致
+
+    page: LLM决策链
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: FN-22
+
+    suite: manual
+
+    layer: functional
+
+    title: llm_analysis 文案层 enabled 无 error
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: FN-30
+
+    suite: manual
+
+    layer: functional
+
+    title: AGENT_MODE=rule 全 rule 来源
+
+    priority: P2
+
+    automated: false
+
+    maps_to: [UI-03]
+
+
+
+  - id: FN-31
+
+    suite: manual
+
+    layer: functional
+
+    title: LLM_ENABLED=false 仍生成规则报告
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: FN-32
+
+    suite: manual
+
+    layer: functional
+
+    title: 无 API Key 友好降级不崩溃
+
+    priority: P1
+
+    automated: false
+
+
+
+  # ── 性能（PERF）──────────────────────────────────────────
+
+  - id: PERF-02
+
+    suite: manual
+
+    layer: performance
+
+    title: 纯规则流水线 ≤ 30s
+
+    priority: P2
+
+    automated: false
+
+    env:
+
+      LLM_ENABLED: "false"
+
+      AGENT_MODE: rule
+
+
+
+  - id: PERF-03
+
+    suite: manual
+
+    layer: performance
+
+    title: 数据拉取阶段 ≤ 20s
+
+    priority: P2
+
+    automated: false
+
+
+
+  - id: PERF-04
+
+    suite: manual
+
+    layer: performance
+
+    title: 已缓存页面切换 ≤ 3s 可交互
+
+    priority: P1
+
+    automated: false
+
+
+
+  - id: PERF-05
+
+    suite: manual
+
+    layer: performance
+
+    title: 单张图表 HTML 生成 ≤ 2s
+
+    priority: P3
+
+    automated: false
+
+
+
+  - id: PERF-06
+
+    suite: manual
+
+    layer: performance
+
+    title: waiting 期间 sidebar 操作不重启流水线
+
+    priority: P1
+
+    automated: false
+
+
+
+  # ── 遗留 ID（兼容引用）────────────────────────────────────
+
+  - id: UI-01
+
+    suite: manual
+
+    title: "[已映射 FN-10] 三页导航与 Session 缓存"
+
+    priority: P1
+
+    automated: false
+
+    deprecated: true
+
+    maps_to: [FN-10]
+
+
+
+  - id: UI-02
+
+    suite: manual
+
+    title: "[已映射 FN-11] 刷新报告按钮"
+
+    priority: P1
+
+    automated: false
+
+    deprecated: true
+
+    maps_to: [FN-11]
+
+
+
+  - id: UI-03
+
+    suite: manual
+
+    title: "[已映射 FN-30] AGENT_MODE=rule 纯规则模式"
+
+    priority: P2
+
+    automated: false
+
+    deprecated: true
+
+    maps_to: [FN-30]
+
+  # ── 金融 Review（FIN）docs/financial-review.md ────────────
+  - id: FIN-01
+    suite: unit
+    layer: financial
+    title: neutral 共识下三档风控 approved 行为
+    module: tests.unit.test_risk
+    finding: F-001
+    priority: P0
+    automated: false
+    acceptance:
+      - debate_bias=neutral 时 conservative 拒绝
+      - 修复 F-001 后 aggressive/neutral 行为与文档一致
+
+  - id: FIN-02
+    suite: unit
+    layer: financial
+    title: win_rate 等于 sentiment 分量非回测胜率
+    module: tests.unit.test_report_engine
+    finding: F-002
+    priority: P0
+    automated: false
+
+  - id: FIN-03
+    suite: unit
+    layer: financial
+    title: risk_reward 与 entry/SL/TP 几何一致
+    module: tests.unit.test_report_engine
+    finding: F-003
+    priority: P1
+    automated: false
+
+  - id: FIN-04
+    suite: unit
+    layer: financial
+    title: 扫低做多 SL/entry magic number 几何
+    module: tests.unit.test_report_engine
+    finding: F-004
+    priority: P1
+    automated: false
+
+  - id: FIN-05
+    suite: integration
+    layer: financial
+    title: metrics.current_price 与 5m Close 一致
+    module: tests.integration.test_pipeline
+    finding: F-005
+    priority: P1
+    automated: true
+    maps_to: [IND-01, IT-01]
+
+  - id: FIN-06
+    suite: unit
+    layer: financial
+    title: conclusion.action 无硬编码价位
+    module: tests.unit.test_report_engine
+    finding: F-006
+    priority: P1
+    automated: false
+
+  - id: FIN-07
+    suite: unit
+    layer: financial
+    title: Fibonacci probability 为静态映射
+    module: tests.unit.test_report_engine
+    finding: F-007
+    priority: P2
+    automated: false
+
+  - id: FIN-08
+    suite: unit
+    layer: financial
+    title: 4h/1d EMA610 历史不足警告
+    module: tests.unit.test_indicators
+    finding: F-008
+    priority: P2
+    automated: false
+    maps_to: [IND-12]
+
+  - id: FIN-09
+    suite: unit
+    layer: financial
+    title: Volume 全 0 时 VWAP 警告
+    module: tests.unit.test_indicators
+    finding: F-009
+    priority: P2
+    automated: false
+
+  - id: FIN-10
+    suite: unit
+    layer: financial
+    title: external 占位数据 source 标识
+    module: tests.unit.test_external
+    finding: F-010
+    priority: P2
+    automated: false
+
+  - id: FIN-11
+    suite: unit
+    layer: financial
+    title: debate 各 bias 下 trader/risk/manager 行为
+    module: tests.unit.test_agent_chain
+    finding: F-011
+    priority: P2
+    automated: false
+
+  - id: FIN-INT-01
+    suite: integration
+    layer: financial
+    title: 1d 独立 fetch vs resample 末 close 价差
+    module: tests.integration.test_pipeline
+    finding: F-005
+    priority: P2
+    automated: false
+
+  - id: FIN-INT-02
+    suite: integration
+    layer: financial
+    title: 5m 末 bar 时间戳新鲜度
+    module: tests.integration.test_pipeline
+    priority: P3
+    automated: false
+
+  - id: FIN-UI-01
+    suite: manual
+    layer: financial
+    title: 胜率/概率须标注结构权重非回测
+    page: 机构级分析报告
+    finding: F-002
+    priority: P0
+    automated: false
+
+  - id: FIN-UI-02
+    suite: manual
+    layer: financial
+    title: DXY/日历/新闻显示占位或模拟
+    page: 机构级分析报告
+    finding: F-010
+    priority: P2
+    automated: false
+
+  - id: FIN-UI-03
+    suite: manual
+    layer: financial
+    title: manager reduce 时展示 position_scale
+    page: LLM决策链
+    finding: F-011
+    priority: P2
+    automated: false
+
+  - id: FIN-UI-04
+    suite: manual
+    layer: financial
+    title: EMA610 不足时可见警告
+    page: 机构级分析报告
+    finding: F-008
+    priority: P2
+    automated: false
+
+  - id: FIN-UI-05
+    suite: manual
+    layer: financial
+    title: footer 免责声明可见
+    page: all
+    priority: P1
+    automated: false
+

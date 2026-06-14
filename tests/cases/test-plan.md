@@ -191,3 +191,18 @@ python tests/run.py --full
 pytest tests/unit/test_indicators.py -q          # IND
 pytest tests/integration -m integration -q       # FN + PERF
 ```
+
+---
+
+## 8. 金融 Review 用例（FIN）
+
+> 详设：[financial-review-cases.md](./financial-review-cases.md) · 来源 [financial-review.md](../../docs/financial-review.md)
+
+| 前缀 | 范围 | 说明 |
+|------|------|------|
+| `FIN-*` | 信号/风控/数据语义 | F-001～F-011 单元与集成 |
+| `FIN-UI-*` | 合规披露 | 胜率标注、占位数据、免责声明 |
+
+**Sprint 1 优先（P0/P1）：** FIN-01 风控 approved · FIN-02 win_rate · FIN-06 结论硬编码 · FIN-03 R:R · FIN-UI-01/05
+
+**已有覆盖：** F-005 现价一致 → `IND-01`；signals schema → `IT-03`；EMA610 notes → `IND-12`
