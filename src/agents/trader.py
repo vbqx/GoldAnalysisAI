@@ -2,26 +2,15 @@
 
 from __future__ import annotations
 
-from src.analysis.ict_pa import sentiment_score
-from src.analysis.report_engine import generate_trading_signals
+from src.analysis.report_engine import TradingSignal
 from src.core.types import MarketContext, ResearchDebate, TransactionProposal
 
 
-def run_trader_agent(ctx: MarketContext, debate: ResearchDebate) -> tuple[TransactionProposal, list]:
-    analyses = ctx.analyses
-    primary = analyses.get("4h") or analyses["1h"]
-    swing_high = primary.swing_high or ctx.metrics["daily_high"]
-    swing_low = primary.swing_low or ctx.metrics["daily_low"]
-    sentiment = sentiment_score(analyses)
-
-    signals = generate_trading_signals(
-        ctx.price,
-        analyses["5m"],
-        analyses["15m"],
-        swing_high,
-        swing_low,
-        sentiment,
-    )
+def run_trader_agent(
+    ctx: MarketContext,
+    debate: ResearchDebate,
+    signals: list[TradingSignal],
+) -> tuple[TransactionProposal, list[TradingSignal]]:
 
     rationale = [
         f"研究员共识：{debate.consensus_bias}（强度 {debate.consensus_strength:.0%}）",
