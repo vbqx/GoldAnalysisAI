@@ -66,7 +66,7 @@ def _render_llm_output_panel(*, stage: str, output: str, error: str | None = Non
 
 
 def render_llm_io_history(
-    records: list[dict], *, title: str = "LLM 输入/输出", expand_last: bool = False
+    records: list[dict], *, title: str = "智能体 I/O", expand_last: bool = False
 ) -> None:
     """Full-width LLM call history."""
     if not records:
@@ -76,18 +76,20 @@ def render_llm_io_history(
     if title:
         st.markdown(f'<p class="section-h">{title}</p>', unsafe_allow_html=True)
     for i, rec in enumerate(records):
-        status = "❌" if rec.get("error") else "✅"
+        is_rule = rec.get("kind") == "rule" or rec.get("model") == "规则引擎"
+        status = "❌" if rec.get("error") else ("📋" if is_rule else "✅")
         timing = ""
         if rec.get("latency_ms"):
             timing = f" · {format_latency_ms(rec['latency_ms'])}"
         stage = rec.get("stage", str(i))
+        model = rec.get("model", "")
         with st.expander(
-            f"{status} {rec.get('label', stage)} · `{rec.get('model', '')}`{timing}",
-            expanded=(i == len(records) - 1) if expand_last else (i == 0),
+            f"{status} {rec.get('label', stage)} · `{model}`{timing}",
+            expanded=(i == len(records) - 1) if expand_last else (i == 0 and stage == "analyst_team"),
         ):
             in_col, out_col = st.columns(2)
             with in_col:
-                st.markdown("**输入（Prompt）**")
+                st.markdown("**输入**" if is_rule else "**输入（Prompt）**")
                 msgs = rec.get("messages") or []
                 st.text_area(
                     f"llm_in_{stage}",
@@ -97,7 +99,7 @@ def render_llm_io_history(
                     label_visibility="collapsed",
                 )
             with out_col:
-                st.markdown("**输出（JSON）**")
+                st.markdown("**输出**" if is_rule else "**输出（JSON）**")
                 if rec.get("error"):
                     st.error(rec["error"])
                 else:

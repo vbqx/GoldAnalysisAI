@@ -35,7 +35,7 @@ def _render_generation_and_llm_io(
             if stage_sources
             else records
         )
-        render_llm_io_history(merged, title="LLM 输入/输出", expand_last=expand_last)
+        render_llm_io_history(merged, title="智能体 I/O（Analyst Team + LLM）", expand_last=expand_last)
     else:
         st.info(empty_io_msg)
 
@@ -55,11 +55,11 @@ def render_live_generation_panel(live: dict) -> None:
             records=records,
             expand_last=True,
             empty_steps_msg="流水线启动中，即将显示各阶段进度…",
-            empty_io_msg="数据拉取与规则分析完成后，将在此展示 LLM Prompt 与整理摘要。",
+            empty_io_msg="数据拉取与 Analyst Team 完成后，将在此展示各阶段输入/输出与 LLM 整理摘要。",
         )
 
     with tab_trace:
-        st.info("智能体决策链将在多空研究、辩论阶段完成后自动出现。")
+        st.info("Analyst Team 与智能体决策链将在四位分析师与多空辩论完成后自动出现。")
 
     with tab_llm:
         st.info("报告文案层将在流水线末尾生成。")
@@ -88,5 +88,5 @@ def render_llm_decision_page(report: dict) -> None:
             steps=meta.get("generation_steps", []),
             records=meta.get("llm_io", []),
             stage_sources=meta.get("stage_sources", {}),
-            empty_io_msg="暂无 LLM 调用记录。请确认 `.env` 中已启用 `LLM_STAGE_*` 或 `LLM_ENABLED`。",
+            empty_io_msg="暂无智能体 I/O 记录。请确认已刷新报告；Analyst Team 为规则输出，LLM 需启用 `LLM_STAGE_*` 或 `LLM_ENABLED`。",
         )

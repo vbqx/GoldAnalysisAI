@@ -59,6 +59,10 @@ class _ModuleSyncProgressReporter(ProgressReporter):
         super().llm_end(stage, output, error=error, latency_ms=latency_ms)
         self._sync()
 
+    def stage_io(self, stage: str, *, input_text: str, output_text: str, latency_ms: int | None = None, label: str | None = None) -> None:
+        super().stage_io(stage, input_text=input_text, output_text=output_text, latency_ms=latency_ms, label=label)
+        self._sync()
+
 
 def bootstrap_env() -> None:
     env_path = Path(__file__).resolve().parents[2] / ".env"

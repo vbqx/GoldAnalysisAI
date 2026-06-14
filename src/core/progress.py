@@ -47,6 +47,7 @@ class LLMIORecord:
     output: str = ""
     error: str | None = None
     latency_ms: int | None = None
+    kind: Literal["llm", "rule"] = "llm"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -57,10 +58,16 @@ class LLMIORecord:
             "output": self.output,
             "error": self.error,
             "latency_ms": self.latency_ms,
+            "kind": self.kind,
         }
 
 
 STAGE_LABELS = {
+    "analyst_team": "Analyst Team",
+    "technical": "技术分析师",
+    "fundamentals": "基本面分析师",
+    "news": "新闻分析师",
+    "sentiment": "情绪分析师",
     "bullish": "看多研究",
     "bearish": "看空研究",
     "debate": "多空辩论",
@@ -123,6 +130,29 @@ class ProgressReporter:
 
     def llm_io_snapshot(self) -> list[dict[str, Any]]:
         return [r.to_dict() for r in self.llm_io]
+
+    def stage_io(
+        self,
+        stage: str,
+        *,
+        input_text: str,
+        output_text: str,
+        latency_ms: int | None = None,
+        label: str | None = None,
+    ) -> None:
+        """Record rule-based stage input/output for the generation I/O panel."""
+        resolved_label = label or STAGE_LABELS.get(stage, stage)
+        self.llm_io.append(
+            LLMIORecord(
+                stage=stage,
+                label=resolved_label,
+                model="规则引擎",
+                messages=[{"role": "user", "content": input_text}],
+                output=output_text,
+                latency_ms=latency_ms,
+                kind="rule",
+            )
+        )
 
     def llm_begin(self, stage: str, model: str, messages: list[dict[str, str]]) -> None:
         label = STAGE_LABELS.get(stage, stage)
