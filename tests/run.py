@@ -8,6 +8,7 @@ Usage:
     python tests/run.py --unit       # unit only
     python tests/run.py --regression # regression only
     python tests/run.py --integration # integration only (slow)
+    python tests/run.py --external    # live News/DXY/Social API smoke tests
 """
 from __future__ import annotations
 
@@ -34,6 +35,7 @@ def main() -> int:
     group.add_argument("--unit", action="store_true", help="unit tests only")
     group.add_argument("--regression", action="store_true", help="regression tests only")
     group.add_argument("--integration", action="store_true", help="integration tests only (slow)")
+    group.add_argument("--external", action="store_true", help="live News/DXY/Social API smoke tests")
     group.add_argument("--financial", action="store_true", help="financial review tests (FIN-*) only")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
@@ -49,6 +51,10 @@ def main() -> int:
         return _pytest([str(TESTS / "unit" / "test_financial_review.py"), *common, "-m", "financial"])
     if args.integration:
         return _pytest([str(TESTS / "integration"), *common, "-m", "integration"])
+    if args.external:
+        return _pytest(
+            [str(TESTS / "integration" / "test_external_apis.py"), *common, "-m", "external_api"],
+        )
     if args.full:
         return _pytest([str(TESTS), *common])
 

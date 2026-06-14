@@ -12,6 +12,7 @@ from src.data.sources.news import NewsDataSource
 from src.data.sources.news_feed import fetch_news_bundle
 from src.data.sources.social import SocialDataSource
 from src.data.sources.social_feed import fetch_social_sentiment
+from src.data.sources.te_calendar_scraper import fetch_te_calendar, scrape_te_calendar_html
 
 
 def _dxy_df(change_pct: float) -> pd.DataFrame:
@@ -54,6 +55,41 @@ def test_fundamentals_source_uses_dxy(mock_fetch) -> None:
 
 
 @patch("src.data.sources.news_feed.FINNHUB_API_KEY", "test-key")
+@patch("src.data.sources.te_calendar_scraper.TE_CALENDAR_ENABLED", True)
+@patch("src.data.sources.te_calendar_scraper.requests.get")
+def test_te_calendar_direct(mock_get) -> None:
+    from pathlib import Path
+
+    html = Path("tests/fixtures/te_calendar_sample.html").read_text(encoding="utf-8")
+    mock_resp = mock_get.return_value
+    mock_resp.raise_for_status.return_value = None
+    mock_resp.text = html
+
+    risk = fetch_te_calendar()
+    assert "Building Permits" in risk or "NAHB" in risk
+
+
+@patch("src.data.sources.news_feed.fetch_te_calendar", return_value="2026-06-14 12:30 United States CPI YoY")
+@patch("src.data.sources.news_feed.NEWS_RSS_ENABLED", False)
+@patch("src.data.sources.news_feed.TE_CALENDAR_ENABLED", True)
+@patch("src.data.sources.news_feed.FINNHUB_API_KEY", "")
+def test_te_calendar_bundle(mock_fetch_te) -> None:
+    headlines, risk, refs = fetch_news_bundle()
+    assert "CPI" in risk
+    assert "te_calendar_scrape" in refs.get("sources", [])
+
+
+def test_te_calendar_parse_html() -> None:
+    from datetime import date
+    from pathlib import Path
+
+    html = Path("tests/fixtures/te_calendar_sample.html").read_text(encoding="utf-8")
+    events = scrape_te_calendar_html(html, today=date(2026, 6, 14), days=3, min_importance=2)
+    assert len(events) >= 1
+    assert any("Building Permits" in ev["event"] or "NAHB" in ev["event"] for ev in events)
+
+
+@patch("src.data.sources.news_feed.TE_CALENDAR_ENABLED", False)
 @patch("src.data.sources.news_feed._finnhub_news")
 @patch("src.data.sources.news_feed._finnhub_calendar")
 def test_news_finnhub_bundle(mock_cal, mock_news) -> None:
@@ -78,30 +114,61 @@ def test_news_rss_fallback(mock_text) -> None:
     assert "google_news_rss" in refs.get("sources", [])
 
 
-@patch("src.data.sources.social_feed.get_json")
-def test_reddit_sentiment_bullish(mock_json) -> None:
-    mock_json.return_value = {
+@patch("src.data.sources.social_feed.TV_SOCIAL_ENABLED", True)
+@patch("src.data.sources.social_feed._fetch_tv_json")
+def test_tv_social_sentiment_bullish(mock_fetch) -> None:
+    import json
+    from pathlib import Path
+
+    ideas = json.loads(Path("tests/fixtures/tv_ideas_sample.json").read_text(encoding="utf-8"))
+    mock_fetch.side_effect = lambda path, symbol: ideas if path == "ideas" else {"data": {"minds": {"results": []}}}
+
+    summary, posts, refs = fetch_social_sentiment()
+    assert refs["source"] == "tradingview_social"
+    assert refs["ideas_count"] >= 1
+    assert "偏多" in summary or "分歧" in summary or len(posts) >= 1
+
+
+def test_tv_parse_ideas_and_minds() -> None:
+    import json
+    from pathlib import Path
+
+    from src.data.sources.social_feed import parse_tv_ideas, parse_tv_minds
+
+    ideas = json.loads(Path("tests/fixtures/tv_ideas_sample.json").read_text(encoding="utf-8"))
+    parsed = parse_tv_ideas(ideas)
+    assert len(parsed) == 2
+    assert parsed[0]["bias_delta"] == 1
+
+    minds_payload = {
         "data": {
-            "children": [
-                {"data": {"title": "Gold bullish breakout long support", "score": 50, "upvote_ratio": 0.9, "stickied": False}},
-                {"data": {"title": "XAUUSD rally moon", "score": 30, "upvote_ratio": 0.85, "stickied": False}},
-            ]
+            "minds": {
+                "results": [
+                    {
+                        "text_ast": {
+                            "type": "root",
+                            "children": [{"type": "p", "children": ["Gold long breakout bullish"]}],
+                        },
+                        "total_likes": 5,
+                        "author": {"username": "mind_user"},
+                    }
+                ]
+            }
         }
     }
-    summary, posts, refs = fetch_social_sentiment()
-    assert refs["source"] == "reddit"
-    assert "偏多" in summary or len(posts) >= 1
+    minds = parse_tv_minds(minds_payload)
+    assert minds[0]["bias_delta"] > 0
 
 
 @patch("src.data.sources.social.fetch_social_sentiment")
 def test_social_source_external(mock_fetch) -> None:
     mock_fetch.return_value = (
-        "Reddit 偏多（60% 加权 · 10 帖）",
-        [{"title": "gold long", "subreddit": "Gold", "score": 10, "upvote_ratio": 0.8}],
-        {"source": "reddit", "bias": "bullish"},
+        "TV 社区偏多（60% 加权 · 10 条 Ideas/Minds）",
+        [{"title": "gold long", "kind": "ideas", "author": "trader", "likes": 10}],
+        {"source": "tradingview_social", "bias": "bullish"},
     )
     ext = SocialDataSource().fetch_external()
-    assert "Reddit" in ext.social_sentiment
+    assert "TV" in ext.social_sentiment
     items = SocialDataSource().fetch_evidence()
     assert any("社媒情绪" in i.summary for i in items)
 
