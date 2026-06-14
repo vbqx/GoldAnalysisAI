@@ -126,6 +126,8 @@ GoldAnalysisAI/
 
 | Session 缓存 | ✅ 切换页面秒开 |
 
+| 外部数据（DXY/新闻/日历/TV 社媒） | ✅ 拉取 + UI 展示 |
+
 | LLM 双轨 + 来源标识 | ✅ |
 
 | 智能体 I/O（Analyst Team + LLM） | ✅ LLM决策链页 |
@@ -169,8 +171,11 @@ LLM_ENABLED=true
 ```bash
 pip install -r requirements-dev.txt
 
-# 快速：单元 + 回归（无网络，推荐 CI / 日常，约 49 项）
+# 快速：单元 + 回归（无网络，推荐 CI / 日常）
 python tests/run.py
+
+# 外部 API 冒烟（DXY / 新闻 / TE 日历 / TV 社媒，需网络）
+python tests/run.py --external
 
 # 金融 Review：FIN-* 单测
 python tests/run.py --financial

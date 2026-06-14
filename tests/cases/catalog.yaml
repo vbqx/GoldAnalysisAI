@@ -146,7 +146,7 @@ cases:
 
     suite: unit
 
-    title: 外部数据源 DXY / 新闻 / Reddit（mock）
+    title: 外部数据源 DXY / 新闻 / TE 日历 / TV 社媒（mock）
 
     module: tests.unit.test_external_sources
 
@@ -408,6 +408,106 @@ cases:
 
 
 
+  - id: IT-05
+
+    suite: integration
+
+    layer: functional
+
+    title: 真实 DXY TradingView 接口
+
+    module: tests.integration.test_external_apis
+
+    priority: P1
+
+    automated: true
+
+    markers: [slow, integration, external_api]
+
+    maps_to: [FIN-10]
+
+
+
+  - id: IT-06
+
+    suite: integration
+
+    layer: functional
+
+    title: 真实 News Finnhub/RSS 接口
+
+    module: tests.integration.test_external_apis
+
+    priority: P1
+
+    automated: true
+
+    markers: [slow, integration, external_api]
+
+    maps_to: [FIN-10]
+
+
+
+  - id: IT-07
+
+    suite: integration
+
+    layer: functional
+
+    title: 真实 TradingView 社媒 Ideas/Minds 接口
+
+    module: tests.integration.test_external_apis
+
+    priority: P1
+
+    automated: true
+
+    markers: [slow, integration, external_api]
+
+    maps_to: [FIN-10]
+
+
+
+  - id: IT-08
+
+    suite: integration
+
+    layer: functional
+
+    title: 真实 TE 经济日历 HTML 抓取
+
+    module: tests.integration.test_external_apis
+
+    priority: P1
+
+    automated: true
+
+    markers: [slow, integration, external_api]
+
+    maps_to: [FIN-10]
+
+
+
+  - id: IT-09
+
+    suite: integration
+
+    layer: functional
+
+    title: 外部 DataSource merge_external 合并
+
+    module: tests.integration.test_external_apis
+
+    priority: P2
+
+    automated: true
+
+    markers: [slow, integration, external_api]
+
+    maps_to: [FIN-10]
+
+
+
   # ── 回归（Issue 修复）────────────────────────────────────
 
   - id: RG-01
@@ -611,6 +711,30 @@ cases:
     acceptance:
 
       - 现价/日涨跌/日高低/情绪/美元/结论六格齐全
+
+
+
+  - id: UIL-16
+
+    suite: manual
+
+    layer: ui_layout
+
+    title: 机构页外部数据面板 external-feed
+
+    page: 机构级分析报告
+
+    priority: P1
+
+    automated: false
+
+    maps_to: [FIN-UI-02]
+
+    acceptance:
+
+      - 展示 DXY / 新闻 / 日历 / TV 社媒四格
+
+      - 数据来源 chip 可见
 
 
 

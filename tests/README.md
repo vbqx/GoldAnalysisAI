@@ -37,6 +37,9 @@ python tests/run.py
 # 金融 Review 单测（FIN-*）
 python tests/run.py --financial
 
+# 外部 API 冒烟（DXY / 新闻 / TE 日历 / TV 社媒，需网络）
+python tests/run.py --external
+
 # 完整测试：含流水线集成（需 TradingView + .env）
 python tests/run.py --full
 
@@ -91,5 +94,6 @@ streamlit run tests/dashboard.py --server.port 8502
 | 旧命令 | 新命令 |
 |--------|--------|
 | `python scripts/run_pipeline_test.py` | `python tests/run.py --integration` |
+| `python scripts/test_live_fetch.py` | 外部数据源手动冒烟（或 `python tests/run.py --external`） |
 | `python scripts/test_llm_json_fix.py` | `pytest tests/unit/test_llm_json.py` |
 | `python scripts/regression_test.py` | `python tests/run.py --fast` |
