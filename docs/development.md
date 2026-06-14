@@ -90,10 +90,12 @@ streamlit run app.py    # http://localhost:8501
 
 **缓存策略**：`ensure_report()`（`src/viz/streamlit_common.py`）后台线程跑流水线 + `session_state` 缓存。切换页面或点击控件**不**重跑；仅首次进入、浏览器刷新或点 **「刷新报告」** 才重新生成。生成等待期间机构页展示与 LLM 决策链相同的步骤 / I/O Tab（每秒刷新）。
 
-首次进入或刷新后约需 2–3 分钟。无 UI 测试：
+无 UI 自动化测试见 [`tests/README.md`](../tests/README.md)：
 
 ```bash
-python scripts/run_pipeline_test.py
+pip install -r requirements-dev.txt
+python tests/run.py              # 快速：单元 + 回归
+python tests/run.py --full       # 含完整流水线（约 2–3 分钟）
 ```
 
 ---
@@ -322,8 +324,9 @@ GoldAnalysisAI/
 │   └── 3_LLM决策链.py
 ├── requirements.txt
 ├── .env.example
+├── requirements-dev.txt        # pytest 等开发依赖
+├── tests/                      # 测试体系，见 tests/README.md
 ├── docs/
-├── scripts/chart_compare_test.py
 └── src/
     ├── pipeline.py             # 对外 API 薄封装
     ├── config.py               # 环境变量 → 模块级常量
@@ -564,7 +567,7 @@ trace["decision"]   # action, selected_signal_indices, summary
 ### 8.3 其他
 
 ```bash
-python scripts/chart_compare_test.py
+python tests/tools/chart_compare.py
 ```
 
 ---
@@ -596,13 +599,19 @@ python scripts/chart_compare_test.py
 
 ## 11. 测试与路线图
 
-**当前无自动化测试。** 手动检查：
+自动化测试见 [`tests/`](../tests/README.md) 与 [`tests/cases/catalog.yaml`](../tests/cases/catalog.yaml)。
+
+```bash
+python tests/run.py --fast       # 日常 / CI
+python tests/run.py --full       # 发版前（含流水线）
+```
+
+手工检查（尚未自动化，见 catalog `UI-*`）：
 
 - [ ] 生成进度与 LLM 流式 I/O 正常显示
 - [ ] 侧边栏「LLM 输入/输出」有完整记录
 - [ ] 顶栏来源条与决策链徽章正确
 - [ ] 两种报告模式渲染正常
-- [ ] `python scripts/run_pipeline_test.py` 输出 `OK price=...`
 
 | 优先级 | 任务 | 状态 |
 |--------|------|------|

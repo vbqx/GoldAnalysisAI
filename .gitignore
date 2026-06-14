@@ -5,3 +5,7 @@ __pycache__/
 _chart_test.html
 logs/
 *.log
+.pytest_cache/
+
+tests/reports/*
+!tests/reports/.gitkeep

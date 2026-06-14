@@ -88,7 +88,9 @@ def render_agent_trace_panel(report: dict) -> None:
                 }
                 for r in risk_reviews
             ],
-            use_container_width=True,
+            # Fix #6 [Improvement] Streamlit use_container_width 弃用警告
+            # 原因：use_container_width 将于 2025-12-31 移除，改用 width="stretch"。
+            width="stretch",
             hide_index=True,
         )
 
