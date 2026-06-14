@@ -2,10 +2,21 @@
 
 from __future__ import annotations
 
+import html
 from typing import Any
 
+from src.analysis.report_engine import parse_risk_events_calendar
 from src.config import GITHUB_REPO, PROJECT_NAME
 from src.viz.source_labels import render_source_badge, stage_source
+
+_SOURCE_LABELS = {
+    "finnhub_news": "Finnhub 新闻",
+    "finnhub_calendar": "Finnhub 日历",
+    "te_calendar_scrape": "TE 经济日历",
+    "google_news_rss": "Google RSS",
+    "tradingview_social": "TV Ideas/Minds",
+    "tradingview_dxy": "TV DXY",
+}
 
 DASHBOARD_CSS = """
 <style>
@@ -118,7 +129,11 @@ DASHBOARD_CSS = """
 .val-with-badge { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; }
 
 /* ── 决策链页 ── */
-.trace-block { padding: 8px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 8px; }
+.ext-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.ext-src-chip { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: #fff7ed; border: 1px solid #fed7aa; font-size: 10px; font-weight: 600; color: #9a3412; }
+.ext-kind { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+.external-feed h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+
 .trace-block:last-child { border-bottom: none; }
 .step-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 6px 16px; font-size: 0.9rem; }
 </style>
@@ -135,6 +150,75 @@ TREND_CN = {"bearish": ("空头", "bear"), "bullish": ("多头", "bull"), "rangi
 
 def _chg_class(change: float) -> str:
     return "bear" if change < 0 else "bull"
+
+
+def _truncate(text: str, n: int) -> str:
+    text = str(text or "—")
+    return text if len(text) <= n else text[: n - 1] + "…"
+
+
+def _source_tags(sources: list[str]) -> str:
+    if not sources:
+        return ""
+    chips = []
+    for src in sources:
+        label = _SOURCE_LABELS.get(src, src)
+        chips.append(f'<span class="ext-src-chip">{html.escape(label)}</span>')
+    return "".join(chips)
+
+
+def render_external_data_panel(ext: dict[str, Any]) -> str:
+    """Live external feed: DXY, headlines, calendar, TV social."""
+    if not ext:
+        return ""
+
+    sources = ext.get("sources") or []
+    src_html = _source_tags(sources if isinstance(sources, list) else [])
+
+    headlines = ext.get("news_headlines") or []
+    if not isinstance(headlines, list):
+        headlines = []
+    headline_html = "".join(
+        f"<li>{html.escape(str(h))}</li>" for h in headlines[:6]
+    ) or "<li>暂无匹配头条</li>"
+
+    risk = str(ext.get("risk_events") or "—")
+    if risk != "—":
+        cal_rows = "".join(
+            f'<div class="cal-item">{html.escape(str(e.get("time", "")))} '
+            f'{e.get("flag", "")} {html.escape(str(e.get("event", "")))}</div>'
+            for e in parse_risk_events_calendar(risk)
+        )
+        if not cal_rows:
+            cal_rows = f'<div class="cal-item">{html.escape(risk[:280])}</div>'
+    else:
+        cal_rows = '<div class="cal-item">—</div>'
+
+    social = html.escape(str(ext.get("social_sentiment") or "—"))
+    posts = ext.get("social_posts") or []
+    if not isinstance(posts, list):
+        posts = []
+    social_html = "".join(
+        f'<li><span class="ext-kind">{html.escape(str(p.get("kind", "ideas")))}</span> '
+        f'{html.escape(str(p.get("author") or "—"))}: '
+        f'{html.escape(str(p.get("title") or "")[:100])}'
+        f'{" · 👍" + str(p.get("likes")) if p.get("likes") else ""}</li>'
+        for p in posts[:4]
+    ) or "<li>暂无 TV 社区样本</li>"
+
+    dxy = html.escape(str(ext.get("dxy_impact") or "—"))
+
+    return f"""
+<div class="section-card external-feed">
+  <h3>外部数据 · 实时拉取 {src_html}</h3>
+  <div class="ext-grid">
+    <div class="panel-box"><h4>美元指数 DXY</h4><p>{dxy}</p></div>
+    <div class="panel-box"><h4>新闻头条</h4><ul class="bullet-list">{headline_html}</ul></div>
+    <div class="panel-box"><h4>经济日历 / 事件风险</h4>{cal_rows}</div>
+    <div class="panel-box"><h4>TV 社区情绪</h4><p>{social}</p><ul class="bullet-list">{social_html}</ul></div>
+  </div>
+</div>
+"""
 
 
 def render_header(report: dict[str, Any]) -> str:
@@ -157,7 +241,8 @@ def render_header(report: dict[str, Any]) -> str:
         ("日高/日低", f"{m['daily_high']:.2f} / {m['daily_low']:.2f}", "", ""),
         ("市场情绪", c["market_sentiment"], cls, ""),
         ("美元指数影响", ext.get("dxy_impact", "—"), "", ""),
-        ("风险事件影响", ext.get("risk_events", "—"), "sm", ""),
+        ("风险事件影响", _truncate(ext.get("risk_events", "—"), 72), "sm", ""),
+        ("TV 社区情绪", _truncate(ext.get("social_sentiment", "—"), 72), "sm", ""),
         (
             "当前结论",
             f'<span class="val-with-badge">{conclusion_badge}<span>{conclusion_text}</span></span>',
@@ -285,11 +370,13 @@ def render_path_cards(paths: list[dict]) -> str:
 
 
 def render_calendar(events: list[dict]) -> str:
+    if not events:
+        return ""
     rows = "".join(
-        f'<div class="cal-item">{e["time"]} {e.get("flag","")} {e["event"]}</div>'
+        f'<div class="cal-item">{html.escape(str(e.get("time", "")))} {e.get("flag", "")} {html.escape(str(e.get("event", "")))}</div>'
         for e in events
     )
-    return f'<div class="panel-box"><h4>📅 今日重要提醒</h4>{rows}</div>'
+    return f'<div class="panel-box"><h4>📅 宏观日历</h4>{rows}</div>'
 
 
 def render_trading_plans(signals: list[dict]) -> str:
