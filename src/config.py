@@ -29,13 +29,22 @@ TV_FETCH_ROUND_RETRIES = max(0, int(os.getenv("TV_FETCH_ROUND_RETRIES", "1")))
 TV_DXY_EXCHANGE = os.getenv("TV_DXY_EXCHANGE", "TVC")
 TV_DXY_SYMBOL = os.getenv("TV_DXY_SYMBOL", "DXY")
 
-# External data (News / DXY / Social)
-FINNHUB_API_KEY = os.getenv("FINNHUB_API_KEY", "")
-TE_CALENDAR_ENABLED = os.getenv("TE_CALENDAR_ENABLED", "true").lower() in ("1", "true", "yes")
-TE_CALENDAR_COUNTRY = os.getenv("TE_CALENDAR_COUNTRY", "united states")
-TE_CALENDAR_DAYS = max(1, int(os.getenv("TE_CALENDAR_DAYS", "2")))
-TE_CALENDAR_MIN_IMPORTANCE = max(1, min(3, int(os.getenv("TE_CALENDAR_MIN_IMPORTANCE", "2"))))
-NEWS_RSS_ENABLED = os.getenv("NEWS_RSS_ENABLED", "true").lower() in ("1", "true", "yes")
+# External data (Jin10 MCP news/calendar, TradingView DXY/social)
+JIN10_API_TOKEN = os.getenv("JIN10_API_TOKEN", "") or os.getenv("JIN10_BEARER_TOKEN", "")
+JIN10_ENABLED = os.getenv("JIN10_ENABLED", "true" if JIN10_API_TOKEN else "false").lower() in (
+    "1",
+    "true",
+    "yes",
+)
+JIN10_MCP_URL = os.getenv("JIN10_MCP_URL", "https://mcp.jin10.com/mcp")
+JIN10_MCP_PROTOCOL = os.getenv("JIN10_MCP_PROTOCOL", "2025-11-25")
+JIN10_KEYWORD = os.getenv("JIN10_KEYWORD") or os.getenv("JIN10_FLASH_KEYWORD", "黄金")
+JIN10_FLASH_KEYWORD = JIN10_KEYWORD  # legacy alias
+JIN10_NEWS_LIMIT = max(3, int(os.getenv("JIN10_NEWS_LIMIT", "12")))
+JIN10_FLASH_LIMIT = max(1, int(os.getenv("JIN10_FLASH_LIMIT", "8")))
+JIN10_ARTICLE_LIMIT = max(1, int(os.getenv("JIN10_ARTICLE_LIMIT", "6")))
+JIN10_CACHE_TTL = max(0, int(os.getenv("JIN10_CACHE_TTL", "600")))
+JIN10_MCP_TIMEOUT = max(30, int(os.getenv("JIN10_MCP_TIMEOUT", "60")))
 TV_SOCIAL_ENABLED = os.getenv("TV_SOCIAL_ENABLED", "true").lower() in ("1", "true", "yes")
 TV_SOCIAL_SYMBOL = os.getenv("TV_SOCIAL_SYMBOL", TV_SYMBOL)
 TV_SOCIAL_IDEAS_LIMIT = max(5, int(os.getenv("TV_SOCIAL_IDEAS_LIMIT", "25")))
