@@ -210,6 +210,13 @@ def _fmt_context(data: dict[str, Any]) -> str:
         preview = headlines[:3]
         bullets = "".join(f"<li>{escape(str(h)[:120])}</li>" for h in preview)
         parts.append(f"<ul>{bullets}</ul>")
+    posts = ext.get("social_posts") or []
+    if isinstance(posts, list) and posts:
+        social_bullets = "".join(
+            f"<li>{escape(str(p.get('author') or '—'))}: {escape(str(p.get('title') or '')[:80])}</li>"
+            for p in posts[:3]
+        )
+        parts.append(f"<p><b>TV 社区样本</b></p><ul>{social_bullets}</ul>")
     return "\n".join(parts)
 
 

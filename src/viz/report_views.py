@@ -18,6 +18,8 @@ from src.viz.dashboard_components import (
 
     render_calendar,
 
+    render_external_data_panel,
+
     render_footer,
 
     render_header,
@@ -138,6 +140,8 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
         )
 
     st.markdown(render_header(report), unsafe_allow_html=True)
+
+    st.markdown(render_external_data_panel(report.get("external", {})), unsafe_allow_html=True)
 
     st.markdown(render_agent_source_banner(report), unsafe_allow_html=True)
 
