@@ -18,21 +18,23 @@ def _bias_from_dxy(text: str) -> Bias:
 
 
 def run_fundamentals_analyst(ctx) -> AnalystReport:
-    ext = FundamentalsDataSource().fetch_external()
-    items = FundamentalsDataSource().fetch_evidence()
+    ext = ctx.external if ctx.external.dxy_impact != "—" else FundamentalsDataSource().fetch_external()
+    ds = FundamentalsDataSource()
+    items = ds.fetch_evidence()
     bias = _bias_from_dxy(ext.dxy_impact)
 
-    if ext.dxy_impact != "—":
+    live = any(i.refs.get("source") == "tradingview" for i in items)
+    if ext.dxy_impact != "—" and not any(i.category == "fundamentals" for i in items):
         items.append(
             EvidenceItem(
                 category="fundamentals",
                 summary=f"宏观：{ext.dxy_impact}",
                 strength=0.55 if bias != "neutral" else 0.35,
-                refs={"dxy_impact": ext.dxy_impact, "placeholder": True},
+                refs={"dxy_impact": ext.dxy_impact, "source": "tradingview" if live else "placeholder"},
             )
         )
 
-    summary = f"基本面：美元指数影响 {ext.dxy_impact}"
-    if not items:
-        summary = "基本面：暂无实时宏观数据（占位）"
+    summary = f"基本面：美元指数 {ext.dxy_impact}"
+    if not live and "占位" in ext.dxy_impact:
+        summary = f"基本面：{ext.dxy_impact}"
     return build_report(agent="fundamentals_analyst", items=items, bias=bias, summary=summary)

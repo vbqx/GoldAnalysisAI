@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from unittest.mock import patch
+
 import pandas as pd
 
 from src.agents.analysts import run_analyst_team
@@ -50,10 +52,15 @@ def test_analyst_team_has_four_specialists() -> None:
     assert len(team.reports) == 4
 
 
-def test_fundamentals_analyst_reads_dxy_placeholder() -> None:
+@patch("src.data.sources.fundamentals.fetch_dxy_impact")
+def test_fundamentals_analyst_reads_dxy(mock_fetch) -> None:
+    mock_fetch.return_value = (
+        "偏强 (104.0, 日 +0.50%) → 利空黄金",
+        {"source": "tradingview", "bias": "bearish"},
+    )
     team = run_analyst_team(_sample_context())
     assert team.fundamentals.bias == "bearish"
-    assert any("美元指数" in i.summary for i in team.fundamentals.items)
+    assert any("美元指数" in i.summary or "宏观" in i.summary for i in team.fundamentals.items)
 
 
 def test_bullish_researcher_includes_matching_analyst_items() -> None:
@@ -96,10 +103,13 @@ def test_debate_includes_analyst_summaries() -> None:
     assert any("technical_analyst" in note for note in debate.discussion_notes)
 
 
-def test_factory_records_analyst_team_stage_io() -> None:
+def test_factory_records_analyst_team_stage_io(monkeypatch) -> None:
     from src.agents import factory as agent_factory
     from src.core.progress import ProgressReporter, reset_progress, set_progress
     from src.core.types import AgentPipelineMeta
+
+    monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", False)
+    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: False)
 
     ctx = _sample_context()
     reporter = ProgressReporter()
