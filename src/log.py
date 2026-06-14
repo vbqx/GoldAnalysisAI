@@ -27,6 +27,11 @@ def setup_logging(*, level: str | None = None, log_file: str | None = None) -> N
     root.setLevel(numeric_level)
 
     console = logging.StreamHandler(sys.stderr)
+    if hasattr(sys.stderr, "reconfigure"):
+        try:
+            sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
     console.setFormatter(logging.Formatter(_LOG_FORMAT, _DATE_FORMAT))
     root.addHandler(console)
 
