@@ -34,13 +34,16 @@ def _review(
         notes.append("保守：仅主信号，仓位 40%")
 
     allowed = [i for i in allowed if i < signal_count]
-    approved = bool(allowed) and proposal.debate_bias != "neutral" or bool(allowed)
 
-    if proposal.debate_bias == "neutral":
-        notes.append("共识震荡 — 保守/中性档降低通过率")
+    if not allowed:
+        approved = False
+    elif proposal.debate_bias == "neutral":
+        approved = False
+        notes.append("共识震荡 — 各档暂不通过，等待方向确认")
         if profile == "conservative":
-            approved = False
             allowed = allowed[:1]
+    else:
+        approved = True
 
     return RiskReview(
         profile=profile,

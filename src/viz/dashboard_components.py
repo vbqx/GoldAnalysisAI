@@ -311,7 +311,7 @@ def render_trading_plans(signals: list[dict]) -> str:
     <div><b>入场：</b>{sig['entry_low']} ~ {sig['entry_high']}</div>
     <div><b>止损：</b>{sig['stop_loss']}</div>
     {tp_lines}
-    <div><b>盈亏比：</b>{sig['risk_reward']} | <b>胜率：</b>{sig.get('win_rate','—')}</div>
+    <div><b>盈亏比：</b>{sig['risk_reward']} | <b>结构权重：</b>{sig.get('sentiment_bias_pct', sig.get('win_rate', '—'))} <span style="color:#94a3b8;font-size:11px">（非回测胜率）</span></div>
   </div>
 </div>""")
     return f'<div class="plan-grid">{"".join(cards)}</div>'

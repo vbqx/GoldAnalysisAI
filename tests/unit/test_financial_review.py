@@ -55,8 +55,7 @@ def test_fin_02_win_rate_matches_sentiment_not_backtest() -> None:
     sentiment = {"bearish": 62.0, "bullish": 28.0, "ranging": 10.0}
     signals = generate_trading_signals(4215.0, a5, a15, 4300.0, 4200.0, sentiment)
     assert signals, "need at least one signal"
-    assert signals[0].win_rate == "62%"
-    # 字段名 win_rate 暗示回测胜率 — 见 FIN-UI-01 / Issue
+    assert signals[0].sentiment_bias_pct == "62%"
 
 
 @pytest.mark.financial
