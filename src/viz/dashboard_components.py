@@ -82,6 +82,21 @@ DASHBOARD_CSS = """
 .plan-card.long .head { background: linear-gradient(135deg, #16a34a, #15803d); }
 .plan-card .body { padding: 8px 10px; background: #fff; line-height: 1.6; }
 .plan-card .body b { color: #475569; font-weight: 600; }
+.llm-narrative-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #334155;
+  margin-top: 6px;
+}
+.llm-narrative-box p { margin: 0 0 8px; }
+.llm-narrative-box p:last-child { margin-bottom: 0; }
+.llm-narrative-box ul { margin: 4px 0 8px; padding-left: 18px; }
+.llm-narrative-box li { margin-bottom: 4px; }
+.llm-narrative-box b { color: #0f172a; }
 .path-card { border-left: 4px solid #94a3b8; padding: 6px 10px; margin-bottom: 6px; font-size: 11px; background: #fafafa; border-radius: 0 6px 6px 0; }
 .section-h { font-size: 14px; font-weight: 700; color: #0f172a; margin: 8px 0 6px; border-left: 3px solid #dc2626; padding-left: 8px; }
 .liq-list, .bullet-list { font-size: 12px; line-height: 1.6; color: #334155; margin: 0; padding-left: 16px; }
