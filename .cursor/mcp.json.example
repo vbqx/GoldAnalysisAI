@@ -1,0 +1,20 @@
+# Cursor / Claude MCP — 金十官方数据（可选，供 AI 对话直接查行情/快讯/日历）
+# Token 申请: https://mcp.jin10.com/app
+# 文档: docs/jin10-mcp.md
+#
+# 复制为 ~/.cursor/mcp.json 或在 Cursor Settings → MCP 中添加：
+#
+# {
+#   "mcpServers": {
+#     "jin10": {
+#       "url": "https://mcp.jin10.com/mcp",
+#       "headers": {
+#         "Authorization": "Bearer YOUR_JIN10_API_TOKEN"
+#       }
+#     }
+#   }
+# }
+#
+# Apify 上也有社区 Actor「dadaodb/jinshi-news」（仅快讯），可通过 Apify MCP 接入 AI：
+# https://mcp.apify.com/?tools=dadaodb/jinshi-news
+# 本项目的 Streamlit 流水线使用上方金十官方 MCP（快讯 + 资讯 + 日历）。

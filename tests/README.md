@@ -37,7 +37,7 @@ python tests/run.py
 # 金融 Review 单测（FIN-*）
 python tests/run.py --financial
 
-# 外部 API 冒烟（DXY / 新闻 / TE 日历 / TV 社媒，需网络）
+# 外部 API 冒烟（DXY / 金十 MCP / TV 社媒，需网络）
 python tests/run.py --external
 
 # 完整测试：含流水线集成（需 TradingView + .env）
