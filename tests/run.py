@@ -34,7 +34,7 @@ def main() -> int:
     group.add_argument("--unit", action="store_true", help="unit tests only")
     group.add_argument("--regression", action="store_true", help="regression tests only")
     group.add_argument("--integration", action="store_true", help="integration tests only (slow)")
-    group.add_argument("--financial", action="store_true", help="financial review tests (FIN-*, some expected fail until bugs fixed)")
+    group.add_argument("--financial", action="store_true", help="financial review tests (FIN-*) only")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -52,8 +52,8 @@ def main() -> int:
     if args.full:
         return _pytest([str(TESTS), *common])
 
-    # default --fast (exclude financial: known failures tracked as GitHub issues)
-    code = _pytest([str(TESTS / "unit"), *common, "-m", "not financial"])
+    # default --fast: all unit tests (incl. FIN-*) + regression
+    code = _pytest([str(TESTS / "unit"), *common])
     if code != 0:
         return code
     return _pytest([str(TESTS / "regression"), *common, "-m", "regression"])
