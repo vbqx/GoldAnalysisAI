@@ -13,14 +13,16 @@
 | **News** (Bloomberg/Reuters) | `data/sources/news.py` | 🔲 占位，规则文案 |
 | **Social** (X/Reddit) | `data/sources/social.py` | 🔲 占位 |
 | **Fundamentals** (DXY/宏观) | `data/sources/fundamentals.py` | 🔲 占位 |
-| **Bullish Researcher** | `agents/bullish.py` | ✅ 从 ICT 结构提取看多证据 |
-| **Bearish Researcher** | `agents/bearish.py` | ✅ 从 ICT 结构提取看空证据 |
-| **Discussion** | `agents/debate.py` | ✅ 多空辩论 → 共识 bias |
+| **Bullish Researcher** | `agents/factory.py` → rule / `llm/stages/bullish` | ✅ 双轨（P0） |
+| **Bearish Researcher** | `agents/factory.py` → rule / `llm/stages/bearish` | ✅ 双轨（P0） |
+| **Discussion** | `agents/factory.py` → rule / `llm/stages/debate` | ✅ 双轨（P0） |
 | **Trader Agent** | `agents/trader.py` | ✅ 生成交易提案（复用 signal 引擎） |
 | **Risk Team** (激进/中性/保守) | `agents/risk.py` | ✅ 三档风控过滤 |
 | **Manager** | `agents/manager.py` | ✅ 最终执行/观望决策 |
+| **LLM 报告文案** | `llm/analyst.py` | ✅ 流水线末尾（`LLM_ENABLED`） |
+| **流式 LLM I/O** | `viz/pipeline_progress.py` | ✅ 生成时实时展示 |
 | **Execution** | （未来）券商/MT5 API | 🔲 未实现 |
-| **Streamlit UI** | `app.py` + `viz/*` | ✅ 不变 |
+| **Streamlit UI** | `app.py` + `views/*` + `viz/*` | ✅ 三页：机构 / 短线 / LLM 决策 |
 
 ---
 
@@ -67,10 +69,12 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │                   REPORT BUILDER                                 │
 │   analysis/report_engine.build_report (JSON schema 不变)         │
-│   + report["agent_trace"] 审计链（UI 暂未展示）                   │
+│   + report["agent_trace"] + meta.stage_sources + meta.llm_io
+│   + 可选 llm/analyst 文案层
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
-                      app.py / viz/*
+                      app.py + views/* + viz/*
+                      ensure_report() 线程生成 + session 缓存
 ```
 
 \* 占位模块，后续接真实 API 时不改 UI。
@@ -83,14 +87,18 @@
 src/
 ├── core/
 │   ├── types.py          # Evidence, Debate, Proposal, Decision…
+│   ├── progress.py       # 生成进度 + LLM I/O 记录（contextvar）
 │   └── orchestrator.py   # run_trade_agent_pipeline()
 ├── agents/
-│   ├── bullish.py        # 看多研究员
-│   ├── bearish.py        # 看空研究员
-│   ├── debate.py         # 辩论
-│   ├── trader.py         # 交易员
-│   ├── risk.py           # 风控三档
-│   └── manager.py        # 经理决策
+│   ├── factory.py          # 统一调度 rule / llm / hybrid
+│   ├── bullish.py          # 规则：看多研究员
+│   ├── bearish.py          # 规则：看空研究员
+│   ├── debate.py           # 规则：辩论
+│   ├── trader.py / risk.py / manager.py
+│   └── llm/
+│       ├── base.py
+│       ├── payload.py
+│       └── stages/         # LLM 各阶段实现
 ├── data/
 │   ├── aggregator.py     # 汇总数据源 → MarketContext
 │   ├── fetcher.py        # (legacy facade)
@@ -120,17 +128,17 @@ report, data, analyses = run_analysis()
 
 ---
 
-## 5. 后续迭代（分析质量）
-
-当前已知问题：**部分结论仍依赖规则模板，外部数据为占位**。建议按层修复：
+## 5. 后续迭代
 
 | 优先级 | 任务 | 负责层 |
 |--------|------|--------|
-| P0 | ICT 检测逻辑校准（BOS/OB/FVG 与实盘对齐） | `analysis/ict_pa.py` |
-| P1 | DXY / 经济日历真实 API | `data/sources/fundamentals.py`, `news.py` |
-| P2 | 结论文案由 `ManagerDecision` + 证据链生成，去掉硬编码 | `agents/manager.py`, `report_engine.py` |
-| P3 | LLM 深度思考层（Trader Agent o1 类） | `agents/trader.py` + 可选 OpenAI |
-| P4 | 执行层对接模拟/实盘 | 新 `execution/` 模块 |
+| **P0** | LLM 研究 + 辩论 + 流式 I/O | ✅ 见 [llm-agents.md](./llm-agents.md) |
+| P1 | LLM 交易员（hybrid 信号选择） | `agents/llm/stages/trader.py` |
+| P2 | LLM 风控 + 经理 | `agents/llm/stages/risk.py`, `manager.py` |
+| P3 | ICT Interpreter + DXY/日历 API | `ict_pa.py`, `data/sources/` |
+| **P4** | 报告文案层 | ✅ `llm/analyst.py` |
+
+完整 LLM 设计见 **[docs/llm-agents.md](./llm-agents.md)**。
 
 ---
 
@@ -142,4 +150,4 @@ print(report["agent_trace"]["debate"]["discussion_notes"])
 print(report["agent_trace"]["decision"]["summary"])
 ```
 
-可在 Streamlit 侧边栏增加「智能体 trace」折叠面板（可选，不影响现有布局）。
+可在 Streamlit 侧边栏「智能体决策链」「LLM 输入/输出」查看 trace 与完整 Prompt/响应。
