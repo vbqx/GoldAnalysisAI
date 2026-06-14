@@ -10,8 +10,9 @@ class FundamentalsDataSource:
     name = "fundamentals"
 
     def fetch_external(self) -> ExternalFactors:
-        impact, _refs = fetch_dxy_impact()
-        return ExternalFactors(dxy_impact=impact)
+        impact, refs = fetch_dxy_impact()
+        sources = ["tradingview_dxy"] if refs.get("source") == "tradingview" else []
+        return ExternalFactors(dxy_impact=impact, sources=sources)
 
     def fetch_evidence(self) -> list[EvidenceItem]:
         impact, refs = fetch_dxy_impact()

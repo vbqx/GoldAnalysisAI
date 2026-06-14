@@ -136,13 +136,17 @@ class ExternalFactors:
     risk_events: str = "—"
     news_headlines: list[str] = field(default_factory=list)
     social_sentiment: str = "—"
+    social_posts: list[dict] = field(default_factory=list)
+    sources: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> dict[str, str | list[str]]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "dxy_impact": self.dxy_impact,
             "risk_events": self.risk_events,
             "news_headlines": self.news_headlines,
             "social_sentiment": self.social_sentiment,
+            "social_posts": self.social_posts[:5],
+            "sources": self.sources,
         }
 
 

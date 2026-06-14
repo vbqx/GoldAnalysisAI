@@ -29,6 +29,10 @@ def merge_external(*parts: ExternalFactors) -> ExternalFactors:
         merged.news_headlines.extend(p.news_headlines)
         if p.social_sentiment != "—":
             merged.social_sentiment = p.social_sentiment
+        merged.social_posts.extend(p.social_posts)
+        for src in p.sources:
+            if src and src not in merged.sources:
+                merged.sources.append(src)
     return merged
 
 
@@ -54,7 +58,7 @@ def build_market_context(
     prog.update("context", detail="DXY · TradingView")
     fund_ext = FundamentalsDataSource().fetch_external()
 
-    prog.update("context", detail="社媒 · Reddit")
+    prog.update("context", detail="社媒 · TradingView")
     social_ext = SocialDataSource().fetch_external()
 
     external = merge_external(news_ext, fund_ext, social_ext)
