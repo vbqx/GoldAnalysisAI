@@ -1,0 +1,26 @@
+{
+  "data": {
+    "ideas": {
+      "data": {
+        "items": [
+          {
+            "name": "Gold bullish breakout long support",
+            "description": "Looking for rally to resistance",
+            "likes_count": 50,
+            "comments_count": 10,
+            "symbol": {"direction": 1},
+            "user": {"username": "gold_trader"}
+          },
+          {
+            "name": "XAUUSD bearish short setup",
+            "description": "Sell into resistance",
+            "likes_count": 20,
+            "comments_count": 4,
+            "symbol": {"direction": 2},
+            "user": {"username": "fx_bear"}
+          }
+        ]
+      }
+    }
+  }
+}

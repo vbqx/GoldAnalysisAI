@@ -12,14 +12,20 @@ load_dotenv()
 def pytest_configure(config: pytest.Config) -> None:
     config.addinivalue_line("markers", "slow: integration test hitting network + LLM (~2-3 min)")
     config.addinivalue_line("markers", "integration: full pipeline or external services")
+    config.addinivalue_line("markers", "external_api: live News/DXY/Social HTTP smoke tests")
     config.addinivalue_line("markers", "regression: regression checks from system test report")
     config.addinivalue_line("markers", "financial: financial review cases (FIN-*) from docs/financial-review.md")
+
+
+def _skip_offline_external_mock(request) -> bool:
+    name = request.module.__name__
+    return name.endswith("test_external_sources") or name.endswith("test_external_apis")
 
 
 @pytest.fixture(autouse=True)
 def offline_external_sources(request):
     """Mock News/DXY/Social fetches in unit tests (except dedicated source tests)."""
-    if request.module.__name__.endswith("test_external_sources"):
+    if _skip_offline_external_mock(request):
         yield
         return
 
