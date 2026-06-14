@@ -79,12 +79,26 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
 
     pipeline_meta = AgentPipelineMeta()
 
+    prog.start("analyst_team", "Analyst Team", "技术 · 基本面 · 新闻 · 情绪")
+    analyst_team = agent_factory.run_analyst_team(ctx, pipeline_meta)
+    prog.done(
+        "analyst_team",
+        f"技术 {analyst_team.technical.bias} · 基本面 {analyst_team.fundamentals.bias}",
+    )
+    log.info(
+        "analyst team technical=%s fundamentals=%s news=%s sentiment=%s",
+        analyst_team.technical.bias,
+        analyst_team.fundamentals.bias,
+        analyst_team.news.bias,
+        analyst_team.sentiment.bias,
+    )
+
     prog.start("bullish", "看多研究")
-    bullish = agent_factory.run_bullish(ctx, pipeline_meta)
+    bullish = agent_factory.run_bullish(ctx, pipeline_meta, analyst_team)
     prog.done("bullish", f"{len(bullish.items)} 条 · 置信 {bullish.confidence:.0%}")
 
     prog.start("bearish", "看空研究")
-    bearish = agent_factory.run_bearish(ctx, pipeline_meta)
+    bearish = agent_factory.run_bearish(ctx, pipeline_meta, analyst_team)
     prog.done("bearish", f"{len(bearish.items)} 条 · 置信 {bearish.confidence:.0%}")
     log.info(
         "research bullish=%d items (conf=%.2f) bearish=%d items (conf=%.2f)",
@@ -95,7 +109,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     )
 
     prog.start("debate", "多空辩论")
-    debate = agent_factory.run_debate(bullish, bearish, analyses, pipeline_meta)
+    debate = agent_factory.run_debate(bullish, bearish, analyses, pipeline_meta, analyst_team)
     prog.done("debate", f"共识 {debate.consensus_bias} · {debate.consensus_strength:.0%}")
     log.info(
         "debate consensus=%s strength=%.2f",
@@ -163,6 +177,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
 
     trace = AgentTrace(
         context=ctx.to_dict(),
+        analyst_team=analyst_team.to_dict(),
         debate=debate.to_dict(),
         proposal=proposal.to_dict(),
         risk_reviews=[r.to_dict() for r in risk_reviews],

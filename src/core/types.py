@@ -26,6 +26,44 @@ class EvidenceItem:
 
 
 @dataclass
+class AnalystReport:
+    """Specialist analyst output (TradingAgents-style Analyst Team)."""
+
+    agent: str  # technical_analyst | fundamentals_analyst | news_analyst | sentiment_analyst
+    bias: Bias
+    items: list[EvidenceItem]
+    confidence: float
+    summary: str
+
+    def to_dict(self) -> dict[str, Any]:
+        d = asdict(self)
+        d["items"] = [asdict(i) for i in self.items]
+        return d
+
+
+@dataclass
+class AnalystTeam:
+    """Four specialist reports consumed by bull/bear researchers."""
+
+    technical: AnalystReport
+    fundamentals: AnalystReport
+    news: AnalystReport
+    sentiment: AnalystReport
+
+    @property
+    def reports(self) -> list[AnalystReport]:
+        return [self.technical, self.fundamentals, self.news, self.sentiment]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "technical": self.technical.to_dict(),
+            "fundamentals": self.fundamentals.to_dict(),
+            "news": self.news.to_dict(),
+            "sentiment": self.sentiment.to_dict(),
+        }
+
+
+@dataclass
 class AgentEvidence:
     agent: str
     direction: Bias
@@ -178,6 +216,7 @@ class AgentTrace:
     """Full audit trail — stored in report under agent_trace (UI optional)."""
 
     context: dict[str, Any]
+    analyst_team: dict[str, Any]
     debate: dict[str, Any]
     proposal: dict[str, Any]
     risk_reviews: list[dict[str, Any]]
