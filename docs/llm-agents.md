@@ -202,6 +202,22 @@ LLM_ENHANCE_CONCLUSION=true
 
 
 
+### 3.4 传输重试与规则兜底
+
+LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整次请求重打**。
+
+| 组件 | 行为 |
+|------|------|
+| `llm/client.py` | `ChunkedEncodingError`、连接超时等 → `LLMClientError` |
+| `agents/llm/base.py` `stream_llm_json()` | 最多 `_MAX_STAGE_RETRIES + 1`（3 次）尝试，退避 1s → 2s |
+| `run_llm_stage()` | JSON 解析失败同样重试；传输与解析均失败 → 返回 `error` trace |
+| `factory` hybrid | LLM 失败或置信度不足 → 采用规则版 `bullish`/`bearish`/`debate` |
+| `llm/analyst.py` | 文案层经 `stream_llm_json()`；失败写入 `llm_analysis.error`，不中断 pipeline |
+
+单元测试：`tests/unit/test_llm_transport.py`。
+
+
+
 ---
 
 
@@ -242,7 +258,7 @@ LLM_ENHANCE_CONCLUSION=true
 
 
 
-实现路径：`core/progress.py`（`llm_begin` / `run_llm_stream` / `llm_end`）→ `agents/llm/base.py` → `llm/client.chat_stream()`。
+实现路径：`core/progress.py`（`stage_io` / `llm_begin` / `run_llm_stream` / `llm_end`）→ `agents/llm/base.py`（`stream_llm_json`）→ `llm/client.chat_stream()`。
 
 
 
@@ -353,7 +369,7 @@ LLM_ENHANCE_CONCLUSION=true
 
 | **P0** | Analyst Team 规则版 + 流水线接入 | ✅ |
 
-| **P0** | factory + LLM 研究 + 辩论 + 流式 I/O | ✅ |
+| **P0** | LLM 传输重试 + hybrid 规则兜底 | ✅ |
 
 | **P4** | 报告文案层 | ✅ |
 
