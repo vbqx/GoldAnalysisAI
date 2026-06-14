@@ -8,6 +8,7 @@ from typing import Any
 import pandas as pd
 
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
+from src.core.types import MarketContext
 from src.data.fetcher import daily_metrics, utc8_now
 from src.indicators.technical import ema_relation, fibonacci_levels
 from src.log import get_logger
@@ -68,6 +69,27 @@ def _compute_risk_reward(
     if risk <= 0 or reward <= 0:
         return "N/A"
     return f"1:{reward / risk:.1f}"
+
+
+def compute_trading_signals(ctx: MarketContext) -> list[TradingSignal]:
+    """Single entry point for pipeline signal generation (trader + report share this)."""
+    analyses = ctx.analyses
+    sentiment = sentiment_score(analyses)
+    primary = analyses.get("4h") or analyses.get("1h")
+    swing_high = (
+        primary.swing_high if primary and primary.swing_high else ctx.metrics["daily_high"]
+    )
+    swing_low = (
+        primary.swing_low if primary and primary.swing_low else ctx.metrics["daily_low"]
+    )
+    return generate_trading_signals(
+        ctx.price,
+        analyses["5m"],
+        analyses["15m"],
+        swing_high,
+        swing_low,
+        sentiment,
+    )
 
 
 def generate_trading_signals(
@@ -399,9 +421,10 @@ def build_path_summary(projections: list[dict]) -> list[dict[str, Any]]:
 def build_report(
     data: dict[str, pd.DataFrame],
     analyses: dict[str, TimeframeAnalysis],
+    *,
+    signals: list[TradingSignal] | None = None,
 ) -> dict[str, Any]:
     df_1d = data["1d"]
-    df_5m = data["5m"]
     metrics = daily_metrics(df_1d)
     price = metrics["current_price"]
 
@@ -411,9 +434,10 @@ def build_report(
     swing_low = primary.swing_low if primary and primary.swing_low else metrics["daily_low"]
 
     fib = fibonacci_levels(swing_high, swing_low)
-    signals = generate_trading_signals(
-        price, analyses["5m"], analyses["15m"], swing_high, swing_low, sentiment,
-    )
+    if signals is None:
+        signals = generate_trading_signals(
+            price, analyses["5m"], analyses["15m"], swing_high, swing_low, sentiment,
+        )
     conclusion = build_conclusion(sentiment, primary.trend if primary else "ranging", signals)
 
     # EMA relations for each TF
