@@ -8,7 +8,16 @@ from typing import TYPE_CHECKING
 
 import pandas as pd
 
-from src.config import TV_EXCHANGE, TV_PASSWORD, TV_SYMBOL, TV_USERNAME
+from src.config import (
+    TV_EXCHANGE,
+    TV_FETCH_RETRIES,
+    TV_FETCH_RETRY_BASE_S,
+    TV_FETCH_ROUND_RETRIES,
+    TV_PASSWORD,
+    TV_SYMBOL,
+    TV_USERNAME,
+)
+from src.core.progress import get_progress
 from src.log import get_logger
 
 log = get_logger(__name__)
@@ -28,6 +37,7 @@ def _read_system_proxy() -> str | None:
 
     try:
         import winreg
+
         key = winreg.OpenKey(
             winreg.HKEY_CURRENT_USER,
             r"Software\Microsoft\Windows\CurrentVersion\Internet Settings",
@@ -70,6 +80,10 @@ def reset_client() -> None:
     log.debug("TradingView client reset")
     _tv_client = None
     _last_error = None
+
+
+def _report_fetch(detail: str) -> None:
+    get_progress().update("fetch", detail=detail)
 
 
 def _get_client():
@@ -117,68 +131,112 @@ def _resample(df: pd.DataFrame, rule: str) -> pd.DataFrame:
     return ohlcv.dropna()
 
 
-def _fetch_bars(interval: "Interval", n_bars: int, retries: int = 2) -> pd.DataFrame:
+def _fetch_bars(
+    interval: "Interval",
+    n_bars: int,
+    *,
+    label: str,
+    retries: int | None = None,
+    exchange: str | None = None,
+    symbol: str | None = None,
+    report_progress: bool = True,
+) -> pd.DataFrame:
     global _last_error
-    tv = _get_client()
+    max_attempts = (retries if retries is not None else TV_FETCH_RETRIES) + 1
     last_exc: Exception | None = None
+    ex = exchange or TV_EXCHANGE
+    sym = symbol or TV_SYMBOL
 
-    for attempt in range(retries + 1):
+    for attempt in range(max_attempts):
+        attempt_no = attempt + 1
+        if report_progress:
+            _report_fetch(f"{label} · 第 {attempt_no}/{max_attempts} 次请求 TradingView…")
         try:
             log.debug(
                 "fetch %s:%s interval=%s n_bars=%d attempt=%d",
-                TV_EXCHANGE,
-                TV_SYMBOL,
+                ex,
+                sym,
                 interval,
                 n_bars,
-                attempt + 1,
+                attempt_no,
             )
-            df = tv.get_hist(
-                symbol=TV_SYMBOL,
-                exchange=TV_EXCHANGE,
+            df = _get_client().get_hist(
+                symbol=sym,
+                exchange=ex,
                 interval=interval,
                 n_bars=n_bars,
             )
             result = _normalize(df)
             log.info(
                 "fetch ok %s:%s interval=%s bars=%d range=%s → %s",
-                TV_EXCHANGE,
-                TV_SYMBOL,
+                ex,
+                sym,
                 interval,
                 len(result),
                 result.index[0].strftime("%Y-%m-%d"),
                 result.index[-1].strftime("%Y-%m-%d"),
             )
+            if report_progress:
+                _report_fetch(f"{label} · 完成 {len(result)} 根 K 线")
             return result
         except Exception as exc:
             last_exc = exc
             _last_error = str(exc)
             log.warning(
                 "fetch failed %s:%s interval=%s attempt=%d: %s",
-                TV_EXCHANGE,
-                TV_SYMBOL,
+                ex,
+                sym,
                 interval,
-                attempt + 1,
+                attempt_no,
                 exc,
             )
-            if attempt < retries:
-                time.sleep(1.5 * (attempt + 1))
+            if attempt < max_attempts - 1:
+                wait = TV_FETCH_RETRY_BASE_S * (2**attempt)
+                if report_progress:
+                    _report_fetch(
+                        f"{label} · 失败（{exc}）· {wait:.0f}s 后重连重试 ({attempt_no}/{max_attempts})"
+                    )
+                reset_client()
+                time.sleep(wait)
 
     raise RuntimeError(
-        f"TradingView fetch failed for {TV_EXCHANGE}:{TV_SYMBOL} — {last_exc}. "
+        f"{label} 拉取失败（已重试 {max_attempts} 次）: {last_exc}. "
         "若在国内网络，可能需要代理/VPN 才能连接 TradingView WebSocket。"
     ) from last_exc
 
 
-def fetch_multi_timeframe() -> dict[str, pd.DataFrame]:
-    """Fetch all timeframes with minimal TradingView requests (2 calls)."""
+def fetch_symbol_daily(
+    exchange: str,
+    symbol: str,
+    *,
+    n_bars: int = 5,
+    label: str | None = None,
+) -> pd.DataFrame:
+    """Fetch daily bars for a non-primary symbol (e.g. DXY) without pipeline fetch progress noise."""
     from tvDatafeed import Interval
 
-    log.info("fetch_multi_timeframe start %s:%s", TV_EXCHANGE, TV_SYMBOL)
-    df_5m = _fetch_bars(Interval.in_5_minute, n_bars=5000)
+    return _fetch_bars(
+        Interval.in_daily,
+        n_bars,
+        label=label or symbol,
+        exchange=exchange,
+        symbol=symbol,
+        retries=1,
+        report_progress=False,
+    )
+
+
+def _fetch_multi_timeframe_once() -> dict[str, pd.DataFrame]:
+    from tvDatafeed import Interval
+
+    _report_fetch("① 5m K 线 (5000 bars) · TradingView WebSocket")
+    df_5m = _fetch_bars(Interval.in_5_minute, n_bars=5000, label="5m")
     time.sleep(0.8)
 
-    df_1d = _fetch_bars(Interval.in_daily, n_bars=365)
+    _report_fetch("② 1d K 线 (365 bars) · TradingView WebSocket")
+    df_1d = _fetch_bars(Interval.in_daily, n_bars=365, label="1d")
 
+    _report_fetch("③ 本地聚合 15m / 1h / 4h")
     out = {
         "5m": df_5m,
         "15m": _resample(df_5m, "15min"),
@@ -192,6 +250,33 @@ def fetch_multi_timeframe() -> dict[str, pd.DataFrame]:
         {k: len(v) for k, v in out.items()},
     )
     return out
+
+
+def fetch_multi_timeframe() -> dict[str, pd.DataFrame]:
+    """Fetch all timeframes with minimal TradingView requests (2 calls)."""
+    log.info("fetch_multi_timeframe start %s:%s", TV_EXCHANGE, TV_SYMBOL)
+    _report_fetch(f"连接 TradingView · {TV_EXCHANGE}:{TV_SYMBOL}")
+
+    last_exc: Exception | None = None
+    rounds = TV_FETCH_ROUND_RETRIES + 1
+    for round_idx in range(rounds):
+        if round_idx > 0:
+            wait = TV_FETCH_RETRY_BASE_S * (2**round_idx)
+            _report_fetch(
+                f"整轮重试 {round_idx + 1}/{rounds} · 重置 WebSocket · {wait:.0f}s 后重试…"
+            )
+            reset_client()
+            time.sleep(wait)
+        try:
+            return _fetch_multi_timeframe_once()
+        except RuntimeError as exc:
+            last_exc = exc
+            log.warning("fetch_multi_timeframe round %d/%d failed: %s", round_idx + 1, rounds, exc)
+
+    raise RuntimeError(
+        f"TradingView fetch failed for {TV_EXCHANGE}:{TV_SYMBOL} — {last_exc}. "
+        "若在国内网络，可能需要代理/VPN 才能连接 TradingView WebSocket。"
+    ) from last_exc
 
 
 def source_label() -> str:
