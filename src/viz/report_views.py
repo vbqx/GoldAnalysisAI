@@ -38,6 +38,8 @@ from src.viz.dashboard_components import (
 
 )
 
+from src.viz.source_labels import render_agent_source_banner
+
 from src.viz.lightweight_chart import build_lightweight_chart_html, chart_iframe_height
 
 
@@ -72,7 +74,7 @@ def _embed_chart(
 
         st.markdown(
 
-            f'<p class="chart-box-title">{ {"15m": "15m 结构判断", "5m": "5m 执行区域", "4h": "4H 结构", "1h": "1H 结构"}.get(tf, tf) }</p>',
+            f'<p class="chart-box-title">{ {"15m": "15m 结构判断", "5m": "5m 执行区域", "4h": "4H 结构", "1h": "1H 结构", "1d": "日线结构"}.get(tf, tf) }</p>',
 
             unsafe_allow_html=True,
 
@@ -114,7 +116,7 @@ def _embed_chart(
 
 
 
-def render_institutional_report(report, data, analyses) -> None:
+def render_institutional_report(report, data, analyses, *, hide_title: bool = False) -> None:
 
     meta = report["meta"]
 
@@ -122,19 +124,22 @@ def render_institutional_report(report, data, analyses) -> None:
 
 
 
-    st.markdown(f'<p class="report-title">{meta["title"]}</p>', unsafe_allow_html=True)
-
-    st.markdown(
-
-        f'<p class="report-meta">更新时间: {meta["updated_at"]} &nbsp;|&nbsp; '
-
-        f'数据源: {report["meta"].get("data_source", "TradingView")} &nbsp;|&nbsp; {meta["methodology"]}</p>',
-
-        unsafe_allow_html=True,
-
-    )
+    if not hide_title:
+        st.markdown(f'<p class="report-title">{meta["title"]}</p>', unsafe_allow_html=True)
+        st.markdown(
+            f'<p class="report-meta">更新时间: {meta["updated_at"]} &nbsp;|&nbsp; '
+            f'数据源: {report["meta"].get("data_source", "TradingView")} &nbsp;|&nbsp; {meta["methodology"]}</p>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            f'<p class="report-meta">数据源: {report["meta"].get("data_source", "TradingView")}</p>',
+            unsafe_allow_html=True,
+        )
 
     st.markdown(render_header(report), unsafe_allow_html=True)
+
+    st.markdown(render_agent_source_banner(report), unsafe_allow_html=True)
 
     st.markdown(render_top_overview_row(report), unsafe_allow_html=True)
 
@@ -160,19 +165,19 @@ def render_institutional_report(report, data, analyses) -> None:
 
     with center:
 
-        st.markdown('<p class="section-h">5min 周期 (执行主图)</p>', unsafe_allow_html=True)
+        st.markdown('<p class="section-h">日线周期 (主图)</p>', unsafe_allow_html=True)
 
         _embed_chart(
 
             data,
 
-            analyses["5m"],
+            analyses["1d"],
 
             report,
 
-            analyses["15m"],
+            analyses["4h"],
 
-            "5m",
+            "1d",
 
             variant="main",
 
