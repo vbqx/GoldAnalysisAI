@@ -11,6 +11,7 @@ from src.analysis.ict_pa import TimeframeAnalysis
 
 Bias = Literal["bullish", "bearish", "neutral"]
 RiskProfile = Literal["aggressive", "neutral", "conservative"]
+StageSource = Literal["rule", "llm", "hybrid"]
 
 
 @dataclass
@@ -129,6 +130,50 @@ class MarketContext:
 
 
 @dataclass
+class LLMStageTrace:
+    """Per-stage LLM call audit metadata."""
+
+    stage: str
+    model: str
+    latency_ms: int = 0
+    error: str | None = None
+    confidence: float | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class StageMeta:
+    """Records which implementation produced a pipeline stage output."""
+
+    source: StageSource
+    fallback_reason: str | None = None
+    llm: LLMStageTrace | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        d: dict[str, Any] = {"source": self.source}
+        if self.fallback_reason:
+            d["fallback_reason"] = self.fallback_reason
+        if self.llm:
+            d["llm"] = self.llm.to_dict()
+        return d
+
+
+@dataclass
+class AgentPipelineMeta:
+    """Collects per-stage source metadata for agent_trace."""
+
+    stages: dict[str, StageMeta] = field(default_factory=dict)
+
+    def record(self, name: str, meta: StageMeta) -> None:
+        self.stages[name] = meta
+
+    def to_dict(self) -> dict[str, Any]:
+        return {k: v.to_dict() for k, v in self.stages.items()}
+
+
+@dataclass
 class AgentTrace:
     """Full audit trail — stored in report under agent_trace (UI optional)."""
 
@@ -137,6 +182,28 @@ class AgentTrace:
     proposal: dict[str, Any]
     risk_reviews: list[dict[str, Any]]
     decision: dict[str, Any]
+    llm: dict[str, Any] | None = None
+    stage_meta: dict[str, Any] | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class LLMAnalysis:
+    """Optional LLM narrative layer (default disabled)."""
+
+    enabled: bool = False
+    model: str = ""
+    provider: str = ""
+    market_summary: str = ""
+    trade_thesis: str = ""
+    action_plan: str = ""
+    risks: list[str] = field(default_factory=list)
+    watch_levels: list[str] = field(default_factory=list)
+    confidence: float = 0.0
+    raw_response: str | None = None
+    error: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
