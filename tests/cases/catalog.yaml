@@ -1171,10 +1171,11 @@ cases:
     suite: unit
     layer: financial
     title: neutral 共识下三档风控 approved 行为
-    module: tests.unit.test_risk
+    module: tests.unit.test_financial_review
     finding: F-001
     priority: P0
-    automated: false
+    automated: true
+    issue: "#9"
     acceptance:
       - debate_bias=neutral 时 conservative 拒绝
       - 修复 F-001 后 aggressive/neutral 行为与文档一致
@@ -1183,28 +1184,30 @@ cases:
     suite: unit
     layer: financial
     title: win_rate 等于 sentiment 分量非回测胜率
-    module: tests.unit.test_report_engine
+    module: tests.unit.test_financial_review
     finding: F-002
     priority: P0
-    automated: false
+    automated: true
+    issue: "#10"
 
   - id: FIN-03
     suite: unit
     layer: financial
     title: risk_reward 与 entry/SL/TP 几何一致
-    module: tests.unit.test_report_engine
+    module: tests.unit.test_financial_review
     finding: F-003
     priority: P1
-    automated: false
+    automated: true
+    issue: "#11"
 
   - id: FIN-04
     suite: unit
     layer: financial
     title: 扫低做多 SL/entry magic number 几何
-    module: tests.unit.test_report_engine
+    module: tests.unit.test_financial_review
     finding: F-004
     priority: P1
-    automated: false
+    automated: true
 
   - id: FIN-05
     suite: integration
@@ -1220,19 +1223,20 @@ cases:
     suite: unit
     layer: financial
     title: conclusion.action 无硬编码价位
-    module: tests.unit.test_report_engine
+    module: tests.unit.test_financial_review
     finding: F-006
     priority: P1
-    automated: false
+    automated: true
+    issue: "#12"
 
   - id: FIN-07
     suite: unit
     layer: financial
     title: Fibonacci probability 为静态映射
-    module: tests.unit.test_report_engine
+    module: tests.unit.test_financial_review
     finding: F-007
     priority: P2
-    automated: false
+    automated: true
 
   - id: FIN-08
     suite: unit
@@ -1248,10 +1252,11 @@ cases:
     suite: unit
     layer: financial
     title: Volume 全 0 时 VWAP 警告
-    module: tests.unit.test_indicators
+    module: tests.unit.test_financial_review
     finding: F-009
     priority: P2
-    automated: false
+    automated: true
+    issue: "#13"
 
   - id: FIN-10
     suite: unit
