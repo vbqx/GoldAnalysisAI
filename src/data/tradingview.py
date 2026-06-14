@@ -29,41 +29,17 @@ _tv_client = None
 _last_error: str | None = None
 
 
+from src.data.proxy_env import apply_system_proxy, read_system_proxy
+
+
 def _read_system_proxy() -> str | None:
-    """Detect system HTTP proxy from env var or Windows registry."""
-    for key in ("HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy"):
-        if val := os.environ.get(key):
-            return val
-
-    try:
-        import winreg
-
-        key = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER,
-            r"Software\Microsoft\Windows\CurrentVersion\Internet Settings",
-        )
-        try:
-            enable, _ = winreg.QueryValueEx(key, "ProxyEnable")
-            if enable:
-                server, _ = winreg.QueryValueEx(key, "ProxyServer")
-                winreg.CloseKey(key)
-                server = server.split(";")[0].strip()
-                return f"http://{server}" if "://" not in server else server
-        except Exception:
-            pass
-        winreg.CloseKey(key)
-    except Exception:
-        pass
-
-    return None
+    return read_system_proxy()
 
 
 def _setup_proxy() -> None:
     """Configure proxy for WebSocket connections from system settings."""
-    proxy = _read_system_proxy()
+    proxy = apply_system_proxy()
     if proxy:
-        os.environ.setdefault("http_proxy", proxy)
-        os.environ.setdefault("https_proxy", proxy)
         log.info("using proxy %s", proxy)
 
 
