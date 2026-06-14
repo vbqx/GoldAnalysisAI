@@ -229,7 +229,11 @@
 ## 7. 执行
 
 ```bash
-python tests/run.py --financial   # FIN-*（4 项预期失败，见 GitHub #9-#13）
+# 日常（含 FIN-* 金融单测）
+python tests/run.py --fast
+
+# 仅金融 Review
+python tests/run.py --financial
 ```
 
 发版前手工：执行 **FIN-UI-01 ~ FIN-UI-05**（P0/P1）。
