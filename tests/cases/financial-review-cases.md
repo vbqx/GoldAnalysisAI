@@ -229,13 +229,7 @@
 ## 7. 执行
 
 ```bash
-# 当前（金融用例尚未实现）
-pytest tests/unit/test_risk.py -q          # FIN-01（待建）
-pytest tests/unit/test_report_engine.py -q # FIN-02~07（待建）
-
-# 已有回归
-python tests/run.py --fast
-python tests/run.py --integration        # FIN-05 部分
+python tests/run.py --financial   # FIN-*（4 项预期失败，见 GitHub #9-#13）
 ```
 
 发版前手工：执行 **FIN-UI-01 ~ FIN-UI-05**（P0/P1）。

@@ -13,3 +13,4 @@ def pytest_configure(config: pytest.Config) -> None:
     config.addinivalue_line("markers", "slow: integration test hitting network + LLM (~2-3 min)")
     config.addinivalue_line("markers", "integration: full pipeline or external services")
     config.addinivalue_line("markers", "regression: regression checks from system test report")
+    config.addinivalue_line("markers", "financial: financial review cases (FIN-*) from docs/financial-review.md")
