@@ -26,7 +26,10 @@ def run_news_analyst(ctx) -> AnalystReport:
     bias: Bias = "neutral"
     if ext.risk_events and ext.risk_events != "—":
         if not any(ext.risk_events[:20] in i.summary for i in items):
-            live = "finnhub" in ext.risk_events or ext.risk_events.startswith("近")
+            live = any(
+                s in (ext.sources or [])
+                for s in ("jin10_flash", "jin10_news", "jin10_calendar")
+            ) or "CPI" in ext.risk_events or "非农" in ext.risk_events
             items.append(
                 EvidenceItem(
                     category="news",

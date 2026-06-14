@@ -194,6 +194,24 @@ def _fmt_analyst_team(data: dict[str, Any]) -> str:
 
 
 def _fmt_context(data: dict[str, Any]) -> str:
+    # Unified fetch step output (bars + external fields at top level)
+    if "bars" in data and "external" not in data:
+        ext = data
+        bars = data.get("bars") or {}
+        parts = [
+            f"<p><b>K 线</b> {escape(str(bars))}</p>",
+            f"<p><b>来源</b> {escape(str(data.get('source_label', '—')))}</p>",
+            f"<p><b>美元指数</b> {escape(str(data.get('dxy_impact', '—')))}</p>",
+            f"<p><b>事件风险</b> {escape(str(data.get('risk_events', '—')))}</p>",
+            f"<p><b>新闻头条</b> {int(data.get('headline_count') or 0)} 条</p>",
+            f"<p><b>社媒情绪</b> {escape(str(data.get('social_sentiment', '—')))}</p>",
+        ]
+        headlines = data.get("news_headlines") or []
+        if isinstance(headlines, list) and headlines:
+            bullets = "".join(f"<li>{escape(str(h)[:120])}</li>" for h in headlines[:5])
+            parts.append(f"<ul>{bullets}</ul>")
+        return "\n".join(parts)
+
     price = data.get("price")
     source = str(data.get("source_label", "")).strip() or "—"
     ext = data.get("external") if isinstance(data.get("external"), dict) else {}
@@ -239,7 +257,7 @@ def format_llm_narrative(stage: str, raw: str) -> str:
         body = _fmt_debate(data)
     elif stage == "analyst_team":
         body = _fmt_analyst_team(data)
-    elif stage == "context":
+    elif stage in ("context", "fetch"):
         body = _fmt_context(data)
     elif stage in _ANALYST_STAGE_TITLES:
         body = _fmt_analyst_report(_ANALYST_STAGE_TITLES[stage], data)

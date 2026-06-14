@@ -200,7 +200,11 @@ def fetch_social_sentiment() -> tuple[str, list[dict], dict]:
     try:
         posts = _collect_posts(symbol)
         if not posts:
-            return "—", [], {"source": "placeholder", "error": "no ideas/minds"}
+            return (
+                "TV 社区暂无数据（Ideas/Minds 为空，请确认 TV_SOCIAL_SYMBOL）",
+                [],
+                {"source": "placeholder", "error": "no ideas/minds"},
+            )
 
         summary, bias, bull_score, bear_score = _summarize(posts)
         samples: list[dict] = []
@@ -209,6 +213,12 @@ def fetch_social_sentiment() -> tuple[str, list[dict], dict]:
                 samples.append(post)
             elif len(samples) < 5 and post.get("likes", 0) >= 10:
                 samples.append(post)
+        if len(samples) < 5:
+            for post in sorted(posts, key=lambda p: int(p.get("likes") or 0), reverse=True):
+                if post not in samples:
+                    samples.append(post)
+                if len(samples) >= 5:
+                    break
 
         refs = {
             "source": "tradingview_social",
@@ -223,4 +233,8 @@ def fetch_social_sentiment() -> tuple[str, list[dict], dict]:
         return summary, samples, refs
     except Exception as exc:
         log.warning("TradingView social sentiment failed: %s", exc)
-        return "—", [], {"source": "placeholder", "error": str(exc)}
+        return (
+            f"TV 社区拉取失败（{exc} · 请检查网络/代理）",
+            [],
+            {"source": "placeholder", "error": str(exc)},
+        )

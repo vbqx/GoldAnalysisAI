@@ -10,10 +10,9 @@ from src.config import GITHUB_REPO, PROJECT_NAME
 from src.viz.source_labels import render_source_badge, stage_source
 
 _SOURCE_LABELS = {
-    "finnhub_news": "Finnhub 新闻",
-    "finnhub_calendar": "Finnhub 日历",
-    "te_calendar_scrape": "TE 经济日历",
-    "google_news_rss": "Google RSS",
+    "jin10_flash": "金十快讯",
+    "jin10_news": "金十资讯",
+    "jin10_calendar": "金十财经日历",
     "tradingview_social": "TV Ideas/Minds",
     "tradingview_dxy": "TV DXY",
 }
@@ -179,7 +178,7 @@ def render_external_data_panel(ext: dict[str, Any]) -> str:
     if not isinstance(headlines, list):
         headlines = []
     headline_html = "".join(
-        f"<li>{html.escape(str(h))}</li>" for h in headlines[:6]
+        f"<li>{html.escape(str(h))}</li>" for h in headlines[:10]
     ) or "<li>暂无匹配头条</li>"
 
     risk = str(ext.get("risk_events") or "—")
@@ -203,10 +202,19 @@ def render_external_data_panel(ext: dict[str, Any]) -> str:
         f'{html.escape(str(p.get("author") or "—"))}: '
         f'{html.escape(str(p.get("title") or "")[:100])}'
         f'{" · 👍" + str(p.get("likes")) if p.get("likes") else ""}</li>'
-        for p in posts[:4]
+        for p in posts[:6]
     ) or "<li>暂无 TV 社区样本</li>"
 
     dxy = html.escape(str(ext.get("dxy_impact") or "—"))
+
+    errors = ext.get("fetch_errors") or []
+    err_html = ""
+    if isinstance(errors, list) and errors:
+        err_html = (
+            '<p class="lbl" style="color:#b45309;margin-top:8px">拉取提示：'
+            + html.escape("；".join(str(e) for e in errors[:3]))
+            + "</p>"
+        )
 
     return f"""
 <div class="section-card external-feed">
@@ -217,6 +225,7 @@ def render_external_data_panel(ext: dict[str, Any]) -> str:
     <div class="panel-box"><h4>经济日历 / 事件风险</h4>{cal_rows}</div>
     <div class="panel-box"><h4>TV 社区情绪</h4><p>{social}</p><ul class="bullet-list">{social_html}</ul></div>
   </div>
+  {err_html}
 </div>
 """
 
