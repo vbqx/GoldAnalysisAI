@@ -3,9 +3,7 @@
 
 
 > **目标**：数据层保持确定性（TradingView + 指标 + 规则 ICT 事实），  
-
-> 多空研究 → 辩论 → 交易 → 风控 → 经理 各阶段可接入大模型。  
-
+> **Analyst Team**（技术/基本面/新闻/情绪）→ 多空研究 → 辩论 → 交易 → 风控 → 经理 各阶段可接入大模型。  
 > **约束**：`run_analysis()` 仍返回 `(report, data, analyses)`；报告 JSON schema 不变。
 
 
@@ -52,6 +50,18 @@ TradingView → enrich → ict_pa.analyze (规则事实)
 
               ┌───────────────────────────────────┐
 
+              │  Analyst Team（规则，P1 可加 LLM）   │
+
+              │  技术 · 基本面 · 新闻 · 情绪          │
+
+              └───────────────────────────────────┘
+
+                              │
+
+                              ▼
+
+              ┌───────────────────────────────────┐
+
               │  agents/factory.py                │
 
               │  AGENT_MODE: rule | llm | hybrid  │
@@ -65,6 +75,8 @@ TradingView → enrich → ict_pa.analyze (规则事实)
      ▼                        ▼                        ▼
 
  看多研究 (LLM)          看空研究 (LLM)           辩论 (LLM strong)
+
+ （含 analyst_team）      （含 analyst_team）        │
 
      │                        │                        │
 
@@ -226,7 +238,7 @@ LLM_ENHANCE_CONCLUSION=true
 
 - Tab **智能体决策** — `agent_trace` + 来源徽章
 
-- Tab **生成与 LLM I/O** — 上方 `generation_steps`，下方 `meta.llm_io`（Prompt + 整理摘要）
+- Tab **生成与 LLM I/O** — 上方 `generation_steps`，下方 `meta.llm_io`（Analyst Team 规则 I/O + LLM Prompt/整理摘要）
 
 
 
@@ -248,7 +260,9 @@ LLM_ENHANCE_CONCLUSION=true
 
 | ICT 结构事实 | `ict_pa.py` | P3 解读 | 事实 ✅ / LLM 🔲 |
 
-| 看多/看空研究 | `bullish.py` / `bearish.py` | `llm/stages/*` | ✅ P0 |
+| **Analyst Team** | `analysts/*.py` | P1 每分析师 LLM | ✅ 规则 / 🔲 LLM |
+
+| 看多/看空研究 | `bullish.py` / `bearish.py` | `llm/stages/*` | ✅ P0（含 analyst_team payload） |
 
 | 辩论 | `debate.py` | `llm/stages/debate.py` | ✅ P0 |
 
@@ -294,33 +308,34 @@ LLM_ENHANCE_CONCLUSION=true
 
 
 
-### `meta.llm_io`
+### `meta.llm_io`（智能体 I/O）
 
-
+含 **规则阶段**（`kind: "rule"`，如 Analyst Team）与 **LLM 阶段**（`kind: "llm"`）：
 
 ```json
-
 [
-
   {
-
+    "stage": "analyst_team",
+    "label": "Analyst Team",
+    "model": "规则引擎",
+    "kind": "rule",
+    "messages": [{"role": "user", "content": "{...market_payload...}"}],
+    "output": "{...technical/fundamentals/news/sentiment...}",
+    "latency_ms": 12
+  },
+  {
     "stage": "bullish",
-
     "label": "看多研究",
-
     "model": "deepseek-ai/DeepSeek-V4-Pro",
-
+    "kind": "llm",
     "messages": [{"role": "system", "content": "..."}],
-
     "output": "{...}",
-
     "latency_ms": 2400
-
   }
-
 ]
-
 ```
+
+规则阶段由 `ProgressReporter.stage_io()` 写入；LLM 阶段由 `llm_begin` / `llm_end` 写入。
 
 
 
@@ -336,9 +351,13 @@ LLM_ENHANCE_CONCLUSION=true
 
 |------|------|------|
 
+| **P0** | Analyst Team 规则版 + 流水线接入 | ✅ |
+
 | **P0** | factory + LLM 研究 + 辩论 + 流式 I/O | ✅ |
 
 | **P4** | 报告文案层 | ✅ |
+
+| **P1** | Analyst Team LLM 双轨 + 真实 News/DXY API | 🔲 |
 
 | **P1** | LLM 交易员 | 🔲 |
 

@@ -226,15 +226,16 @@ build_report()  →  dict  report
 
 | 顺序 | 函数 | 文件 | 输入 → 输出 |
 |------|------|------|-------------|
-| 1 | `agent_factory.run_bullish(ctx, pipeline_meta)` | `src/agents/factory.py` | → `AgentEvidence`（rule/llm/hybrid） |
+| 0 | `agent_factory.run_analyst_team(ctx, pipeline_meta)` | `src/agents/analysts/` | → `AnalystTeam`（四位分析师，规则；`stage_io` 记入 `meta.llm_io`） |
+| 1 | `agent_factory.run_bullish(ctx, pipeline_meta, team)` | `src/agents/factory.py` | → `AgentEvidence`（整合 Analyst 同向证据 + ICT） |
 | 2 | `agent_factory.run_bearish(...)` | 同上 | → `AgentEvidence` |
-| 3 | `agent_factory.run_debate(...)` | 同上 | → `ResearchDebate` |
+| 3 | `agent_factory.run_debate(..., team)` | 同上 | → `ResearchDebate`（含 Analyst 摘要） |
 | 4 | `agent_factory.run_trader(...)` | 同上 | → `(TransactionProposal, signals[])` |
 | 5 | `generate_trading_signals(...)` | `src/analysis/report_engine.py` | trader 内部调用 |
 | 6 | `agent_factory.run_risk(...)` | `src/agents/factory.py` | → `RiskReview[3]` |
 | 7 | `agent_factory.run_manager(...)` | 同上 | → `ManagerDecision` |
 
-研究员内部均调用 `_structure_items(analyses)` 从结构中提取证据。
+研究员从 ICT 结构提取证据，并通过 `items_for_direction()` 并入 Analyst Team 同向条目。
 
 ---
 
@@ -266,9 +267,9 @@ build_report()  →  dict  report
 |------|------|
 | `report["meta"]["agent_mode"]` | 当前 `AGENT_MODE` |
 | `report["meta"]["stage_sources"]` | 各阶段 rule/llm/hybrid |
-| `report["meta"]["generation_steps"]` | 生成步骤与耗时 |
-| `report["meta"]["llm_io"]` | 全部 LLM 调用的输入/输出 |
-| `AgentTrace(...).to_dict()` → `report["agent_trace"]` | 决策审计链 |
+| `report["meta"]["generation_steps"]` | 生成步骤与耗时（含 `analyst_team`） |
+| `report["meta"]["llm_io"]` | 智能体 I/O：规则阶段（`stage_io`，如 Analyst Team）+ LLM 调用 |
+| `AgentTrace(...).to_dict()` → `report["agent_trace"]` | 决策审计链（含 `analyst_team` 四位分析师） |
 | `run_llm_analysis` + `apply_llm_to_report` | `report["llm_analysis"]`、增强 `conclusion` |
 | 按 `decision.selected_signal_indices` 重排 | `report["signals"]` |
 
@@ -292,7 +293,7 @@ build_report()  →  dict  report
 | `build_projection_chart()` | `src/viz/charts.py` | `report["projections"]` |
 | `render_agent_source_banner()` | `src/viz/source_labels.py` | 顶栏 规则/LLM 来源 |
 | `StreamlitProgressReporter` | `src/viz/pipeline_progress.py` | 进度 + LLM 流式 I/O |
-| `render_llm_io_history()` | 同上 | 侧边栏 LLM 历史 |
+| `render_llm_io_history()` | 同上 | 智能体 I/O（Analyst Team 规则输出 + LLM） |
 | `render_agent_trace_sidebar()` | `src/viz/agent_trace_view.py` | 决策链 + 来源徽章 |
 | `render_llm_sidebar()` | `src/viz/llm_view.py` | LLM 深度分析文案 |
 | `indicator_snapshot()` | `src/indicators/verify.py` | 指标校验表 |
@@ -419,12 +420,25 @@ GoldAnalysisAI/
 
 ### 5.5 智能体层 `src/agents/`
 
-经 **`factory.py`** 调度，支持 `AGENT_MODE=rule|llm|hybrid`。规则实现仍在 `bullish.py` 等；LLM 实现在 `agents/llm/stages/`。
+经 **`factory.py`** 调度，支持 `AGENT_MODE=rule|llm|hybrid`。流水线分两阶段研究，对齐 TradingAgents：
+
+**阶段 A — Analyst Team**（`agents/analysts/`，按信息类型分工）
+
+| 分析师 | 规则实现 | 数据源 | LLM |
+|--------|----------|--------|-----|
+| Technical | `analysts/technical.py` | EMA/VWAP + ICT 结构 | P1 |
+| Fundamentals | `analysts/fundamentals.py` | `sources/fundamentals.py`（DXY 占位） | P1 |
+| News | `analysts/news.py` | `sources/news.py`（占位） | P1 |
+| Sentiment | `analysts/sentiment.py` | 结构投票 + `sources/social.py` | P1 |
+
+输出 `AnalystTeam` → 写入 `agent_trace.analyst_team`。
+
+**阶段 B — Researcher / Trade / Risk**（按交易方向与执行）
 
 | 阶段 | factory 入口 | 规则实现 | LLM 实现 |
 |------|-------------|----------|----------|
-| Research | `run_bullish` / `run_bearish` | `bullish.py` / `bearish.py` | `llm/stages/bullish.py` 等 |
-| Debate | `run_debate` | `debate.py` | `llm/stages/debate.py` |
+| Research | `run_bullish` / `run_bearish` | `bullish.py` / `bearish.py`（整合 Analyst 同向证据） | `llm/stages/bullish.py` 等 |
+| Debate | `run_debate` | `debate.py`（含 Analyst 摘要） | `llm/stages/debate.py` |
 | Trade | `run_trader` | `trader.py` | P1 规划中 |
 | Risk | `run_risk` | `risk.py` | P2 规划中 |
 | Manager | `run_manager` | `manager.py` | P2 规划中 |
@@ -484,6 +498,8 @@ GoldAnalysisAI/
 
 ```
 EvidenceItem          # 单条证据
+AnalystReport         # 单个分析师报告（Technical / News 等）
+AnalystTeam           # 四位分析师容器
 AgentEvidence         # 某研究员输出
 ResearchDebate        # 辩论结果 + consensus_bias
 TransactionProposal   # 方向 + signal 索引列表
@@ -491,7 +507,7 @@ RiskReview            # 某档风控结果
 ManagerDecision       # execute | reduce | wait
 MarketContext         # 流水线共享上下文（只读输入）
 ExternalFactors       # DXY、新闻等
-AgentTrace            # 全链路审计（序列化进 report）
+AgentTrace            # 全链路审计（含 analyst_team）
 ```
 
 均提供 `to_dict()` 用于 JSON 序列化。

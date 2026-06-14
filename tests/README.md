@@ -31,8 +31,11 @@ tests/
 # 安装开发依赖（含 pytest）
 pip install -r requirements-dev.txt
 
-# 快速测试：单元 + 回归（默认，无网络）
+# 快速测试：单元 + 回归（默认，无网络，约 41 项）
 python tests/run.py
+
+# 金融 Review 单测（FIN-*）
+python tests/run.py --financial
 
 # 完整测试：含流水线集成（需 TradingView + .env）
 python tests/run.py --full
@@ -46,8 +49,9 @@ python tests/run.py --integration
 等价 pytest 命令：
 
 ```bash
-pytest tests/unit -q
-pytest tests/regression -m regression -q
+pytest tests/unit tests/regression -q          # 快速（含 Analyst Team + FIN）
+pytest tests/unit/test_analyst_team.py -v
+pytest tests/unit/test_financial_review.py -m financial -v
 pytest tests/integration -m integration -q   # slow
 ```
 
@@ -59,11 +63,11 @@ pytest tests/integration -m integration -q   # slow
 streamlit run tests/dashboard.py --server.port 8502
 ```
 
-打开 http://localhost:8502 ，选择套件后点击「开始」。界面约 1 秒刷新；集成测试每条约 3 分钟。
+打开 http://localhost:8502 ，选择套件后点击「开始」。支持 **快速**、**金融 Review（FIN-*）**、**集成** 等套件；界面约 1 秒刷新。
 
 ## 用例维护
 
-1. 在 [`cases/test-plan.md`](cases/test-plan.md) 设计场景，在 [`cases/catalog.yaml`](cases/catalog.yaml) 登记用例（`UIL-*` / `IND-*` / `FN-*` / `PERF-*` / `UT-*` / `IT-*` / `RG-*`）
+1. 在 [`cases/test-plan.md`](cases/test-plan.md) 设计场景，在 [`cases/catalog.yaml`](cases/catalog.yaml) 登记用例（`UIL-*` / `IND-*` / `FN-*` / `FIN-*` / `PERF-*` / `UT-*` / `IT-*` / `RG-*`）
 2. 在对应子目录实现测试代码
 3. 本地 `python tests/run.py` 验证
 4. 关 Issue 时在评论中引用用例 ID（如 `RG-03`）
