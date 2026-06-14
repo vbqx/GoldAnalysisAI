@@ -63,6 +63,7 @@ class LLMIORecord:
 
 
 STAGE_LABELS = {
+    "context": "构建市场上下文",
     "analyst_team": "Analyst Team",
     "technical": "技术分析师",
     "fundamentals": "基本面分析师",

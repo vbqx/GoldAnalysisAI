@@ -65,10 +65,30 @@ def _render_llm_output_panel(*, stage: str, output: str, error: str | None = Non
     st.markdown(format_llm_narrative(stage, raw), unsafe_allow_html=True)
 
 
+def _filter_llm_io_records(records: list[dict]) -> list[dict]:
+    has_llm_analyst = any(
+        r.get("stage") in ("technical", "fundamentals", "news", "sentiment")
+        and r.get("kind") != "rule"
+        and r.get("model") != "规则引擎"
+        for r in records
+    )
+    if not has_llm_analyst:
+        return records
+    return [
+        r
+        for r in records
+        if not (
+            r.get("stage") == "analyst_team"
+            and (r.get("kind") == "rule" or r.get("model") == "规则引擎")
+        )
+    ]
+
+
 def render_llm_io_history(
     records: list[dict], *, title: str = "智能体 I/O", expand_last: bool = False
 ) -> None:
     """Full-width LLM call history."""
+    records = _filter_llm_io_records(records)
     if not records:
         if title:
             st.caption("暂无 LLM 调用记录")
@@ -85,7 +105,7 @@ def render_llm_io_history(
         model = rec.get("model", "")
         with st.expander(
             f"{status} {rec.get('label', stage)} · `{model}`{timing}",
-            expanded=(i == len(records) - 1) if expand_last else (i == 0 and stage == "analyst_team"),
+            expanded=(i == len(records) - 1) if expand_last else (i == 0),
         ):
             in_col, out_col = st.columns(2)
             with in_col:

@@ -59,8 +59,13 @@ def render_agent_trace_panel(report: dict) -> None:
         }
         for col, (key, title) in zip(cols, labels.items()):
             report = analyst_team.get(key) or {}
+            analyst_meta = stage_meta.get(key) or {}
             with col:
-                st.markdown(f"**{title}**")
+                st.markdown(f"**{title}** {_badge_md(analyst_meta)}")
+                if analyst_meta.get("llm"):
+                    cap = stage_llm_caption(stage_meta, key)
+                    if cap:
+                        st.caption(cap)
                 st.caption(report.get("bias", "—"))
                 st.caption(report.get("summary", "—")[:120])
                 st.caption(f"{len(report.get('items', []))} 条证据")

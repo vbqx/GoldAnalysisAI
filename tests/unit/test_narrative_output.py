@@ -16,3 +16,17 @@ def test_analyst_team_narrative_html() -> None:
     assert "技术分析师" in html
     assert "基本面分析师" in html
     assert "偏多" in html
+
+
+def test_single_analyst_stage_narrative_html() -> None:
+    raw = """{
+      "bias": "bearish",
+      "confidence": 0.72,
+      "summary": "DXY偏强压制黄金",
+      "items": [{"category": "fundamentals", "summary": "美元走强", "strength": 0.7}]
+    }"""
+    html = format_llm_narrative("fundamentals", raw)
+    assert "基本面分析师" in html
+    assert "偏空" in html
+    assert "美元走强" in html
+    assert "主要证据" in html

@@ -132,6 +132,43 @@ def _fmt_generic(data: dict[str, Any]) -> str:
     return f"<ul>{_lines_to_html(lines[:10])}</ul>"
 
 
+def _fmt_analyst_report(title: str, data: dict[str, Any]) -> str:
+    """Single AnalystReport JSON (technical / fundamentals / news / sentiment)."""
+    bias = _BIAS_CN.get(str(data.get("bias", "")).lower(), "中性")
+    summary = str(data.get("summary", "")).strip() or "—"
+    confidence = _pct(data.get("confidence"))
+    items = data.get("items") or []
+    bullets: list[str] = []
+    if isinstance(items, list):
+        for row in items[:8]:
+            if not isinstance(row, dict):
+                continue
+            s = str(row.get("summary", "")).strip()
+            if not s:
+                continue
+            tf = row.get("timeframe")
+            cat = _CATEGORY_CN.get(str(row.get("category", "")), str(row.get("category", "")))
+            strength = _pct(row.get("strength"))
+            prefix = f"[{tf}] " if tf else ""
+            meta = f"（{cat} · 强度 {strength}）" if cat else f"（强度 {strength}）"
+            bullets.append(f"{prefix}{s}{meta}")
+    parts = [
+        f"<p><b>{escape(title)}</b>：{escape(bias)}（置信 {confidence}）</p>",
+        f"<p>{escape(summary)}</p>",
+    ]
+    if bullets:
+        parts.append(f"<p><b>主要证据</b></p><ul>{_lines_to_html(bullets)}</ul>")
+    return "\n".join(parts)
+
+
+_ANALYST_STAGE_TITLES = {
+    "technical": "技术分析师",
+    "fundamentals": "基本面分析师",
+    "news": "新闻分析师",
+    "sentiment": "情绪分析师",
+}
+
+
 def _fmt_analyst_team(data: dict[str, Any]) -> str:
     labels = {
         "technical": "技术分析师",
@@ -156,6 +193,26 @@ def _fmt_analyst_team(data: dict[str, Any]) -> str:
     return "\n".join(parts) if parts else "<p>（无 Analyst Team 数据）</p>"
 
 
+def _fmt_context(data: dict[str, Any]) -> str:
+    price = data.get("price")
+    source = str(data.get("source_label", "")).strip() or "—"
+    ext = data.get("external") if isinstance(data.get("external"), dict) else {}
+    headlines = ext.get("news_headlines") or []
+    headline_count = len(headlines) if isinstance(headlines, list) else 0
+    parts = [
+        f"<p><b>现价</b> {escape(str(price))} · 来源 {escape(source)}</p>",
+        f"<p><b>美元指数</b> {escape(str(ext.get('dxy_impact', '—')))}</p>",
+        f"<p><b>事件风险</b> {escape(str(ext.get('risk_events', '—')))}</p>",
+        f"<p><b>新闻头条</b> {headline_count} 条</p>",
+        f"<p><b>社媒情绪</b> {escape(str(ext.get('social_sentiment', '—')))}</p>",
+    ]
+    if headline_count and isinstance(headlines, list):
+        preview = headlines[:3]
+        bullets = "".join(f"<li>{escape(str(h)[:120])}</li>" for h in preview)
+        parts.append(f"<ul>{bullets}</ul>")
+    return "\n".join(parts)
+
+
 def format_llm_narrative(stage: str, raw: str) -> str:
     """Return HTML for the human-readable summary box."""
     if not raw.strip():
@@ -175,6 +232,10 @@ def format_llm_narrative(stage: str, raw: str) -> str:
         body = _fmt_debate(data)
     elif stage == "analyst_team":
         body = _fmt_analyst_team(data)
+    elif stage == "context":
+        body = _fmt_context(data)
+    elif stage in _ANALYST_STAGE_TITLES:
+        body = _fmt_analyst_report(_ANALYST_STAGE_TITLES[stage], data)
     elif stage in ("llm_narrative", "narrative"):
         body = _fmt_narrative(data)
     else:
