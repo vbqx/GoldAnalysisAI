@@ -25,7 +25,7 @@ class TradingSignal:
     stop_loss: float
     take_profits: list[float]
     risk_reward: str
-    win_rate: str
+    sentiment_bias_pct: str
     position_size: str
     note: str
     theme: str  # "short" | "long"
@@ -45,6 +45,29 @@ def _nearest_zone(price: float, zones: list, direction: str) -> tuple[float, flo
         return candidates[0]
     candidates.sort(key=lambda x: x[1], reverse=True)
     return candidates[0]
+
+
+def _compute_risk_reward(
+    *,
+    direction: str,
+    entry_low: float,
+    entry_high: float,
+    stop_loss: float,
+    take_profits: list[float],
+) -> str:
+    if not take_profits:
+        return "N/A"
+    entry_mid = (entry_low + entry_high) / 2
+    tp1 = take_profits[0]
+    if direction == "SELL":
+        risk = stop_loss - entry_mid
+        reward = entry_mid - tp1
+    else:
+        risk = entry_mid - stop_loss
+        reward = tp1 - entry_mid
+    if risk <= 0 or reward <= 0:
+        return "N/A"
+    return f"1:{reward / risk:.1f}"
 
 
 def generate_trading_signals(
@@ -79,8 +102,14 @@ def generate_trading_signals(
                 entry_high=round(entry_high, 2),
                 stop_loss=round(sl, 2),
                 take_profits=[round(tp1, 2), round(tp2, 2), round(tp3, 2)],
-                risk_reward="1:2.5 ~ 1:4",
-                win_rate=f"{bear_pct}%",
+                risk_reward=_compute_risk_reward(
+                    direction="SELL",
+                    entry_low=round(entry_low, 2),
+                    entry_high=round(entry_high, 2),
+                    stop_loss=round(sl, 2),
+                    take_profits=[round(tp1, 2), round(tp2, 2), round(tp3, 2)],
+                ),
+                sentiment_bias_pct=f"{bear_pct}%",
                 position_size="30% 试探仓",
                 note="反弹至 FVG / 流动性回补后做空",
                 theme="short",
@@ -102,8 +131,14 @@ def generate_trading_signals(
                 entry_high=round(ob.high, 2),
                 stop_loss=round(ob.high + (ob.high - ob.low), 2),
                 take_profits=[round(tp1, 2), round(tp2, 2), round(tp3, 2)],
-                risk_reward="1:2.5 ~ 1:4",
-                win_rate=f"{max(bear_pct - 5, 45)}%",
+                risk_reward=_compute_risk_reward(
+                    direction="SELL",
+                    entry_low=round(ob.low, 2),
+                    entry_high=round(ob.high, 2),
+                    stop_loss=round(ob.high + (ob.high - ob.low), 2),
+                    take_profits=[round(tp1, 2), round(tp2, 2), round(tp3, 2)],
+                ),
+                sentiment_bias_pct=f"{max(bear_pct - 5, 45)}%",
                 position_size="20% 标准仓",
                 note="更高时间框架 Order Block 反弹做空",
                 theme="short",
@@ -115,17 +150,27 @@ def generate_trading_signals(
         tp1 = price
         tp2 = swing_low + (swing_high - swing_low) * 0.382
         tp3 = swing_low + (swing_high - swing_low) * 0.5
+        entry_low_r = round(sweep_low, 2)
+        entry_high_r = round(swing_low, 2)
+        sl_r = round(swing_low - 9, 2)
+        tps = [round(tp1, 2), round(tp2, 2), round(tp3, 2)]
         signals.append(
             TradingSignal(
                 name="右侧扫低做多",
                 direction="BUY",
                 direction_cn="买入",
-                entry_low=round(sweep_low, 2),
-                entry_high=round(swing_low, 2),
-                stop_loss=round(swing_low - 9, 2),
-                take_profits=[round(tp1, 2), round(tp2, 2), round(tp3, 2)],
-                risk_reward="1:2 ~ 1:3",
-                win_rate=f"{bull_pct}%",
+                entry_low=entry_low_r,
+                entry_high=entry_high_r,
+                stop_loss=sl_r,
+                take_profits=tps,
+                risk_reward=_compute_risk_reward(
+                    direction="BUY",
+                    entry_low=entry_low_r,
+                    entry_high=entry_high_r,
+                    stop_loss=sl_r,
+                    take_profits=tps,
+                ),
+                sentiment_bias_pct=f"{bull_pct}%",
                 position_size="15% 逆势轻仓",
                 note="流动性扫低后短多，严格止损",
                 theme="long",
@@ -185,7 +230,7 @@ def build_conclusion(
     if sentiment["bearish"] >= sentiment["bullish"]:
         mood = "弱势偏空 ↓"
         direction = "主方向偏空，当前处于逆势反弹阶段"
-        action = "不追多，优先等待 4389-4396 反弹至阻力区做空"
+        action = "不追多，优先等待反弹至阻力区做空"
     else:
         mood = "偏强偏多 ↑"
         direction = "主方向偏多，关注回调支撑"
@@ -194,7 +239,10 @@ def build_conclusion(
     if signals:
         first = signals[0]
         zone = f"{first.entry_low:.0f}-{first.entry_high:.0f}"
-        action = action.replace("4389-4396", zone) if "4389-4396" in action else f"{action}；关注 {zone} 区域"
+        if sentiment["bearish"] >= sentiment["bullish"]:
+            action = f"不追多，优先等待 {zone} 反弹至阻力区做空"
+        else:
+            action = f"不追空，优先等待 {zone} 附近回调做多"
 
     return {
         "market_sentiment": mood,

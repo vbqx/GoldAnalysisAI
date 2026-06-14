@@ -33,6 +33,13 @@ def indicator_snapshot(df: pd.DataFrame, timeframe: str) -> dict:
     row["ema_relation"] = ema_relation(price, last)
 
     notes: list[str] = []
+    if "Volume" in df.columns:
+        zero_vol = int((df["Volume"].fillna(0) == 0).sum())
+        if zero_vol == len(df):
+            notes.append("Volume 全为 0，VWAP 基于替代成交量计算，仅供参考")
+        elif zero_vol >= len(df) * 0.5:
+            notes.append(f"Volume 为 0 占比 {zero_vol}/{len(df)}，VWAP 可靠性下降")
+
     if len(df) < 610:
         notes.append(f"EMA610 仅基于 {len(df)} 根 K 线，历史不足 610 根时与 TV 长周期 EMA 可能有偏差")
 
