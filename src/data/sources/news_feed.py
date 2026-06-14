@@ -1,12 +1,13 @@
-"""News + economic calendar — Finnhub (optional) + Google News RSS fallback."""
+"""News + economic calendar — TE scrape / Finnhub + Google News RSS."""
 
 from __future__ import annotations
 
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 
-from src.config import FINNHUB_API_KEY, NEWS_RSS_ENABLED
+from src.config import FINNHUB_API_KEY, NEWS_RSS_ENABLED, TE_CALENDAR_ENABLED
 from src.data.sources._http import get_json, get_text
+from src.data.sources.te_calendar_scraper import fetch_te_calendar
 from src.log import get_logger
 
 log = get_logger(__name__)
@@ -38,10 +39,14 @@ def _matches_gold(text: str) -> bool:
 def _finnhub_news() -> list[str]:
     if not FINNHUB_API_KEY:
         return []
-    data = get_json(
-        "https://finnhub.io/api/v1/news",
-        params={"category": "general", "token": FINNHUB_API_KEY},
-    )
+    try:
+        data = get_json(
+            "https://finnhub.io/api/v1/news",
+            params={"category": "general", "token": FINNHUB_API_KEY},
+        )
+    except Exception as exc:
+        log.warning("finnhub news failed: %s", exc)
+        return []
     if not isinstance(data, list):
         return []
     headlines: list[str] = []
@@ -59,16 +64,22 @@ def _finnhub_news() -> list[str]:
 def _finnhub_calendar() -> str:
     if not FINNHUB_API_KEY:
         return "—"
-    today = datetime.now(timezone.utc).date()
-    end = today + timedelta(days=2)
-    data = get_json(
-        "https://finnhub.io/api/v1/calendar/economic",
-        params={
-            "from": today.isoformat(),
-            "to": end.isoformat(),
-            "token": FINNHUB_API_KEY,
-        },
-    )
+    try:
+        today = datetime.now(timezone.utc).date()
+        end = today + timedelta(days=2)
+        data = get_json(
+            "https://finnhub.io/api/v1/calendar/economic",
+            params={
+                "from": today.isoformat(),
+                "to": end.isoformat(),
+                "token": FINNHUB_API_KEY,
+            },
+        )
+    except Exception as exc:
+        log.warning("finnhub calendar failed (free tier may lack access): %s", exc)
+        if "403" in str(exc):
+            return "Finnhub 经济日历需付费档（免费 Key 403）"
+        return "—"
     events = data.get("economicCalendar") if isinstance(data, dict) else None
     if not isinstance(events, list):
         return "—"
@@ -110,6 +121,23 @@ def _rss_news() -> list[str]:
     return headlines
 
 
+def _economic_calendar() -> tuple[str, str | None]:
+    """Return (risk_events text, source tag for refs)."""
+    if TE_CALENDAR_ENABLED:
+        risk = fetch_te_calendar()
+        if risk != "—":
+            return risk, "te_calendar_scrape"
+        return risk, None
+
+    if FINNHUB_API_KEY:
+        risk = _finnhub_calendar()
+        if risk != "—":
+            return risk, "finnhub_calendar"
+        return risk, None
+
+    return "—", None
+
+
 def fetch_news_bundle() -> tuple[list[str], str, dict]:
     """Return (headlines, risk_events, refs)."""
     refs: dict = {"sources": []}
@@ -120,11 +148,10 @@ def fetch_news_bundle() -> tuple[list[str], str, dict]:
             headlines = _finnhub_news()
             if headlines:
                 refs["sources"].append("finnhub_news")
-            risk = _finnhub_calendar()
-            if risk != "—":
-                refs["sources"].append("finnhub_calendar")
-        else:
-            risk = "—"
+
+        risk, cal_source = _economic_calendar()
+        if cal_source:
+            refs["sources"].append(cal_source)
 
         if not headlines and NEWS_RSS_ENABLED:
             headlines = _rss_news()
@@ -133,17 +160,17 @@ def fetch_news_bundle() -> tuple[list[str], str, dict]:
 
         if risk == "—":
             risk = (
-                "关注美盘数据/央行讲话（RSS 模式 · 无日历 API）"
+                "关注美盘数据/央行讲话（RSS 模式 · 未配置经济日历）"
                 if headlines
                 else _PLACEHOLDER_EVENTS
             )
 
-        if not headlines and not FINNHUB_API_KEY and not NEWS_RSS_ENABLED:
+        if not headlines and not FINNHUB_API_KEY and not TE_CALENDAR_ENABLED and not NEWS_RSS_ENABLED:
             refs["source"] = "placeholder"
             return [], _PLACEHOLDER_EVENTS, refs
 
         refs["headline_count"] = len(headlines)
-        refs["source"] = "live" if headlines or "finnhub" in str(refs.get("sources")) else "partial"
+        refs["source"] = "live" if headlines or refs.get("sources") else "partial"
         return headlines, risk, refs
     except Exception as exc:
         log.warning("news fetch failed: %s", exc)
