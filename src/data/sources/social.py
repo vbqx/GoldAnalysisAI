@@ -13,14 +13,17 @@ class SocialDataSource:
 
     def fetch_external(self) -> ExternalFactors:
         summary, posts, refs = fetch_social_sentiment()
-        if summary == "—" or refs.get("source") != _TV_SOURCE:
-            return ExternalFactors()
-        sources = [_TV_SOURCE] if refs.get("source") == _TV_SOURCE else []
-        return ExternalFactors(
-            social_sentiment=summary,
-            social_posts=posts,
-            sources=sources,
-        )
+        if refs.get("source") == _TV_SOURCE:
+            return ExternalFactors(
+                social_sentiment=summary,
+                social_posts=posts,
+                sources=[_TV_SOURCE],
+            )
+        if refs.get("source") == "disabled":
+            return ExternalFactors(social_sentiment="TV 社媒已关闭（TV_SOCIAL_ENABLED=false）")
+        if summary and summary != "—":
+            return ExternalFactors(social_sentiment=summary, social_posts=posts)
+        return ExternalFactors()
 
     def fetch_external_summary(self) -> tuple[str, dict]:
         summary, _posts, refs = fetch_social_sentiment()
