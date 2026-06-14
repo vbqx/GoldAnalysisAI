@@ -75,6 +75,53 @@ def market_payload(ctx: MarketContext, team: AnalystTeam | None = None) -> dict[
     return payload
 
 
+def technical_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
+    return {
+        "symbol": "XAUUSD",
+        "price": ctx.price,
+        "metrics": ctx.metrics,
+        "timeframes": [
+            _tf_block(tf, ctx.analyses[tf])
+            for tf in ("1d", "4h", "1h", "15m", "5m")
+            if tf in ctx.analyses
+        ],
+    }
+
+
+def fundamentals_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
+    return {
+        "symbol": "XAUUSD",
+        "price": ctx.price,
+        "external": ctx.external.to_dict(),
+    }
+
+
+def news_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
+    ext = ctx.external.to_dict()
+    return {
+        "symbol": "XAUUSD",
+        "price": ctx.price,
+        "risk_events": ext.get("risk_events"),
+        "news_headlines": ext.get("news_headlines") or [],
+    }
+
+
+def sentiment_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
+    from src.analysis.ict_pa import sentiment_score
+
+    ext = ctx.external.to_dict()
+    return {
+        "symbol": "XAUUSD",
+        "price": ctx.price,
+        "structure_sentiment": sentiment_score(ctx.analyses),
+        "timeframe_trends": {
+            tf: ctx.analyses[tf].trend for tf in ("4h", "1h", "15m", "5m") if tf in ctx.analyses
+        },
+        "social_sentiment": ext.get("social_sentiment"),
+        "external": ext,
+    }
+
+
 def evidence_payload(evidence: AgentEvidence) -> dict[str, Any]:
     return {
         "agent": evidence.agent,

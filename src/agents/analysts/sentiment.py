@@ -1,12 +1,24 @@
-"""Sentiment Analyst — structure vote + social mood (placeholder)."""
+"""Sentiment Analyst — structure vote + Reddit social mood."""
 
 from __future__ import annotations
 
 from src.analysis.ict_pa import sentiment_score
+from src.config import REDDIT_ENABLED
 from src.core.types import AnalystReport, Bias, EvidenceItem, MarketContext
 from src.data.sources.social import SocialDataSource
 
 from src.agents.analysts.base import build_report
+
+
+def _social_note(ext, social_items: list) -> str:
+    social = (ext.social_sentiment or "").strip()
+    if social and social != "—":
+        return social[:60] + ("…" if len(social) > 60 else "")
+    if social_items:
+        return f"Reddit {len(social_items)} 条样本"
+    if not REDDIT_ENABLED:
+        return "Reddit 未启用"
+    return "Reddit 暂无数据（接口限流或未返回）"
 
 
 def run_sentiment_analyst(ctx: MarketContext) -> AnalystReport:
@@ -20,18 +32,22 @@ def run_sentiment_analyst(ctx: MarketContext) -> AnalystReport:
         )
     ]
 
-    social_items = SocialDataSource().fetch_evidence()
-    items.extend(social_items)
-
     ext = ctx.external
+    social_items = SocialDataSource().fetch_evidence()
+    for item in social_items:
+        if not any(item.summary in i.summary for i in items):
+            items.append(item)
+
     if ext.social_sentiment and ext.social_sentiment != "—":
-        items.append(
-            EvidenceItem(
-                category="sentiment",
-                summary=f"社媒情绪：{ext.social_sentiment}",
-                strength=0.45,
+        if not any(ext.social_sentiment[:30] in i.summary for i in items):
+            items.append(
+                EvidenceItem(
+                    category="sentiment",
+                    summary=f"社媒情绪：{ext.social_sentiment}",
+                    strength=0.45,
+                    refs={"source": "reddit"},
+                )
             )
-        )
 
     bull = vote["bullish"]
     bear = vote["bearish"]
@@ -42,6 +58,6 @@ def run_sentiment_analyst(ctx: MarketContext) -> AnalystReport:
     else:
         bias = "bearish"
 
-    social_note = "社媒数据待接入" if not social_items else f"社媒 {len(social_items)} 条"
-    summary = f"情绪：结构投票偏多 {bull:.0f}% / 偏空 {bear:.0f}% · {social_note}"
+    social_note = _social_note(ext, social_items)
+    summary = f"情绪：结构投票 多 {bull:.0f}% / 空 {bear:.0f}% · {social_note}"
     return build_report(agent="sentiment_analyst", items=items, bias=bias, summary=summary)
