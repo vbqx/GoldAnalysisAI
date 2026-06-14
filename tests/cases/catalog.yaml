@@ -12,7 +12,7 @@ meta:
 
   project: GoldAnalysisAI
 
-  last_review: "2026-06-14"
+  last_review: "2026-06-15"
 
   owner: qa
 
@@ -146,7 +146,7 @@ cases:
 
     suite: unit
 
-    title: 外部数据源 DXY / 新闻 / TE 日历 / TV 社媒（mock）
+    title: 外部数据源 DXY / 金十 MCP / TV 社媒（mock）
 
     module: tests.unit.test_external_sources
 
@@ -474,7 +474,7 @@ cases:
 
     layer: functional
 
-    title: 真实 TE 经济日历 HTML 抓取
+    title: 金十 MCP 快讯 + 资讯 + 日历（live smoke）
 
     module: tests.integration.test_external_apis
 

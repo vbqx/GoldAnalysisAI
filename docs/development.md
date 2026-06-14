@@ -68,12 +68,8 @@ copy .env.example .env          # Windows
 | `TV_EXCHANGE` | `OANDA` | 交易所 |
 | `TV_USERNAME` / `TV_PASSWORD` | 空 | 可选；登录后历史 bar 更多 |
 | `TV_FETCH_RETRIES` / `TV_FETCH_ROUND_RETRIES` | `3` / `1` | TradingView 拉数重试 |
-| `FINNHUB_API_KEY` | 空 | Finnhub 新闻；无 key 时可用 RSS |
-| `TE_CALENDAR_ENABLED` | `true` | Trading Economics 日历 HTML 抓取（免费） |
-| `TE_CALENDAR_COUNTRY` / `TE_CALENDAR_DAYS` | `united states` / `2` | 日历国家与天数 |
-| `TV_SOCIAL_ENABLED` | `true` | TradingView Ideas + Minds 社区情绪 |
-| `TV_SOCIAL_SYMBOL` | `XAUUSD` | 社媒抓取品种 |
-| `NEWS_RSS_ENABLED` | `true` | Google News RSS 兜底 |
+| `JIN10_API_TOKEN` | 空 | 金十官方 MCP 快讯 + 资讯 + 财经日历（[申请](https://mcp.jin10.com/app)） |
+| `JIN10_KEYWORD` | `黄金` | 快讯/资讯筛选关键词 |
 | `LOG_LEVEL` | `INFO` | `DEBUG` 可跟踪流水线 |
 | `LOG_FILE` | 空 | 如 `logs/goldanalysisai.log` |
 | `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](./llm-agents.md) |
@@ -102,7 +98,7 @@ streamlit run app.py    # http://localhost:8501
 ```bash
 pip install -r requirements-dev.txt
 python tests/run.py              # 快速：单元 + 回归（约 55+ 项）
-python tests/run.py --external   # 外部 API 冒烟（DXY/新闻/TE 日历/TV 社媒）
+python tests/run.py --external   # 外部 API 冒烟（金十 MCP / DXY / TV 社媒）
 python tests/run.py --financial  # 金融 Review FIN-*
 python tests/run.py --full       # 含完整流水线（约 2–3 分钟）
 ```
@@ -169,21 +165,29 @@ build_report(signals=…)  →  dict  report
 
 ---
 
-### 3.3 阶段二：TradingView 拉数
+### 3.3 阶段二：数据拉取（`fetch_pipeline.py`）
 
 | 顺序 | 函数 | 文件 | 说明 |
 |------|------|------|------|
-| 1 | `fetch_multi_timeframe()` | `src/data/fetcher.py` | facade，转调 tradingview |
-| 2 | `fetch_multi_timeframe()` | `src/data/tradingview.py` | 组装 5m/15m/1h/4h/1d |
-| 3 | `_get_client()` | `src/data/tradingview.py` | 单例 `TvDatafeed()` |
-| 4 | `_fetch_bars()` | `src/data/tradingview.py` | 调用 `tv.get_hist()`，重试 2 次 |
-| 5 | `_normalize()` | `src/data/tradingview.py` | 列名 → Open/High/Low/Close/Volume |
-| 6 | `_resample()` | `src/data/tradingview.py` | 5m 聚合为 15m / 1h / 4h |
-| 7 | `source_label()` | `src/data/tradingview.py` | 数据源标签字符串 |
+| 1 | `fetch_all_data()` | `src/data/fetch_pipeline.py` | orchestrator 入口：K 线 + 外部源 |
+| 2 | `fetch_multi_timeframe()` | `src/data/fetcher.py` → `tradingview.py` | 组装 5m/15m/1h/4h/1d |
+| 3 | `fetch_external_bundle()` | `src/data/fetch_pipeline.py` | 新闻 / DXY / 社媒（新闻与社媒可并行） |
+| 4 | `fetch_jin10_bundle()` | `src/data/sources/jin10_feed.py` | 金十 MCP：快讯 + 资讯 + 日历 |
+| 5 | `merge_external()` | `src/data/aggregator.py` | → `ExternalFactors` |
 
-**请求次数**：2 次（5000×5m + 365×1d）；15m/1h/4h 本地 resample，不再请求。
+**TradingView 细节**（步骤 2 内部）：
 
-**输出变量**（orchestrator 内）：`raw: dict[str, DataFrame]`，键为 `"5m" | "15m" | "1h" | "4h" | "1d"`。
+| 顺序 | 函数 | 文件 | 说明 |
+|------|------|------|------|
+| 1 | `_get_client()` | `src/data/tradingview.py` | 单例 `TvDatafeed()` |
+| 2 | `_fetch_bars()` | `src/data/tradingview.py` | 调用 `tv.get_hist()`，可配置重试 |
+| 3 | `_normalize()` | `src/data/tradingview.py` | 列名 → Open/High/Low/Close/Volume |
+| 4 | `_resample()` | `src/data/tradingview.py` | 5m 聚合为 15m / 1h / 4h |
+| 5 | `source_label()` | `src/data/tradingview.py` | 数据源标签字符串 |
+
+**请求次数**：2 次 TV（5000×5m + 365×1d）；15m/1h/4h 本地 resample。外部 HTTP 见 [jin10-mcp.md](./jin10-mcp.md)。
+
+**输出变量**：`DataFetchResult(raw, external, source_label)`。
 
 ---
 
@@ -224,14 +228,10 @@ build_report(signals=…)  →  dict  report
 
 | 顺序 | 函数 | 文件 | 说明 |
 |------|------|------|------|
-| 1 | `build_market_context(enriched, analyses)` | `src/data/aggregator.py` | 组装 `MarketContext` |
+| 1 | `assemble_market_context(...)` | `src/data/aggregator.py` | 组装 `MarketContext`（external 已由 fetch_pipeline 拉取） |
 | 2 | `daily_metrics(enriched["1d"])` | `src/data/fetcher.py` | 现价、日涨跌、日高日低 |
 | 3 | `get_active_source()` | `src/data/fetcher.py` | → `tradingview.source_label()` |
-| 4 | `merge_external()` | `src/data/aggregator.py` | 合并外部因子 |
-| 5 | `NewsDataSource().fetch_external()` | `src/data/sources/news.py` | Finnhub/RSS 新闻 + **Trading Economics** 日历 |
-| 6 | `FundamentalsDataSource().fetch_external()` | `src/data/sources/fundamentals.py` | DXY via TradingView |
-| 7 | `SocialDataSource().fetch_external()` | `src/data/sources/social.py` | TradingView Ideas + Minds 社区情绪 |
-| 8 | `collect_evidence()` | `src/data/aggregator.py` | 调各 DataSource（日志用） |
+| 4 | `collect_evidence()` | `src/data/aggregator.py` | 调各 DataSource（日志用） |
 
 **输出变量**：`ctx: MarketContext`（含 `enriched`、`analyses`、`metrics`、`price`、`external`）。
 
@@ -286,7 +286,7 @@ build_report(signals=…)  →  dict  report
 | `report["meta"]["llm_io"]` | 智能体 I/O：规则阶段（`stage_io`，如 Analyst Team）+ LLM 调用 |
 | `AgentTrace(...).to_dict()` → `report["agent_trace"]` | 决策审计链（含 `analyst_team` 四位分析师） |
 | `report["external"]` | DXY、新闻、日历、TV 社媒 + `sources` 标签 |
-| `parse_risk_events_calendar()` → `report["calendar_events"]` | 有 TE 日历时覆盖占位日历 |
+| `parse_risk_events_calendar()` → `report["calendar_events"]` | 有金十财经日历时覆盖占位日历 |
 | `run_llm_analysis` + `apply_llm_to_report` | `report["llm_analysis"]`、增强 `conclusion` |
 | 按 `decision.selected_signal_indices` 重排 | `report["signals"]` |
 
@@ -355,10 +355,11 @@ GoldAnalysisAI/
     │   ├── progress.py         # 进度 + LLM I/O（contextvar）
     │   └── orchestrator.py     # 流水线编排
     ├── data/
+    │   ├── fetch_pipeline.py   # K 线 + 外部源统一拉取
     │   ├── tradingview.py      # 网络 I/O + resample
     │   ├── fetcher.py          # facade
     │   ├── aggregator.py       # MarketContext 组装
-    │   └── sources/            # 可插拔 DataSource
+    │   └── sources/            # DataSource（jin10 / dxy / social / market）
     ├── indicators/technical.py
     ├── analysis/
     │   ├── ict_pa.py           # 结构检测（计算密集）
@@ -420,8 +421,8 @@ GoldAnalysisAI/
 | 模块 | 数据源 | 说明 |
 |------|--------|------|
 | `dxy.py` | TradingView `TVC:DXY` | 日涨跌 → 黄金影响文案 |
-| `news_feed.py` | Finnhub + Google RSS | 新闻头条 |
-| `te_calendar_scraper.py` | Trading Economics HTML | 经济日历（免费抓取，优先于 Finnhub 日历） |
+| `jin10_feed.py` / `jin10_mcp_client.py` | 金十官方 MCP | `list_flash` / `search_news` / `list_calendar` |
+| `news.py` | NewsDataSource | 合并快讯 + 资讯 + 日历 → ExternalFactors |
 | `social_feed.py` | TradingView Ideas/Minds | XAUUSD 社区多空加权情绪 |
 
 合并后写入 `ExternalFactors`（`social_posts`、`sources`），UI 经 `report["external"]` 展示；失败时回退占位文案，不中断流水线。
@@ -457,7 +458,7 @@ GoldAnalysisAI/
 |--------|----------|--------|-----|
 | Technical | `analysts/technical.py` | EMA/VWAP + ICT 结构 | ✅ `llm/stages/analysts/technical.py` |
 | Fundamentals | `analysts/fundamentals.py` | `sources/dxy.py` + TradingView | ✅ `llm/stages/analysts/fundamentals.py` |
-| News | `analysts/news.py` | `sources/news_feed.py`（Finnhub/RSS） | ✅ `llm/stages/analysts/news.py` |
+| News | `analysts/news.py` | `sources/news.py` + `jin10_feed.py` | ✅ `llm/stages/analysts/news.py` |
 | Sentiment | `analysts/sentiment.py` | 结构投票 + `sources/social_feed.py`（TV Ideas/Minds） | ✅ `llm/stages/analysts/sentiment.py` |
 
 输出 `AnalystTeam` → 写入 `agent_trace.analyst_team`。
@@ -649,7 +650,7 @@ python tests/tools/chart_compare.py
 | SSE 断流 / ChunkedEncoding | `stream_llm_json` 自动整次重打（最多 3 次）；仍失败则 hybrid 用规则 |
 | 看多/看空耗时差大 | 同模型下 Prompt 体量不同，30–90s/次属正常 |
 | 胜率 % | **非回测**；`sentiment_score()` 多周期趋势加权 |
-| DXY/新闻/社媒 | `dxy.py`、`news_feed.py`、`te_calendar_scraper.py`、`social_feed.py` |
+| DXY/新闻/社媒 | `dxy.py`、`jin10_feed.py`、`news.py`、`social_feed.py` |
 
 ---
 

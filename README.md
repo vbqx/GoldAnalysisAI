@@ -62,6 +62,8 @@ streamlit run app.py
 
 |------|------|
 
+| [docs/jin10-mcp.md](docs/jin10-mcp.md) | 金十 MCP 接入（快讯 / 资讯 / 日历） |
+
 | [docs/development.md](docs/development.md) | 开发文档 |
 
 | [docs/architecture.md](docs/architecture.md) | 架构设计 |
@@ -126,7 +128,7 @@ GoldAnalysisAI/
 
 | Session 缓存 | ✅ 切换页面秒开 |
 
-| 外部数据（DXY/新闻/日历/TV 社媒） | ✅ 拉取 + UI 展示 |
+| 外部数据（DXY/金十快讯·资讯·日历/TV 社媒） | ✅ 拉取 + UI 展示 |
 
 | LLM 双轨 + 来源标识 | ✅ |
 
@@ -174,7 +176,7 @@ pip install -r requirements-dev.txt
 # 快速：单元 + 回归（无网络，推荐 CI / 日常）
 python tests/run.py
 
-# 外部 API 冒烟（DXY / 新闻 / TE 日历 / TV 社媒，需网络）
+# 外部 API 冒烟（DXY / 金十 MCP / TV 社媒，需网络）
 python tests/run.py --external
 
 # 金融 Review：FIN-* 单测

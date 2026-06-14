@@ -12,7 +12,7 @@
 | **Market** (Yahoo 等) | `data/sources/market.py` → TradingView OANDA:XAUUSD | ✅ 已接入 |
 | **Technical Analyst** | `agents/analysts/technical.py` | ✅ 规则版（EMA + ICT 结构） |
 | **Fundamentals Analyst** | `agents/analysts/fundamentals.py` | ✅ 规则版（DXY via TradingView） |
-| **News Analyst** | `agents/analysts/news.py` | ✅ 规则版（Finnhub + Google RSS） |
+| **News Analyst** | `agents/analysts/news.py` | ✅ 规则版（金十 MCP 快讯 + 资讯 + 日历） |
 | **Sentiment Analyst** | `agents/analysts/sentiment.py` | ✅ 规则版（结构投票 + TV Ideas/Minds） |
 | **Bullish Researcher** | `agents/factory.py` → rule / `llm/stages/bullish` | ✅ 整合 Analyst Team 输出 |
 | **Bearish Researcher** | `agents/factory.py` → rule / `llm/stages/bearish` | ✅ 整合 Analyst Team 输出 |
@@ -31,8 +31,14 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
+│                     FETCH (fetch_pipeline.py)                    │
+│  TradingView bars → News(DXY) + Social 并行 → merge_external     │
+└────────────────────────────┬────────────────────────────────────┘
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
 │                        DATA LAYER                                │
-│  Market(TV) │ News* │ Social* │ Fundamentals(DXY)*              │
+│  market(TV) │ jin10_mcp (快讯/资讯/日历) │ dxy │ tv_social       │
+│  jin10_mcp_client → jin10_feed → news.py (NewsDataSource)       │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
                     data/aggregator.py
@@ -81,7 +87,7 @@
                       app.py + views/* + viz/*
 ```
 
-\* News / Social / Fundamentals 已接入真实数据源（TradingView DXY、Finnhub/RSS、TE 经济日历、TV Ideas/Minds）；失败时回退占位文案，UI schema 不变。
+\* News / Social / Fundamentals 已接入真实数据源（金十 MCP 快讯/资讯/日历、TradingView DXY、TV Ideas/Minds）；失败时回退占位文案，UI schema 不变。
 
 ---
 
@@ -91,7 +97,7 @@
 |--------|------|------|------|
 | Technical | `analysts/technical.py` | EMA/VWAP、ICT 多周期结构 | `AnalystReport(bias, items, summary)` |
 | Fundamentals | `analysts/fundamentals.py` | DXY / TradingView | 黄金多空宏观偏向 |
-| News | `analysts/news.py` | Finnhub + Google RSS | 波动/事件风险（通常 neutral） |
+| News | `analysts/news.py` | 金十 MCP 快讯 + 资讯 + 日历 | 波动/事件风险（通常 neutral） |
 | Sentiment | `analysts/sentiment.py` | 结构情绪投票 + TV Ideas/Minds | 短期情绪偏向 |
 
 **类型**（`core/types.py`）：
@@ -127,8 +133,16 @@ src/
 │   ├── trader.py / risk.py / manager.py
 │   └── llm/stages/         # LLM 各阶段（payload 含 analyst_team）
 ├── data/
-│   ├── aggregator.py
-│   └── sources/            # market / news / social / fundamentals
+│   ├── fetch_pipeline.py   # K 线 + 外部源统一拉取（orchestrator 入口）
+│   ├── aggregator.py       # merge_external → MarketContext
+│   └── sources/
+│       ├── jin10_mcp_client.py  # 金十 MCP 传输（JSON-RPC / SSE）
+│       ├── jin10_feed.py        # 快讯 + 资讯 + 日历 bundle
+│       ├── gold_relevance.py    # 黄金相关筛选
+│       ├── news.py              # NewsDataSource
+│       ├── fundamentals.py      # DXY
+│       ├── social_feed.py       # TV Ideas/Minds
+│       └── market.py            # TradingView OHLCV
 ├── analysis/
 ├── indicators/
 ├── viz/
