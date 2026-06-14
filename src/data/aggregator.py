@@ -5,6 +5,7 @@ from __future__ import annotations
 import pandas as pd
 
 from src.analysis.ict_pa import TimeframeAnalysis
+from src.core.progress import get_progress
 from src.core.types import EvidenceItem, ExternalFactors, MarketContext
 from src.data.fetcher import daily_metrics, get_active_source
 from src.data.sources import (
@@ -44,11 +45,19 @@ def build_market_context(
     enriched: dict[str, pd.DataFrame],
     analyses: dict[str, TimeframeAnalysis],
 ) -> MarketContext:
+    prog = get_progress()
     metrics = daily_metrics(enriched["1d"])
-    external = merge_external(
-        NewsDataSource().fetch_external(),
-        FundamentalsDataSource().fetch_external(),
-    )
+
+    prog.update("context", detail="新闻 · Finnhub / RSS")
+    news_ext = NewsDataSource().fetch_external()
+
+    prog.update("context", detail="DXY · TradingView")
+    fund_ext = FundamentalsDataSource().fetch_external()
+
+    prog.update("context", detail="社媒 · Reddit")
+    social_ext = SocialDataSource().fetch_external()
+
+    external = merge_external(news_ext, fund_ext, social_ext)
     ctx = MarketContext(
         enriched=enriched,
         analyses=analyses,
