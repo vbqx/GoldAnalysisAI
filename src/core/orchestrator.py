@@ -8,7 +8,7 @@ import time
 from src.agents import factory as agent_factory
 from src.config import AGENT_MODE, LLM_ENABLED, TV_EXCHANGE, TV_SYMBOL
 from src.analysis.ict_pa import analyze_timeframe
-from src.analysis.report_engine import build_report, compute_trading_signals
+from src.analysis.report_engine import build_report, compute_trading_signals, parse_risk_events_calendar
 from src.core.progress import get_progress
 from src.core.types import AgentPipelineMeta, AgentTrace
 from src.data.aggregator import build_market_context
@@ -197,7 +197,13 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         "risk_events": ctx.external.risk_events,
         "news_headlines": ctx.external.news_headlines[:8],
         "social_sentiment": ctx.external.social_sentiment,
+        "social_posts": ctx.external.social_posts[:5],
+        "sources": ctx.external.sources,
     }
+
+    live_cal = parse_risk_events_calendar(ctx.external.risk_events)
+    if live_cal:
+        report["calendar_events"] = live_cal
 
     if LLM_ENABLED:
         prog.start("llm_narrative", "LLM 报告文案", "深度分析生成中…")
