@@ -456,7 +456,7 @@ def build_report(
         "projections": projections,
         "invalidation": invalidation_rules(analyses["15m"], swing_high, signals),
         "chart": {
-            "timeframe": "5m",
+            "timeframe": "1d",
             "swing_high": swing_high,
             "swing_low": swing_low,
         },
