@@ -1,4 +1,4 @@
-"""External data sources — DXY, news, social (mocked HTTP / TradingView)."""
+"""External data sources — DXY, Jin10 MCP, social (mocked HTTP / TradingView)."""
 
 from __future__ import annotations
 
@@ -8,11 +8,10 @@ import pandas as pd
 
 from src.data.sources.dxy import fetch_dxy_impact
 from src.data.sources.fundamentals import FundamentalsDataSource
+from src.data.sources.jin10_feed import Jin10NewsBundle, fetch_jin10_bundle
 from src.data.sources.news import NewsDataSource
-from src.data.sources.news_feed import fetch_news_bundle
 from src.data.sources.social import SocialDataSource
 from src.data.sources.social_feed import fetch_social_sentiment
-from src.data.sources.te_calendar_scraper import fetch_te_calendar, scrape_te_calendar_html
 
 
 def _dxy_df(change_pct: float) -> pd.DataFrame:
@@ -54,64 +53,67 @@ def test_fundamentals_source_uses_dxy(mock_fetch) -> None:
     assert items[0].refs.get("source") == "tradingview"
 
 
-@patch("src.data.sources.news_feed.FINNHUB_API_KEY", "test-key")
-@patch("src.data.sources.te_calendar_scraper.TE_CALENDAR_ENABLED", True)
-@patch("src.data.sources.te_calendar_scraper.requests.get")
-def test_te_calendar_direct(mock_get) -> None:
-    from pathlib import Path
+@patch("src.data.sources.jin10_feed.fetch_jin10_flash", return_value=(["2026-06-16 10:00 现货黄金突破4200美元"], None))
+@patch(
+    "src.data.sources.jin10_feed.fetch_jin10_articles",
+    return_value=(["2026-06-16 09:00 一周展望：黄金等待筑底"], None),
+)
+@patch(
+    "src.data.sources.jin10_feed.fetch_jin10_risk_events",
+    return_value=("2026-06-16 20:30 美国 美国6月CPI年率", None),
+)
+def test_jin10_bundle_flash_articles_calendar(_cal, _articles, _flash) -> None:
+    bundle = fetch_jin10_bundle()
+    assert "黄金" in bundle.flash[0]
+    assert "黄金" in bundle.articles[0]
+    assert "CPI" in bundle.risk_events
+    assert "jin10_flash" in bundle.sources
+    assert "jin10_news" in bundle.sources
+    assert "jin10_calendar" in bundle.sources
 
-    html = Path("tests/fixtures/te_calendar_sample.html").read_text(encoding="utf-8")
-    mock_resp = mock_get.return_value
-    mock_resp.raise_for_status.return_value = None
-    mock_resp.text = html
 
-    risk = fetch_te_calendar()
-    assert "Building Permits" in risk or "NAHB" in risk
+@patch("src.data.sources.jin10_feed.JIN10_ENABLED", False)
+@patch("src.data.sources.jin10_feed.JIN10_API_TOKEN", "")
+def test_jin10_bundle_requires_token() -> None:
+    bundle = fetch_jin10_bundle()
+    assert bundle.headlines == []
+    assert "JIN10_API_TOKEN" in str(bundle.errors)
 
 
-@patch("src.data.sources.news_feed.fetch_te_calendar", return_value="2026-06-14 12:30 United States CPI YoY")
-@patch("src.data.sources.news_feed.NEWS_RSS_ENABLED", False)
-@patch("src.data.sources.news_feed.TE_CALENDAR_ENABLED", True)
-@patch("src.data.sources.news_feed.FINNHUB_API_KEY", "")
-def test_te_calendar_bundle(mock_fetch_te) -> None:
-    headlines, risk, refs = fetch_news_bundle()
+def test_jin10_calendar_filters_gold_events() -> None:
+    from src.data.sources.jin10_feed import fetch_jin10_risk_events
+
+    rows = {
+        "items": [
+            {
+                "time": "2026-06-16 20:30",
+                "country": "美国",
+                "event": "美国6月CPI年率",
+                "importance": "3",
+            },
+            {
+                "time": "2026-06-16 22:00",
+                "country": "美国",
+                "event": "NAHB Housing Market Index",
+                "importance": "2",
+            },
+        ]
+    }
+    with patch("src.data.sources.jin10_feed.jin10_call_tool", return_value=rows):
+        with patch("src.data.sources.jin10_feed.JIN10_ENABLED", True):
+            with patch("src.data.sources.jin10_feed.JIN10_API_TOKEN", "t"):
+                risk, err = fetch_jin10_risk_events()
+    assert err is None
     assert "CPI" in risk
-    assert "te_calendar_scrape" in refs.get("sources", [])
+    assert "NAHB" not in risk
 
 
-def test_te_calendar_parse_html() -> None:
-    from datetime import date
-    from pathlib import Path
+def test_gold_macro_event_filter() -> None:
+    from src.data.sources.gold_relevance import is_gold_macro_event
 
-    html = Path("tests/fixtures/te_calendar_sample.html").read_text(encoding="utf-8")
-    events = scrape_te_calendar_html(html, today=date(2026, 6, 14), days=3, min_importance=2)
-    assert len(events) >= 1
-    assert any("Building Permits" in ev["event"] or "NAHB" in ev["event"] for ev in events)
-
-
-@patch("src.data.sources.news_feed.TE_CALENDAR_ENABLED", False)
-@patch("src.data.sources.news_feed._finnhub_news")
-@patch("src.data.sources.news_feed._finnhub_calendar")
-def test_news_finnhub_bundle(mock_cal, mock_news) -> None:
-    mock_news.return_value = ["Fed holds rates (Reuters)"]
-    mock_cal.return_value = "2026-06-14 US CPI"
-    headlines, risk, refs = fetch_news_bundle()
-    assert headlines == ["Fed holds rates (Reuters)"]
-    assert "CPI" in risk
-    assert refs["source"] == "live"
-
-
-@patch("src.data.sources.news_feed.FINNHUB_API_KEY", "")
-@patch("src.data.sources.news_feed.get_text")
-def test_news_rss_fallback(mock_text) -> None:
-    rss = """<?xml version="1.0"?>
-    <rss><channel>
-      <item><title>Gold rises on Fed outlook</title></item>
-    </channel></rss>"""
-    mock_text.return_value = rss
-    headlines, risk, refs = fetch_news_bundle()
-    assert any("Gold" in h for h in headlines)
-    assert "google_news_rss" in refs.get("sources", [])
+    assert is_gold_macro_event("美国6月CPI年率", "美国", importance=3)
+    assert not is_gold_macro_event("NAHB Housing Market Index", "美国", importance=2)
+    assert is_gold_macro_event("中国MLF操作", "中国", importance=2)
 
 
 @patch("src.data.sources.social_feed.TV_SOCIAL_ENABLED", True)
@@ -173,12 +175,25 @@ def test_social_source_external(mock_fetch) -> None:
     assert any("社媒情绪" in i.summary for i in items)
 
 
-@patch("src.data.sources.news.fetch_news_bundle")
+@patch("src.data.sources.news.fetch_jin10_bundle")
 def test_news_source_evidence(mock_bundle) -> None:
-    mock_bundle.return_value = (
-        ["Gold hits record high"],
-        "近 48h 无高影响美元宏观事件（Finnhub）",
-        {"source": "live", "sources": ["finnhub_news"]},
+    mock_bundle.return_value = Jin10NewsBundle(
+        flash=["Gold hits record high"],
+        articles=["Weekly gold outlook bullish"],
+        risk_events="2026-06-16 20:30 美国 美国6月CPI年率",
+        sources=["jin10_flash", "jin10_news", "jin10_calendar"],
     )
     items = NewsDataSource().fetch_evidence()
     assert any("Gold hits" in i.summary for i in items)
+    assert any("Weekly gold" in i.summary for i in items)
+    assert any("事件风险" in i.summary for i in items)
+
+
+@patch("src.data.sources.jin10_feed.fetch_jin10_flash", return_value=(["flash headline"], None))
+@patch("src.data.sources.jin10_feed.fetch_jin10_articles", return_value=([], "jin10 articles empty"))
+@patch("src.data.sources.jin10_feed.fetch_jin10_risk_events", return_value=("2026 CPI", None))
+def test_news_source_external(_cal, _articles, _flash) -> None:
+    ext = NewsDataSource().fetch_external()
+    assert ext.news_headlines
+    assert "jin10_flash" in ext.sources
+    assert "jin10_calendar" in ext.sources

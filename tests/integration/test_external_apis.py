@@ -1,4 +1,4 @@
-"""Live API smoke tests — News / DXY / Social (requires network + proxy if needed).
+"""Live API smoke tests — Jin10 MCP / DXY / Social (requires network + credentials).
 
 Run:
     python tests/run.py --external
@@ -9,12 +9,12 @@ from __future__ import annotations
 
 import pytest
 
-from src.config import FINNHUB_API_KEY, NEWS_RSS_ENABLED, TE_CALENDAR_ENABLED, TV_SOCIAL_ENABLED
+from src.config import JIN10_API_TOKEN, JIN10_ENABLED, TV_SOCIAL_ENABLED
 from src.data.aggregator import merge_external
 from src.data.sources.dxy import fetch_dxy_impact
 from src.data.sources.fundamentals import FundamentalsDataSource
+from src.data.sources.jin10_feed import fetch_jin10_bundle
 from src.data.sources.news import NewsDataSource
-from src.data.sources.news_feed import fetch_news_bundle
 from src.data.sources.social import SocialDataSource
 from src.data.sources.social_feed import fetch_social_sentiment
 
@@ -23,7 +23,7 @@ pytestmark = [pytest.mark.integration, pytest.mark.slow, pytest.mark.external_ap
 
 def _skip_if_placeholder(source: str, refs: dict, label: str) -> None:
     if source == "placeholder" or refs.get("source") == "placeholder":
-        pytest.skip(f"{label} unavailable: {refs.get('error', 'placeholder')}")
+        pytest.skip(f"{label} unavailable: {refs.get('error', refs.get('errors'))}")
 
 
 @pytest.mark.external_api
@@ -39,61 +39,21 @@ def test_live_dxy_tradingview() -> None:
 
 
 @pytest.mark.external_api
-def test_live_news_bundle_rss_or_finnhub() -> None:
-    """Headlines from Finnhub (if key) and/or Google News RSS; risk_events non-empty."""
-    headlines, risk, refs = fetch_news_bundle()
+@pytest.mark.skipif(not JIN10_ENABLED or not JIN10_API_TOKEN, reason="JIN10_API_TOKEN not set")
+def test_live_jin10_news_bundle() -> None:
+    """Flash + articles + calendar from Jin10 official MCP."""
+    bundle = fetch_jin10_bundle()
 
-    has_finnhub = bool(FINNHUB_API_KEY)
-    has_rss = NEWS_RSS_ENABLED
+    if not bundle.sources and not bundle.headlines:
+        pytest.skip(f"Jin10 MCP failed: {bundle.errors}")
 
-    if not has_finnhub and not has_rss:
-        pytest.skip("FINNHUB_API_KEY empty and NEWS_RSS_ENABLED=false")
+    assert "jin10_flash" in bundle.sources or "jin10_news" in bundle.sources or "jin10_calendar" in bundle.sources
+    assert bundle.risk_events and bundle.risk_events != "—"
+    if bundle.headlines:
+        assert len(bundle.headlines) >= 1
 
-    if refs.get("source") == "placeholder" and not headlines:
-        pytest.skip(f"news fetch failed: {refs.get('error', 'placeholder')}")
-
-    assert risk and risk != "—"
-    assert refs.get("source") in ("live", "partial")
-
-    if headlines:
-        assert len(headlines) >= 1
-        assert all(isinstance(h, str) and h.strip() for h in headlines)
-        if has_rss and not has_finnhub:
-            assert "google_news_rss" in refs.get("sources", [])
-    elif has_finnhub:
-        assert "finnhub" in str(refs.get("sources")) or "finnhub_calendar" in str(
-            refs.get("sources")
-        )
-
-
-@pytest.mark.external_api
-@pytest.mark.skipif(not TE_CALENDAR_ENABLED, reason="TE_CALENDAR_ENABLED=false")
-def test_live_te_calendar_scrape() -> None:
-    """Trading Economics calendar via HTML scrape (no paid API)."""
-    from src.data.sources.te_calendar_scraper import fetch_te_calendar
-
-    risk = fetch_te_calendar()
-    assert isinstance(risk, str)
-    assert risk.strip()
-    assert risk != "—"
-
-
-@pytest.mark.external_api
-@pytest.mark.skipif(not FINNHUB_API_KEY, reason="FINNHUB_API_KEY not set")
-def test_live_finnhub_economic_calendar() -> None:
-    """Finnhub calendar fallback — only when TE scrape disabled."""
-    from src.config import TE_CALENDAR_ENABLED
-    from src.data.sources.news_feed import _finnhub_calendar
-
-    if TE_CALENDAR_ENABLED:
-        pytest.skip("TE calendar scrape enabled; Finnhub calendar is fallback only")
-
-    risk = _finnhub_calendar()
-    assert isinstance(risk, str)
-    assert risk.strip()
-    if "403" in risk or "付费" in risk:
-        pytest.skip("Finnhub calendar not available on free tier")
-    assert risk != "—"
+    ext = NewsDataSource().fetch_external()
+    assert ext.news_headlines or ext.risk_events != "—"
 
 
 @pytest.mark.external_api
@@ -131,6 +91,6 @@ def test_live_data_sources_fetch_external() -> None:
     )
 
     if live_count == 0:
-        pytest.skip("no live external data (TV/Finnhub/RSS/TE calendar all unavailable)")
+        pytest.skip("no live external data (Jin10 MCP / TV unavailable)")
 
     assert merged.dxy_impact != "—" or merged.news_headlines or merged.risk_events != "—"

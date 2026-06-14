@@ -11,11 +11,10 @@ sys.path.insert(0, str(ROOT))
 from src.data.aggregator import merge_external
 from src.data.sources.dxy import fetch_dxy_impact
 from src.data.sources.fundamentals import FundamentalsDataSource
+from src.data.sources.jin10_feed import fetch_jin10_bundle
 from src.data.sources.news import NewsDataSource
-from src.data.sources.news_feed import fetch_news_bundle
 from src.data.sources.social import SocialDataSource
 from src.data.sources.social_feed import fetch_social_sentiment
-from src.data.sources.te_calendar_scraper import fetch_te_calendar
 
 
 def _block(title: str, body: object) -> None:
@@ -34,19 +33,19 @@ def main() -> int:
     dxy_impact, dxy_refs = fetch_dxy_impact()
     _block("DXY (TradingView)", {"impact": dxy_impact, "refs": dxy_refs})
 
-    headlines, risk, news_refs = fetch_news_bundle()
+    bundle = fetch_jin10_bundle()
     _block(
-        "News bundle",
+        "Jin10 MCP (flash + articles + calendar)",
         {
-            "headlines": headlines[:5],
-            "headline_count": len(headlines),
-            "risk_events": risk,
-            "refs": news_refs,
+            "flash": bundle.flash[:3],
+            "articles": bundle.articles[:3],
+            "headlines_merged": bundle.headlines[:5],
+            "headline_count": len(bundle.headlines),
+            "risk_events": bundle.risk_events,
+            "sources": bundle.sources,
+            "errors": bundle.errors,
         },
     )
-
-    te_cal = fetch_te_calendar()
-    _block("TE calendar scrape", te_cal)
 
     social_summary, posts, social_refs = fetch_social_sentiment()
     _block(
@@ -70,6 +69,7 @@ def main() -> int:
             "news_headlines": merged.news_headlines[:3],
             "risk_events": merged.risk_events,
             "social_sentiment": merged.social_sentiment,
+            "sources": merged.sources,
         },
     )
 
@@ -77,8 +77,8 @@ def main() -> int:
         1
         for flag in (
             dxy_refs.get("source") == "tradingview",
-            bool(headlines) or news_refs.get("sources"),
-            te_cal and te_cal != "—",
+            bool(bundle.headlines) or bool(bundle.sources),
+            bundle.risk_events != "—" and "占位" not in bundle.risk_events,
             social_refs.get("source") == "tradingview_social",
         )
         if flag

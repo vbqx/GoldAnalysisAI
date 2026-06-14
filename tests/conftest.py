@@ -31,14 +31,16 @@ def offline_external_sources(request):
 
     from unittest.mock import patch
 
+    from src.data.sources.jin10_feed import Jin10NewsBundle
+
     with (
         patch(
             "src.data.sources.fundamentals.fetch_dxy_impact",
             return_value=("偏强 → 利空黄金（占位）", {"source": "placeholder", "bias": "bearish"}),
         ),
         patch(
-            "src.data.sources.news.fetch_news_bundle",
-            return_value=([], "美盘数据/讲话 → 波动放大（占位）", {"source": "placeholder"}),
+            "src.data.sources.news.fetch_jin10_bundle",
+            return_value=Jin10NewsBundle(risk_events="美盘数据/讲话 → 波动放大（占位）"),
         ),
         patch(
             "src.data.sources.social.fetch_social_sentiment",
