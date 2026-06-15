@@ -13,10 +13,11 @@ from src.llm.router import get_fast_client
 
 ANALYST_JSON_SCHEMA = """{
   "bias": "bullish|bearish|neutral",
-  "items": [{"category": "...", "summary": "...", "strength": 0.0-1.0, "timeframe": "4h"}],
+  "items": [{"category": "...", "summary": "...", "strength": 0.0-1.0, "timeframe": "4h", "source": "数据来源标签"}],
   "confidence": 0.0-1.0,
   "summary": "一句话结论"
-}"""
+}
+items 至少 4 条；每条须含 source（如 jin10 / macro / tradingview_ict / tradingview_social）。"""
 
 
 def run_specialist_llm(
