@@ -1,0 +1,253 @@
+"""Build derived analyst context and density metrics.
+
+Called once after ``assemble_market_context()`` via ``finalize_market_context()``:
+
+- Layer 2 derived signals (EMA position, news topics, event countdown, spot/kline cross-check)
+- ``context_stats`` for observability in report meta and Analyst Team stage I/O
+"""
+
+from __future__ import annotations
+
+import json
+import re
+from datetime import datetime
+from typing import Any
+
+import pandas as pd
+
+from src.data.news_topics import cluster_headline_topics
+from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
+from src.config import (
+    ANALYST_CALENDAR_MAX,
+    ANALYST_NEWS_MAX,
+    JIN10_KLINE_ENABLED,
+    JIN10_QUOTE_ENABLED,
+)
+from src.core.types import CalendarEvent, ExternalFactors, HeadlineItem, MarketContext
+from src.data.sources.jin10_feed import fetch_jin10_kline, fetch_jin10_quote
+from src.indicators.technical import ema_relation
+
+
+def calendar_to_risk_text(events: list[CalendarEvent], *, limit: int = 6) -> str:
+    if not events:
+        return "—"
+    return "；".join(e.display() for e in events[:limit])
+
+
+def headlines_to_strings(items: list[HeadlineItem], *, limit: int | None = None) -> list[str]:
+    cap = limit or ANALYST_NEWS_MAX
+    out: list[str] = []
+    seen: set[str] = set()
+    for item in items:
+        text = item.text.strip()
+        if not text or text in seen:
+            continue
+        seen.add(text)
+        out.append(text[:240])
+        if len(out) >= cap:
+            break
+    return out
+
+
+def sync_external_legacy_fields(ext: ExternalFactors) -> None:
+    """Keep news_headlines / risk_events in sync with structured fields."""
+    if ext.headline_items:
+        ext.news_headlines = headlines_to_strings(ext.headline_items)
+    if ext.calendar_events:
+        ext.risk_events = calendar_to_risk_text(ext.calendar_events)
+
+
+def build_market_position(enriched: dict[str, pd.DataFrame], price: float) -> dict[str, Any]:
+    """EMA / VWAP distances and recent range for technical analyst."""
+    block: dict[str, Any] = {"price": price}
+    if "5m" in enriched:
+        last = enriched["5m"].iloc[-1]
+        relations = ema_relation(price, last)
+        block["ema_vwap"] = {
+            col: {"value": round(float(last[col]), 2), "relation": rel}
+            for col, rel in relations.items()
+            if col in last and pd.notna(last[col]) and rel != "N/A"
+        }
+    if "1d" in enriched and len(enriched["1d"]) >= 5:
+        df = enriched["1d"].tail(5)
+        block["range_5d"] = {
+            "high": round(float(df["High"].max()), 2),
+            "low": round(float(df["Low"].min()), 2),
+        }
+        block["range_position"] = round(
+            (price - float(df["Low"].min())) / max(float(df["High"].max()) - float(df["Low"].min()), 1e-9),
+            3,
+        )
+    return block
+
+
+def build_spot_cross_check(tv_price: float, quote: dict[str, Any] | None) -> dict[str, Any]:
+    if not quote:
+        return {}
+    try:
+        jin10_close = float(quote.get("close") or 0)
+    except (TypeError, ValueError):
+        return {}
+    if jin10_close <= 0 or tv_price <= 0:
+        return {}
+    diff_pct = abs(jin10_close - tv_price) / tv_price * 100
+    return {
+        "code": quote.get("code", "XAUUSD"),
+        "jin10_close": jin10_close,
+        "tv_price": round(tv_price, 2),
+        "diff_pct": round(diff_pct, 3),
+        "aligned": diff_pct < 0.15,
+        "jin10_change_pct": quote.get("ups_percent"),
+        "quote_time": quote.get("time"),
+    }
+
+
+def _parse_event_time(raw: str) -> datetime | None:
+    text = (raw or "").strip()
+    if not text:
+        return None
+    for fmt in (
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M",
+        "%Y/%m/%d %H:%M",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M",
+    ):
+        try:
+            return datetime.strptime(text, fmt)
+        except ValueError:
+            continue
+    match = re.search(r"(\d{4}-\d{2}-\d{2})\s+(\d{1,2}:\d{2})", text)
+    if match:
+        try:
+            return datetime.strptime(f"{match.group(1)} {match.group(2)}", "%Y-%m-%d %H:%M")
+        except ValueError:
+            return None
+    return None
+
+
+def build_event_countdown(events: list[CalendarEvent]) -> dict[str, Any]:
+    """Hours until the next high-impact calendar event."""
+    now = datetime.now()
+    best: CalendarEvent | None = None
+    best_hours: float | None = None
+    for event in events:
+        if event.importance < 3.0:
+            continue
+        when = _parse_event_time(event.time)
+        if when is None:
+            continue
+        hours = (when - now).total_seconds() / 3600
+        if hours < -1:
+            continue
+        if best_hours is None or hours < best_hours:
+            best_hours = hours
+            best = event
+    if best is None or best_hours is None:
+        return {}
+    return {
+        "event": best.event,
+        "time": best.time,
+        "region": best.region,
+        "importance": best.importance,
+        "hours_until": round(best_hours, 1),
+    }
+
+
+def build_jin10_kline_summary(bars: list[dict[str, Any]], tv_price: float) -> dict[str, Any]:
+    if not bars:
+        return {}
+    last = bars[-1]
+    try:
+        close = float(last.get("close") or 0)
+    except (TypeError, ValueError):
+        return {}
+    if close <= 0:
+        return {}
+    first = bars[0]
+    try:
+        open_px = float(first.get("open") or first.get("close") or close)
+    except (TypeError, ValueError):
+        open_px = close
+    change_pct = (close - open_px) / open_px * 100 if open_px else 0.0
+    diff_pct = abs(close - tv_price) / tv_price * 100 if tv_price > 0 else 0.0
+    return {
+        "bars": len(bars),
+        "last_close": round(close, 2),
+        "session_change_pct": round(change_pct, 3),
+        "tv_price": round(tv_price, 2),
+        "diff_pct": round(diff_pct, 3),
+        "aligned_with_tv": diff_pct < 0.15,
+        "last_time": last.get("time"),
+    }
+
+
+def build_derived_context(ctx: MarketContext) -> dict[str, Any]:
+    vote = sentiment_score(ctx.analyses)
+    ext = ctx.external
+    high_impact = sum(1 for e in ext.calendar_events if e.importance >= 3.0)
+    derived: dict[str, Any] = {
+        "market_position": build_market_position(ctx.enriched, ctx.price),
+        "structure_sentiment": vote,
+        "calendar_high_impact_count": high_impact,
+        "upcoming_calendar": [e.to_dict() for e in ext.calendar_events[:6]],
+        "news_topics": cluster_headline_topics(ext.headline_items),
+        "event_countdown": build_event_countdown(ext.calendar_events),
+        "headline_count": len(ext.headline_items),
+        "flash_count": sum(1 for h in ext.headline_items if h.source == "jin10_flash"),
+        "article_count": sum(1 for h in ext.headline_items if h.source == "jin10_news"),
+        "macro_bias_votes": {
+            q.bias: sum(1 for m in ext.macro_quotes if m.bias == q.bias) for q in ext.macro_quotes
+        },
+    }
+    if JIN10_QUOTE_ENABLED:
+        quote, _ = fetch_jin10_quote()
+        cross = build_spot_cross_check(ctx.price, quote)
+        if cross:
+            derived["spot_cross_check"] = cross
+    if JIN10_KLINE_ENABLED:
+        bars, _ = fetch_jin10_kline()
+        kline_summary = build_jin10_kline_summary(bars, ctx.price)
+        if kline_summary:
+            derived["jin10_kline_summary"] = kline_summary
+    return derived
+
+
+def compute_context_stats(ctx: MarketContext) -> dict[str, Any]:
+    ext = ctx.external
+    ict_events = sum(len(a.events) for a in ctx.analyses.values())
+    stats = {
+        "headline_items": len(ext.headline_items),
+        "calendar_events": len(ext.calendar_events),
+        "macro_quotes": len(ext.macro_quotes),
+        "social_posts": len(ext.social_posts),
+        "ict_events_total": ict_events,
+        "sources": list(ext.sources),
+    }
+    try:
+        payload_sample = json.dumps(ctx.external.to_dict(), ensure_ascii=False)
+        stats["external_payload_bytes"] = len(payload_sample.encode("utf-8"))
+    except Exception:
+        stats["external_payload_bytes"] = 0
+    return stats
+
+
+def finalize_market_context(ctx: MarketContext) -> MarketContext:
+    """Attach derived signals and density stats after assembly."""
+    sync_external_legacy_fields(ctx.external)
+    ctx.derived = build_derived_context(ctx)
+    ctx.context_stats = compute_context_stats(ctx)
+    return ctx
+
+
+def rank_ict_events(analysis: TimeframeAnalysis, *, limit: int) -> list[dict[str, Any]]:
+    """Prefer BOS/CHoCH over other structure events."""
+    priority = {"choch": 0, "bos": 1}
+    sorted_events = sorted(
+        analysis.events,
+        key=lambda e: (priority.get((e.kind or "").lower(), 9), -e.price),
+    )
+    return [
+        {"kind": e.kind, "direction": e.direction, "price": e.price}
+        for e in sorted_events[-limit:]
+    ]

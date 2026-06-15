@@ -27,6 +27,9 @@ def merge_external(*parts: ExternalFactors) -> ExternalFactors:
         if p.risk_events != "—":
             merged.risk_events = p.risk_events
         merged.news_headlines.extend(p.news_headlines)
+        merged.headline_items.extend(p.headline_items)
+        merged.calendar_events.extend(p.calendar_events)
+        merged.macro_quotes.extend(p.macro_quotes)
         if p.social_sentiment != "—":
             merged.social_sentiment = p.social_sentiment
         merged.social_posts.extend(p.social_posts)
@@ -34,6 +37,9 @@ def merge_external(*parts: ExternalFactors) -> ExternalFactors:
         for src in p.sources:
             if src and src not in merged.sources:
                 merged.sources.append(src)
+    from src.data.context_builder import sync_external_legacy_fields
+
+    sync_external_legacy_fields(merged)
     return merged
 
 
@@ -62,13 +68,9 @@ def assemble_market_context(
         external=external,
         source_label=source_label,
     )
-    log.debug(
-        "market context assembled price=%.2f dxy=%r headlines=%d",
-        ctx.price,
-        external.dxy_impact,
-        len(external.news_headlines),
-    )
-    return ctx
+    from src.data.context_builder import finalize_market_context
+
+    return finalize_market_context(ctx)
 
 
 def build_market_context(
