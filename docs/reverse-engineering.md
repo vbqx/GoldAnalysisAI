@@ -127,19 +127,29 @@ MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；
 
 ## 4. 与原报告的差距（MVP 已知限制）
 
-1. EMA610 在 5min 上需要足够历史数据，Yahoo 可能不足
+1. EMA610 在 5min 上需要足够历史数据，匿名 TradingView 可能不足
 2. OB/FVG 检测为启发式，非 ICT 标准定义
 3. 胜率是趋势投票，非历史回测统计
-4. 无 DXY 实时联动（Header 中为占位文案）
-5. 无 LLM 润色结论
+4. DXY / 金十 / 社媒已接入实时 API，拉取失败时回退占位文案（UI 应区分 live / fallback）
+5. LLM 结论润色可选（`LLM_ENABLED`）；默认规则引擎生成结论文案
 
 ---
 
 ## 5. 推荐迭代路线
 
 ```
-Phase 1 (当前 MVP)  → 规则引擎 + Streamlit
-Phase 2             → 稳定数据源 + HTML 静态报告导出
-Phase 3             → LLM 结论 + DXY 因子
+Phase 1 (当前 MVP)  → 规则引擎 + Streamlit + 外部数据 + LLM 双轨
+Phase 2             → HTML/PDF 静态报告导出
+Phase 3             → ICT Interpreter + 流水线并行
 Phase 4             → 信号回测 + 真实胜率
 ```
+
+---
+
+## 相关文档
+
+| 文档 | 内容 |
+|------|------|
+| [README.md](./README.md) | 文档中心索引 |
+| [development.md](./development.md) | 模块实现与数据流 |
+| [financial-review.md](./financial-review.md) | 金融逻辑评审 |

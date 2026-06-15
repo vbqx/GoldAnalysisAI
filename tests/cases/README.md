@@ -1,6 +1,6 @@
 # 测试用例目录
 
-本目录存放**用例定义与测试设计文档**，与 `tests/unit`、`tests/regression` 等实现代码分离。
+本目录存放**用例定义与测试设计文档**，与 `tests/unit`、`tests/regression` 等实现代码分离。项目文档见 [`docs/README.md`](../../docs/README.md)。
 
 | 文件 | 说明 |
 |------|------|

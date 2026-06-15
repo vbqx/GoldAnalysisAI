@@ -6,7 +6,7 @@
 **不包含**：VaR/Sharpe/回测等未规划能力  
 **评审日期**：2026-06-14  
 **分发对象**：开发团队、测试团队、产品/UI  
-**相关文档**：[development.md](./development.md) · [reverse-engineering.md](./reverse-engineering.md) · [architecture.md](./architecture.md) · [tests/cases/catalog.yaml](../tests/cases/catalog.yaml)
+**相关文档**：[docs/README.md](./README.md) · [development.md](./development.md) · [reverse-engineering.md](./reverse-engineering.md) · [architecture.md](./architecture.md) · [tests/cases/catalog.yaml](../tests/cases/catalog.yaml)
 
 ---
 
@@ -41,7 +41,7 @@ TradingView OHLCV → 技术指标 → ICT/PA 结构识别 → 多 Agent 决策 
 |------|----------|----------|
 | Sharpe / 最大回撤 / VaR / Beta | 未规划 | N/A |
 | 历史回测胜率 | P6 路线图 | N/A |
-| DXY / 新闻 / 经济日历 | 占位文案 | 需标注「模拟」 |
+| DXY / 新闻 / 经济日历 | 已接入 live API（金十 MCP / TradingView） | 拉取失败时回退占位；UI 须区分 live / fallback |
 | LLM 交易员 / 风控 / 经理 | P1/P2 规划中 | 当前为规则版 |
 | 券商 Execution | 未实现 | N/A |
 
@@ -204,15 +204,15 @@ TradingView OHLCV → 技术指标 → ICT/PA 结构识别 → 多 Agent 决策 
 
 ---
 
-### F-010 | P2 | 占位外部因子可能被 LLM 当作事实
+### F-010 | P2 | 外部因子 fallback 可能被 LLM 当作事实
 
 | 项 | 内容 |
 |----|------|
-| **位置** | `src/data/sources/news.py`、`fundamentals.py`；`report_engine.build_calendar_events()` |
-| **现象** | DXY、日历为固定占位；LLM narrative 可能引用。 |
-| **金融风险** | 虚假宏观上下文影响 LLM 输出可信度。 |
-| **开发建议** | `report["external"]["source"]="placeholder"`；LLM prompt 标注不可采信。 |
-| **测试建议** | external 含 source 标识；LLM prompt 含 placeholder 警告（快照测试）。 |
+| **位置** | `src/data/sources/news.py`、`dxy.py`、`fundamentals.py`；`report_engine.build_calendar_events()` |
+| **现象** | DXY / 金十 / 社媒已接入 live API，但拉取失败时各源回退 `refs.source="placeholder"` 占位文案；LLM narrative 仍可能引用。 |
+| **金融风险** | fallback 宏观上下文影响 LLM 输出可信度。 |
+| **开发建议** | `report["external"]` 保留 per-source 标识（live / placeholder / disabled）；LLM prompt 标注 fallback 不可采信；UI 视觉区分。 |
+| **测试建议** | external 含 source 标识；mock 失败路径断言 placeholder；LLM prompt 含 fallback 警告（快照测试）。 |
 
 ---
 
@@ -311,7 +311,7 @@ TradingView OHLCV → 技术指标 → ICT/PA 结构识别 → 多 Agent 决策 
 | ID | 验收项 |
 |----|--------|
 | FIN-UI-01 | 「胜率/概率」须标注非回测 |
-| FIN-UI-02 | DXY/新闻/日历/TV 社媒显示 live 或回退说明 |
+| FIN-UI-02 | DXY/新闻/日历/TV 社媒显示 live 或明确 fallback 说明 |
 | FIN-UI-03 | manager reduce 时展示 position_scale |
 | FIN-UI-04 | EMA610 不足时报告有警告 |
 | FIN-UI-05 | 免责声明可见 |
@@ -362,3 +362,4 @@ GoldAnalysisAI Phase 1 MVP **架构合理、文档边界清晰**，作为 PA+ICT
 | 版本 | 日期 | 说明 |
 |------|------|------|
 | 1.0 | 2026-06-14 | 初版 — Phase 1 MVP 金融 Review |
+| 1.1 | 2026-06-15 | 同步 live 外部数据源状态；F-010 改为 fallback 语义 |
