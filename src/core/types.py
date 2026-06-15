@@ -131,22 +131,82 @@ class ManagerDecision:
 
 
 @dataclass
+class HeadlineItem:
+    """Structured news headline for Analyst Team payloads."""
+
+    source: str  # jin10_flash | jin10_news
+    text: str
+    time: str = ""
+    title: str = ""
+    url: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class CalendarEvent:
+    """Structured macro calendar row."""
+
+    time: str
+    region: str
+    event: str
+    importance: float = 1.0
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    def display(self) -> str:
+        return f"{self.time} {self.region} {self.event}".strip()
+
+
+@dataclass
+class MacroQuote:
+    """DXY / yields snapshot for fundamentals analyst."""
+
+    name: str
+    symbol: str
+    close: float
+    change_pct: float
+    impact: str
+    bias: Bias
+    source: str = "tradingview"
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
 class ExternalFactors:
     dxy_impact: str = "—"
     risk_events: str = "—"
     news_headlines: list[str] = field(default_factory=list)
+    headline_items: list[HeadlineItem] = field(default_factory=list)
+    calendar_events: list[CalendarEvent] = field(default_factory=list)
+    macro_quotes: list[MacroQuote] = field(default_factory=list)
     social_sentiment: str = "—"
     social_posts: list[dict] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
     fetch_errors: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
+        from src.config import ANALYST_CALENDAR_MAX, ANALYST_NEWS_MAX, ANALYST_SOCIAL_MAX
+
         return {
             "dxy_impact": self.dxy_impact,
             "risk_events": self.risk_events,
-            "news_headlines": self.news_headlines,
+            "news_headlines": self.news_headlines[:ANALYST_NEWS_MAX],
+            "headlines": [h.to_dict() for h in self.headline_items[:ANALYST_NEWS_MAX]],
+            "flash_headlines": [
+                h.to_dict() for h in self.headline_items if h.source == "jin10_flash"
+            ][:ANALYST_NEWS_MAX],
+            "article_headlines": [
+                h.to_dict() for h in self.headline_items if h.source == "jin10_news"
+            ][:ANALYST_NEWS_MAX],
+            "calendar": [c.to_dict() for c in self.calendar_events[:ANALYST_CALENDAR_MAX]],
+            "macro_quotes": [m.to_dict() for m in self.macro_quotes],
             "social_sentiment": self.social_sentiment,
-            "social_posts": self.social_posts[:5],
+            "social_posts": self.social_posts[:ANALYST_SOCIAL_MAX],
             "sources": self.sources,
             "fetch_errors": self.fetch_errors[:5],
         }
@@ -162,12 +222,16 @@ class MarketContext:
     price: float
     external: ExternalFactors
     source_label: str
+    derived: dict[str, Any] = field(default_factory=dict)
+    context_stats: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "price": self.price,
             "metrics": self.metrics,
             "external": self.external.to_dict(),
+            "derived": self.derived,
+            "context_stats": self.context_stats,
             "source_label": self.source_label,
             "timeframes": list(self.analyses.keys()),
         }
