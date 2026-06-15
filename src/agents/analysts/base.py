@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from src.config import PAYLOAD_EVIDENCE_MAX
 from src.core.types import AnalystReport, Bias, EvidenceItem
 
 
@@ -34,7 +35,7 @@ def build_report(
 
 
 def items_for_direction(team_reports: list[AnalystReport], direction: Bias) -> list[EvidenceItem]:
-    """Pull evidence from specialist reports that align with a researcher direction."""
+    """Pull evidence from specialist reports aligned with a researcher direction."""
     merged: list[EvidenceItem] = []
     for report in team_reports:
         if report.bias != direction or not report.items:
@@ -50,4 +51,5 @@ def items_for_direction(team_reports: list[AnalystReport], direction: Bias) -> l
                     refs={**item.refs, "analyst": report.agent},
                 )
             )
-    return merged
+    merged.sort(key=lambda i: i.strength, reverse=True)
+    return merged[:PAYLOAD_EVIDENCE_MAX]

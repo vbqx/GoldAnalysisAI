@@ -109,7 +109,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     )
 
     prog.start("debate", "多空辩论")
-    debate = agent_factory.run_debate(bullish, bearish, analyses, pipeline_meta, analyst_team)
+    debate = agent_factory.run_debate(bullish, bearish, analyses, pipeline_meta, analyst_team, ctx)
     prog.done("debate", f"共识 {debate.consensus_bias} · {debate.consensus_strength:.0%}")
     log.info(
         "debate consensus=%s strength=%.2f",
@@ -163,11 +163,19 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         "dxy_impact": ctx.external.dxy_impact,
         "risk_events": ctx.external.risk_events,
         "news_headlines": ctx.external.news_headlines[:12],
+        "headline_count": len(ctx.external.headline_items),
+        "calendar_count": len(ctx.external.calendar_events),
+        "macro_quotes": [m.to_dict() for m in ctx.external.macro_quotes],
+        "news_topics": ctx.derived.get("news_topics", []),
+        "event_countdown": ctx.derived.get("event_countdown", {}),
+        "spot_cross_check": ctx.derived.get("spot_cross_check"),
+        "jin10_kline_summary": ctx.derived.get("jin10_kline_summary"),
         "social_sentiment": ctx.external.social_sentiment,
         "social_posts": ctx.external.social_posts[:8],
         "sources": ctx.external.sources,
         "fetch_errors": ctx.external.fetch_errors[:5],
     }
+    report["meta"]["context_stats"] = ctx.context_stats
 
     live_cal = parse_risk_events_calendar(ctx.external.risk_events)
     if live_cal:

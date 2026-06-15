@@ -2,45 +2,29 @@
 
 from __future__ import annotations
 
-from src.core.types import AnalystReport, Bias, EvidenceItem
-from src.data.sources.news import NewsDataSource
+from src.agents.analysts.news_bias import infer_news_bias
+from src.core.types import AnalystReport, EvidenceItem, MarketContext
+from src.data.sources.news import external_to_evidence
 
 from src.agents.analysts.base import build_report
 
 
-def run_news_analyst(ctx) -> AnalystReport:
+def run_news_analyst(ctx: MarketContext) -> AnalystReport:
     ext = ctx.external
-    items = NewsDataSource().fetch_evidence()
+    is_live = any(
+        s in (ext.sources or []) for s in ("jin10_flash", "jin10_news", "jin10_calendar")
+    )
+    items = external_to_evidence(ext, is_live=is_live)
 
-    for headline in ext.news_headlines[:5]:
-        if not any(headline in i.summary for i in items):
-            items.append(
-                EvidenceItem(
-                    category="news",
-                    summary=headline,
-                    strength=0.5,
-                    refs={"source": "news"},
-                )
-            )
-
-    bias: Bias = "neutral"
-    if ext.risk_events and ext.risk_events != "—":
-        if not any(ext.risk_events[:20] in i.summary for i in items):
-            live = any(
-                s in (ext.sources or [])
-                for s in ("jin10_flash", "jin10_news", "jin10_calendar")
-            ) or "CPI" in ext.risk_events or "非农" in ext.risk_events
-            items.append(
-                EvidenceItem(
-                    category="news",
-                    summary=f"事件风险：{ext.risk_events}",
-                    strength=0.45 if live else 0.35,
-                    refs={"source": "calendar" if live else "placeholder"},
-                )
-            )
+    bias = infer_news_bias(ext.headline_items, ext.calendar_events, risk_text=ext.risk_events)
 
     if ext.news_headlines:
-        summary = f"新闻：{len(ext.news_headlines)} 条头条 · {ext.risk_events[:40]}"
+        summary = (
+            f"新闻：{len(ext.headline_items)} 条"
+            f"（快讯 {sum(1 for h in ext.headline_items if h.source == 'jin10_flash')} · "
+            f"资讯 {sum(1 for h in ext.headline_items if h.source == 'jin10_news')}）"
+            f" · 日历 {len(ext.calendar_events)} · bias {bias}"
+        )
     elif ext.risk_events != "—":
         summary = f"新闻：{ext.risk_events[:80]}"
     else:

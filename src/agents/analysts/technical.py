@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from src.agents.analysts.structure_zones import ict_zone_evidence
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
 from src.core.types import AnalystReport, Bias, EvidenceItem, MarketContext
 from src.data.sources.market import MarketDataSource
@@ -94,7 +95,8 @@ def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
         ema_bias = "bearish"
 
     vote = sentiment_score(ctx.analyses)
-    items = market_items + struct_items + ema_items
+    zone_items = ict_zone_evidence(ctx)
+    items = market_items + struct_items + ema_items + zone_items
 
     biases = [struct_bias, ema_bias]
     if vote["bullish"] > vote["bearish"] + 8:

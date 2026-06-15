@@ -176,6 +176,13 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
         news=picked["news"],
         sentiment=picked["sentiment"],
     )
+    elapsed = int((time.perf_counter() - t0) * 1000)
+    prog.stage_io(
+        "analyst_team",
+        input_text=json.dumps(input_payload, ensure_ascii=False, indent=2),
+        output_text=json.dumps(team.to_dict(), ensure_ascii=False, indent=2),
+        latency_ms=elapsed,
+    )
     pipeline.record("analyst_team", StageMeta(source=_analyst_team_aggregate_source(llm_picked)))
     return team
 
@@ -239,15 +246,16 @@ def run_debate(
     analyses,
     pipeline: AgentPipelineMeta,
     team: AnalystTeam,
+    ctx: MarketContext,
 ) -> ResearchDebate:
-    rule_result = rule_debate(bullish, bearish, analyses, team)
+    rule_result = rule_debate(bullish, bearish, analyses, team, ctx)
     if not _use_llm_stage(LLM_STAGE_DEBATE):
         get_progress().update("debate", detail="规则引擎")
         pipeline.record("debate", StageMeta(source="rule"))
         return rule_result
 
     get_progress().update("debate", detail="LLM 辩论中…")
-    llm_result, trace = run_llm_debate(bullish, bearish, analyses)
+    llm_result, trace = run_llm_debate(bullish, bearish, analyses, ctx=ctx, team=team)
     return _pick_debate(rule_result, llm_result, trace, pipeline)
 
 
