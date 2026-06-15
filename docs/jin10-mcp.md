@@ -21,6 +21,8 @@ JIN10_KEYWORD=黄金
 | `list_flash` | 快讯 → 新闻头条 | 金十快讯 |
 | `search_news` / `list_news` | 资讯文章 → 新闻头条 | 金十资讯 |
 | `list_calendar` | 宏观日历 → 事件风险 | 金十财经日历 |
+| `get_quote` | XAUUSD 实时报价 → spot 交叉校验 | — |
+| `get_kline` | XAUUSD K 线 → 技术分析师 derived 摘要 | — |
 
 本地验证：
 
@@ -68,3 +70,9 @@ MCP 是 **给 AI 助手用的协议**；Streamlit 报告生成走的是 Python M
 | `JIN10_NEWS_LIMIT` | `12` | 合并后头条总上限 |
 | `JIN10_CACHE_TTL` | `600` | 进程内缓存秒数 |
 | `JIN10_MCP_TIMEOUT` | `60` | MCP HTTP 超时秒数 |
+| `JIN10_QUOTE_ENABLED` | `true` | 启用 get_quote 交叉校验 |
+| `JIN10_QUOTE_CODE` | `XAUUSD` | 报价品种代码 |
+| `JIN10_KLINE_ENABLED` | `true` | 启用 get_kline 摘要 |
+| `JIN10_KLINE_CODE` | `XAUUSD` | K 线品种代码 |
+| `JIN10_KLINE_COUNT` | `20` | K 线条数 |
+| `JIN10_KLINE_PERIOD` | 空 | 可选整数周期（不传则用 MCP 默认） |

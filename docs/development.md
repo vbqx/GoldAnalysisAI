@@ -70,6 +70,7 @@ copy .env.example .env          # Windows
 | `TV_FETCH_RETRIES` / `TV_FETCH_ROUND_RETRIES` | `3` / `1` | TradingView 拉数重试 |
 | `JIN10_API_TOKEN` | 空 | 金十官方 MCP 快讯 + 资讯 + 财经日历（[申请](https://mcp.jin10.com/app)） |
 | `JIN10_KEYWORD` | `黄金` | 快讯/资讯筛选关键词 |
+| `ANALYST_*` / `TV_US10Y_*` | 见 [analyst-context.md](./analyst-context.md) | Analyst Team 输入密度上限 |
 | `LOG_LEVEL` | `INFO` | `DEBUG` 可跟踪流水线 |
 | `LOG_FILE` | 空 | 如 `logs/goldanalysisai.log` |
 | `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](./llm-agents.md) |
@@ -97,10 +98,10 @@ streamlit run app.py    # http://localhost:8501
 
 ```bash
 pip install -r requirements-dev.txt
-python tests/run.py              # 快速：单元 + 回归（约 55+ 项）
+python tests/run.py              # 快速：单元 + 回归（约 77 项，无网络）
 python tests/run.py --external   # 外部 API 冒烟（金十 MCP / DXY / TV 社媒）
 python tests/run.py --financial  # 金融 Review FIN-*
-python tests/run.py --full       # 含完整流水线（约 2–3 分钟）
+python tests/run.py --full       # 含完整流水线（需 .env + TV；启用 LLM 时可能 >5 分钟）
 ```
 
 ---
@@ -124,7 +125,10 @@ enrich() × 各周期  →  dict[str, DataFrame]  enriched（+EMA/VWAP）
 analyze_timeframe() × 5  →  dict[str, TimeframeAnalysis]  analyses
         │
         ▼  [data/aggregator.py]
-build_market_context()  →  MarketContext  ctx
+assemble_market_context()  →  MarketContext  ctx
+        │
+        ▼  [data/context_builder.py]
+finalize_market_context()  →  ctx.derived + ctx.context_stats
         │
         ▼  [agents/analysts/ + agents/factory.py]
 analyst_team → bullish / bearish → debate
@@ -171,9 +175,13 @@ build_report(signals=…)  →  dict  report
 |------|------|------|------|
 | 1 | `fetch_all_data()` | `src/data/fetch_pipeline.py` | orchestrator 入口：K 线 + 外部源 |
 | 2 | `fetch_multi_timeframe()` | `src/data/fetcher.py` → `tradingview.py` | 组装 5m/15m/1h/4h/1d |
-| 3 | `fetch_external_bundle()` | `src/data/fetch_pipeline.py` | 新闻 / DXY / 社媒（新闻与社媒可并行） |
+| 3 | `fetch_external_bundle()` | `src/data/fetch_pipeline.py` | 新闻 / DXY+US10Y / 社媒（三源并行） |
 | 4 | `fetch_jin10_bundle()` | `src/data/sources/jin10_feed.py` | 金十 MCP：快讯 + 资讯 + 日历 |
-| 5 | `merge_external()` | `src/data/aggregator.py` | → `ExternalFactors` |
+| 5 | `fetch_jin10_quote()` / `fetch_jin10_kline()` | `jin10_feed.py` | 可选：spot/K 线与 TV 交叉校验（在 `finalize_market_context` 内） |
+| 6 | `merge_external()` | `src/data/aggregator.py` | → `ExternalFactors` |
+| 7 | `finalize_market_context()` | `src/data/context_builder.py` | derived 信号 + context_stats |
+
+详见 [analyst-context.md](./analyst-context.md)（三层架构、配置项、Phase 0–6 状态）。
 
 **TradingView 细节**（步骤 2 内部）：
 

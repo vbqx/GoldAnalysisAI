@@ -29,6 +29,7 @@
 | **流式可观测** | 机构页展示生成进度；LLM 完整 I/O 在「LLM决策链」页 |
 
 | **可审计** | `stage_meta` 标 `rule/llm/hybrid`；`meta.llm_io` 存完整 I/O |
+| **输入密度** | 结构化 `HeadlineItem` / `CalendarEvent` / `MacroQuote`；见 [analyst-context.md](./analyst-context.md) |
 
 
 

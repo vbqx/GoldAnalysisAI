@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT))
 from src.data.aggregator import merge_external
 from src.data.sources.dxy import fetch_dxy_impact
 from src.data.sources.fundamentals import FundamentalsDataSource
-from src.data.sources.jin10_feed import fetch_jin10_bundle
+from src.data.sources.jin10_feed import fetch_jin10_bundle, fetch_jin10_kline, fetch_jin10_quote
 from src.data.sources.news import NewsDataSource
 from src.data.sources.social import SocialDataSource
 from src.data.sources.social_feed import fetch_social_sentiment
@@ -44,6 +44,19 @@ def main() -> int:
             "risk_events": bundle.risk_events,
             "sources": bundle.sources,
             "errors": bundle.errors,
+        },
+    )
+
+    quote, quote_err = fetch_jin10_quote()
+    kline, kline_err = fetch_jin10_kline()
+    _block(
+        "Jin10 MCP (quote + kline)",
+        {
+            "quote": quote,
+            "quote_error": quote_err,
+            "kline_bars": len(kline),
+            "kline_sample": kline[:2],
+            "kline_error": kline_err,
         },
     )
 
