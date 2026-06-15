@@ -50,7 +50,9 @@ streamlit run app.py
 
 
 
-报告在 session 中缓存；后台线程生成，等待时可看实时步骤与 LLM I/O。仅点 **「刷新报告」** 才重跑（约 2–3 分钟）。
+报告在 session 中缓存；后台线程生成，等待时可看实时步骤与 LLM I/O。仅点 **「刷新报告」** 才重跑（规则模式约 30s；启用 LLM 全流程可能 5–6 分钟）。
+
+**手动验证 Analyst 输入密度**：生成完成后在「LLM决策链」页查看 `context_stats`、`news_topics`、`spot_cross_check`；报告 `meta.context_stats` 与 `external` 块含结构化计数。
 
 
 
@@ -62,6 +64,7 @@ streamlit run app.py
 
 |------|------|
 
+| [docs/analyst-context.md](docs/analyst-context.md) | Analyst Team 输入密度与三层架构 |
 | [docs/jin10-mcp.md](docs/jin10-mcp.md) | 金十 MCP 接入（快讯 / 资讯 / 日历） |
 
 | [docs/development.md](docs/development.md) | 开发文档 |
@@ -101,8 +104,10 @@ GoldAnalysisAI/
 │   ├── integration/
 │   └── regression/
 └── src/
-    ├── core/orchestrator.py
-    ├── agents/
+    ├── data/
+    │   ├── context_builder.py    # derived + context_stats（Analyst 输入密度）
+    │   ├── fetch_pipeline.py
+    │   └── sources/              # jin10_mcp, macro (DXY/US10Y), news, social
     │   ├── analysts/           # Analyst Team（TradingAgents 对齐）
     │   └── factory.py
     ├── llm/
@@ -122,7 +127,8 @@ GoldAnalysisAI/
 
 |------|------|
 
-| Analyst Team | ✅ 技术/基本面/新闻/情绪（规则版） |
+| Analyst Team 输入密度 | ✅ 结构化 Headline/Calendar/MacroQuote + derived/context_stats |
+| 金十 quote/kline 交叉校验 | ✅ `derived.spot_cross_check` / `jin10_kline_summary` |
 
 | 多页面 UI | ✅ 机构 / 短线 / LLM 决策 |
 

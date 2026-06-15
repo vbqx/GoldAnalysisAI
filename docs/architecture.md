@@ -11,8 +11,8 @@
 |-----------------|---------------------|----------|
 | **Market** (Yahoo 等) | `data/sources/market.py` → TradingView OANDA:XAUUSD | ✅ 已接入 |
 | **Technical Analyst** | `agents/analysts/technical.py` | ✅ 规则版（EMA + ICT 结构） |
-| **Fundamentals Analyst** | `agents/analysts/fundamentals.py` | ✅ 规则版（DXY via TradingView） |
-| **News Analyst** | `agents/analysts/news.py` | ✅ 规则版（金十 MCP 快讯 + 资讯 + 日历） |
+| **Fundamentals Analyst** | `agents/analysts/fundamentals.py` | ✅ 规则版（DXY + US10Y via TradingView） |
+| **News Analyst** | `agents/analysts/news.py` | ✅ 规则版（金十 MCP 快讯 + 资讯 + 日历；结构化 HeadlineItem / CalendarEvent） |
 | **Sentiment Analyst** | `agents/analysts/sentiment.py` | ✅ 规则版（结构投票 + TV Ideas/Minds） |
 | **Bullish Researcher** | `agents/factory.py` → rule / `llm/stages/bullish` | ✅ 整合 Analyst Team 输出 |
 | **Bearish Researcher** | `agents/factory.py` → rule / `llm/stages/bearish` | ✅ 整合 Analyst Team 输出 |
@@ -32,12 +32,14 @@
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     FETCH (fetch_pipeline.py)                    │
-│  TradingView bars → News(DXY) + Social 并行 → merge_external     │
+│  TradingView bars → News + Fundamentals + Social 并行 → merge_external │
+│  finalize_market_context → derived (topics, countdown, spot/kline check) │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                        DATA LAYER                                │
-│  market(TV) │ jin10_mcp (快讯/资讯/日历) │ dxy │ tv_social       │
+│  market(TV) │ jin10_mcp (快讯/资讯/日历/quote/kline) │ macro(DXY+US10Y) │ tv_social │
+│  context_builder.py → derived + context_stats                         │
 │  jin10_mcp_client → jin10_feed → news.py (NewsDataSource)       │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
@@ -134,13 +136,15 @@ src/
 │   └── llm/stages/         # LLM 各阶段（payload 含 analyst_team）
 ├── data/
 │   ├── fetch_pipeline.py   # K 线 + 外部源统一拉取（orchestrator 入口）
+│   ├── context_builder.py  # derived 信号 + context_stats
 │   ├── aggregator.py       # merge_external → MarketContext
 │   └── sources/
 │       ├── jin10_mcp_client.py  # 金十 MCP 传输（JSON-RPC / SSE）
 │       ├── jin10_feed.py        # 快讯 + 资讯 + 日历 bundle
 │       ├── gold_relevance.py    # 黄金相关筛选
+│       ├── macro.py             # DXY + US10Y quotes
 │       ├── news.py              # NewsDataSource
-│       ├── fundamentals.py      # DXY
+│       ├── fundamentals.py      # 宏观 DataSource
 │       ├── social_feed.py       # TV Ideas/Minds
 │       └── market.py            # TradingView OHLCV
 ├── analysis/
