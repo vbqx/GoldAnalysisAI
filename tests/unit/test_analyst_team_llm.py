@@ -10,7 +10,7 @@ from src.agents import factory as agent_factory
 from src.agents.llm.schemas import parse_analyst_report
 from src.analysis.ict_pa import analyze_timeframe
 from src.core.progress import ProgressReporter, reset_progress, set_progress
-from src.core.types import AgentPipelineMeta, ExternalFactors, MarketContext
+from src.core.types import AgentPipelineMeta, ExternalFactors, MacroQuote, MarketContext
 from src.indicators.technical import enrich
 
 
@@ -41,7 +41,19 @@ def _sample_context() -> MarketContext:
             "daily_low": price - 10,
         },
         price=price,
-        external=ExternalFactors(),
+        external=ExternalFactors(
+            dxy_impact="偏强 (104.0, 日 +0.50%) → 利空黄金",
+            macro_quotes=[
+                MacroQuote(
+                    name="DXY",
+                    symbol="TVC:DXY",
+                    close=104.0,
+                    change_pct=0.5,
+                    impact="偏强 (104.0, 日 +0.50%) → 利空黄金",
+                    bias="bearish",
+                )
+            ],
+        ),
         source_label="test",
     )
 
@@ -51,7 +63,12 @@ def test_parse_analyst_report() -> None:
         "bias": "bearish",
         "confidence": 0.72,
         "summary": "DXY偏强",
-        "items": [{"category": "fundamentals", "summary": "美元压制黄金", "strength": 0.7}],
+        "items": [
+            {"category": "fundamentals", "summary": "美元压制黄金", "strength": 0.7},
+            {"category": "fundamentals", "summary": "US10Y上行", "strength": 0.65},
+            {"category": "fundamentals", "summary": "实际利率偏高", "strength": 0.6},
+            {"category": "fundamentals", "summary": "风险偏好回落", "strength": 0.55},
+        ],
     }
     report = parse_analyst_report(raw, agent="fundamentals_analyst")
     assert report.bias == "bearish"
@@ -72,7 +89,12 @@ def test_factory_analyst_team_llm_hybrid_picks_high_confidence(monkeypatch) -> N
         "bias": "bullish",
         "confidence": 0.9,
         "summary": "LLM 技术偏多",
-        "items": [{"category": "technical", "summary": "4h BOS 向上", "strength": 0.85, "timeframe": "4h"}],
+        "items": [
+            {"category": "technical", "summary": "4h BOS 向上", "strength": 0.85, "timeframe": "4h"},
+            {"category": "technical", "summary": "1h 趋势偏多", "strength": 0.8, "timeframe": "1h"},
+            {"category": "technical", "summary": "EMA20 上方", "strength": 0.7, "timeframe": "5m"},
+            {"category": "technical", "summary": "FVG 支撑", "strength": 0.65, "timeframe": "15m"},
+        ],
     }
 
     def fake_technical(_ctx):

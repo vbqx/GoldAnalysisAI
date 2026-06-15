@@ -35,8 +35,8 @@ def offline_external_sources(request):
 
     with (
         patch(
-            "src.data.sources.fundamentals.fetch_dxy_impact",
-            return_value=("偏强 → 利空黄金（占位）", {"source": "placeholder", "bias": "bearish"}),
+            "src.data.sources.fundamentals.fetch_macro_quotes",
+            return_value=[],
         ),
         patch(
             "src.data.sources.news.fetch_jin10_bundle",

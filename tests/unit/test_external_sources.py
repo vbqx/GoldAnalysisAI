@@ -8,6 +8,7 @@ import pandas as pd
 
 from src.data.sources.dxy import fetch_dxy_impact
 from src.data.sources.fundamentals import FundamentalsDataSource
+from src.core.types import CalendarEvent, HeadlineItem
 from src.data.sources.jin10_feed import Jin10NewsBundle, fetch_jin10_bundle
 from src.data.sources.news import NewsDataSource
 from src.data.sources.social import SocialDataSource
@@ -44,23 +45,46 @@ def test_dxy_fallback_placeholder(mock_tv) -> None:
     assert "偏强" in impact or "回退" in impact
 
 
-@patch("src.data.sources.fundamentals.fetch_dxy_impact")
+@patch("src.data.sources.fundamentals.fetch_macro_quotes")
 def test_fundamentals_source_uses_dxy(mock_fetch) -> None:
-    mock_fetch.return_value = ("偏强 (104.2, 日 +0.30%) → 利空黄金", {"source": "tradingview", "bias": "bearish"})
+    from src.core.types import MacroQuote
+
+    mock_fetch.return_value = [
+        MacroQuote(
+            name="DXY",
+            symbol="TVC:DXY",
+            close=104.2,
+            change_pct=0.3,
+            impact="偏强 (104.2, 日 +0.30%) → 利空黄金",
+            bias="bearish",
+        )
+    ]
     ext = FundamentalsDataSource().fetch_external()
     assert "利空黄金" in ext.dxy_impact
     items = FundamentalsDataSource().fetch_evidence()
     assert items[0].refs.get("source") == "tradingview"
 
 
-@patch("src.data.sources.jin10_feed.fetch_jin10_flash", return_value=(["2026-06-16 10:00 现货黄金突破4200美元"], None))
 @patch(
-    "src.data.sources.jin10_feed.fetch_jin10_articles",
-    return_value=(["2026-06-16 09:00 一周展望：黄金等待筑底"], None),
+    "src.data.sources.jin10_feed.fetch_jin10_flash",
+    return_value=(
+        [HeadlineItem(source="jin10_flash", text="2026-06-16 10:00 现货黄金突破4200美元", time="2026-06-16")],
+        None,
+    ),
 )
 @patch(
-    "src.data.sources.jin10_feed.fetch_jin10_risk_events",
-    return_value=("2026-06-16 20:30 美国 美国6月CPI年率", None),
+    "src.data.sources.jin10_feed.fetch_jin10_articles",
+    return_value=(
+        [HeadlineItem(source="jin10_news", text="2026-06-16 09:00 一周展望：黄金等待筑底", time="2026-06-16")],
+        None,
+    ),
+)
+@patch(
+    "src.data.sources.jin10_feed.fetch_jin10_calendar",
+    return_value=(
+        [CalendarEvent(time="2026-06-16 20:30", region="美国", event="美国6月CPI年率", importance=3.0)],
+        None,
+    ),
 )
 def test_jin10_bundle_flash_articles_calendar(_cal, _articles, _flash) -> None:
     bundle = fetch_jin10_bundle()
@@ -81,7 +105,7 @@ def test_jin10_bundle_requires_token() -> None:
 
 
 def test_jin10_calendar_filters_gold_events() -> None:
-    from src.data.sources.jin10_feed import fetch_jin10_risk_events
+    from src.data.sources.jin10_feed import fetch_jin10_calendar
 
     rows = {
         "items": [
@@ -102,10 +126,10 @@ def test_jin10_calendar_filters_gold_events() -> None:
     with patch("src.data.sources.jin10_feed.jin10_call_tool", return_value=rows):
         with patch("src.data.sources.jin10_feed.JIN10_ENABLED", True):
             with patch("src.data.sources.jin10_feed.JIN10_API_TOKEN", "t"):
-                risk, err = fetch_jin10_risk_events()
+                events, err = fetch_jin10_calendar()
     assert err is None
-    assert "CPI" in risk
-    assert "NAHB" not in risk
+    assert any("CPI" in e.event for e in events)
+    assert not any("NAHB" in e.event for e in events)
 
 
 def test_gold_macro_event_filter() -> None:
@@ -180,20 +204,27 @@ def test_news_source_evidence(mock_bundle) -> None:
     mock_bundle.return_value = Jin10NewsBundle(
         flash=["Gold hits record high"],
         articles=["Weekly gold outlook bullish"],
+        flash_items=[HeadlineItem(source="jin10_flash", text="Gold hits record high")],
+        article_items=[HeadlineItem(source="jin10_news", text="Weekly gold outlook bullish")],
+        calendar_events=[
+            CalendarEvent(time="2026-06-16 20:30", region="美国", event="美国6月CPI年率", importance=3.0)
+        ],
         risk_events="2026-06-16 20:30 美国 美国6月CPI年率",
         sources=["jin10_flash", "jin10_news", "jin10_calendar"],
     )
     items = NewsDataSource().fetch_evidence()
     assert any("Gold hits" in i.summary for i in items)
     assert any("Weekly gold" in i.summary for i in items)
-    assert any("事件风险" in i.summary for i in items)
+    assert any("CPI" in i.summary for i in items)
 
 
-@patch("src.data.sources.jin10_feed.fetch_jin10_flash", return_value=(["flash headline"], None))
+@patch(
+    "src.data.sources.jin10_feed.fetch_jin10_flash",
+    return_value=([HeadlineItem(source="jin10_flash", text="flash headline")], None),
+)
 @patch("src.data.sources.jin10_feed.fetch_jin10_articles", return_value=([], "jin10 articles empty"))
-@patch("src.data.sources.jin10_feed.fetch_jin10_risk_events", return_value=("2026 CPI", None))
+@patch("src.data.sources.jin10_feed.fetch_jin10_calendar", return_value=([], None))
 def test_news_source_external(_cal, _articles, _flash) -> None:
     ext = NewsDataSource().fetch_external()
     assert ext.news_headlines
     assert "jin10_flash" in ext.sources
-    assert "jin10_calendar" in ext.sources

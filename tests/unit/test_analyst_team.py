@@ -12,7 +12,7 @@ from src.agents.bearish import run_bearish_researcher
 from src.agents.bullish import run_bullish_researcher
 from src.agents.debate import run_debate
 from src.analysis.ict_pa import TimeframeAnalysis, analyze_timeframe
-from src.core.types import AnalystReport, AnalystTeam, EvidenceItem, ExternalFactors, MarketContext
+from src.core.types import AnalystReport, AnalystTeam, EvidenceItem, ExternalFactors, MacroQuote, MarketContext
 from src.indicators.technical import enrich
 
 
@@ -37,7 +37,19 @@ def _sample_context() -> MarketContext:
         analyses=analyses,
         metrics={"current_price": float(close.iloc[-1]), "daily_change": 1.0, "daily_change_pct": 0.1},
         price=float(close.iloc[-1]),
-        external=ExternalFactors(),
+        external=ExternalFactors(
+            dxy_impact="偏强 (104.0, 日 +0.50%) → 利空黄金",
+            macro_quotes=[
+                MacroQuote(
+                    name="DXY",
+                    symbol="TVC:DXY",
+                    close=104.0,
+                    change_pct=0.5,
+                    impact="偏强 (104.0, 日 +0.50%) → 利空黄金",
+                    bias="bearish",
+                )
+            ],
+        ),
         source_label="test",
     )
 
@@ -52,15 +64,21 @@ def test_analyst_team_has_four_specialists() -> None:
     assert len(team.reports) == 4
 
 
-@patch("src.data.sources.fundamentals.fetch_dxy_impact")
+@patch("src.data.sources.fundamentals.fetch_macro_quotes")
 def test_fundamentals_analyst_reads_dxy(mock_fetch) -> None:
-    mock_fetch.return_value = (
-        "偏强 (104.0, 日 +0.50%) → 利空黄金",
-        {"source": "tradingview", "bias": "bearish"},
-    )
+    mock_fetch.return_value = [
+        MacroQuote(
+            name="DXY",
+            symbol="TVC:DXY",
+            close=104.0,
+            change_pct=0.5,
+            impact="偏强 (104.0, 日 +0.50%) → 利空黄金",
+            bias="bearish",
+        )
+    ]
     team = run_analyst_team(_sample_context())
     assert team.fundamentals.bias == "bearish"
-    assert any("美元指数" in i.summary or "宏观" in i.summary for i in team.fundamentals.items)
+    assert any("DXY" in i.summary or "宏观" in i.summary for i in team.fundamentals.items)
 
 
 def test_bullish_researcher_includes_matching_analyst_items() -> None:
@@ -98,7 +116,7 @@ def test_debate_includes_analyst_summaries() -> None:
     team = run_analyst_team(ctx)
     bull = run_bullish_researcher(ctx, team)
     bear = run_bearish_researcher(ctx, team)
-    debate = run_debate(bull, bear, ctx.analyses, team)
+    debate = run_debate(bull, bear, ctx.analyses, team, ctx=ctx)
     assert any("Analyst Team" in note for note in debate.discussion_notes)
     assert any("technical_analyst" in note for note in debate.discussion_notes)
 
