@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from src.analysis.ict_pa import sentiment_score
-from src.core.types import AgentEvidence, AnalystTeam, Bias, ResearchDebate
+from src.core.types import AgentEvidence, AnalystTeam, Bias, MarketContext, ResearchDebate
 
 
 def run_debate(
@@ -11,6 +11,7 @@ def run_debate(
     bearish: AgentEvidence,
     analyses,
     team: AnalystTeam | None = None,
+    ctx: MarketContext | None = None,
 ) -> ResearchDebate:
     notes: list[str] = []
     bull_score = bullish.confidence * max(len(bullish.items), 1)
@@ -24,6 +25,18 @@ def run_debate(
         notes.append("── Analyst Team 摘要 ──")
         for report in team.reports:
             notes.append(f"{report.agent}: {report.summary}（{report.bias} · {report.confidence:.0%}）")
+
+    topics = (getattr(ctx, "derived", None) or {}).get("news_topics") if ctx else None
+    if topics:
+        notes.append("── 新闻主题 ──")
+        for bucket in topics[:3]:
+            notes.append(f"{bucket['topic']}（{bucket['count']} 条）")
+
+    calendar = (getattr(ctx, "derived", None) or {}).get("upcoming_calendar") if ctx else None
+    if calendar:
+        notes.append("── 近期日历 ──")
+        for row in calendar[:4]:
+            notes.append(f"{row.get('time', '')} {row.get('region', '')} {row.get('event', '')}".strip())
 
     notes.append(f"看多研究员：{bullish.summary}")
     notes.append(f"看空研究员：{bearish.summary}")
