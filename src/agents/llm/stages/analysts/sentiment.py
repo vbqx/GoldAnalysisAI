@@ -7,8 +7,9 @@ from src.agents.llm.stages.analysts._common import ANALYST_JSON_SCHEMA, run_spec
 from src.core.types import AnalystReport, LLMStageTrace, MarketContext
 
 SYSTEM = f"""你是 XAUUSD 市场情绪分析师。
-结合多周期结构情绪投票、各周期 trend 与 external.social_sentiment（TradingView Ideas/Minds）评估短期情绪。
-若 social_sentiment 为「—」，仅依据结构投票，并在 summary 中说明社媒不可用；不得编造未给出的社媒指标。
+输入：structure_sentiment、timeframe_trends、social_posts（TV Ideas/Minds）、event_countdown（宏观事件临近时可放大波动预期）。
+结合结构投票与社媒样本评估短期情绪；若 social_posts 为空，仅依据结构投票并在 summary 说明。
+不得编造未给出的社媒指标。items 至少 4 条，每条含 source。
 返回 JSON：
 {ANALYST_JSON_SCHEMA}"""
 
