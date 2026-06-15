@@ -1,6 +1,6 @@
 # GoldAnalysisAI 开发文档
 
-说明本仓库的架构、执行路径、模块职责与扩展方式。
+说明本仓库的架构、执行路径、模块职责与扩展方式。文档索引见 [docs/README.md](./README.md)。
 
 ---
 
@@ -667,7 +667,7 @@ python tests/tools/chart_compare.py
 自动化测试见 [`tests/`](../tests/README.md) 与 [`tests/cases/catalog.yaml`](../tests/cases/catalog.yaml)。
 
 ```bash
-python tests/run.py --fast       # 日常 / CI（约 55+ 项）
+python tests/run.py --fast       # 日常 / CI（约 77 项）
 python tests/run.py --external   # 外部 API 冒烟（需网络）
 python tests/run.py --financial  # FIN-* 金融 Review
 python tests/run.py --full       # 发版前（含流水线）
@@ -703,12 +703,15 @@ python tests/run.py --full       # 发版前（含流水线）
 
 | 文档 | 内容 |
 |------|------|
+| [README.md](./README.md) | 文档中心索引 |
 | [architecture.md](./architecture.md) | TradingAgents 对照、Analyst Team、分层图 |
 | [llm-agents.md](./llm-agents.md) | LLM 双轨、传输重试、智能体 I/O、硅基流动配置 |
+| [analyst-context.md](./analyst-context.md) | Analyst Team 输入密度与配置 |
+| [jin10-mcp.md](./jin10-mcp.md) | 金十 MCP 接入 |
 | [financial-review.md](./financial-review.md) | 金融逻辑评审与 FIN-* 用例追溯 |
 | [reverse-engineering.md](./reverse-engineering.md) | 报告各区块算法反推 |
 | [tests/README.md](../tests/README.md) | 测试套件与面板 |
-| [README.md](../README.md) | 快速开始 |
+| [README.md](../README.md) | 项目快速开始 |
 
 ---
 
