@@ -9,7 +9,8 @@
 | 角色 | 建议路径 |
 |------|----------|
 | **新用户** | [README.md](../README.md) → [development.md §2](./development.md#2-环境搭建) |
-| **开发者** | [development.md](./development.md) → [architecture.md](./architecture.md) → [llm-agents.md](./llm-agents.md) |
+| **开发者（首次读代码）** | **[developer-onboarding.md](./developer-onboarding.md)** → `orchestrator.py` → [development.md](./development.md) |
+| **开发者（查参考）** | [development.md](./development.md) → [architecture.md](./architecture.md) → [llm-agents.md](./llm-agents.md) |
 | **数据 / 集成** | [jin10-mcp.md](./jin10-mcp.md) → [analyst-context.md](./analyst-context.md) |
 | **测试 / QA** | [tests/README.md](../tests/README.md) → [financial-review.md](./financial-review.md) → [tests/cases/catalog.yaml](../tests/cases/catalog.yaml) |
 | **产品 / 评审** | [reverse-engineering.md](./reverse-engineering.md) → [financial-review.md](./financial-review.md) |
@@ -23,7 +24,8 @@
 | 文档 | 说明 |
 |------|------|
 | [README.md](../README.md) | 项目简介、快速开始、能力一览、LLM 配置示例 |
-| [development.md](./development.md) | 开发文档：环境、数据流、模块职责、扩展与调试 |
+| **[developer-onboarding.md](./developer-onboarding.md)** | **开发者上手指南：心智模型、读码路线、改功能速查** |
+| [development.md](./development.md) | 开发参考手册：环境、完整数据流、模块职责、扩展与调试 |
 
 ### 架构与设计
 
@@ -68,6 +70,8 @@
 
 ```
 README.md（快速开始）
+    │
+    ├── developer-onboarding.md（开发者 15 分钟入门）
     │
     ├── development.md ──────► architecture.md
     │         │                      │

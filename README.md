@@ -39,7 +39,8 @@ streamlit run app.py
 
 | 文档 | 说明 |
 |------|------|
-| [docs/development.md](docs/development.md) | 开发文档（环境、数据流、模块职责） |
+| **[docs/developer-onboarding.md](docs/developer-onboarding.md)** | **开发者上手指南（建议先读）** |
+| [docs/development.md](docs/development.md) | 开发参考手册（环境、数据流、模块职责） |
 | [docs/architecture.md](docs/architecture.md) | 架构设计（TradingAgents 对照） |
 | [docs/llm-agents.md](docs/llm-agents.md) | LLM 多智能体双轨调度 |
 | [docs/analyst-context.md](docs/analyst-context.md) | Analyst Team 输入密度与三层架构 |
