@@ -42,6 +42,9 @@ class DataFetchResult:
             "risk_events": ext.risk_events,
             "news_headlines": ext.news_headlines[:12],
             "headline_count": len(ext.news_headlines),
+            "structured_headlines": len(ext.headline_items),
+            "calendar_events": len(ext.calendar_events),
+            "macro_quotes": len(ext.macro_quotes),
             "social_sentiment": ext.social_sentiment,
             "social_post_count": len(ext.social_posts),
             "sources": ext.sources,
@@ -61,14 +64,15 @@ def _fetch_fundamentals_external() -> ExternalFactors:
 
 
 def fetch_external_bundle(*, parallel_http: bool = True) -> ExternalFactors:
-    """News + social (+ DXY). HTTP sources may run in parallel after TV bars."""
+    """News + social + fundamentals (DXY/US10Y). All three HTTP sources run in parallel when enabled."""
     if parallel_http:
-        with ThreadPoolExecutor(max_workers=2) as pool:
+        with ThreadPoolExecutor(max_workers=3) as pool:
             fut_news = pool.submit(_fetch_news_external)
             fut_social = pool.submit(_fetch_social_external)
+            fut_fund = pool.submit(_fetch_fundamentals_external)
             news_ext = fut_news.result()
             social_ext = fut_social.result()
-        fund_ext = _fetch_fundamentals_external()
+            fund_ext = fut_fund.result()
     else:
         news_ext = _fetch_news_external()
         fund_ext = _fetch_fundamentals_external()
