@@ -98,10 +98,15 @@ LLM_STAGE_TRADER=false
 LLM_STAGE_RISK=false
 LLM_STAGE_MANAGER=false
 
+# 可选：仅调试单个 Analyst LLM；留空或 all 表示四位都跑
+LLM_ANALYST_ONLY=technical
+
 # 报告结论文案层（独立于智能体链）
 LLM_ENABLED=true
 LLM_ENHANCE_CONCLUSION=true
 ```
+
+`LLM_ANALYST_ONLY` 仅在 `LLM_STAGE_ANALYSTS=true` 且 `AGENT_MODE=llm|hybrid` 时生效；未选中的 Analyst 使用规则输出补齐，避免完整流水线等待四个 LLM 分析师全部完成。
 
 ### 3.4 传输重试与规则兜底
 
