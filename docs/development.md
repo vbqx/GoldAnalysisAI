@@ -11,10 +11,10 @@
 |----------|--------|
 | 15 分钟搞懂项目、知道从哪读代码 | **[developer-onboarding.md](./developer-onboarding.md)** |
 | 查函数链、模块细节、调试 FAQ | **[development-reference.md](./development-reference.md)** |
-| 不懂术语（BOS、hybrid、Analyst Team） | **[glossary.md](./glossary.md)** |
+| 不懂术语（BOS、混合模式、分析师团队） | **[glossary.md](./glossary.md)** |
 | 改功能不知道动哪个文件 | **[cheat-sheet.md](./cheat-sheet.md)** |
-| 看 report JSON 长什么样 | **[examples/report-schema.md](./examples/report-schema.md)** |
-| UI 操作与页面动线 | **[walkthrough.md](./walkthrough.md)** |
+| 看报告 JSON 长什么样 | **[examples/report-schema.md](./examples/report-schema.md)** |
+| 界面操作与页面动线 | **[walkthrough.md](./walkthrough.md)** |
 
 ---
 
@@ -49,7 +49,7 @@ report, data, analyses = run_analysis()
 - 内部流水线参考 [TradingAgents](https://github.com/TauricResearch/TradingAgents)（两阶段研究：Analyst Team → Bull/Bear）；
 - 数据源通过 Protocol 解耦，便于替换实现。
 
-**流水线步骤权威列表**：[pipeline-steps.yaml](./pipeline-steps.yaml)（与 `orchestrator.py` CI 同步）
+**流水线步骤权威列表**：[pipeline-steps.yaml](./pipeline-steps.yaml)（与 `orchestrator.py` 在 CI 中同步）
 
 ---
 
