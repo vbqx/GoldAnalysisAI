@@ -24,14 +24,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dev dependencies
-        run: pip install -r requirements-dev.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Verify pipeline docs sync with code
         run: pytest tests/regression/test_doc_pipeline_sync.py -v
 
       - name: Verify sample report JSON is valid
         run: |
-          pip install -r requirements.txt
           python scripts/export_sample_report.py
           python -c "import json; json.load(open('docs/examples/sample-report.json'))"
