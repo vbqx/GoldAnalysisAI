@@ -40,7 +40,7 @@
 | 改 Streamlit 布局 | `viz/report_views.py` | 手工界面 / 用例 catalog `UIL-*` |
 | 改运行前配置/缓存/刷新行为 | `viz/streamlit_common.py` + `core/run_config.py` | 用例 catalog `FN-*` / `pytest tests/unit/test_run_config.py` |
 | 改进度条/I/O 展示 | `viz/pipeline_progress.py` | 手工生成报告 |
-| 改流水线顺序 | `core/orchestrator.py` + **`docs/pipeline-steps.yaml`** | `pytest tests/regression/test_doc_pipeline_sync.py` |
+| 改流水线顺序 | `core/orchestrator.py` + **`docs/reference/pipeline-steps.yaml`** | `pytest tests/regression/test_doc_pipeline_sync.py` |
 
 ---
 
@@ -57,7 +57,7 @@
 | `JIN10_API_TOKEN` | — | 金十 MCP |
 | `LOG_LEVEL` | `DEBUG` | 跟踪流水线 |
 
-完整列表见 `.env.example` 与 [development-reference.md §2.3](./development-reference.md#23-配置env)。
+完整列表见 `.env.example` 与 [handbook.md §2.3](./handbook.md#23-配置env)。
 
 ---
 
@@ -99,10 +99,10 @@ report, data, analyses = run_analysis()
 
 | 文档 | 何时用 |
 |------|--------|
-| [developer-onboarding.md](./developer-onboarding.md) | 首次读项目 |
+| [onboarding.md](../getting-started/onboarding.md) | 首次读项目 |
 | [glossary.md](./glossary.md) | 不懂术语 |
-| [examples/report-schema.md](./examples/report-schema.md) | 不懂 report JSON |
-| [walkthrough.md](./walkthrough.md) | 界面操作动线 |
+| [examples/report-schema.md](../examples/report-schema.md) | 不懂 report JSON |
+| [walkthrough.md](../getting-started/walkthrough.md) | 界面操作动线 |
 
 ---
 

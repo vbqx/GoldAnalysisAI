@@ -1,6 +1,20 @@
 # GoldAnalysisAI 文档中心
 
-本目录集中存放项目设计与开发文档。测试说明见 [`tests/README.md`](../tests/README.md)。
+项目文档按用途分目录存放。测试说明见 [`tests/README.md`](../tests/README.md)。
+
+---
+
+## 目录结构
+
+```
+docs/
+├── getting-started/     # 入门：心智模型、环境、界面动线
+├── reference/           # 参考：手册、术语、速查、流水线步骤
+├── design/              # 设计：架构、LLM、分析师输入
+├── domain/              # 领域：算法反推、金融评审
+├── integrations/        # 集成：外部数据源
+└── examples/            # 报告 JSON 样例与字段说明
+```
 
 ---
 
@@ -8,64 +22,61 @@
 
 | 角色 | 建议路径 |
 |------|----------|
-| **新用户** | [README.md](../README.md) → [development.md §2](./development.md#2-环境搭建) |
-| **开发者（首次读代码）** | **[developer-onboarding.md](./developer-onboarding.md)** → `orchestrator.py` → [cheat-sheet.md](./cheat-sheet.md) |
-| **开发者（查参考）** | [development-reference.md](./development-reference.md) · [glossary.md](./glossary.md) · [examples/report-schema.md](./examples/report-schema.md) |
-| **数据 / 集成** | [jin10-mcp.md](./jin10-mcp.md) → [analyst-context.md](./analyst-context.md) |
-| **测试 / 质量** | [tests/README.md](../tests/README.md) → [financial-review.md](./financial-review.md) |
-| **产品 / 界面** | [walkthrough.md](./walkthrough.md) → [reverse-engineering.md](./reverse-engineering.md) |
+| **新用户** | [README.md](../README.md) → [getting-started/setup.md](./getting-started/setup.md) |
+| **开发者（首次读代码）** | **[getting-started/onboarding.md](./getting-started/onboarding.md)** → `orchestrator.py` → [reference/cheat-sheet.md](./reference/cheat-sheet.md) |
+| **开发者（查参考）** | [reference/handbook.md](./reference/handbook.md) · [reference/glossary.md](./reference/glossary.md) · [examples/report-schema.md](./examples/report-schema.md) |
+| **数据 / 集成** | [integrations/jin10-mcp.md](./integrations/jin10-mcp.md) → [design/analyst-context.md](./design/analyst-context.md) |
+| **测试 / 质量** | [tests/README.md](../tests/README.md) → [domain/financial-review.md](./domain/financial-review.md) |
+| **产品 / 界面** | [getting-started/walkthrough.md](./getting-started/walkthrough.md) → [domain/reverse-engineering.md](./domain/reverse-engineering.md) |
 
 ---
 
 ## 文档索引
 
-### 教程层（优先阅读）
+### getting-started — 入门
 
 | 文档 | 说明 |
 |------|------|
-| [README.md](../README.md) | 项目简介、快速开始 |
-| **[developer-onboarding.md](./developer-onboarding.md)** | 15 分钟心智模型、读码路线、刷新报告步骤表 |
-| **[walkthrough.md](./walkthrough.md)** | 界面三页操作动线、流程图、验证清单 |
+| **[onboarding.md](./getting-started/onboarding.md)** | 15 分钟心智模型、读码路线、刷新报告步骤表 |
+| [setup.md](./getting-started/setup.md) | 环境搭建、配置、运行与测试 |
+| [walkthrough.md](./getting-started/walkthrough.md) | 界面三页操作动线、流程图、验证清单 |
 
-### 参考层
-
-| 文档 | 说明 |
-|------|------|
-| [development.md](./development.md) | 开发入口：环境搭建 + 分册导航 |
-| [development-reference.md](./development-reference.md) | 完整数据流、模块说明、调试与常见问题（600+ 行） |
-| **[glossary.md](./glossary.md)** | 术语表：ICT、分析师团队、混合模式、胜率字段等 |
-| **[examples/report-schema.md](./examples/report-schema.md)** | 报告 JSON 字段说明 |
-| **[examples/sample-report.json](./examples/sample-report.json)** | 脱敏样例（`scripts/export_sample_report.py` 生成） |
-
-### 架构与设计
+### reference — 参考
 
 | 文档 | 说明 |
 |------|------|
-| [architecture.md](./architecture.md) | 与 TradingAgents 对照、分层数据流 |
-| [llm-agents.md](./llm-agents.md) | 大模型双轨调度、审计字段 |
-| [analyst-context.md](./analyst-context.md) | 分析师团队输入密度 |
-| [jin10-mcp.md](./jin10-mcp.md) | 金十 MCP 接入 |
+| [handbook.md](./reference/handbook.md) | 完整数据流、模块说明、调试与常见问题 |
+| [glossary.md](./reference/glossary.md) | 术语表：ICT、分析师团队、混合模式、胜率字段等 |
+| [cheat-sheet.md](./reference/cheat-sheet.md) | 改功能 → 文件 → 测试，一页速查 |
+| [pipeline-steps.yaml](./reference/pipeline-steps.yaml) | 流水线步骤权威列表（与代码 CI 同步） |
 
-### 速查与同步
-
-| 文档 | 说明 |
-|------|------|
-| **[cheat-sheet.md](./cheat-sheet.md)** | 改功能 → 文件 → 测试，一页速查 |
-| **[pipeline-steps.yaml](./pipeline-steps.yaml)** | 流水线步骤权威列表（与代码 CI 同步） |
-
-### 领域参考
+### design — 架构与设计
 
 | 文档 | 说明 |
 |------|------|
-| [reverse-engineering.md](./reverse-engineering.md) | 报告各区块算法反推 |
-| [financial-review.md](./financial-review.md) | 金融逻辑评审 F-001～F-012 |
+| [architecture.md](./design/architecture.md) | 与 TradingAgents 对照、分层数据流 |
+| [llm-agents.md](./design/llm-agents.md) | 大模型双轨调度、审计字段 |
+| [analyst-context.md](./design/analyst-context.md) | 分析师团队输入密度 |
 
-### 测试
+### domain — 领域参考
 
 | 文档 | 说明 |
 |------|------|
-| [tests/README.md](../tests/README.md) | 测试套件与命令行 |
-| [tests/cases/catalog.yaml](../tests/cases/catalog.yaml) | 用例目录 |
+| [reverse-engineering.md](./domain/reverse-engineering.md) | 报告各区块算法反推 |
+| [financial-review.md](./domain/financial-review.md) | 金融逻辑评审 F-001～F-012 |
+
+### integrations — 外部集成
+
+| 文档 | 说明 |
+|------|------|
+| [jin10-mcp.md](./integrations/jin10-mcp.md) | 金十 MCP 接入 |
+
+### examples — 样例
+
+| 文档 | 说明 |
+|------|------|
+| [report-schema.md](./examples/report-schema.md) | 报告 JSON 字段说明 |
+| [sample-report.json](./examples/sample-report.json) | 脱敏样例（`scripts/export_sample_report.py` 生成） |
 
 ---
 
@@ -74,27 +85,27 @@
 ```
 README.md（快速开始）
     │
-    ├── developer-onboarding.md ──► walkthrough.md（界面动线）
+    ├── getting-started/onboarding.md ──► walkthrough.md（界面动线）
     │         │
-    │         ├── cheat-sheet.md ◄── pipeline-steps.yaml（CI 同步）
-    │         ├── glossary.md（术语）
+    │         ├── reference/cheat-sheet.md ◄── pipeline-steps.yaml（CI 同步）
+    │         ├── reference/glossary.md（术语）
     │         └── examples/（报告 JSON 样例）
     │
-    ├── development.md（开发入口）
-    │         └── development-reference.md（详细参考）
+    ├── getting-started/setup.md（环境搭建）
+    │         └── reference/handbook.md（详细参考）
     │
-    ├── architecture.md ──► llm-agents.md
-    └── financial-review.md
+    ├── design/architecture.md ──► llm-agents.md
+    └── domain/financial-review.md
 ```
 
 ---
 
 ## 维护约定
 
-1. **新增流水线步骤**：同时修改 `orchestrator.py` / `fetch_pipeline.py`、`pipeline-steps.yaml`、上手指南中的步骤表；运行 `pytest tests/regression/test_doc_pipeline_sync.py`。
+1. **新增流水线步骤**：同时修改 `orchestrator.py` / `fetch_pipeline.py`、`reference/pipeline-steps.yaml`、上手指南中的步骤表；运行 `pytest tests/regression/test_doc_pipeline_sync.py`。
 2. **修改报告字段**：更新 `examples/report-schema.md`，并运行 `python scripts/export_sample_report.py`。
-3. **新增术语**：写入 `glossary.md`。
-4. **修改界面动线**：同步 `walkthrough.md`。
+3. **新增术语**：写入 `reference/glossary.md`。
+4. **修改界面动线**：同步 `getting-started/walkthrough.md`。
 5. **持续集成**：`.github/workflows/docs.yml` 自动校验文档与代码一致。
 
 ---

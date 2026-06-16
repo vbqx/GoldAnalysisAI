@@ -1,7 +1,7 @@
 # 界面操作动线
 
 说明：**从打开应用到读懂决策链**的完整路径。  
-建议与 [developer-onboarding.md](./developer-onboarding.md) 中的代码心智模型对照阅读。
+建议与 [onboarding.md](./onboarding.md) 中的代码心智模型对照阅读。
 
 ---
 
@@ -42,7 +42,7 @@ flowchart LR
 生成开始后：
 
 1. 页面显示 **「正在生成报告…」** 及进度
-2. 步骤条按 [pipeline-steps.yaml](./pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative`）  
+2. 步骤条按 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative`）  
    中文含义：数据拉取 → 技术指标 → ICT 结构 → 分析师团队 → 看多/看空 → 辩论 → 交易 → 风控 → 经理 → 报告 →（可选）LLM 文案
 3. 生成过程中可切换到 **LLM决策链** 页查看实时输入输出
 4. 完成后渲染机构报告，主图为 **1 日 K 线**
@@ -178,10 +178,10 @@ AGENT_MODE=rule LLM_ENABLED=false streamlit run app.py
 
 | 文档 | 内容 |
 |------|------|
-| [developer-onboarding.md](./developer-onboarding.md) | 代码层心智模型 |
-| [examples/report-schema.md](./examples/report-schema.md) | 报告 JSON 字段 |
-| [cheat-sheet.md](./cheat-sheet.md) | 改界面/流水线速查 |
-| [pipeline-steps.yaml](./pipeline-steps.yaml) | 步骤 ID 权威列表 |
+| [onboarding.md](./onboarding.md) | 代码层心智模型 |
+| [examples/report-schema.md](../examples/report-schema.md) | 报告 JSON 字段 |
+| [cheat-sheet.md](../reference/cheat-sheet.md) | 改界面/流水线速查 |
+| [pipeline-steps.yaml](../reference/pipeline-steps.yaml) | 步骤 ID 权威列表 |
 
 ---
 

@@ -2,7 +2,7 @@
 
 > **原则**：前端 Streamlit 不变；`run_analysis()` 仍返回 `(report, data, analyses)`。  
 > 内部分层按 [TradingAgents](https://github.com/TauricResearch/TradingAgents) 多智能体流水线重构。  
-> 文档索引见 [docs/README.md](./README.md)。
+> 文档索引见 [docs/README.md](../README.md)。
 
 ---
 
@@ -201,7 +201,7 @@ Phase 1 保持 `run_analysis()` 返回签名不变，适合快速解决“启动
 | **P2** | LLM 交易员 / 风控 / 经理 | `agents/llm/stages/` |
 | **P3** | ICT Interpreter | `ict_pa.py` |
 
-完整 LLM 设计见 **[docs/llm-agents.md](./llm-agents.md)**。
+完整 LLM 设计见 **[llm-agents.md](./llm-agents.md)**。
 
 ---
 

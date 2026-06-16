@@ -228,10 +228,10 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 
 | 文档 | 内容 |
 |------|------|
-| [README.md](./README.md) | 文档中心索引 |
+| [README.md](../README.md) | 文档中心索引 |
 | [architecture.md](./architecture.md) | TradingAgents 对照与分层图 |
 | [analyst-context.md](./analyst-context.md) | Analyst 输入密度与 payload |
-| [development.md](./development.md) | 开发与扩展指南 |
+| [setup.md](../getting-started/setup.md) | 环境搭建与扩展指南 |
 
 ---
 

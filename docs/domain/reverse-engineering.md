@@ -150,6 +150,6 @@ Phase 4             → 信号回测 + 真实胜率
 
 | 文档 | 内容 |
 |------|------|
-| [README.md](./README.md) | 文档中心索引 |
-| [development.md](./development.md) | 模块实现与数据流 |
+| [README.md](../README.md) | 文档中心索引 |
+| [handbook.md](../reference/handbook.md) | 模块实现与数据流 |
 | [financial-review.md](./financial-review.md) | 金融逻辑评审 |
