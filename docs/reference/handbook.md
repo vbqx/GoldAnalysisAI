@@ -72,7 +72,7 @@ build_report(signals=…)  →  dict  report
 进度条 + LLM 流式 I/O + render_*  →  浏览器 UI
 ```
 
-**Streamlit 入口**：各页面调用 `ensure_report()`（`src/viz/streamlit_common.py`），共享 session 缓存。仅 `app.py` 首次加载或「刷新报告」时跑完整流水线并显示进度条。
+**Streamlit 入口**：各页面调用 `ensure_report()`（`src/viz/streamlit_common.py`），共享 session 缓存。**外部数据**页另用 `ensure_external_data()`，fetch 完成后即可展示。仅用户确认 **「开始生成报告」** 或侧边栏 **「重新配置 / 刷新报告」** 后重配并确认时，才跑完整流水线并显示进度条。
 
 ---
 
@@ -265,8 +265,9 @@ build_report(signals=…)  →  dict  report
 ```
 GoldAnalysisAI/
 ├── app.py                      # st.navigation 入口（纯路由）
-├── views/                      # 三页视图脚本
+├── views/                      # 四页视图脚本
 │   ├── 1_机构级分析报告.py
+│   ├── 4_外部数据.py
 │   ├── 2_短线策略.py
 │   └── 3_LLM决策链.py
 ├── requirements.txt
@@ -322,11 +323,12 @@ GoldAnalysisAI/
 
 ### 5.1 `app.py` 与多页面
 
-- **`app.py`**：`st.navigation` 注册三页；预加载 `.env`；不显示为侧边栏「app」
-- **`views/1_机构级分析报告.py`**：`ensure_report()` 触发首次生成 + 实时决策链 Tab
+- **`app.py`**：`st.navigation` 注册四页；预加载 `.env`；不显示为侧边栏「app」
+- **`views/1_机构级分析报告.py`**：机构一页式布局（顶栏四格、多周期结构、日线主图 + 交易计划、底栏四格）
+- **`views/4_外部数据.py`**：`ensure_external_data()`，fetch 完成后展示 DXY/新闻/日历/社媒与二次加工摘要
 - **`views/2_短线策略.py`**：`ensure_report(show_generation_ui=False)`，秒开
 - **`views/3_LLM决策链.py`**：决策链、LLM 文案、`meta.llm_io` 完整记录
-- **共享**：`src/viz/streamlit_common.py`（bootstrap、sidebar、线程生成、session 缓存）
+- **共享**：`src/viz/streamlit_common.py`（bootstrap、生成前配置、sidebar 重新配置/刷新、线程生成、session 缓存）
 
 ### 5.2 数据层 `src/data/`
 
@@ -562,7 +564,7 @@ python tests/tools/chart_compare.py
 
 | 项目 | 行为 |
 |------|------|
-| 报告生成 | 首次进入或「刷新报告」时全量执行，约 2–3 分钟 |
+| 报告生成 | 用户确认「开始生成报告」或「重新配置 / 刷新报告」后全量执行，约 2–3 分钟（规则）或 5–6 分钟（全开 LLM） |
 | 切换页面 | 复用 `session_state` 缓存，秒开 |
 | LLM 耗时 | 研究阶段 30–90s/次属正常（V4-Pro）；传输断流自动重试，不拖垮整条 pipeline |
 | 数据拉取 | 2 次 TV 请求 + resample，典型 3–15s |
@@ -575,7 +577,7 @@ python tests/tools/chart_compare.py
 |------|-------------|
 | 「数据获取失败」 | TradingView WebSocket 不可达；检查代理、`TV_USERNAME/PASSWORD` |
 | EMA610 异常 | 历史 bar 不足；增大 `n_bars` 或登录 TV |
-| 改了代码 UI 不变 | 重启 Streamlit；已缓存报告需点「刷新报告」 |
+| 改了代码 UI 不变 | 重启 Streamlit；已缓存报告需点「重新配置 / 刷新报告」 |
 | LLM 模型名不对 | `config.py` import 时读 `.env`；各阶段见 `stage_sources.llm.model` |
 | LLM 阶段报错但报告仍有内容 | hybrid 已回退规则；查看 `stage_sources` 与 `llm_io` 中 `error` 字段 |
 | SSE 断流 / ChunkedEncoding | `stream_llm_json` 自动整次重打（最多 3 次）；仍失败则 hybrid 用规则 |
@@ -601,7 +603,8 @@ python tests/run.py --full       # 发版前（含流水线）
 - [ ] 生成步骤含「构建市场上下文」与 external 子步骤；I/O 含 context 规则记录
 - [ ] 生成步骤含 `Analyst Team`；I/O 含四位分析师 LLM 或规则输出
 - [ ] 「LLM决策链」三 Tab：智能体决策 / LLM 文案 / 生成与 LLM I/O
-- [ ] 顶栏与「外部数据 · 实时拉取」面板展示 DXY/新闻/日历/TV 社媒（实时数据或明确占位/回退说明）
+- [ ] **外部数据**页在 fetch 完成后展示 DXY/新闻/日历/TV 社媒与二次加工摘要（实时或明确占位/回退说明）
+- [ ] 机构页顶栏四格 + 多周期结构（4H/1H/15M）+ 日线主图与交易计划分栏
 - [ ] Analyst Team 四列 badge 与 stage_sources 一致
 - [ ] 两种报告模式渲染正常；结构权重标注「非回测胜率」
 
