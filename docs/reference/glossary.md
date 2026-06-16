@@ -15,7 +15,7 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 | **智能体（Agent）** | 流水线中的一个决策阶段（规则函数或大模型包装）；不等于「全程都是 LLM」 |
 | **factory（工厂）** | `src/agents/factory.py`，统一调度规则 / 纯 LLM / 混合 三种模式 |
 | **orchestrator（编排器）** | `src/core/orchestrator.py`，端到端流水线编排 |
-| **MarketContext** | 流水线共享的只读上下文：K 线、结构分析、外部因子、衍生信号 |
+| **MarketContext** | 流水线共享的只读上下文：K 线、结构分析、外部因子、二次加工摘要（derived） |
 | **AgentTrace** | 写入 `report["agent_trace"]` 的完整决策审计链 |
 
 ---
@@ -64,7 +64,7 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 | **US10Y** | 美国 10 年期国债收益率，宏观参考 |
 | **实时 / 占位 / 回退** | 外部数据：拉取成功 / 失败占位文案 / 界面应区分展示 |
 | **context_stats** | 分析师输入密度计数，在 `report["meta"]["context_stats"]` |
-| **derived（衍生信号）** | 由 `context_builder` 生成：新闻主题、价差校验、事件倒计时等 |
+| **derived / 二次加工摘要** | 由 `context_builder` 在 fetch 阶段生成的基础字段；完整报告后含新闻主题、spot 交叉校验等。界面标签为「二次加工摘要」，见 **外部数据** 页 |
 
 ---
 
@@ -72,8 +72,9 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 
 | 术语 | 含义 |
 |------|------|
-| **ensure_report()** | 界面入口：会话缓存 + 后台线程跑流水线 |
-| **刷新报告** | 用户主动重跑流水线的操作（另：浏览器刷新也会触发） |
+| **ensure_report()** | 界面入口：会话缓存 + 后台线程跑完整流水线 |
+| **ensure_external_data()** | 外部数据页入口：fetch 完成后即可展示 `report.external`，不等待 LLM |
+| **重新配置 / 刷新报告** | 侧边栏操作：清空缓存并回到生成前配置面板（预填上次 RunConfig），确认后重跑流水线 |
 | **generation_steps** | 生成进度与耗时，对应 `docs/reference/pipeline-steps.yaml` |
 | **LLM决策链页** | 第三个导航页：决策链 + LLM 输入输出 |
 

@@ -15,18 +15,20 @@ streamlit run app.py
 ```mermaid
 flowchart LR
     A[app.py 导航] --> B[机构级分析报告]
+    A --> E[外部数据]
     A --> C[短线策略]
     A --> D[LLM决策链]
-    B --> E[生成前配置面板]
-    C --> E
-    D --> E
-    E --> F[用户点击开始生成]
-    F --> G[ensure_report 后台线程]
-    G --> H[run_analysis 流水线]
-    H --> I[session_state 会话缓存]
+    B --> F[生成前配置面板]
+    C --> F
+    D --> F
+    E --> F
+    F --> G[用户点击开始生成]
+    G --> H[ensure_report 后台线程]
+    H --> I[run_analysis 流水线]
+    I --> J[session_state 会话缓存]
 ```
 
-三个页面共享同一份 `(report, data, analyses)`。**切换页面不会重新跑流水线**。
+四个内容页共享同一份 `(report, data, analyses)`。**切换页面不会重新跑流水线**。外部数据页在 `fetch` 完成后即可通过 `ensure_external_data()` 展示，无需等待完整报告。
 
 ---
 
@@ -36,8 +38,10 @@ flowchart LR
 
 1. 选择 **规则引擎**、**LLM 智能体** 或 **混合模式**
 2. LLM / 混合模式可选择是否启用 **LLM 报告文案**
-3. 高级调试可选择只运行单个 Analyst LLM（其余 Analyst 用规则输出补齐）
+3. 勾选 **高级调试** 后，可分别控制：分析师团队、看多/看空研究、辩论、交易员/风控/经理（后三者 LLM 尚未接入，勾选仅写入配置），以及四位 Analyst 子模块
 4. 点击 **开始生成报告** 后，才进入数据拉取与报告生成
+
+已有报告时，侧边栏 **「重新配置 / 刷新报告」** 会清空缓存并回到本面板；面板会**预填上次确认的配置**，避免误用 `.env` 默认值。
 
 生成开始后：
 
@@ -60,19 +64,37 @@ flowchart LR
 
 | 区域 | 数据来源 | 说明 |
 |------|----------|------|
-| 顶栏价格/结论 | `report.metrics` + `report.conclusion` | 现价、日涨跌、一句话结论 |
-| 主图 K 线 | `data["1d"]` + `analyses["1d"]` | EMA/VWAP + OB/FVG 叠加 |
-| 多周期结构 | `report.timeframes` | 左侧周期卡片 |
-| 情绪饼图 | `report.sentiment` | ⚠️ 结构权重，非回测胜率 |
-| 交易计划卡片 | `report.signals` | 入场/止损/止盈 |
-| 外部数据面板 | `report.external` | DXY、新闻、日历、社媒 |
-| 来源条 | `report.meta.stage_sources` | 各阶段规则/LLM 标识 |
+| 顶栏指标 | `report.metrics` | 现价、日涨跌、日高/低、情绪摘要 |
+| 顶栏四格 | `market_overview` / `liquidity` / `conclusion` / `sentiment` | 市场总览、流动性、结论要点、多空结构权重饼图（最右） |
+| 多周期结构 | `data` + `report.timeframes` | 三列：4H/1H/15M 快照 K 线 + 结构文字（BOS/OB/FVG） |
+| 日线主图 | `data["1d"]` + `analyses["1d"]` | 左侧宽栏，EMA/VWAP + OB/FVG + A/B/C 推演 |
+| 交易计划 | `report.signals` | 右侧栏，最多 3 条计划卡片 |
+| 底栏四格 | `fibonacci` / `path_summary` / 风控 / `conclusion` | Fib、走势推演、失效条件、最终结论 |
+| 外部数据 | `report.external`（摘要） | 完整面板见 **外部数据** 导航页 |
 
-**操作**：点击侧边栏 **「重新配置 / 刷新报告」** → 清空缓存 → 回到生成前配置面板。
+机构页**不再**内嵌外部数据大面板；DXY、新闻、日历、社媒与 **二次加工摘要** 见 `views/4_外部数据.py`。
+
+**操作**：点击侧边栏 **「重新配置 / 刷新报告」** → 清空缓存 → 回到生成前配置面板（预填上次配置）。
 
 ---
 
-## 4. 短线策略页
+## 4. 外部数据页
+
+**代码**：`views/4_外部数据.py` → `viz/external_data_view.py` → `ensure_external_data()`
+
+| 内容 | 说明 |
+|------|------|
+| K 线拉取概况 | 各周期 bar 数 |
+| DXY / 金十快讯 / 资讯 | 实时或占位 |
+| 经济日历 | 事件风险 |
+| TV 社媒 | Ideas/Minds |
+| 二次加工摘要 | fetch 阶段仅有基础字段；完整报告生成后含 `news_topics`、spot 交叉校验等 |
+
+**fetch 完成后**（约 10–30 秒）即可在本页查看，无需等待 LLM 或报告组装。生成过程中可从机构页切到本页等待自动刷新。
+
+---
+
+## 5. 短线策略页
 
 **代码**：`views/2_短线策略.py`
 
@@ -82,7 +104,7 @@ flowchart LR
 
 ---
 
-## 5. LLM决策链页（看清 AI 做了什么）
+## 6. LLM决策链页（看清 AI 做了什么）
 
 **代码**：`views/3_LLM决策链.py` → `viz/decision_page.py`
 
@@ -122,7 +144,7 @@ flowchart LR
 
 ---
 
-## 6. 序列图：刷新报告 → 查看决策链
+## 7. 序列图：刷新报告 → 查看决策链
 
 ```mermaid
 sequenceDiagram
@@ -132,7 +154,9 @@ sequenceDiagram
     participant 流水线 as run_analysis
     participant 智能体 as agents/factory
 
-    用户->>界面: 点击「刷新报告」
+    用户->>界面: 点击「重新配置 / 刷新报告」
+    界面->>界面: 回到生成前配置（预填上次 RunConfig）
+    用户->>界面: 确认并「开始生成报告」
     界面->>缓存: 启动后台线程
     缓存->>流水线: run_analysis()
     流水线->>流水线: 拉数 → 指标 → ICT
@@ -147,7 +171,7 @@ sequenceDiagram
 
 ---
 
-## 7. 验证清单（约 5 分钟）
+## 8. 验证清单（约 5 分钟）
 
 生成一份报告后，按顺序确认：
 
@@ -155,19 +179,20 @@ sequenceDiagram
 - [ ] `agent_trace.analyst_team` 有四条记录（technical / fundamentals / news / sentiment）
 - [ ] `external.sources` 标明实时源或明确的 `placeholder` 占位
 - [ ] `meta.stage_sources` 与顶栏来源条一致
+- [ ] 切换「外部数据」页在 fetch 完成后展示新闻/日历（无需等完整报告）
 - [ ] 切换「短线策略」页在 2 秒内打开（缓存生效）
 - [ ] 饼图/信号区有 **非回测** 相关说明（见 financial-review FIN-UI-01）
 
 ---
 
-## 8. 录制演示视频（可选）
+## 9. 录制演示视频（可选）
 
 ```bash
 # 规则模式（更快）
 AGENT_MODE=rule LLM_ENABLED=false streamlit run app.py
 
 # 建议操作顺序：
-# 刷新报告 → 观察步骤条 → LLM决策链三个标签页 → 切换短线策略页
+# 重新配置 / 刷新报告 → 观察步骤条 → 外部数据页 → LLM决策链三个标签页 → 切换短线策略页
 
 # 录屏可保存至 docs/assets/（可选，大文件可不提交仓库）
 ```

@@ -195,7 +195,7 @@ LOG_LEVEL=DEBUG
 | 困惑 | 解释 |
 |------|------|
 | 为什么叫 Agent 但大部分是规则？ | 命名对齐 TradingAgents 分层；LLM 是渐进接入的，交易/风控/经理仍是规则 |
-| 改了代码界面不变 | Streamlit 缓存了 report；需重启并点「刷新报告」 |
+| 改了代码界面不变 | Streamlit 缓存了 report；需重启并点「重新配置 / 刷新报告」 |
 | 开了 LLM 但没效果 | 检查 `LLM_API_KEY`、`AGENT_MODE`、`LLM_STAGE_*`；看 `stage_sources` |
 | 生成要 5 分钟 | 全流程多次 API 调用属正常；`AGENT_MODE=rule` 可降到约 30 秒 |
 | 文档与代码不一致 | 以 `orchestrator.py` 调用顺序为准 |
