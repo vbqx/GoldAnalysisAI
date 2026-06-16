@@ -53,9 +53,9 @@
 
 ---
 
-## 3. 一次「刷新报告」发生了什么
+## 3. 一次「生成 / 刷新报告」发生了什么
 
-用户点击 **「刷新报告」** 或首次进入页面时，`src/viz/streamlit_common.py` 中的 `ensure_report()` 会在后台线程调用 `run_analysis()`。
+首次进入页面时，`src/viz/streamlit_common.py` 中的 `ensure_report()` 会先显示 **生成前配置** 面板；用户选择规则 / LLM / 混合模式并点击 **「开始生成报告」** 后，后台线程才会调用 `run_analysis()`。已有报告后点击 **「重新配置 / 刷新报告」** 会清空缓存并回到配置面板。
 
 > 步骤 ID 权威列表见 [pipeline-steps.yaml](./pipeline-steps.yaml)（与 `orchestrator.py`、`fetch_pipeline.py` 在 CI 中同步校验）
 
@@ -85,12 +85,13 @@
 | 顺序 | 文件 | 关注点 |
 |------|------|--------|
 | 1 | `app.py` | 纯导航，不跑流水线 |
-| 2 | `src/viz/streamlit_common.py` | `ensure_report()` — 界面与流水线的唯一连接点 |
-| 3 | `src/pipeline.py` | 对外 API，一行委托 |
-| 4 | `src/core/orchestrator.py` | **主调用图**，建议通读 |
-| 5 | `src/core/types.py` | 全部数据结构：`MarketContext`、`AnalystReport`、`AgentTrace` 等 |
-| 6 | `src/agents/factory.py` | 规则 / 大模型 / 混合模式如何调度 |
-| 7 | `src/analysis/report_engine.py` | 报告 JSON 结构与信号如何生成 |
+| 2 | `src/viz/streamlit_common.py` | `ensure_report()` — 生成前配置、缓存、后台线程 |
+| 3 | `src/core/run_config.py` | UI 运行配置与 import-bound 模块同步 |
+| 4 | `src/pipeline.py` | 对外 API，一行委托 |
+| 5 | `src/core/orchestrator.py` | **主调用图**，建议通读 |
+| 6 | `src/core/types.py` | 全部数据结构：`MarketContext`、`AnalystReport`、`AgentTrace` 等 |
+| 7 | `src/agents/factory.py` | 规则 / 大模型 / 混合模式如何调度 |
+| 8 | `src/analysis/report_engine.py` | 报告 JSON 结构与信号如何生成 |
 
 读完后应能回答：
 - 改信号逻辑 → `report_engine.py`
@@ -152,6 +153,7 @@ report["sentiment"]               # 饼图（结构权重，非回测胜率）
 report["external"]                # DXY、新闻、社媒及来源标签
 report["agent_trace"]             # 完整决策链
 report["meta"]["agent_mode"]      # rule / llm / hybrid
+report["meta"]["run_config"]      # UI 本次选择的运行配置
 report["meta"]["stage_sources"]   # 每阶段实际用规则还是 LLM
 report["meta"]["generation_steps"]# 各步耗时
 report["meta"]["llm_io"]          # 智能体输入输出审计
