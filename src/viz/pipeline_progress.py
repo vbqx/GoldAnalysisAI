@@ -48,18 +48,29 @@ def render_progress_steps(steps: list[dict], *, title: str = "生成步骤") -> 
         st.markdown(_format_step(step))
 
 
-def _render_llm_output_panel(*, stage: str, output: str, error: str | None = None, json_height: int = 220) -> None:
+def _render_llm_io_text(*, label: str, key: str, text: str, height: int = 360) -> None:
+    if label:
+        st.markdown(f'<p class="io-label">{label}</p>', unsafe_allow_html=True)
+    st.text_area(
+        key,
+        text,
+        height=height,
+        disabled=True,
+        label_visibility="collapsed",
+    )
+
+
+def _render_llm_output_panel(*, stage: str, output: str, error: str | None = None, json_height: int = 320) -> None:
     if error:
         st.error(error)
         return
     raw = output or ""
     st.caption("原始输出（JSON）")
-    st.text_area(
-        f"llm_out_{stage}",
-        format_llm_output(raw)[:16000] + ("…" if len(raw) > 16000 else ""),
+    _render_llm_io_text(
+        label="",
+        key=f"llm_out_{stage}",
+        text=format_llm_output(raw)[:16000] + ("…" if len(raw) > 16000 else ""),
         height=json_height,
-        disabled=True,
-        label_visibility="collapsed",
     )
     st.caption("整理摘要")
     st.markdown(format_llm_narrative(stage, raw), unsafe_allow_html=True)
@@ -107,30 +118,25 @@ def render_llm_io_history(
             f"{status} {rec.get('label', stage)} · `{model}`{timing}",
             expanded=(i == len(records) - 1) if expand_last else (i == 0),
         ):
-            in_col, out_col = st.columns(2)
-            with in_col:
-                st.markdown("**输入**" if is_rule else "**输入（Prompt）**")
-                msgs = rec.get("messages") or []
-                st.text_area(
-                    f"llm_in_{stage}",
-                    format_messages(msgs),
-                    height=280,
-                    disabled=True,
-                    label_visibility="collapsed",
+            input_label = "输入" if is_rule else "输入（Prompt）"
+            output_label = "输出" if is_rule else "输出（JSON）"
+            msgs = rec.get("messages") or []
+            _render_llm_io_text(
+                label=input_label,
+                key=f"llm_in_{stage}",
+                text=format_messages(msgs),
+                height=360,
+            )
+            if rec.get("error"):
+                st.error(rec["error"])
+            else:
+                raw = rec.get("output") or ""
+                _render_llm_io_text(
+                    label=output_label,
+                    key=f"llm_out_{stage}",
+                    text=format_llm_output(raw)[:16000] + ("…" if len(raw) > 16000 else ""),
+                    height=360,
                 )
-            with out_col:
-                st.markdown("**输出**" if is_rule else "**输出（JSON）**")
-                if rec.get("error"):
-                    st.error(rec["error"])
-                else:
-                    raw = rec.get("output") or ""
-                    st.text_area(
-                        f"llm_out_{stage}",
-                        format_llm_output(raw)[:16000] + ("…" if len(raw) > 16000 else ""),
-                        height=280,
-                        disabled=True,
-                        label_visibility="collapsed",
-                    )
             if not rec.get("error"):
                 st.markdown("**整理摘要**")
                 st.markdown(
@@ -179,7 +185,7 @@ class StreamlitProgressReporter(ProgressReporter):
             expander.text_area(
                 f"llm_in_{stage}",
                 format_messages(messages),
-                height=200,
+                height=280,
                 disabled=True,
                 label_visibility="collapsed",
             )
@@ -218,7 +224,7 @@ class StreamlitProgressReporter(ProgressReporter):
             block["output_box"].error(error)
         elif output:
             with block["output_box"].container():
-                _render_llm_output_panel(stage=stage, output=output, json_height=180)
+                _render_llm_output_panel(stage=stage, output=output, json_height=260)
 
     def complete(self, *, ok: bool = True) -> None:
         if not self.state.steps:

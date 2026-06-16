@@ -45,20 +45,21 @@ def render_agent_trace_panel(report: dict) -> None:
         st.caption(f"{_badge_md(trader_meta)} · 信号 {proposal.get('signal_indices', [])}")
 
     st.markdown("**经理摘要**")
-    st.write(decision.get("summary", "—"))
+    st.markdown(decision.get("summary", "—"))
 
     if analyst_team:
         team_meta = stage_meta.get("analyst_team") or {}
         st.markdown(f"**Analyst Team** {_badge_md(team_meta)}")
-        cols = st.columns(4)
         labels = {
             "technical": "技术",
             "fundamentals": "基本面",
             "news": "新闻",
             "sentiment": "情绪",
         }
-        for col, (key, title) in zip(cols, labels.items()):
-            report = analyst_team.get(key) or {}
+        row1 = st.columns(2)
+        row2 = st.columns(2)
+        for col, (key, title) in zip(row1 + row2, labels.items()):
+            analyst_report = analyst_team.get(key) or {}
             analyst_meta = stage_meta.get(key) or {}
             with col:
                 st.markdown(f"**{title}** {_badge_md(analyst_meta)}")
@@ -66,9 +67,9 @@ def render_agent_trace_panel(report: dict) -> None:
                     cap = stage_llm_caption(stage_meta, key)
                     if cap:
                         st.caption(cap)
-                st.caption(report.get("bias", "—"))
-                st.caption(report.get("summary", "—")[:120])
-                st.caption(f"{len(report.get('items', []))} 条证据")
+                st.caption(f"倾向：{analyst_report.get('bias', '—')}")
+                st.markdown(analyst_report.get("summary", "—"))
+                st.caption(f"{len(analyst_report.get('items', []))} 条证据")
 
     st.markdown("**辩论要点**")
     for note in debate.get("discussion_notes", [])[:6]:
@@ -83,13 +84,13 @@ def render_agent_trace_panel(report: dict) -> None:
         st.markdown(f"**看多研究** {_badge_md(bull_meta)}")
         if bull_meta.get("llm"):
             st.caption(stage_llm_caption(stage_meta, "bullish"))
-        st.caption(bull.get("summary", "—"))
+        st.markdown(bull.get("summary", "—"))
         st.caption(f"{len(bull.get('items', []))} 条证据")
     with r2:
         st.markdown(f"**看空研究** {_badge_md(bear_meta)}")
         if bear_meta.get("llm"):
             st.caption(stage_llm_caption(stage_meta, "bearish"))
-        st.caption(bear.get("summary", "—"))
+        st.markdown(bear.get("summary", "—"))
         st.caption(f"{len(bear.get('items', []))} 条证据")
 
     if proposal.get("rationale"):
