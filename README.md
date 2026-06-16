@@ -26,10 +26,11 @@ streamlit run app.py
 | 页面 | 文件 | 说明 |
 |------|------|------|
 | 机构级分析报告 | `views/1_机构级分析报告.py` | 机构完整报告，主图日线 |
+| 外部数据 | `views/4_外部数据.py` | 新闻/日历/DXY/社媒，**fetch 完成后即可查看** |
 | 短线策略 | `views/2_短线策略.py` | 短线策略图，**切换不重新生成** |
 | LLM决策链 | `views/3_LLM决策链.py` | 智能体决策、LLM 文案、生成与智能体 I/O |
 
-报告在 session 中缓存；后台线程生成，等待时可看实时步骤与 LLM I/O。仅点 **「刷新报告」** 才重跑（规则模式约 30s；启用 LLM 全流程可能 5–6 分钟）。
+报告在 session 中缓存；后台线程生成，等待时可看实时步骤与 LLM I/O。仅点 **「重新配置 / 刷新报告」** 并再次确认配置后才重跑（规则模式约 30s；启用 LLM 全流程可能 5–6 分钟）。
 
 **手动验证 Analyst 输入密度**：生成完成后在「LLM决策链」页查看 `context_stats`、`news_topics`、`spot_cross_check`；报告 `meta.context_stats` 与 `external` 块含结构化计数。
 
@@ -53,8 +54,9 @@ streamlit run app.py
 ```
 GoldAnalysisAI/
 ├── app.py                      # 导航入口（st.navigation）
-├── views/                      # 三页视图（由 app.py 导航注册）
+├── views/                      # 四页视图（由 app.py 导航注册）
 │   ├── 1_机构级分析报告.py
+│   ├── 4_外部数据.py
 │   ├── 2_短线策略.py
 │   └── 3_LLM决策链.py
 ├── tests/                      # 测试体系（用例 / 单元 / 集成 / 回归 / 工具）
