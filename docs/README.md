@@ -9,92 +9,93 @@
 | 角色 | 建议路径 |
 |------|----------|
 | **新用户** | [README.md](../README.md) → [development.md §2](./development.md#2-环境搭建) |
-| **开发者（首次读代码）** | **[developer-onboarding.md](./developer-onboarding.md)** → `orchestrator.py` → [development.md](./development.md) |
-| **开发者（查参考）** | [development.md](./development.md) → [architecture.md](./architecture.md) → [llm-agents.md](./llm-agents.md) |
+| **开发者（首次读代码）** | **[developer-onboarding.md](./developer-onboarding.md)** → `orchestrator.py` → [cheat-sheet.md](./cheat-sheet.md) |
+| **开发者（查参考）** | [development-reference.md](./development-reference.md) · [glossary.md](./glossary.md) · [examples/report-schema.md](./examples/report-schema.md) |
 | **数据 / 集成** | [jin10-mcp.md](./jin10-mcp.md) → [analyst-context.md](./analyst-context.md) |
-| **测试 / QA** | [tests/README.md](../tests/README.md) → [financial-review.md](./financial-review.md) → [tests/cases/catalog.yaml](../tests/cases/catalog.yaml) |
-| **产品 / 评审** | [reverse-engineering.md](./reverse-engineering.md) → [financial-review.md](./financial-review.md) |
+| **测试 / QA** | [tests/README.md](../tests/README.md) → [financial-review.md](./financial-review.md) |
+| **产品 / UI** | [walkthrough.md](./walkthrough.md) → [reverse-engineering.md](./reverse-engineering.md) |
 
 ---
 
 ## 文档索引
 
-### 入门
+### P0 — 教程层（先读这些）
 
 | 文档 | 说明 |
 |------|------|
-| [README.md](../README.md) | 项目简介、快速开始、能力一览、LLM 配置示例 |
-| **[developer-onboarding.md](./developer-onboarding.md)** | **开发者上手指南：心智模型、读码路线、改功能速查** |
-| [development.md](./development.md) | 开发参考手册：环境、完整数据流、模块职责、扩展与调试 |
+| [README.md](../README.md) | 项目简介、快速开始 |
+| **[developer-onboarding.md](./developer-onboarding.md)** | 15 分钟心智模型、读码路线、刷新报告步骤表 |
+| **[walkthrough.md](./walkthrough.md)** | UI 三页动线、mermaid 序列图、验证清单 |
+
+### P1 — 参考层
+
+| 文档 | 说明 |
+|------|------|
+| [development.md](./development.md) | 开发 hub：环境搭建 + 分册导航 |
+| [development-reference.md](./development-reference.md) | 完整数据流、模块说明、调试 FAQ（600+ 行） |
+| **[glossary.md](./glossary.md)** | 术语表：ICT、Analyst Team、hybrid、win_rate 等 |
+| **[examples/report-schema.md](./examples/report-schema.md)** | 报告 JSON 字段说明 |
+| **[examples/sample-report.json](./examples/sample-report.json)** | 脱敏样例（`scripts/export_sample_report.py` 生成） |
 
 ### 架构与设计
 
 | 文档 | 说明 |
 |------|------|
-| [architecture.md](./architecture.md) | TradingAgents 对照、Analyst Team、分层数据流、目录结构 |
-| [llm-agents.md](./llm-agents.md) | LLM 双轨调度、分阶段开关、传输重试、审计字段 |
-| [analyst-context.md](./analyst-context.md) | Analyst Team 三层信息架构、配置上限、可观测性 |
+| [architecture.md](./architecture.md) | TradingAgents 对照、分层数据流 |
+| [llm-agents.md](./llm-agents.md) | LLM 双轨调度、审计字段 |
+| [analyst-context.md](./analyst-context.md) | Analyst 输入密度 |
+| [jin10-mcp.md](./jin10-mcp.md) | 金十 MCP 接入 |
 
-### 数据源与集成
+### P2 — 速查与同步
 
 | 文档 | 说明 |
 |------|------|
-| [jin10-mcp.md](./jin10-mcp.md) | 金十 MCP 接入（快讯 / 资讯 / 日历 / quote / kline） |
+| **[cheat-sheet.md](./cheat-sheet.md)** | 改功能 → 文件 → 测试 一页速查 |
+| **[pipeline-steps.yaml](./pipeline-steps.yaml)** | 流水线步骤权威列表（CI 与代码同步） |
 
 ### 领域参考
 
 | 文档 | 说明 |
 |------|------|
-| [reverse-engineering.md](./reverse-engineering.md) | 报告各区块算法反推与 MVP 映射 |
-| [financial-review.md](./financial-review.md) | 金融逻辑评审报告（Finding F-001～F-012） |
+| [reverse-engineering.md](./reverse-engineering.md) | 报告各区块算法反推 |
+| [financial-review.md](./financial-review.md) | 金融逻辑评审 F-001～F-012 |
 
 ### 测试
 
 | 文档 | 说明 |
 |------|------|
-| [tests/README.md](../tests/README.md) | 测试套件、CLI 命令、测试面板 |
-| [tests/cases/README.md](../tests/cases/README.md) | 用例 ID 规则与维护流程 |
-| [tests/cases/test-plan.md](../tests/cases/test-plan.md) | 分层测试设计 |
-| [tests/cases/financial-review-cases.md](../tests/cases/financial-review-cases.md) | FIN-* 用例详设 |
-| [tests/cases/catalog.yaml](../tests/cases/catalog.yaml) | 用例目录（ID、优先级、自动化状态） |
-
-### 脚本
-
-| 文档 | 说明 |
-|------|------|
-| [scripts/README.md](../scripts/README.md) | 旧脚本迁移对照（新测试一律放 `tests/`） |
+| [tests/README.md](../tests/README.md) | 测试套件与 CLI |
+| [tests/cases/catalog.yaml](../tests/cases/catalog.yaml) | 用例目录 |
 
 ---
 
 ## 文档关系
 
 ```
-README.md（快速开始）
+README.md
     │
-    ├── developer-onboarding.md（开发者 15 分钟入门）
-    │
-    ├── development.md ──────► architecture.md
-    │         │                      │
-    │         │                      └── llm-agents.md
+    ├── developer-onboarding.md ──► walkthrough.md
     │         │
-    │         ├── analyst-context.md ◄── jin10-mcp.md
-    │         │
-    │         └── reverse-engineering.md
+    │         ├── cheat-sheet.md ◄── pipeline-steps.yaml (CI sync)
+    │         ├── glossary.md
+    │         └── examples/report-schema.md + sample-report.json
     │
-    ├── financial-review.md ──► tests/cases/financial-review-cases.md
+    ├── development.md (hub)
+    │         └── development-reference.md (detailed)
     │
-    └── tests/README.md ──────► tests/cases/*
+    ├── architecture.md ──► llm-agents.md
+    └── financial-review.md
 ```
 
 ---
 
 ## 维护约定
 
-1. **对外接口**（`run_analysis()` 返回值）变更时，同步更新 `development.md` 与 `architecture.md`。
-2. **新增数据源**时，更新 `jin10-mcp.md` 或 `development.md` §5.2，并在 `analyst-context.md` 补充配置项。
-3. **新增 LLM 阶段**时，更新 `llm-agents.md` 路线图与 `architecture.md` 对照表。
-4. **金融逻辑变更**时，在 `financial-review.md` 追加 Finding 或在修订记录中标注已修复项。
-5. **新增测试用例**时，在 `tests/cases/catalog.yaml` 登记，并在 `test-plan.md` 补充场景。
+1. **新增流水线步骤**：同时改 `orchestrator.py` / `fetch_pipeline.py`、`pipeline-steps.yaml`、onboarding 步骤表；跑 `pytest tests/regression/test_doc_pipeline_sync.py`。
+2. **改 report 字段**：更新 `examples/report-schema.md`，重新运行 `python scripts/export_sample_report.py`。
+3. **新增术语**：写入 `glossary.md`。
+4. **改 UI 动线**：同步 `walkthrough.md`。
+5. CI 工作流：`.github/workflows/docs.yml` 自动校验文档与代码同步。
 
 ---
 

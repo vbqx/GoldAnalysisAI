@@ -2,6 +2,10 @@
 
 本目录**不再存放测试用例**。测试相关代码已迁移至 [`tests/`](../tests/README.md)。项目文档见 [`docs/README.md`](../docs/README.md)。
 
+| 脚本 | 说明 |
+|------|------|
+| `export_sample_report.py` | 生成 `docs/examples/sample-report.json`（无网络） |
+
 | 旧脚本 | 新位置 |
 |--------|--------|
 | `run_pipeline_test.py` | `python tests/run.py --integration` |
