@@ -57,21 +57,22 @@
 
 用户点 **「刷新报告」** 或首次进入页面时，`src/viz/streamlit_common.py` 的 `ensure_report()` 在后台线程调用 `run_analysis()`。
 
-| 步骤 | 代码位置 | 产出 | 是否用 LLM |
-|------|----------|------|------------|
-| 1. 拉 K 线 + 外部数据 | `data/fetch_pipeline.py` | OHLCV、新闻、DXY、社媒 | 否 |
-| 2. 指标 enrich | `indicators/technical.py` | EMA/VWAP 列 | 否 |
-| 3. ICT 结构分析 | `analysis/ict_pa.py` | 5 个周期的 trend/BOS/OB/FVG | 否 |
-| 4. 组装上下文 | `data/aggregator.py` + `context_builder.py` | `MarketContext` | 否 |
-| 5. Analyst Team ×4 | `agents/analysts/*` + `factory.py` | 四位分析师 bias + items | 可选 |
-| 6. 看多 / 看空研究 | `agents/bullish.py` / `bearish.py` | 证据列表 + 置信度 | 可选 |
-| 7. 辩论 | `agents/debate.py` | `consensus_bias` | 可选 |
-| 8. 交易信号 | `analysis/report_engine.py` | `TradingSignal[]` | 否 |
-| 9. 交易员 | `agents/trader.py` | 选哪些 signal | 否（规则） |
-| 10. 风控 ×3 | `agents/risk.py` | 通过/降仓 | 否（规则） |
-| 11. 经理 | `agents/manager.py` | execute / reduce / wait | 否（规则） |
-| 12. 组装 report | `analysis/report_engine.py` | UI 消费的 JSON | 否 |
-| 13. LLM 文案 | `llm/analyst.py` | `report["llm_analysis"]` | 可选 |
+> 步骤 ID 权威列表：[pipeline-steps.yaml](./pipeline-steps.yaml)（CI 与 `orchestrator.py` / `fetch_pipeline.py` 同步校验）
+
+| 步骤 ID | 代码位置 | 产出 | 是否用 LLM |
+|---------|----------|------|------------|
+| `fetch` | `data/fetch_pipeline.py` | OHLCV、新闻、DXY、社媒 | 否 |
+| `indicators` | `indicators/technical.py` | EMA/VWAP 列 | 否 |
+| `ict` | `analysis/ict_pa.py` | 5 个周期的 trend/BOS/OB/FVG | 否 |
+| `analyst_team` | `agents/analysts/*` + `factory.py` | 四位分析师 bias + items | 可选 |
+| `bullish` | `agents/bullish.py` / `factory.py` | 证据列表 + 置信度 | 可选 |
+| `bearish` | `agents/bearish.py` / `factory.py` | 证据列表 + 置信度 | 可选 |
+| `debate` | `agents/debate.py` / `factory.py` | `consensus_bias` | 可选 |
+| `trader` | `analysis/report_engine.py` + `agents/trader.py` | `TradingSignal[]` + 提案 | 否 |
+| `risk` | `agents/risk.py` | 通过/降仓 | 否 |
+| `manager` | `agents/manager.py` | execute / reduce / wait | 否 |
+| `report` | `analysis/report_engine.py` | UI 消费的 JSON | 否 |
+| `llm_narrative` | `llm/analyst.py` | `report["llm_analysis"]` | 可选 |
 
 **切换页面不会重跑**——三页共享 `st.session_state` 里缓存的同一份 `(report, data, analyses)`。
 
@@ -201,16 +202,19 @@ LOG_LEVEL=DEBUG
 
 ---
 
-## 9. 改功能该动哪里（速查表）
+## 9. 改功能该动哪里
 
-| 我想… | 改这里 | 测试 |
-|-------|--------|------|
-| 调整 EMA/OB/FVG 检测 | `analysis/ict_pa.py` | `pytest tests/unit/test_indicators.py` |
-| 改入场/止损/止盈规则 | `analysis/report_engine.py` | `tests/unit/test_financial_review.py` |
-| 改 Analyst 新闻筛选 | `agents/analysts/news.py` + `data/sources/news.py` | `tests/unit/test_analyst_input_density.py` |
-| 接入新 LLM 阶段 | `agents/llm/stages/` + `factory.py` | `tests/unit/test_analyst_team_llm.py` |
-| 改 Streamlit 布局 | `viz/report_views.py` | 手工 UI 或 catalog `UIL-*` |
-| 改刷新/缓存行为 | `viz/streamlit_common.py` | catalog `FN-*` |
+完整速查表见 **[cheat-sheet.md](./cheat-sheet.md)**（含测试命令与配置项）。
+
+| 我想… | 改这里 |
+|-------|--------|
+| 调整 EMA/OB/FVG 检测 | `analysis/ict_pa.py` |
+| 改入场/止损/止盈规则 | `analysis/report_engine.py` |
+| 改 Analyst 新闻筛选 | `agents/analysts/news.py` + `data/sources/news.py` |
+| 接入新 LLM 阶段 | `agents/llm/stages/` + `factory.py` |
+| 改 Streamlit 布局 | `viz/report_views.py` |
+| 改刷新/缓存行为 | `viz/streamlit_common.py` |
+| 改流水线步骤 | `orchestrator.py` + **`pipeline-steps.yaml`** |
 
 ---
 
@@ -223,26 +227,25 @@ orchestrator.py + types.py（30 min）
     ↓
 development.md §3 数据流（需要查函数链时）
     ↓
+examples/report-schema.md + sample-report.json（理解输出）
+    ↓
 llm-agents.md（开 LLM 时）
     ↓
 financial-review.md（改信号/风控时必读边界）
 ```
 
-**不要**一开始通读 `development.md`（700+ 行）——它是 **参考手册**，不是 **教程**。
+**不要**一开始通读 [development-reference.md](./development-reference.md)（600+ 行）——它是 **参考手册**，不是 **教程**。
 
 ---
 
-## 11. 文档仍可改进的方向
+## 11. 文档体系（P0–P3）
 
-若你作为维护者希望文档更好，建议优先级：
-
-| 优先级 | 缺什么 | 建议 |
-|--------|--------|------|
-| P0 | 教程型入口 | 本文 + 保持与 `orchestrator.py` 同步 |
-| P1 | 报告 JSON Schema 样例 | 增加 `docs/examples/sample-report.json`（脱敏快照） |
-| P1 | 术语表 | ICT/BOS/CHoCH/Analyst Team 一页 glossary |
-| P2 | 架构图自动更新 | CI 检查 orchestrator 步骤与 doc 表格一致 |
-| P2 | 视频/动图 | 刷新报告 → 步骤条 → agent_trace 浏览录屏 |
+| 层级 | 文档 | 用途 |
+|------|------|------|
+| P0 教程 | 本文 + [walkthrough.md](./walkthrough.md) | 心智模型 + UI 动线 |
+| P1 参考 | [development-reference.md](./development-reference.md) · [glossary.md](./glossary.md) · [examples/report-schema.md](./examples/report-schema.md) | 函数链 · 术语 · JSON |
+| P2 速查/同步 | [cheat-sheet.md](./cheat-sheet.md) · [pipeline-steps.yaml](./pipeline-steps.yaml) | 改功能 · CI 步骤校验 |
+| P3 演示 | [walkthrough.md](./walkthrough.md) mermaid 序列图 | 可扩展录屏至 `docs/assets/` |
 
 ---
 
@@ -251,7 +254,12 @@ financial-review.md（改信号/风控时必读边界）
 | 文档 | 何时读 |
 |------|--------|
 | [README.md](./README.md) | 文档索引 |
-| [development.md](./development.md) | 查具体函数、模块、FAQ |
+| [cheat-sheet.md](./cheat-sheet.md) | 改功能速查 |
+| [glossary.md](./glossary.md) | 不懂术语 |
+| [development.md](./development.md) | 环境搭建 hub |
+| [development-reference.md](./development-reference.md) | 查具体函数、模块、FAQ |
+| [examples/report-schema.md](./examples/report-schema.md) | 理解 report JSON |
+| [walkthrough.md](./walkthrough.md) | UI 操作动线 |
 | [architecture.md](./architecture.md) | 理解 TradingAgents 对照 |
 | [llm-agents.md](./llm-agents.md) | 开 LLM / 调试 hybrid |
 | [financial-review.md](./financial-review.md) | 理解字段语义与已知缺陷 |
