@@ -10,7 +10,14 @@ from pathlib import Path
 import streamlit as st
 
 from src.core.progress import ProgressReporter, reset_progress, set_progress
-from src.core.run_config import RunConfig, run_config_for_mode, run_config_from_env, apply_run_config
+from src.core.run_config import (
+    RunConfig,
+    apply_run_config,
+    coerce_run_config,
+    run_config_for_mode,
+    run_config_from_env,
+    run_config_widget_state,
+)
 from src.indicators.verify import indicator_snapshot, indicator_table_rows
 from src.log import get_logger
 from src.pipeline import run_analysis
@@ -24,6 +31,8 @@ REFRESH_COUNTER_KEY = "report_refresh_counter"
 RUN_CONFIG_KEY = "report_run_config"
 RUN_CONFIG_READY_KEY = "report_run_config_ready"
 REPORT_CONFIG_FINGERPRINT_KEY = f"{REPORT_SESSION_KEY}_run_config_fingerprint"
+RUN_CONFIG_REFRESH_UI_KEY = "run_config_refresh_ui"
+RUN_CONFIG_WIDGETS_SEEDED_KEY = "run_config_widgets_seeded"
 
 _MODE_LABEL_TO_VALUE = {
     "规则引擎": "rule",
@@ -31,13 +40,21 @@ _MODE_LABEL_TO_VALUE = {
     "混合模式": "hybrid",
 }
 _MODE_VALUE_TO_LABEL = {v: k for k, v in _MODE_LABEL_TO_VALUE.items()}
-_ANALYST_ONLY_OPTIONS = {
-    "全部": "",
-    "technical": "technical",
-    "fundamentals": "fundamentals",
-    "news": "news",
-    "sentiment": "sentiment",
-}
+_ANALYST_LLM_WIDGETS: tuple[tuple[str, str, str], ...] = (
+    ("run_config_llm_technical", "technical", "技术分析师"),
+    ("run_config_llm_fundamentals", "fundamentals", "基本面分析师"),
+    ("run_config_llm_news", "news", "新闻分析师"),
+    ("run_config_llm_sentiment", "sentiment", "情绪分析师"),
+)
+_PIPELINE_STAGE_WIDGETS: tuple[tuple[str, str, bool], ...] = (
+    ("run_config_stage_bullish", "看多研究", False),
+    ("run_config_stage_bearish", "看空研究", False),
+    ("run_config_stage_debate", "多空辩论", False),
+    ("run_config_stage_trader", "交易员", True),
+    ("run_config_stage_risk", "风控团队", True),
+    ("run_config_stage_manager", "经理决策", True),
+)
+_RESERVED_STAGE_HELP = "LLM 尚未接入，勾选会写入配置供后续启用"
 
 _GEN_THREADS: dict[int, threading.Thread] = {}
 _GEN_RESULTS: dict[int, tuple[dict, dict, dict]] = {}
@@ -55,9 +72,12 @@ class _ModuleSyncProgressReporter(ProgressReporter):
         self._sync()
 
     def _sync(self) -> None:
+        prev = _LIVE_GEN_STATE.get(self._counter, {})
+        external = self.external_snapshot or prev.get("external")
         _LIVE_GEN_STATE[self._counter] = {
             "steps": self.snapshot(),
             "llm_io": self.llm_io_snapshot(),
+            "external": external,
         }
 
     def _on_change(self) -> None:
@@ -158,6 +178,58 @@ def render_page_hero(title: str, subtitle: str = "") -> None:
     )
 
 
+def _on_request_reconfigure() -> None:
+    """Sidebar callback — runs before the next script pass so ensure_* sees flags immediately."""
+    log.info("user requested report reconfiguration")
+    st.session_state[FORCE_REFRESH_KEY] = True
+    st.session_state[RUN_CONFIG_READY_KEY] = False
+    st.session_state[RUN_CONFIG_REFRESH_UI_KEY] = True
+    st.session_state.pop(RUN_CONFIG_WIDGETS_SEEDED_KEY, None)
+
+
+def render_sidebar_refresh_button() -> None:
+    st.sidebar.button(
+        "重新配置 / 刷新报告",
+        type="primary",
+        on_click=_on_request_reconfigure,
+        key="sidebar_refresh_report",
+    )
+
+
+def _saved_run_config_for_panel() -> RunConfig:
+    """Prefill source: confirmed session config → cached report meta → .env defaults."""
+    cfg = coerce_run_config(st.session_state.get(RUN_CONFIG_KEY))
+    if cfg is not None:
+        return cfg
+    bundle = st.session_state.get(REPORT_SESSION_KEY)
+    if bundle:
+        report = bundle[0] if isinstance(bundle, tuple) else None
+        if isinstance(report, dict):
+            cfg = coerce_run_config(report.get("meta", {}).get("run_config"))
+            if cfg is not None:
+                return cfg
+    return run_config_from_env()
+
+
+def _apply_widget_state_from_run_config(config: RunConfig) -> None:
+    for key, value in run_config_widget_state(config).items():
+        st.session_state[key] = value
+
+
+def _seed_run_config_widgets_if_needed(seed: RunConfig, *, force: bool = False) -> None:
+    """Prefill widgets once per config-panel visit; never overwrite user edits on rerun."""
+    if force or not st.session_state.get(RUN_CONFIG_WIDGETS_SEEDED_KEY):
+        _apply_widget_state_from_run_config(seed)
+        st.session_state[RUN_CONFIG_WIDGETS_SEEDED_KEY] = True
+
+
+def _resolve_confirmed_run_config() -> RunConfig | None:
+    cfg = coerce_run_config(st.session_state.get(RUN_CONFIG_KEY))
+    if cfg is not None:
+        return cfg
+    return None
+
+
 def render_sidebar_header() -> None:
     st.sidebar.markdown("**GoldAnalysisAI**")
     st.sidebar.caption("数据源: TradingView · OANDA:XAUUSD")
@@ -173,22 +245,20 @@ def render_sidebar_header() -> None:
         st.sidebar.caption(f"LLM 研究: {fast}")
         st.sidebar.caption(f"LLM 辩论/文案: {strong}" + (f" · 报告 {report}" if report not in (fast, strong) else ""))
     st.sidebar.caption("先选择运行模式再生成；切换页面不重新生成")
+    render_sidebar_refresh_button()
 
 
-def render_sidebar_footer(data: dict) -> None:
-    active_config = st.session_state.get(RUN_CONFIG_KEY)
-    if isinstance(active_config, RunConfig):
-        st.sidebar.caption(f"当前模式: {_MODE_VALUE_TO_LABEL.get(active_config.agent_mode, active_config.agent_mode)}")
-    with st.sidebar.expander("指标校验", expanded=False):
-        st.table(indicator_table_rows([
-            indicator_snapshot(data["5m"], "5m"),
-            indicator_snapshot(data["15m"], "15m"),
-        ]))
-    if st.sidebar.button("重新配置 / 刷新报告", type="primary"):
-        log.info("user requested report reconfiguration")
-        st.session_state[FORCE_REFRESH_KEY] = True
-        st.session_state[RUN_CONFIG_READY_KEY] = False
-        st.rerun()
+def render_sidebar_footer(data: dict | None = None) -> None:
+    active_config = coerce_run_config(st.session_state.get(RUN_CONFIG_KEY))
+    if active_config is not None:
+        mode = _MODE_VALUE_TO_LABEL.get(active_config.agent_mode, active_config.agent_mode)
+        st.sidebar.caption(f"当前模式: {mode} · `{active_config.fingerprint()}`")
+    if data:
+        with st.sidebar.expander("指标校验", expanded=False):
+            st.table(indicator_table_rows([
+                indicator_snapshot(data["5m"], "5m"),
+                indicator_snapshot(data["15m"], "15m"),
+            ]))
 
 
 def _next_refresh_counter() -> int:
@@ -206,31 +276,64 @@ def _invalidate_report_cache() -> None:
     _clear_generation_state(old)
 
 
-def _init_run_config_widgets() -> None:
-    env_config = run_config_from_env()
-    st.session_state.setdefault("run_config_mode_label", _MODE_VALUE_TO_LABEL.get(env_config.agent_mode, "规则引擎"))
-    st.session_state.setdefault("run_config_llm_narrative", env_config.llm_enabled)
-    analyst_label = next((label for label, value in _ANALYST_ONLY_OPTIONS.items() if value == env_config.llm_analyst_only), "全部")
-    st.session_state.setdefault("run_config_analyst_only", analyst_label)
+
+def _analyst_checkbox_state() -> tuple[str, int]:
+    """Return (llm_analyst_only, checked_count). llm_analyst_only is '__multi__' when invalid."""
+    checked = [stage for key, stage, _ in _ANALYST_LLM_WIDGETS if st.session_state.get(key, True)]
+    n = len(checked)
+    if n in (0, 4):
+        return "", n
+    if n == 1:
+        return checked[0], 1
+    return "__multi__", n
 
 
 def _selected_run_config() -> RunConfig:
     mode_label = st.session_state.get("run_config_mode_label", "规则引擎")
     mode = _MODE_LABEL_TO_VALUE.get(mode_label, "rule")
-    analyst_label = st.session_state.get("run_config_analyst_only", "全部")
-    analyst_only = _ANALYST_ONLY_OPTIONS.get(analyst_label, "")
-    return run_config_for_mode(
-        mode,  # type: ignore[arg-type]
-        llm_enabled=bool(st.session_state.get("run_config_llm_narrative", mode != "rule")),
-        llm_analyst_only=analyst_only,
-    )
+    if mode == "rule":
+        return run_config_for_mode("rule")
+
+    advanced = bool(st.session_state.get("run_config_advanced", False))
+    if not advanced:
+        return run_config_for_mode(
+            mode,  # type: ignore[arg-type]
+            llm_enabled=bool(st.session_state.get("run_config_llm_narrative", True)),
+            llm_analyst_only="",
+        )
+
+    analyst_only, checked_count = _analyst_checkbox_state()
+    stage_analysts = bool(st.session_state.get("run_config_stage_analysts", True))
+    if checked_count == 0:
+        stage_analysts = False
+
+    return RunConfig(
+        agent_mode=mode,  # type: ignore[arg-type]
+        llm_enabled=bool(st.session_state.get("run_config_llm_narrative", True)),
+        llm_stage_analysts=stage_analysts,
+        llm_stage_bullish=bool(st.session_state.get("run_config_stage_bullish", True)),
+        llm_stage_bearish=bool(st.session_state.get("run_config_stage_bearish", True)),
+        llm_stage_debate=bool(st.session_state.get("run_config_stage_debate", True)),
+        llm_stage_trader=bool(st.session_state.get("run_config_stage_trader", False)),
+        llm_stage_risk=bool(st.session_state.get("run_config_stage_risk", False)),
+        llm_stage_manager=bool(st.session_state.get("run_config_stage_manager", False)),
+        llm_analyst_only="" if analyst_only == "__multi__" else analyst_only,
+    ).normalized()
 
 
 def _render_run_config_panel() -> None:
     from src.llm.router import llm_configured
 
-    _init_run_config_widgets()
-    render_page_hero("生成前配置", "选择规则或 LLM 后再开始拉取数据，避免启动即更新报告")
+    seed = _saved_run_config_for_panel()
+    is_refresh = bool(st.session_state.pop(RUN_CONFIG_REFRESH_UI_KEY, False))
+    _seed_run_config_widgets_if_needed(seed, force=is_refresh)
+    hero_title = "重新生成配置" if is_refresh else "生成前配置"
+    hero_sub = (
+        "已载入上次配置，可调整后点击「开始生成报告」"
+        if is_refresh
+        else "选择规则或 LLM 后再开始拉取数据，避免启动即更新报告"
+    )
+    render_page_hero(hero_title, hero_sub)
 
     st.markdown("#### 运行模式")
     mode_label = st.radio(
@@ -244,6 +347,8 @@ def _render_run_config_panel() -> None:
     llm_ready = llm_configured()
 
     if mode == "rule":
+        st.session_state["run_config_llm_narrative"] = False
+        st.session_state["run_config_advanced"] = False
         st.info("规则引擎模式不会调用 LLM，适合快速生成与排查数据/指标问题。")
     elif mode == "llm":
         st.info("LLM 智能体模式会启用分析师团队、看多/看空研究、辩论与可选报告文案。")
@@ -255,28 +360,56 @@ def _render_run_config_panel() -> None:
 
     st.checkbox(
         "启用 LLM 报告文案",
-        value=needs_llm,
         disabled=not needs_llm,
         key="run_config_llm_narrative",
         help="这是流水线末尾的报告叙述层，独立于智能体链。规则模式下固定关闭。",
     )
 
-    with st.expander("高级调试", expanded=False):
-        st.selectbox(
-            "仅运行单个 Analyst LLM",
-            list(_ANALYST_ONLY_OPTIONS),
-            disabled=not needs_llm,
-            key="run_config_analyst_only",
-            help="用于调试单个分析师；未选中的分析师使用规则输出补齐。",
-        )
+    st.checkbox(
+        "高级调试",
+        disabled=not needs_llm,
+        key="run_config_advanced",
+        help="勾选后可分阶段、分 Analyst 控制 LLM 调用范围。",
+    )
+
+    if needs_llm and st.session_state.get("run_config_advanced"):
+        st.markdown("**分析师团队**")
+        st.checkbox("启用 Analyst Team LLM", key="run_config_stage_analysts")
+        st.markdown("**研究 · 辩论 · 执行链**")
+        stage_cols = st.columns(3)
+        for idx, (key, label, reserved) in enumerate(_PIPELINE_STAGE_WIDGETS):
+            with stage_cols[idx % 3]:
+                st.checkbox(
+                    label,
+                    key=key,
+                    help=_RESERVED_STAGE_HELP if reserved else None,
+                )
+        st.markdown("**Analyst 子模块**（仅勾选的走 LLM，其余用规则补齐；四者全选 = 四位均 LLM；全不选 = 分析师团队均规则）")
+        col_a, col_b = st.columns(2)
+        with col_a:
+            for key, _stage, label in _ANALYST_LLM_WIDGETS[:2]:
+                st.checkbox(label, key=key)
+        with col_b:
+            for key, _stage, label in _ANALYST_LLM_WIDGETS[2:]:
+                st.checkbox(label, key=key)
+        _analyst_only, checked_count = _analyst_checkbox_state()
+        if _analyst_only == "__multi__":
+            st.warning("单 Analyst 调试请只勾选一个，或四个全部勾选。")
 
     config = _selected_run_config()
-    st.caption(f"本次配置指纹: `{config.fingerprint()}`")
+    st.caption(f"预填配置指纹: `{seed.fingerprint()}` · 本次配置指纹: `{config.fingerprint()}`")
 
-    start_disabled = needs_llm and not llm_ready
+    _analyst_only, _ = _analyst_checkbox_state()
+    analyst_invalid = (
+        needs_llm
+        and st.session_state.get("run_config_advanced")
+        and _analyst_only == "__multi__"
+    )
+    start_disabled = (needs_llm and not llm_ready) or analyst_invalid
     if st.button("开始生成报告", type="primary", disabled=start_disabled):
         st.session_state[RUN_CONFIG_KEY] = config
         st.session_state[RUN_CONFIG_READY_KEY] = True
+        st.session_state.pop(RUN_CONFIG_WIDGETS_SEEDED_KEY, None)
         _invalidate_report_cache()
         log.info("user started report generation config=%s", config.to_dict())
         st.rerun()
@@ -360,6 +493,91 @@ def _render_waiting_ui(counter: int, *, show_generation_ui: bool) -> None:
     _live_poll()
 
 
+def _fetch_step_status(steps: list[dict] | None) -> str | None:
+    for step in reversed(steps or []):
+        if step.get("id") == "fetch":
+            return step.get("status")
+    return None
+
+
+def _render_external_waiting(counter: int) -> None:
+    render_page_hero(
+        "正在拉取外部数据…",
+        "K 线 · 金十快讯/资讯/日历 · DXY · TV 社媒 — 完成后本页自动刷新",
+    )
+
+    @st.fragment(run_every=timedelta(seconds=1))
+    def _poll() -> None:
+        live = _LIVE_GEN_STATE.get(counter, {})
+        if live.get("external"):
+            st.rerun()
+        if counter in _GEN_RESULTS or counter in _GEN_ERRORS:
+            st.rerun()
+        steps = live.get("steps") or []
+        fetch_status = _fetch_step_status(steps)
+        if fetch_status == "running":
+            st.info("数据拉取进行中…")
+        elif fetch_status == "error":
+            st.error("数据拉取失败，请查看机构报告页或点侧边栏重试。")
+        else:
+            st.info("等待流水线启动…")
+
+    _poll()
+
+
+def ensure_external_data() -> dict:
+    """
+    Return external-data payload. Waits only until fetch completes (not full report).
+    Uses cached report external when the full bundle is already in session.
+    """
+    if st.session_state.pop(FORCE_REFRESH_KEY, False):
+        _invalidate_report_cache()
+        st.session_state[RUN_CONFIG_READY_KEY] = False
+        st.session_state.pop(RUN_CONFIG_WIDGETS_SEEDED_KEY, None)
+
+    if not st.session_state.get(RUN_CONFIG_READY_KEY):
+        _render_run_config_panel()
+
+    run_config = _resolve_confirmed_run_config()
+    if run_config is None:
+        st.session_state[RUN_CONFIG_READY_KEY] = False
+        _render_run_config_panel()
+    run_config_fingerprint = run_config.fingerprint()
+    counter = _next_refresh_counter()
+
+    if REPORT_SESSION_KEY in st.session_state:
+        cached_counter = st.session_state.get(f"{REPORT_SESSION_KEY}_counter")
+        cached_config = st.session_state.get(REPORT_CONFIG_FINGERPRINT_KEY)
+        if cached_counter == counter and cached_config == run_config_fingerprint:
+            from src.viz.external_data_view import external_payload_from_report
+
+            report, data, _ = st.session_state[REPORT_SESSION_KEY]
+            return external_payload_from_report(report, data)
+
+    if counter in _GEN_ERRORS:
+        exc = _GEN_ERRORS.pop(counter)
+        _LIVE_GEN_STATE.pop(counter, None)
+        log.exception("report generation failed during external page wait")
+        st.error(f"数据获取失败: {exc}")
+        st.stop()
+
+    if counter in _GEN_RESULTS:
+        bundle = _GEN_RESULTS.get(counter)
+        if bundle:
+            from src.viz.external_data_view import external_payload_from_report
+
+            return external_payload_from_report(bundle[0], bundle[1])
+
+    live = _LIVE_GEN_STATE.get(counter, {})
+    if live.get("external"):
+        return live["external"]
+
+    _start_generation(counter, run_config)
+
+    _render_external_waiting(counter)
+    st.stop()
+
+
 def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]:
     """
     Return cached (report, data, analyses). Generate only after run config is confirmed.
@@ -370,14 +588,15 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
     if st.session_state.pop(FORCE_REFRESH_KEY, False):
         _invalidate_report_cache()
         st.session_state[RUN_CONFIG_READY_KEY] = False
+        st.session_state.pop(RUN_CONFIG_WIDGETS_SEEDED_KEY, None)
 
     if not st.session_state.get(RUN_CONFIG_READY_KEY):
         _render_run_config_panel()
 
-    run_config = st.session_state.get(RUN_CONFIG_KEY)
-    if not isinstance(run_config, RunConfig):
-        run_config = run_config_from_env()
-        st.session_state[RUN_CONFIG_KEY] = run_config
+    run_config = _resolve_confirmed_run_config()
+    if run_config is None:
+        st.session_state[RUN_CONFIG_READY_KEY] = False
+        _render_run_config_panel()
     run_config_fingerprint = run_config.fingerprint()
     counter = _next_refresh_counter()
 

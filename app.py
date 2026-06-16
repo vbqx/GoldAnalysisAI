@@ -40,6 +40,7 @@ pg = st.navigation(
             icon="📊",
             default=True,
         ),
+        st.Page("views/4_外部数据.py", title="外部数据", icon="🌐"),
         st.Page("views/2_短线策略.py", title="短线策略", icon="📈"),
         st.Page("views/3_LLM决策链.py", title="LLM决策链", icon="🤖"),
     ]

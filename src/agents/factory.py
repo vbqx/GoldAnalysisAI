@@ -27,7 +27,12 @@ from src.config import (
     LLM_ANALYST_ONLY,
     LLM_OVERRIDE_THRESHOLD,
     LLM_STAGE_ANALYSTS,
+    LLM_STAGE_BULLISH,
+    LLM_STAGE_BEARISH,
     LLM_STAGE_DEBATE,
+    LLM_STAGE_TRADER,
+    LLM_STAGE_RISK,
+    LLM_STAGE_MANAGER,
     LLM_STAGE_RESEARCH,
 )
 from src.core.progress import get_progress
@@ -202,7 +207,7 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
 
 def run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam) -> AgentEvidence:
     rule_result = rule_bullish(ctx, team)
-    if not _use_llm_stage(LLM_STAGE_RESEARCH):
+    if not _use_llm_stage(LLM_STAGE_BULLISH):
         get_progress().update("bullish", detail="规则引擎")
         pipeline.record("bullish", StageMeta(source="rule"))
         return rule_result
@@ -214,7 +219,7 @@ def run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTe
 
 def run_bearish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam) -> AgentEvidence:
     rule_result = rule_bearish(ctx, team)
-    if not _use_llm_stage(LLM_STAGE_RESEARCH):
+    if not _use_llm_stage(LLM_STAGE_BEARISH):
         get_progress().update("bearish", detail="规则引擎")
         pipeline.record("bearish", StageMeta(source="rule"))
         return rule_result
@@ -278,15 +283,29 @@ def run_trader(
     pipeline: AgentPipelineMeta,
     signals: list[TradingSignal],
 ):
-    pipeline.record("trader", StageMeta(source="rule"))
+    if not _use_llm_stage(LLM_STAGE_TRADER):
+        get_progress().update("trader", detail="规则引擎")
+        pipeline.record("trader", StageMeta(source="rule"))
+        return rule_trader(ctx, debate, signals)
+
+    get_progress().update("trader", detail="规则引擎（LLM 预留）")
+    pipeline.record("trader", StageMeta(source="rule", fallback_reason="LLM 交易员尚未实现"))
     return rule_trader(ctx, debate, signals)
 
 
 def run_risk(proposal: TransactionProposal, signal_count: int, pipeline: AgentPipelineMeta) -> list[RiskReview]:
-    pipeline.record("risk", StageMeta(source="rule"))
+    if not _use_llm_stage(LLM_STAGE_RISK):
+        pipeline.record("risk", StageMeta(source="rule"))
+        return rule_risk(proposal, signal_count)
+
+    pipeline.record("risk", StageMeta(source="rule", fallback_reason="LLM 风控尚未实现"))
     return rule_risk(proposal, signal_count)
 
 
 def run_manager(proposal: TransactionProposal, reviews: list[RiskReview], pipeline: AgentPipelineMeta) -> ManagerDecision:
-    pipeline.record("manager", StageMeta(source="rule"))
+    if not _use_llm_stage(LLM_STAGE_MANAGER):
+        pipeline.record("manager", StageMeta(source="rule"))
+        return rule_manager(proposal, reviews)
+
+    pipeline.record("manager", StageMeta(source="rule", fallback_reason="LLM 经理尚未实现"))
     return rule_manager(proposal, reviews)

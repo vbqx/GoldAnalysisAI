@@ -2,7 +2,14 @@
 
 from __future__ import annotations
 
-from src.core.run_config import RunConfig, apply_run_config, run_config_for_mode, run_config_from_env
+from src.core.run_config import (
+    RunConfig,
+    apply_run_config,
+    coerce_run_config,
+    run_config_for_mode,
+    run_config_from_env,
+    run_config_widget_state,
+)
 
 
 def test_rule_run_config_disables_llm_stages() -> None:
@@ -11,7 +18,8 @@ def test_rule_run_config_disables_llm_stages() -> None:
     assert config.agent_mode == "rule"
     assert config.llm_enabled is False
     assert config.llm_stage_analysts is False
-    assert config.llm_stage_research is False
+    assert config.llm_stage_bullish is False
+    assert config.llm_stage_bearish is False
     assert config.llm_stage_debate is False
     assert config.llm_analyst_only == ""
 
@@ -25,6 +33,38 @@ def test_run_config_fingerprint_changes_with_mode() -> None:
     assert llm.to_dict()["agent_mode"] == "llm"
 
 
+def test_coerce_run_config_accepts_dict_snapshot() -> None:
+    raw = run_config_for_mode("hybrid", llm_enabled=False).to_dict()
+    cfg = coerce_run_config(raw)
+    assert cfg is not None
+    assert cfg.agent_mode == "hybrid"
+    assert cfg.llm_enabled is False
+
+
+def test_run_config_widget_state_rule_mode() -> None:
+    cfg = run_config_for_mode("rule")
+    state = run_config_widget_state(cfg)
+    assert state["run_config_mode_label"] == "规则引擎"
+    assert state["run_config_llm_narrative"] is False
+    assert state["run_config_advanced"] is False
+
+
+def test_run_config_widget_state_marks_advanced_partial_analyst() -> None:
+    cfg = RunConfig(
+        agent_mode="llm",
+        llm_enabled=True,
+        llm_stage_analysts=True,
+        llm_stage_bullish=True,
+        llm_stage_bearish=True,
+        llm_stage_debate=True,
+        llm_analyst_only="technical",
+    )
+    state = run_config_widget_state(cfg)
+    assert state["run_config_advanced"] is True
+    assert state["run_config_llm_technical"] is True
+    assert state["run_config_llm_fundamentals"] is False
+
+
 def test_apply_run_config_updates_import_bound_modules() -> None:
     from src import config as app_config
     from src.agents import factory as agent_factory
@@ -36,7 +76,8 @@ def test_apply_run_config_updates_import_bound_modules() -> None:
         agent_mode="llm",
         llm_enabled=True,
         llm_stage_analysts=True,
-        llm_stage_research=True,
+        llm_stage_bullish=True,
+        llm_stage_bearish=False,
         llm_stage_debate=True,
         llm_analyst_only="technical",
     )
@@ -47,6 +88,8 @@ def test_apply_run_config_updates_import_bound_modules() -> None:
         assert app_config.AGENT_MODE == "llm"
         assert agent_factory.AGENT_MODE == "llm"
         assert agent_factory.LLM_STAGE_ANALYSTS is True
+        assert agent_factory.LLM_STAGE_BULLISH is True
+        assert agent_factory.LLM_STAGE_BEARISH is False
         assert agent_factory.LLM_ANALYST_ONLY == "technical"
         assert orchestrator.AGENT_MODE == "llm"
         assert orchestrator.LLM_ENABLED is True
