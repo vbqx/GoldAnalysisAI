@@ -620,6 +620,20 @@ cases:
 
 
 
+  - id: RG-08
+
+    suite: regression
+
+    title: 首屏生成前配置门禁
+
+    module: tests.regression.test_fixes
+
+    priority: P1
+
+    automated: true
+
+
+
   # ── UI 布局（UIL）手工 ────────────────────────────────────
 
   - id: UIL-01

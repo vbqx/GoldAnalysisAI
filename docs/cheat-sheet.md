@@ -38,7 +38,7 @@
 | 新增 LLM 阶段 | `agents/llm/stages/` + `factory.py` | `pytest tests/unit/test_analyst_team_llm.py` |
 | LLM 传输/重试 | `agents/llm/base.py` | `pytest tests/unit/test_llm_transport.py` |
 | 改 Streamlit 布局 | `viz/report_views.py` | 手工界面 / 用例 catalog `UIL-*` |
-| 改缓存/刷新行为 | `viz/streamlit_common.py` | 用例 catalog `FN-*` |
+| 改运行前配置/缓存/刷新行为 | `viz/streamlit_common.py` + `core/run_config.py` | 用例 catalog `FN-*` / `pytest tests/unit/test_run_config.py` |
 | 改进度条/I/O 展示 | `viz/pipeline_progress.py` | 手工生成报告 |
 | 改流水线顺序 | `core/orchestrator.py` + **`docs/pipeline-steps.yaml`** | `pytest tests/regression/test_doc_pipeline_sync.py` |
 
@@ -51,6 +51,7 @@
 | `AGENT_MODE` | `rule` / `llm` / `hybrid` | 智能体调度：规则 / 纯 LLM / 混合 |
 | `LLM_ENABLED` | `true` / `false` | 报告文案层开关 |
 | `LLM_STAGE_ANALYSTS` | `true` | 分析师团队 LLM |
+| `LLM_ANALYST_ONLY` | `technical` / `fundamentals` / `news` / `sentiment` | 仅调试单个 Analyst LLM |
 | `LLM_STAGE_RESEARCH` | `true` | 看多/看空 LLM |
 | `LLM_STAGE_DEBATE` | `true` | 辩论 LLM |
 | `JIN10_API_TOKEN` | — | 金十 MCP |

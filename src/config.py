@@ -96,6 +96,20 @@ if AGENT_MODE not in ("rule", "llm", "hybrid"):
     AGENT_MODE = "rule"
 
 LLM_OVERRIDE_THRESHOLD = float(os.getenv("LLM_OVERRIDE_THRESHOLD", "0.65"))
+_LLM_ANALYST_ONLY_RAW = os.getenv("LLM_ANALYST_ONLY", "").strip().lower()
+_LLM_ANALYST_ALIASES = {
+    "": "",
+    "all": "",
+    "technical": "technical",
+    "technical_analyst": "technical",
+    "fundamentals": "fundamentals",
+    "fundamentals_analyst": "fundamentals",
+    "news": "news",
+    "news_analyst": "news",
+    "sentiment": "sentiment",
+    "sentiment_analyst": "sentiment",
+}
+LLM_ANALYST_ONLY = _LLM_ANALYST_ALIASES.get(_LLM_ANALYST_ONLY_RAW, "")
 
 
 def short_model_name(model: str) -> str:
