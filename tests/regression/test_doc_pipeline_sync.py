@@ -1,4 +1,4 @@
-"""Regression: pipeline docs stay in sync with code prog.start() keys."""
+"""回归测试：流水线文档与代码 prog.start() 步骤保持同步。"""
 
 from __future__ import annotations
 

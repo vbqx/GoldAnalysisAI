@@ -43,7 +43,7 @@ streamlit run app.py
 | [docs/walkthrough.md](docs/walkthrough.md) | UI 操作动线与序列图 |
 | [docs/cheat-sheet.md](docs/cheat-sheet.md) | 改功能速查表 |
 | [docs/glossary.md](docs/glossary.md) | 术语表 |
-| [docs/development.md](docs/development.md) | 开发 hub（环境搭建） |
+| [docs/development.md](docs/development.md) | 开发入口（环境搭建） |
 | [docs/development-reference.md](docs/development-reference.md) | 开发参考手册（完整数据流） |
 | [docs/examples/report-schema.md](docs/examples/report-schema.md) | 报告 JSON 结构说明 |
 | [docs/architecture.md](docs/architecture.md) | 架构设计（TradingAgents 对照） |
@@ -97,11 +97,11 @@ GoldAnalysisAI/
 | Analyst Team 输入密度 | ✅ 结构化 Headline/Calendar/MacroQuote + derived/context_stats |
 | 金十 quote/kline 交叉校验 | ✅ `derived.spot_cross_check` / `jin10_kline_summary` |
 | 多页面 UI | ✅ 机构 / 短线 / LLM 决策 |
-| Session 缓存 | ✅ 切换页面秒开 |
+| Session 会话缓存 | ✅ 切换页面秒开 |
 | 外部数据（DXY/金十快讯·资讯·日历/TV 社媒） | ✅ 拉取 + UI 展示 |
 | LLM 双轨 + 来源标识 | ✅ |
 | 智能体 I/O（Analyst Team + LLM） | ✅ LLM决策链页 |
-| LLM 传输重试 + hybrid 规则兜底 | ✅ |
+| LLM 传输重试 + 混合模式规则兜底 | ✅ |
 | 主图日线 (1d) | ✅ |
 
 ## LLM 配置（硅基流动示例）
