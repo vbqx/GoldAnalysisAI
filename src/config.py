@@ -144,3 +144,13 @@ LLM_STAGE_ICT = _stage_flag("LLM_STAGE_ICT")
 LLM_STAGE_TRADER = _stage_flag("LLM_STAGE_TRADER")
 LLM_STAGE_RISK = _stage_flag("LLM_STAGE_RISK")
 LLM_STAGE_MANAGER = _stage_flag("LLM_STAGE_MANAGER")
+
+
+def _stage_flag_or(name: str, default: bool) -> bool:
+    if name in os.environ:
+        return _stage_flag(name)
+    return default
+
+
+LLM_STAGE_BULLISH = _stage_flag_or("LLM_STAGE_BULLISH", LLM_STAGE_RESEARCH)
+LLM_STAGE_BEARISH = _stage_flag_or("LLM_STAGE_BEARISH", LLM_STAGE_RESEARCH)
