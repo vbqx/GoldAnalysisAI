@@ -19,10 +19,11 @@ _SOURCE_LABELS = {
 
 DASHBOARD_CSS = """
 <style>
-/* ── Streamlit 全局 ── */
-.block-container { padding-top: 1rem; padding-bottom: 2rem; max-width: 1320px; }
+/* ── Streamlit 全局（各页面共用） ── */
+.block-container { padding-top: 1rem; padding-bottom: 2rem; max-width: 1440px; }
 [data-testid="stSidebar"] { background: #f8fafc; }
 [data-testid="stSidebar"] .block-container { padding-top: 1.25rem; }
+iframe { border: none; display: block; }
 
 /* ── 页面标题区 ── */
 .page-hero {
@@ -33,13 +34,13 @@ DASHBOARD_CSS = """
   margin-bottom: 16px;
 }
 .page-hero h1 { font-size: 1.45rem; font-weight: 700; color: #0f172a; margin: 0 0 4px 0; }
-.page-hero p { font-size: 0.88rem; color: #64748b; margin: 0; }
+.page-hero p { font-size: 0.88rem; color: #64748b; margin: 0; line-height: 1.5; }
 
 /* ── Tabs ── */
 .stTabs [data-baseweb="tab-list"] { gap: 6px; background: transparent; border-bottom: 1px solid #e2e8f0; }
 .stTabs [data-baseweb="tab"] {
-  height: 38px; padding: 0 14px; border-radius: 8px 8px 0 0;
-  font-size: 0.88rem; font-weight: 600; color: #64748b;
+  height: 40px; padding: 0 16px; border-radius: 8px 8px 0 0;
+  font-size: 0.92rem; font-weight: 600; color: #64748b;
 }
 .stTabs [aria-selected="true"] { color: #0f172a; background: #fff7ed; border: 1px solid #fed7aa; border-bottom-color: #fff7ed; }
 
@@ -48,93 +49,275 @@ DASHBOARD_CSS = """
   background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
-  padding: 14px 16px;
-  margin-bottom: 14px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
 }
-.section-card h3 { font-size: 1rem; font-weight: 700; color: #0f172a; margin: 0 0 10px 0; }
+.section-card h3 { font-size: 1.05rem; font-weight: 700; color: #0f172a; margin: 0 0 12px 0; }
 
 .report-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin: 0 0 4px 0; }
 .report-title.center { color: #0f172a; text-align: center; font-size: 1.5rem; }
-.report-subtitle { text-align: center; color: #64748b; font-size: 0.85rem; margin: 0 0 12px; }
-.report-meta { font-size: 0.8rem; color: #64748b; margin-bottom: 12px; }
-.header-grid {
+.report-subtitle { text-align: center; color: #64748b; font-size: 0.9rem; margin: 0 0 12px; line-height: 1.5; }
+.report-meta { font-size: 0.8rem; color: #64748b; margin-bottom: 12px; line-height: 1.35; }
+.report-hint { font-size: 0.68rem; color: #94a3b8; margin: 0 0 4px 0; }
+
+/* ── 机构报告顶栏 / 底栏（专用 class，不影响短线策略页） ── */
+.header-metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-  margin-bottom: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 6px;
 }
-.top-grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 12px; }
-.hbox { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; min-height: 72px; box-shadow: 0 1px 2px rgba(15,23,42,0.04); }
-.hbox.panel { border: 1px solid #e2e8f0; }
-.hbox .lbl { font-size: 11px; color: #64748b; margin: 0; }
-.hbox .val { font-size: 1.15rem; font-weight: 700; margin: 2px 0 0; line-height: 1.2; color: #0f172a; }
-.hbox .val.sm { font-size: 0.82rem; font-weight: 600; line-height: 1.35; color: #334155; }
+.top-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr 1fr 1fr;
+  gap: 6px;
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+@media (max-width: 1100px) {
+  .header-metrics, .top-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bottom-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.hbox {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 8px;
+  min-height: 0;
+  box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+}
+.hbox.panel { min-height: 0; overflow: auto; }
+.hbox.panel.top-cell {
+  height: 170px;
+  min-height: 170px;
+  max-height: 170px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  margin: 0;
+}
+.hbox.panel.top-cell .lbl { font-size: 0.78rem; color: #475569; margin: 0 0 4px 0; font-weight: 700; flex-shrink: 0; }
+.hbox.panel.top-cell .bullet-list { font-size: 0.78rem; line-height: 1.48; color: #1e293b; margin: 0; }
+.hbox.panel.top-cell .bullet-list li { margin-bottom: 3px; }
+.hbox.panel.top-cell .bullet-list b { font-size: 0.82rem; color: #0f172a; }
+.report-top-row-anchor + div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(4) [data-testid="stVerticalBlockBorderWrapper"] {
+  min-height: 170px;
+  box-sizing: border-box;
+}
+.report-top-row-anchor + div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(4) .stPlotlyChart {
+  margin-top: 0 !important;
+}
+.hbox.panel .lbl { font-size: 0.78rem; color: #475569; margin: 0 0 4px 0; font-weight: 700; }
+.hbox.panel .bullet-list { font-size: 0.78rem; line-height: 1.48; color: #1e293b; }
+.hbox.panel .bullet-list li { margin-bottom: 3px; }
+.hbox.panel .bullet-list b { font-size: 0.82rem; color: #0f172a; }
+.hbox .lbl { font-size: 10px; color: #64748b; margin: 0 0 2px 0; font-weight: 600; }
+.hbox .val { font-size: 1rem; font-weight: 700; margin: 0; line-height: 1.2; color: #0f172a; }
+.hbox .val.sm { font-size: 0.75rem; font-weight: 500; line-height: 1.45; color: #334155; word-break: break-word; }
 .hbox .bear { color: #dc2626; }
 .hbox .bull { color: #16a34a; }
-.panel-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; font-size: 12px; color: #334155; line-height: 1.55; }
+
+.panel-box {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #334155;
+  line-height: 1.55;
+}
 .panel-box h4 { margin: 0 0 8px; font-size: 13px; color: #0f172a; display: flex; align-items: center; gap: 8px; }
-.num-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: #0f172a; color: #fff; font-weight: 700; font-size: 12px; border-radius: 4px; }
-.tf-panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; font-size: 12px; line-height: 1.55; color: #334155; }
-.tf-panel h4 { margin: 0 0 6px; font-size: 13px; color: #0f172a; }
-.tf-panel .bear { color: #dc2626; font-weight: 600; }
-.tf-panel .bull { color: #16a34a; font-weight: 600; }
+.panel-box.compact {
+  padding: 6px 8px;
+  margin-bottom: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  border-radius: 6px;
+  max-height: 118px;
+  overflow: auto;
+}
+.panel-box.compact h4 { margin: 0 0 4px; font-size: 0.78rem; gap: 6px; }
+.panel-box.span-2 { grid-column: 1 / -1; }
+.num-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: #0f172a; color: #fff; font-weight: 700; font-size: 12px; border-radius: 4px; flex-shrink: 0; }
+
 .level-ladder { display: flex; flex-direction: column; gap: 6px; }
 .level-item { border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px; text-align: center; background: #fff; }
 .level-item.resistance { border-color: #fca5a5; background: #fff5f5; }
 .level-item.support { border-color: #86efac; background: #f0fdf4; }
 .level-item .price { font-size: 1.25rem; font-weight: 700; color: #0f172a; }
 .level-item .lbl { font-size: 11px; color: #64748b; margin-top: 2px; }
-.plan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.plan-card { border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; font-size: 12px; }
-.plan-card .head { padding: 8px 10px; font-weight: 700; color: #fff; text-align: center; font-size: 13px; }
+
+.tf-panel {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 5px 7px;
+  margin-bottom: 4px;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: #334155;
+}
+.tf-panel h4 { margin: 0 0 3px; font-size: 0.72rem; color: #0f172a; }
+.tf-stack { display: flex; flex-direction: column; gap: 4px; }
+.tf-multi-section-h { margin: 0 0 2px !important; }
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] {
+  gap: 0.35rem !important;
+  align-items: stretch;
+  margin-bottom: 2px;
+}
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] [data-testid="stVerticalBlockBorderWrapper"] {
+  padding: 0 !important;
+  gap: 0 !important;
+  overflow: hidden;
+}
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] [data-testid="stVerticalBlock"] {
+  gap: 0 !important;
+}
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] [data-testid="element-container"],
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] [data-testid="stMarkdownContainer"],
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] [data-testid="stMarkdown"] {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] [data-testid="stMarkdown"] p {
+  margin: 0 !important;
+}
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] [data-testid="stIframe"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.tf-main-row-anchor + div[data-testid="stHorizontalBlock"] {
+  gap: 0.5rem !important;
+  margin-top: 0 !important;
+}
+.tf-main-row-anchor + div[data-testid="stHorizontalBlock"] .section-h.tight {
+  margin-top: 0 !important;
+}
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] iframe {
+  display: block;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 0;
+  vertical-align: top;
+  min-height: 0 !important;
+}
+.tf-col-label {
+  margin: 0;
+  padding: 3px 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #475569;
+  line-height: 1.15;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] .tf-panel {
+  margin: 0;
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0;
+  padding: 3px 8px 4px;
+  font-size: 0.65rem;
+  line-height: 1.28;
+  background: #fff;
+}
+.tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] .tf-panel h4 {
+  margin: 0 0 2px;
+  font-size: 0.68rem;
+}
+.tf-mini-block { margin-bottom: 2px; }
+.tf-mini-block .chart-box-title { margin-bottom: 0; padding: 3px 6px; font-size: 0.7rem; }
+.tf-mini-block .tf-panel { margin-top: 2px; margin-bottom: 0; padding: 4px 6px; font-size: 0.66rem; }
+
+.plan-stack { display: flex; flex-direction: column; gap: 5px; }
+.plan-card { border: 1px solid #e2e8f0; border-radius: 5px; overflow: hidden; font-size: 0.68rem; }
+.plan-card .head { padding: 4px 6px; font-weight: 700; color: #fff; text-align: center; font-size: 0.72rem; }
+.plan-card .body { padding: 5px 7px; background: #fff; line-height: 1.45; }
+.plan-card .body b { color: #475569; font-weight: 600; }
 .plan-card.short .head { background: linear-gradient(135deg, #dc2626, #b91c1c); }
 .plan-card.short.alt .head { background: linear-gradient(135deg, #991b1b, #7f1d1d); }
 .plan-card.long .head { background: linear-gradient(135deg, #16a34a, #15803d); }
-.plan-card .body { padding: 8px 10px; background: #fff; line-height: 1.6; }
-.plan-card .body b { color: #475569; font-weight: 600; }
+.tf-panel .bear { color: #dc2626; font-weight: 600; }
+.tf-panel .bull { color: #16a34a; font-weight: 600; }
+.star-list li::before { content: "★ "; color: #eab308; }
+.cal-item { font-size: 0.72rem; padding: 4px 0; border-bottom: 1px dashed #e2e8f0; line-height: 1.45; }
+
 .llm-narrative-box {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  padding: 12px 14px;
-  font-size: 13px;
-  line-height: 1.65;
+  padding: 14px 16px;
+  font-size: 0.9rem;
+  line-height: 1.7;
   color: #334155;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 .llm-narrative-box p { margin: 0 0 8px; }
 .llm-narrative-box p:last-child { margin-bottom: 0; }
-.llm-narrative-box ul { margin: 4px 0 8px; padding-left: 18px; }
-.llm-narrative-box li { margin-bottom: 4px; }
+.llm-narrative-box ul { margin: 4px 0 8px; padding-left: 20px; }
+.llm-narrative-box li { margin-bottom: 6px; }
 .llm-narrative-box b { color: #0f172a; }
-.path-card { border-left: 4px solid #94a3b8; padding: 6px 10px; margin-bottom: 6px; font-size: 11px; background: #fafafa; border-radius: 0 6px 6px 0; }
+
+.path-card {
+  border-left: 3px solid #94a3b8;
+  padding: 4px 6px;
+  margin-bottom: 4px;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  background: #fafafa;
+  border-radius: 0 4px 4px 0;
+}
+.path-card .summary { color: #64748b; margin-top: 2px; display: block; font-size: 0.65rem; }
+
 .section-h { font-size: 14px; font-weight: 700; color: #0f172a; margin: 8px 0 6px; border-left: 3px solid #dc2626; padding-left: 8px; }
-.liq-list, .bullet-list { font-size: 12px; line-height: 1.6; color: #334155; margin: 0; padding-left: 16px; }
-.cal-item { font-size: 12px; padding: 4px 0; border-bottom: 1px dashed #e2e8f0; }
-.footer-bar { background: linear-gradient(90deg, #dc2626, #b91c1c); color: #fff; padding: 8px 14px; border-radius: 6px; font-size: 12px; margin-top: 10px; }
+.section-h.tight { font-size: 0.78rem; margin: 0 0 3px; padding-left: 6px; }
+.liq-list, .bullet-list { font-size: 12px; line-height: 1.55; color: #334155; margin: 0; padding-left: 18px; }
+.liq-list li, .bullet-list li { margin-bottom: 4px; }
+.mini-table { width: 100%; border-collapse: collapse; font-size: 0.68rem; }
+.mini-table th, .mini-table td { border: 1px solid #e2e8f0; padding: 2px 4px; text-align: left; }
+.footer-bar { background: linear-gradient(90deg, #dc2626, #b91c1c); color: #fff; padding: 8px 14px; border-radius: 6px; font-size: 12px; line-height: 1.5; margin-top: 10px; }
 .footer-brand { text-align: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; font-weight: 600; }
-.star-list { font-size: 12px; line-height: 1.65; color: #334155; margin: 0; padding-left: 0; list-style: none; }
-.star-list li::before { content: "★ "; color: #eab308; }
+.star-list { font-size: 0.68rem; line-height: 1.45; color: #334155; margin: 0; padding-left: 0; list-style: none; }
+.star-list li { margin-bottom: 3px; }
 .chart-box-title { font-size: 12px; font-weight: 700; color: #0f172a; margin: 0 0 4px; padding: 6px 10px; border: 1px solid #e2e8f0; border-bottom: none; border-radius: 6px 6px 0 0; background: #f8fafc; }
-.chart-stack { margin-bottom: 10px; }
-.agent-source-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 11px; }
+
+.agent-source-bar { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-bottom: 4px; padding: 4px 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; font-size: 0.65rem; line-height: 1.35; }
 .agent-mode-tag { color: #64748b; font-weight: 600; margin-right: 4px; }
-.stage-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; color: #334155; }
+.stage-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; color: #334155; }
 .src-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 700; line-height: 1.4; }
 .src-badge.sm { font-size: 9px; padding: 0 5px; }
 .src-badge.rule { background: #e2e8f0; color: #475569; }
 .src-badge.llm { background: #ede9fe; color: #6d28d9; }
 .stage-model { font-size: 10px; color: #64748b; margin-left: 4px; }
-.val-with-badge { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; }
+.val-with-badge { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; line-height: 1.65; }
 
-/* ── 决策链页 ── */
-.ext-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+/* ── 外部数据：宽面板优先 ── */
+.ext-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+@media (max-width: 900px) {
+  .ext-grid { grid-template-columns: 1fr; }
+}
 .ext-src-chip { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: #fff7ed; border: 1px solid #fed7aa; font-size: 10px; font-weight: 600; color: #9a3412; }
 .ext-kind { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
 .external-feed h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 
 .trace-block:last-child { border-bottom: none; }
-.step-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 6px 16px; font-size: 0.9rem; }
+.step-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px 16px; font-size: 0.92rem; }
+
+/* ── LLM I/O 文本区 ── */
+.llm-io-block { margin-bottom: 16px; }
+.llm-io-block .io-label { font-size: 0.9rem; font-weight: 600; color: #0f172a; margin: 0 0 6px 0; }
 </style>
 """
 
@@ -221,9 +404,9 @@ def render_external_data_panel(ext: dict[str, Any]) -> str:
   <h3>外部数据 · 实时拉取 {src_html}</h3>
   <div class="ext-grid">
     <div class="panel-box"><h4>美元指数 DXY</h4><p>{dxy}</p></div>
-    <div class="panel-box"><h4>新闻头条</h4><ul class="bullet-list">{headline_html}</ul></div>
-    <div class="panel-box"><h4>经济日历 / 事件风险</h4>{cal_rows}</div>
     <div class="panel-box"><h4>TV 社区情绪</h4><p>{social}</p><ul class="bullet-list">{social_html}</ul></div>
+    <div class="panel-box span-2"><h4>新闻头条</h4><ul class="bullet-list">{headline_html}</ul></div>
+    <div class="panel-box span-2"><h4>经济日历 / 事件风险</h4>{cal_rows}</div>
   </div>
   {err_html}
 </div>
@@ -233,62 +416,86 @@ def render_external_data_panel(ext: dict[str, Any]) -> str:
 def render_header(report: dict[str, Any]) -> str:
     m = report["metrics"]
     c = report["conclusion"]
-    ext = report.get("external", {})
     cls = _chg_class(m["daily_change"])
 
-    debate_src = stage_source(report, "debate")
-    debate_badge = render_source_badge(debate_src, small=True)
-    conclusion_text = c.get("header_conclusion", c["action"])
-    if c.get("llm_trade_thesis"):
-        conclusion_badge = render_source_badge("llm", small=True)
-    else:
-        conclusion_badge = debate_badge
-
-    boxes = [
-        ("当前价格", f"{m['current_price']:.2f}", cls, ""),
-        ("日涨跌", f"{m['daily_change']:+.2f} ({m['daily_change_pct']:+.2f}%)", cls, ""),
-        ("日高/日低", f"{m['daily_high']:.2f} / {m['daily_low']:.2f}", "", ""),
-        ("市场情绪", c["market_sentiment"], cls, ""),
-        ("美元指数影响", ext.get("dxy_impact", "—"), "", ""),
-        ("风险事件影响", _truncate(ext.get("risk_events", "—"), 72), "sm", ""),
-        ("TV 社区情绪", _truncate(ext.get("social_sentiment", "—"), 72), "sm", ""),
-        (
-            "当前结论",
-            f'<span class="val-with-badge">{conclusion_badge}<span>{conclusion_text}</span></span>',
-            "sm",
-            "",
-        ),
+    metric_boxes = [
+        ("当前价格", f"{m['current_price']:.2f}", cls),
+        ("日涨跌", f"{m['daily_change']:+.2f} ({m['daily_change_pct']:+.2f}%)", cls),
+        ("日高 / 日低", f"{m['daily_high']:.2f} / {m['daily_low']:.2f}", ""),
+        ("市场情绪", c["market_sentiment"], cls),
     ]
-    parts = ['<div class="header-grid">']
-    for label, val, vcls, _extra in boxes:
-        vc = f" {vcls}" if vcls in ("bear", "bull") else (" sm" if vcls == "sm" else "")
-        parts.append(f'<div class="hbox"><p class="lbl">{label}</p><p class="val{vc}">{val}</p></div>')
-    parts.append("</div>")
-    return "".join(parts)
+    metric_html = ['<div class="header-metrics">']
+    for label, val, vcls in metric_boxes:
+        vc = f" {vcls}" if vcls in ("bear", "bull") else ""
+        metric_html.append(f'<div class="hbox"><p class="lbl">{label}</p><p class="val{vc}">{val}</p></div>')
+    metric_html.append("</div>")
+
+    conclusion_html = ""
+    return "".join(metric_html) + conclusion_html
 
 
 def render_top_overview_row(report: dict[str, Any]) -> str:
+    """Top row: overview | (donut slot) | liquidity | today — 4 columns, 3 HTML panels."""
     overview = report.get("market_overview", [])
-    paths = report.get("path_summary", [])
-    liq = report.get("liquidity", [])[:4]
+    liq = report.get("liquidity", [])[:5]
+    c = report["conclusion"]
+    debate_src = stage_source(report, "debate")
+    debate_badge = render_source_badge(debate_src, small=True)
+    conclusion_text = html.escape(c.get("header_conclusion", c["action"]))
 
-    ov_html = "".join(f"<li>{x}</li>" for x in overview)
-    path_html = "".join(
-        f'<div class="path-card" style="border-color:{p["color"]}">'
-        f'<b>{p["id"]}</b> {p["probability"]}% — {p["name"]}<br><span style="color:#64748b">{p["summary"][:80]}…</span></div>'
-        for p in paths
+    ov_html = "".join(f"<li>{html.escape(str(x))}</li>" for x in overview[:5])
+    liq_html = "".join(
+        f"<li>[{html.escape(str(item['timeframe']))}] <b>{item['price']:.0f}</b> {html.escape(str(item['label'])[:18])}</li>"
+        for item in liq
     )
-    liq_html = "".join(f"<li>{item['price']:.0f} {item['label'][:20]}</li>" for item in liq)
 
     return f"""
 <div class="top-grid-4">
-  <div class="hbox panel"><p class="lbl">📊 顶级市场总览</p><ul class="bullet-list">{ov_html}</ul></div>
-  <div class="hbox panel"><p class="lbl">🎯 高概率路径摘要</p>{path_html}</div>
-  <div class="hbox panel"><p class="lbl">💧 关键流动性位置</p><ul class="bullet-list">{liq_html}</ul></div>
-  <div class="hbox panel"><p class="lbl">⚡ 今日要点</p><ul class="bullet-list">
-    <li>{report['conclusion']['direction_summary']}</li>
-    <li>{report['conclusion']['action']}</li>
+  <div class="hbox panel"><p class="lbl">📊 市场总览</p><ul class="bullet-list">{ov_html or "<li>—</li>"}</ul></div>
+  <div class="hbox panel donut-slot"><p class="lbl">📈 多空结构权重</p><p class="val sm" style="color:#94a3b8">← 右侧图表</p></div>
+  <div class="hbox panel"><p class="lbl">💧 关键流动性</p><ul class="bullet-list">{liq_html or "<li>—</li>"}</ul></div>
+  <div class="hbox panel"><p class="lbl">⚡ 结论与要点 {debate_badge}</p><ul class="bullet-list">
+    <li>{conclusion_text}</li>
+    <li>{html.escape(c['direction_summary'])}</li>
   </ul></div>
+</div>
+"""
+
+
+def render_tf_stack(report: dict[str, Any]) -> str:
+    panels = "".join(
+        render_tf_panel(tf, report["timeframes"][tf], compact=True)
+        for tf in ("4h", "1h", "15m")
+    )
+    return f'<div class="tf-stack">{panels}</div>'
+
+
+def render_bottom_row(report: dict[str, Any], conclusion: dict[str, Any]) -> str:
+    fib = report.get("fibonacci", [])
+    fib_head = "".join(f"<th>{html.escape(str(h))}</th>" for h in ("比例", "价位", "含义"))
+    fib_body = "".join(
+        f"<tr><td>{f['ratio']:.3f}</td><td>{f['price']}</td><td>{html.escape(str(f['significance']))}</td></tr>"
+        for f in fib[:5]
+    )
+    paths = report.get("path_summary", [])
+    path_html = "".join(
+        f'<div class="path-card" style="border-color:{p["color"]}">'
+        f'<b>{p["id"]} · {p["probability"]}%</b> {html.escape(str(p["name"]))}'
+        f'<span class="summary">{html.escape(str(p.get("summary", "")))}</span></div>'
+        for p in paths[:3]
+    )
+    risk_items = list(report.get("risk_control", [])) + list(report.get("invalidation", []))
+    risk_html = "".join(f"<li>{html.escape(str(r))}</li>" for r in risk_items[:5])
+    stars = "".join(f"<li>{html.escape(str(s))}</li>" for s in conclusion.get("starred", [])[:4])
+
+    return f"""
+<div class="bottom-grid">
+  <div class="panel-box compact"><h4>Fib 回调参考</h4>
+    <table class="mini-table"><thead><tr>{fib_head}</tr></thead><tbody>{fib_body}</tbody></table>
+  </div>
+  <div class="panel-box compact"><h4>未来走势推演</h4>{path_html or "<p>—</p>"}</div>
+  <div class="panel-box compact"><h4>风控与失效</h4><ul class="bullet-list">{risk_html or "<li>—</li>"}</ul></div>
+  <div class="panel-box compact"><h4>最终结论</h4><ul class="star-list">{stars or "<li>—</li>"}</ul></div>
 </div>
 """
 
@@ -300,9 +507,19 @@ def _fmt_zone(items: list[dict], direction: str | None = None) -> str:
     return " / ".join(f"{i['low']:.0f}-{i['high']:.0f}" for i in filtered[:2])
 
 
-def render_tf_panel(tf: str, info: dict[str, Any]) -> str:
+def render_tf_panel(tf: str, info: dict[str, Any], *, compact: bool = False) -> str:
     label = TF_LABELS.get(tf, tf)
     trend_cn, trend_cls = TREND_CN.get(info["trend"], ("—", ""))
+    pd_map = {"premium": "溢价", "discount": "折价", "equilibrium": "均衡", "unknown": "—"}
+    pd_txt = pd_map.get(info.get("premium_discount", ""), "—")
+    ob_bear = _fmt_zone(info.get("order_blocks", []), "bearish")
+    fvg_bear = _fmt_zone(info.get("fvgs", []), "bearish")
+    if compact:
+        return (
+            f'<div class="tf-panel"><h4>{label} · <span class="{trend_cls}">{trend_cn}</span></h4>'
+            f"<div>BOS {info.get('bos', '无')} | CHoCH {info.get('choch', '无')} | {pd_txt}</div>"
+            f"<div>OB {ob_bear} | FVG {fvg_bear}</div></div>"
+        )
     ema = info.get("ema_relation", {})
     ema_txt = " / ".join(f"{k}{v}" for k, v in ema.items())
     pd_map = {"premium": "溢价区", "discount": "折价区", "equilibrium": "均衡", "unknown": "—"}
@@ -410,7 +627,7 @@ def render_trading_plans(signals: list[dict]) -> str:
     <div><b>盈亏比：</b>{sig['risk_reward']} | <b>结构权重：</b>{sig.get('sentiment_bias_pct', sig.get('win_rate', '—'))} <span style="color:#94a3b8;font-size:11px">（非回测胜率）</span></div>
   </div>
 </div>""")
-    return f'<div class="plan-grid">{"".join(cards)}</div>'
+    return f'<div class="plan-stack">{"".join(cards)}</div>'
 
 
 def render_liquidity(items: list[dict]) -> str:

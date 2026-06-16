@@ -83,6 +83,11 @@ class ProgressReporter:
     def __init__(self) -> None:
         self.state = PipelineProgressState()
         self.llm_io: list[LLMIORecord] = []
+        self.external_snapshot: dict[str, Any] | None = None
+
+    def set_external_snapshot(self, data: dict[str, Any]) -> None:
+        self.external_snapshot = data
+        self._on_change()
 
     def start(self, step_id: str, label: str, detail: str = "") -> None:
         self._finish_running()

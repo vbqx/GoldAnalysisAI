@@ -52,6 +52,22 @@ CHART_VARIANTS: dict[str, dict[str, Any]] = {
         "bottom_margin": 0.05,
         "header_lines": 1,
     },
+    "strip": {
+        "height": 120,
+        "bars": 32,
+        "volume": False,
+        "overlay_header": False,
+        "line_labels": False,
+        "zone_labels": False,
+        "show_indicators": False,
+        "show_overlays": False,
+        "top_margin": 0.02,
+        "bottom_margin": 0.02,
+        "header_lines": 0,
+        "aspect_ratio": 3.75,
+        "min_height": 108,
+        "max_height": 138,
+    },
     "strategy": {
         "height": 292,
         "bars": 52,
@@ -379,6 +395,9 @@ def build_lightweight_chart_html(
     top_margin = float(preset["top_margin"])
     bottom_margin = float(preset["bottom_margin"])
     header_lines = int(preset["header_lines"])
+    strip_max_h = int(preset.get("max_height", height)) if variant == "strip" else height
+    strip_min_h = int(preset.get("min_height", height)) if variant == "strip" else height
+    strip_aspect = float(preset.get("aspect_ratio", 3.75)) if variant == "strip" else 0.0
 
     plot_df = df.tail(bars).copy()
     last = plot_df.iloc[-1]
@@ -462,7 +481,7 @@ def build_lightweight_chart_html(
     header_html = f'<div id="tv-chart-header" class="tv-chart-header{overlay_cls}">{header_inner}</div>' if show_header else ""
 
     wm = watermark or ""
-    wm_size = "28px" if variant == "main" else "18px"
+    wm_size = "28px" if variant == "main" else ("14px" if variant == "strip" else "18px")
     wm_html = (
         f'<div style="position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);'
         f'font-size:{wm_size};font-weight:700;color:rgba(148,163,184,0.22);pointer-events:none;'
@@ -476,9 +495,9 @@ def build_lightweight_chart_html(
     overlays_json = json.dumps(overlays)
     candle_times_json = json.dumps([c["time"] for c in candles])
     candle_map_json = json.dumps({c["time"]: c for c in candles})
-    zone_font = "11px" if variant == "main" else "10px"
-    zone_right = "78px" if variant == "main" else "62px"
-    scale_min_width = 72 if variant == "main" else 56
+    zone_font = "11px" if variant == "main" else ("9px" if variant == "strip" else "10px")
+    zone_right = "78px" if variant == "main" else ("48px" if variant == "strip" else "62px")
+    scale_min_width = 72 if variant == "main" else (44 if variant == "strip" else 56)
 
     body_parts = [header_html] if overlay_header else []
     body_parts.extend([
@@ -504,11 +523,15 @@ def build_lightweight_chart_html(
   .tv-chart-header.overlay {{ position:absolute; top:0; left:0; right:0; z-index:20; }}
   .tv-chart-wrap.tv-mini .tv-chart-header,
   .tv-chart-wrap.tv-strategy .tv-chart-header {{ border:none; border-radius:0; background:transparent; padding:4px 10px 2px; }}
+  .tv-chart-wrap.tv-strip {{ margin:0; padding:0; line-height:0; }}
+  .tv-chart-wrap.tv-strip .tv-chart-header {{ border:none; border-radius:0; background:transparent; padding:0; margin:0; height:0; overflow:hidden; }}
   .tv-chart-wrap.tv-mini .tv-ohlc-line,
   .tv-chart-wrap.tv-strategy .tv-ohlc-line {{ font-size:11px; color:#334155; font-weight:600; }}
+  .tv-chart-wrap.tv-strip .tv-ohlc-line {{ font-size:9px; color:#64748b; font-weight:600; line-height:1.15; }}
   .tv-chart-wrap.tv-main .tv-ohlc-line {{ font-size:12px; color:#334155; font-weight:600; }}
   .tv-chart-wrap.tv-mini .tv-chart-body,
   .tv-chart-wrap.tv-strategy .tv-chart-body {{ border:1px solid #e2e8f0; border-radius:0 0 6px 6px; overflow:hidden; }}
+  .tv-chart-wrap.tv-strip .tv-chart-body {{ border:none; border-radius:0; overflow:hidden; padding:0; margin:0; }}
   .zone-label {{
     position:absolute;
     right:{zone_right};
@@ -540,10 +563,15 @@ def build_lightweight_chart_html(
   const showOverlays = {json.dumps(show_overlays)};
   const compactHeader = {json.dumps(header_lines == 1)};
   const enablePriceScaleDrag = {json.dumps(variant == "main")};
+  const useStripAspect = {json.dumps(variant == "strip")};
+  const stripAspect = {strip_aspect if strip_aspect else 3.75};
+  const stripMinH = {strip_min_h};
+  const stripMaxH = {strip_max_h};
+  let bodyHeight = {height};
 
   const chart = LightweightCharts.createChart(container, {{
     width: container.clientWidth,
-    height: {height},
+    height: bodyHeight,
     layout: {{ background: {{ color: '#ffffff' }}, textColor: '#334155' }},
     grid: {{ vertLines: {{ color: '#f1f5f9' }}, horzLines: {{ color: '#f1f5f9' }} }},
     rightPriceScale: {{
@@ -594,7 +622,7 @@ def build_lightweight_chart_html(
     for (const zone of sorted) {{
       const mid = (zone.low + zone.high) / 2;
       let y = candleSeries.priceToCoordinate(mid);
-      if (y == null || y < 24 || y > {height} - 16) continue;
+      if (y == null || y < 24 || y > bodyHeight - 16) continue;
       for (const py of placed) {{
         if (Math.abs(py - y) < 18) y = py - 20;
       }}
@@ -706,10 +734,33 @@ def build_lightweight_chart_html(
     }});
   }}
 
-  new ResizeObserver(() => {{
-    chart.applyOptions({{ width: container.clientWidth }});
+  new ResizeObserver(() => layoutChart()).observe(container);
+  layoutChart();
+
+  function layoutChart() {{
+    const w = container.clientWidth;
+    let h = bodyHeight;
+    if (useStripAspect) {{
+      h = Math.round(w / stripAspect);
+      h = Math.max(stripMinH, Math.min(stripMaxH, h));
+      bodyHeight = h;
+    }}
+    chart.applyOptions({{ width: w, height: h }});
     positionZoneLabels(candleSeries);
-  }}).observe(container);
+    if (useStripAspect) {{
+      const total = h + 1;
+      try {{
+        if (window.frameElement) {{
+          window.frameElement.style.height = total + 'px';
+          window.frameElement.style.overflow = 'hidden';
+        }}
+      }} catch (e) {{}}
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      document.body.style.overflow = 'hidden';
+    }}
+  }}
 }})();
 </script>
 """
@@ -720,4 +771,7 @@ def chart_iframe_height(variant: str = "main", height: int | None = None) -> int
     height = height if height is not None else int(preset["height"])
     if variant == "main":
         return height + 20
+    if variant == "strip":
+        min_h = int(preset.get("min_height", height))
+        return min_h + 2
     return height + 4

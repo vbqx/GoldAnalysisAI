@@ -75,6 +75,10 @@ def test_report_generation_requires_run_config_panel() -> None:
     assert "开始生成报告" in common_src
     assert "RUN_CONFIG_READY_KEY" in common_src
     assert "_start_generation(counter, run_config)" in common_src
+    assert "RUN_CONFIG_WIDGETS_SEEDED_KEY" in common_src
+    assert "_seed_run_config_widgets_if_needed" in common_src
+    assert "run_config_widget_state" in run_config_src
+    assert "coerce_run_config" in run_config_src
     assert "apply_run_config" in run_config_src
 
 

@@ -25,9 +25,9 @@ def build_sentiment_donut(sentiment: dict[str, float]) -> go.Figure:
         ]
     )
     fig.update_layout(
-        title=dict(text="多空胜率 (技术面投票)", font=dict(size=14)),
-        height=260,
-        margin=dict(t=45, b=10, l=10, r=10),
+        title=dict(text="多空结构权重", font=dict(size=13)),
+        height=165,
+        margin=dict(t=36, b=12, l=8, r=8),
         showlegend=False,
     )
     return fig

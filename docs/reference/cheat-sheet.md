@@ -37,7 +37,8 @@
 | 金十 MCP 参数 | `config.py` + `jin10_feed.py` | `python tests/run.py --external` |
 | 新增 LLM 阶段 | `agents/llm/stages/` + `factory.py` | `pytest tests/unit/test_analyst_team_llm.py` |
 | LLM 传输/重试 | `agents/llm/base.py` | `pytest tests/unit/test_llm_transport.py` |
-| 改 Streamlit 布局 | `viz/report_views.py` | 手工界面 / 用例 catalog `UIL-*` |
+| 改 Streamlit 布局 | `viz/report_views.py` + `viz/dashboard_components.py` | 手工界面 / 用例 catalog `UIL-*` |
+| 改外部数据页 | `viz/external_data_view.py` + `views/4_外部数据.py` | `pytest tests/unit/test_external_data_view.py` |
 | 改运行前配置/缓存/刷新行为 | `viz/streamlit_common.py` + `core/run_config.py` | 用例 catalog `FN-*` / `pytest tests/unit/test_run_config.py` |
 | 改进度条/I/O 展示 | `viz/pipeline_progress.py` | 手工生成报告 |
 | 改流水线顺序 | `core/orchestrator.py` + **`docs/reference/pipeline-steps.yaml`** | `pytest tests/regression/test_doc_pipeline_sync.py` |

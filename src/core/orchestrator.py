@@ -39,6 +39,9 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         fetched = fetch_all_data()
     except RuntimeError:
         raise
+    from src.viz.external_data_view import external_snapshot_from_fetch
+
+    prog.set_external_snapshot(external_snapshot_from_fetch(fetched))
     raw = fetched.raw
     log.debug(
         "raw bars: %s",
