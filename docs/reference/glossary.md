@@ -1,6 +1,6 @@
 # 术语表
 
-GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engineering.md](./reverse-engineering.md)。
+GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engineering.md](../domain/reverse-engineering.md)。
 
 ---
 
@@ -74,7 +74,7 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 |------|------|
 | **ensure_report()** | 界面入口：会话缓存 + 后台线程跑流水线 |
 | **刷新报告** | 用户主动重跑流水线的操作（另：浏览器刷新也会触发） |
-| **generation_steps** | 生成进度与耗时，对应 `docs/pipeline-steps.yaml` |
+| **generation_steps** | 生成进度与耗时，对应 `docs/reference/pipeline-steps.yaml` |
 | **LLM决策链页** | 第三个导航页：决策链 + LLM 输入输出 |
 
 ---
@@ -83,9 +83,9 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 
 | 文档 | 内容 |
 |------|------|
-| [developer-onboarding.md](./developer-onboarding.md) | 15 分钟开发者入门 |
+| [onboarding.md](../getting-started/onboarding.md) | 15 分钟开发者入门 |
 | [cheat-sheet.md](./cheat-sheet.md) | 改功能速查 |
-| [examples/report-schema.md](./examples/report-schema.md) | 报告 JSON 字段说明 |
+| [examples/report-schema.md](../examples/report-schema.md) | 报告 JSON 字段说明 |
 
 ---
 

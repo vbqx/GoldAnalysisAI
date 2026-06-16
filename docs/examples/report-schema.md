@@ -47,9 +47,9 @@ python scripts/export_sample_report.py
 |--------|------|
 | `agent_mode` | 当前模式：`rule` / `llm` / `hybrid` |
 | `stage_sources` | 每阶段实际用规则还是 LLM，及回退原因 |
-| `generation_steps` | 与 [pipeline-steps.yaml](../pipeline-steps.yaml) 步骤 ID 对应 |
+| `generation_steps` | 与 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 步骤 ID 对应 |
 | `llm_io` | 规则阶段输入输出 + LLM 消息与响应 |
-| `context_stats` | 分析师输入密度，见 [analyst-context.md](../analyst-context.md) |
+| `context_stats` | 分析师输入密度，见 [analyst-context.md](../design/analyst-context.md) |
 
 ---
 
@@ -75,7 +75,7 @@ python scripts/export_sample_report.py
 { "bullish": 25.0, "bearish": 62.0, "ranging": 13.0 }
 ```
 
-来自 `ict_pa.sentiment_score()` 多周期趋势加权。界面若展示为「胜率」，须标注为**结构权重**。见 [financial-review.md](../financial-review.md) F-002。
+来自 `ict_pa.sentiment_score()` 多周期趋势加权。界面若展示为「胜率」，须标注为**结构权重**。见 [financial-review.md](../domain/financial-review.md) F-002。
 
 ---
 
@@ -169,9 +169,9 @@ print(json.dumps(report["meta"]["generation_steps"], ensure_ascii=False, indent=
 
 | 文档 | 内容 |
 |------|------|
-| [developer-onboarding.md](../developer-onboarding.md) | 三种返回值说明 |
-| [glossary.md](../glossary.md) | win_rate、AgentTrace 等术语 |
-| [reverse-engineering.md](../reverse-engineering.md) | 各界面区块的算法来源 |
+| [onboarding.md](../getting-started/onboarding.md) | 三种返回值说明 |
+| [glossary.md](../reference/glossary.md) | win_rate、AgentTrace 等术语 |
+| [reverse-engineering.md](../domain/reverse-engineering.md) | 各界面区块的算法来源 |
 
 ---
 

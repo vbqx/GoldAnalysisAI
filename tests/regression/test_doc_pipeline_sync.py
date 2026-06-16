@@ -8,15 +8,15 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
-PIPELINE_YAML = ROOT / "docs" / "pipeline-steps.yaml"
+PIPELINE_YAML = ROOT / "docs" / "reference" / "pipeline-steps.yaml"
 ORCHESTRATOR = ROOT / "src" / "core" / "orchestrator.py"
 FETCH_PIPELINE = ROOT / "src" / "data" / "fetch_pipeline.py"
 
 DOC_FILES = [
-    ROOT / "docs" / "developer-onboarding.md",
-    ROOT / "docs" / "development-reference.md",
-    ROOT / "docs" / "walkthrough.md",
-    ROOT / "docs" / "cheat-sheet.md",
+    ROOT / "docs" / "getting-started" / "onboarding.md",
+    ROOT / "docs" / "reference" / "handbook.md",
+    ROOT / "docs" / "getting-started" / "walkthrough.md",
+    ROOT / "docs" / "reference" / "cheat-sheet.md",
 ]
 
 
@@ -65,5 +65,5 @@ def test_docs_mention_all_pipeline_steps() -> None:
 
 
 def test_onboarding_links_pipeline_yaml() -> None:
-    onboarding = (ROOT / "docs" / "developer-onboarding.md").read_text(encoding="utf-8")
+    onboarding = (ROOT / "docs" / "getting-started" / "onboarding.md").read_text(encoding="utf-8")
     assert "pipeline-steps.yaml" in onboarding

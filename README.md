@@ -39,19 +39,13 @@ streamlit run app.py
 
 | 文档 | 说明 |
 |------|------|
-| **[docs/developer-onboarding.md](docs/developer-onboarding.md)** | **开发者上手指南（建议先读）** |
-| [docs/walkthrough.md](docs/walkthrough.md) | UI 操作动线与序列图 |
-| [docs/cheat-sheet.md](docs/cheat-sheet.md) | 改功能速查表 |
-| [docs/glossary.md](docs/glossary.md) | 术语表 |
-| [docs/development.md](docs/development.md) | 开发入口（环境搭建） |
-| [docs/development-reference.md](docs/development-reference.md) | 开发参考手册（完整数据流） |
-| [docs/examples/report-schema.md](docs/examples/report-schema.md) | 报告 JSON 结构说明 |
-| [docs/architecture.md](docs/architecture.md) | 架构设计（TradingAgents 对照） |
-| [docs/llm-agents.md](docs/llm-agents.md) | LLM 多智能体双轨调度 |
-| [docs/analyst-context.md](docs/analyst-context.md) | Analyst Team 输入密度与三层架构 |
-| [docs/jin10-mcp.md](docs/jin10-mcp.md) | 金十 MCP 接入（快讯 / 资讯 / 日历） |
-| [docs/financial-review.md](docs/financial-review.md) | 金融逻辑评审 |
-| [docs/reverse-engineering.md](docs/reverse-engineering.md) | 报告结构反推 |
+| **[docs/getting-started/onboarding.md](docs/getting-started/onboarding.md)** | **开发者上手指南（建议先读）** |
+| [docs/getting-started/setup.md](docs/getting-started/setup.md) | 环境搭建与运行 |
+| [docs/getting-started/walkthrough.md](docs/getting-started/walkthrough.md) | UI 操作动线与序列图 |
+| [docs/reference/cheat-sheet.md](docs/reference/cheat-sheet.md) | 改功能速查表 |
+| [docs/reference/handbook.md](docs/reference/handbook.md) | 开发参考手册（完整数据流） |
+| [docs/design/architecture.md](docs/design/architecture.md) | 架构设计（TradingAgents 对照） |
+| [docs/domain/financial-review.md](docs/domain/financial-review.md) | 金融逻辑评审 |
 | [tests/README.md](tests/README.md) | 测试体系与 CLI 命令 |
 
 ## 项目结构

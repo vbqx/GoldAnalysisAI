@@ -1,6 +1,6 @@
 # GoldAnalysisAI 开发参考手册
 
-> 函数调用链、模块职责、调试与常见问题的**详细参考**。入门请先读 [developer-onboarding.md](./developer-onboarding.md)。
+> 函数调用链、模块职责、调试与常见问题的**详细参考**。入门请先读 [onboarding.md](../getting-started/onboarding.md)。
 
 ---
 
@@ -16,10 +16,10 @@
 | `TV_FETCH_RETRIES` / `TV_FETCH_ROUND_RETRIES` | `3` / `1` | TradingView 拉数重试 |
 | `JIN10_API_TOKEN` | 空 | 金十官方 MCP 快讯 + 资讯 + 财经日历（[申请](https://mcp.jin10.com/app)） |
 | `JIN10_KEYWORD` | `黄金` | 快讯/资讯筛选关键词 |
-| `ANALYST_*` / `TV_US10Y_*` | 见 [analyst-context.md](./analyst-context.md) | Analyst Team 输入密度上限 |
+| `ANALYST_*` / `TV_US10Y_*` | 见 [analyst-context.md](../design/analyst-context.md) | Analyst Team 输入密度上限 |
 | `LOG_LEVEL` | `INFO` | `DEBUG` 可跟踪流水线 |
 | `LOG_FILE` | 空 | 如 `logs/goldanalysisai.log` |
-| `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](./llm-agents.md) |
+| `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](../design/llm-agents.md) |
 | `LLM_*` | 见 `.env.example` | 硅基流动 / OpenAI 兼容 API |
 
 配置在 **`src/config.py`** 读取环境变量（模块 import 时自动加载 `.env`）；`app.py` 在 import 前也会预加载 `.env`。
@@ -101,7 +101,7 @@ build_report(signals=…)  →  dict  report
 | 6 | `merge_external()` | `src/data/aggregator.py` | → `ExternalFactors` |
 | 7 | `finalize_market_context()` | `src/data/context_builder.py` | derived 信号 + context_stats |
 
-详见 [analyst-context.md](./analyst-context.md)（三层架构、配置项、Phase 0–6 状态）。
+详见 [analyst-context.md](../design/analyst-context.md)（三层架构、配置项、Phase 0–6 状态）。
 
 **TradingView 细节**（步骤 2 内部）：
 
@@ -113,7 +113,7 @@ build_report(signals=…)  →  dict  report
 | 4 | `_resample()` | `src/data/tradingview.py` | 5m 聚合为 15m / 1h / 4h |
 | 5 | `source_label()` | `src/data/tradingview.py` | 数据源标签字符串 |
 
-**请求次数**：2 次 TV（5000×5m + 365×1d）；15m/1h/4h 本地 resample。外部 HTTP 见 [jin10-mcp.md](./jin10-mcp.md)。
+**请求次数**：2 次 TV（5000×5m + 365×1d）；15m/1h/4h 本地 resample。外部 HTTP 见 [jin10-mcp.md](../integrations/jin10-mcp.md)。
 
 **输出变量**：`DataFetchResult(raw, external, source_label)`。
 
@@ -374,7 +374,7 @@ GoldAnalysisAI/
 | `swing_high`, `swing_low` | 最近摆动极值 |
 | `events` | `StructureEvent` 列表（BOS/CHoCH） |
 
-算法为 **启发式 MVP**，详见 [reverse-engineering.md](./reverse-engineering.md)。
+算法为 **启发式 MVP**，详见 [reverse-engineering.md](../domain/reverse-engineering.md)。
 
 ### 5.5 智能体层 `src/agents/`
 
@@ -507,7 +507,7 @@ Trader 只消费 orchestrator 传入的 `signals`；Manager 按 index 重排 `re
 
 ### 7.4 接入 LLM 多智能体
 
-完整设计见 **[llm-agents.md](./llm-agents.md)**。
+完整设计见 **[llm-agents.md](../design/llm-agents.md)**。
 
 - **调度**：`agents/factory.py`，`AGENT_MODE=rule|llm|hybrid`
 - **分阶段开关**：`LLM_STAGE_ANALYSTS`、`LLM_STAGE_RESEARCH`、`LLM_STAGE_DEBATE`（`LLM_STAGE_ICT/TRADER/RISK/MANAGER` 已在 config 定义，factory 尚未接入）
@@ -626,20 +626,20 @@ python tests/run.py --full       # 发版前（含流水线）
 
 | 文档 | 内容 |
 |------|------|
-| [README.md](./README.md) | 文档中心索引 |
-| [developer-onboarding.md](./developer-onboarding.md) | 开发者入门 |
+| [README.md](../README.md) | 文档中心索引 |
+| [onboarding.md](../getting-started/onboarding.md) | 开发者入门 |
 | [cheat-sheet.md](./cheat-sheet.md) | 改功能速查 |
 | [glossary.md](./glossary.md) | 术语表 |
-| [walkthrough.md](./walkthrough.md) | UI 动线 |
-| [examples/report-schema.md](./examples/report-schema.md) | 报告 JSON |
-| [architecture.md](./architecture.md) | TradingAgents 对照 |
-| [llm-agents.md](./llm-agents.md) | LLM 双轨、传输重试、智能体 I/O、硅基流动配置 |
-| [analyst-context.md](./analyst-context.md) | Analyst Team 输入密度与配置 |
-| [jin10-mcp.md](./jin10-mcp.md) | 金十 MCP 接入 |
-| [financial-review.md](./financial-review.md) | 金融逻辑评审与 FIN-* 用例追溯 |
-| [reverse-engineering.md](./reverse-engineering.md) | 报告各区块算法反推 |
-| [tests/README.md](../tests/README.md) | 测试套件与面板 |
-| [README.md](../README.md) | 项目快速开始 |
+| [walkthrough.md](../getting-started/walkthrough.md) | UI 动线 |
+| [examples/report-schema.md](../examples/report-schema.md) | 报告 JSON |
+| [architecture.md](../design/architecture.md) | TradingAgents 对照 |
+| [llm-agents.md](../design/llm-agents.md) | LLM 双轨、传输重试、智能体 I/O、硅基流动配置 |
+| [analyst-context.md](../design/analyst-context.md) | Analyst Team 输入密度与配置 |
+| [jin10-mcp.md](../integrations/jin10-mcp.md) | 金十 MCP 接入 |
+| [financial-review.md](../domain/financial-review.md) | 金融逻辑评审与 FIN-* 用例追溯 |
+| [reverse-engineering.md](../domain/reverse-engineering.md) | 报告各区块算法反推 |
+| [tests/README.md](../../tests/README.md) | 测试套件与面板 |
+| [README.md](../../README.md) | 项目快速开始 |
 
 ---
 

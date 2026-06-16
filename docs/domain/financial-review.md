@@ -6,7 +6,7 @@
 **不包含**：VaR/Sharpe/回测等未规划能力  
 **评审日期**：2026-06-14  
 **分发对象**：开发团队、测试团队、产品/UI  
-**相关文档**：[docs/README.md](./README.md) · [development.md](./development.md) · [reverse-engineering.md](./reverse-engineering.md) · [architecture.md](./architecture.md) · [tests/cases/catalog.yaml](../tests/cases/catalog.yaml)
+**相关文档**：[docs/README.md](../README.md) · [getting-started/setup.md](../getting-started/setup.md) · [reverse-engineering.md](./reverse-engineering.md) · [architecture.md](../design/architecture.md) · [tests/cases/catalog.yaml](../../tests/cases/catalog.yaml)
 
 ---
 

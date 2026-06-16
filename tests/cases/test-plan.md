@@ -196,7 +196,7 @@ pytest tests/integration -m integration -q       # FN + PERF
 
 ## 8. 金融 Review 用例（FIN）
 
-> 详设：[financial-review-cases.md](./financial-review-cases.md) · 来源 [financial-review.md](../../docs/financial-review.md)
+> 详设：[financial-review-cases.md](./financial-review-cases.md) · 来源 [financial-review.md](../../docs/domain/financial-review.md)
 
 | 前缀 | 范围 | 说明 |
 |------|------|------|
