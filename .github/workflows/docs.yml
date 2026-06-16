@@ -1,0 +1,36 @@
+name: Docs
+
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - 'src/core/orchestrator.py'
+      - 'src/data/fetch_pipeline.py'
+      - 'tests/regression/test_doc_pipeline_sync.py'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'src/core/orchestrator.py'
+      - 'src/data/fetch_pipeline.py'
+      - 'tests/regression/test_doc_pipeline_sync.py'
+
+jobs:
+  doc-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Verify pipeline docs sync with code
+        run: pytest tests/regression/test_doc_pipeline_sync.py -v
+
+      - name: Verify sample report JSON is valid
+        run: |
+          python scripts/export_sample_report.py
+          python -c "import json; json.load(open('docs/examples/sample-report.json'))"

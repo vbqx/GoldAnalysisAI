@@ -31,7 +31,7 @@ tests/
 # 安装开发依赖（含 pytest）
 pip install -r requirements-dev.txt
 
-# 快速测试：单元 + 回归（默认，无网络，约 61 项）
+# 快速测试：单元 + 回归（默认，无网络，约 77 项）
 python tests/run.py
 
 # 金融 Review 单测（FIN-*）
