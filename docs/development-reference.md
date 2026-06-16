@@ -1,6 +1,6 @@
 # GoldAnalysisAI 开发参考手册
 
-> 函数调用链、模块职责、调试 FAQ 的**详细参考**。入门请先读 [developer-onboarding.md](./developer-onboarding.md)。
+> 函数调用链、模块职责、调试与常见问题的**详细参考**。入门请先读 [developer-onboarding.md](./developer-onboarding.md)。
 
 ---
 
@@ -598,7 +598,7 @@ python tests/run.py --full       # 发版前（含流水线）
 - [ ] 生成步骤含「构建市场上下文」与 external 子步骤；I/O 含 context 规则记录
 - [ ] 生成步骤含 `Analyst Team`；I/O 含四位分析师 LLM 或规则输出
 - [ ] 「LLM决策链」三 Tab：智能体决策 / LLM 文案 / 生成与 LLM I/O
-- [ ] 顶栏与「外部数据 · 实时拉取」面板展示 DXY/新闻/日历/TV 社媒（live 或明确回退文案）
+- [ ] 顶栏与「外部数据 · 实时拉取」面板展示 DXY/新闻/日历/TV 社媒（实时数据或明确占位/回退说明）
 - [ ] Analyst Team 四列 badge 与 stage_sources 一致
 - [ ] 两种报告模式渲染正常；结构权重标注「非回测胜率」
 

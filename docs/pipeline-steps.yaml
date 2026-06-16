@@ -1,6 +1,6 @@
-# Canonical pipeline progress steps — single source of truth for docs & CI sync.
-# prog.start() keys must match orchestrator.py and fetch_pipeline.py.
-# Regenerate docs tables from this file when adding stages.
+# 流水线进度步骤权威列表 — 文档与 CI 同步的唯一数据源
+# prog.start() 的 key 须与 orchestrator.py、fetch_pipeline.py 一致
+# 新增阶段时请同步更新相关 Markdown 文档
 
 version: 1
 sources:
@@ -10,7 +10,6 @@ sources:
 steps:
   - id: fetch
     label: 数据拉取
-    label_en: Data fetch
     module: src/data/fetch_pipeline.py
     function: fetch_all_data
     uses_llm: false
@@ -18,7 +17,6 @@ steps:
 
   - id: indicators
     label: 计算技术指标
-    label_en: Indicators
     module: src/indicators/technical.py
     function: enrich
     uses_llm: false
@@ -26,15 +24,13 @@ steps:
 
   - id: ict
     label: ICT 结构分析
-    label_en: ICT structure
     module: src/analysis/ict_pa.py
     function: analyze_timeframe
     uses_llm: false
     progress: true
 
   - id: analyst_team
-    label: Analyst Team
-    label_en: Analyst Team
+    label: 分析师团队
     module: src/agents/analysts/
     function: run_analyst_team
     uses_llm: optional
@@ -42,7 +38,6 @@ steps:
 
   - id: bullish
     label: 看多研究
-    label_en: Bullish research
     module: src/agents/factory.py
     function: run_bullish
     uses_llm: optional
@@ -50,7 +45,6 @@ steps:
 
   - id: bearish
     label: 看空研究
-    label_en: Bearish research
     module: src/agents/factory.py
     function: run_bearish
     uses_llm: optional
@@ -58,7 +52,6 @@ steps:
 
   - id: debate
     label: 多空辩论
-    label_en: Debate
     module: src/agents/factory.py
     function: run_debate
     uses_llm: optional
@@ -66,7 +59,6 @@ steps:
 
   - id: trader
     label: 交易员提案
-    label_en: Trader
     module: src/agents/trader.py
     function: run_trader_agent
     uses_llm: false
@@ -74,7 +66,6 @@ steps:
 
   - id: risk
     label: 风控审核
-    label_en: Risk review
     module: src/agents/risk.py
     function: run_risk_team
     uses_llm: false
@@ -82,7 +73,6 @@ steps:
 
   - id: manager
     label: 经理决策
-    label_en: Manager
     module: src/agents/manager.py
     function: run_manager
     uses_llm: false
@@ -90,7 +80,6 @@ steps:
 
   - id: report
     label: 组装报告
-    label_en: Report build
     module: src/analysis/report_engine.py
     function: build_report
     uses_llm: false
@@ -98,7 +87,6 @@ steps:
 
   - id: llm_narrative
     label: LLM 报告文案
-    label_en: LLM narrative
     module: src/llm/analyst.py
     function: run_llm_analysis
     uses_llm: optional
