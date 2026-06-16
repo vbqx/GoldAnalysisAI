@@ -1,0 +1,624 @@
+{
+  "meta": {
+    "symbol": "XAUUSD",
+    "title": "XAUUSD 黄金/美元 机构级交易分析报告 (PA + ICT + SMC)",
+    "strategy_title": "XAUUSD 黄金 短线交易策略图",
+    "strategy_subtitle": "PA + ICT + SMC | 5min / 15min 简版执行策略",
+    "updated_at": "2026-06-16 08:39 (UTC+8)",
+    "methodology": "Price Action + ICT + SMC",
+    "data_source": "OANDA:XAUUSD (sample)",
+    "agent_mode": "rule",
+    "stage_sources": {},
+    "context_stats": {
+      "headline_count": 1,
+      "calendar_count": 1,
+      "macro_quote_count": 1,
+      "note": "脱敏样例，非 live 流水线输出"
+    },
+    "sample": true,
+    "disclaimer": "脱敏样例 JSON，仅供文档与测试参考，非 live 报告"
+  },
+  "metrics": {
+    "current_price": NaN,
+    "daily_change": NaN,
+    "daily_change_pct": NaN,
+    "daily_high": NaN,
+    "daily_low": NaN,
+    "prev_close": NaN
+  },
+  "sentiment": {
+    "bullish": 0.0,
+    "bearish": 0.0,
+    "ranging": 100.0
+  },
+  "conclusion": {
+    "market_sentiment": "弱势偏空 ↓",
+    "direction_summary": "主方向偏空，当前处于逆势反弹阶段",
+    "action": "不追多，优先等待 2640-2645 反弹至阻力区做空",
+    "header_conclusion": "主方向偏空，当前处于逆势反弹阶段。不追多，优先等待 2640-2645 反弹至阻力区做空",
+    "must_do": [
+      "★ 主策略：反弹至 FVG/OB 阻力区分批做空",
+      "★ 次策略：扫低流动性后短多（逆势轻仓）",
+      "★ 风控：单笔风险 ≤ 2%，止损必执行"
+    ],
+    "starred": [
+      "最佳做空区：2640-2645",
+      "暂不建议追多",
+      "失效条件见下方「失效条件」模块"
+    ]
+  },
+  "market_overview": [
+    "4H 结构：震荡 | BOS 无 | CHoCH 无",
+    "1H 结构：震荡 | BOS 无 | CHoCH 无",
+    "15m 结构：震荡 | BOS 无 | CHoCH 无",
+    "现价 nan，日幅 nan-nan",
+    "主方向偏空，当前处于逆势反弹阶段"
+  ],
+  "key_levels": [
+    {
+      "price": NaN,
+      "label": "上方强压",
+      "kind": "resistance"
+    },
+    {
+      "price_low": NaN,
+      "price_high": NaN,
+      "label": "Daily Open",
+      "kind": "neutral"
+    },
+    {
+      "price": NaN,
+      "label": "前段中枢 / 均衡",
+      "kind": "neutral"
+    },
+    {
+      "price_low": 2639.52,
+      "price_high": 2644.52,
+      "label": "反抽压力",
+      "kind": "resistance"
+    },
+    {
+      "price_low": NaN,
+      "price_high": NaN,
+      "label": "当前分界",
+      "kind": "neutral"
+    },
+    {
+      "price_low": NaN,
+      "price_high": NaN,
+      "label": "下方支撑",
+      "kind": "support"
+    }
+  ],
+  "resistance_levels": [
+    "nan：上方强压",
+    "2640-2645：反抽压力"
+  ],
+  "support_levels": [
+    "nan-nan：下方支撑"
+  ],
+  "strategy_plans": [
+    {
+      "name": "方案 A（主策略）",
+      "logic": "流动性扫低后短多，严格止损",
+      "entry": "2639.52 ~ 2644.52",
+      "stop_loss": 2635.52,
+      "targets": "2659.52 / 2654.83 / 2658.02",
+      "theme": "long"
+    }
+  ],
+  "path_summary": [
+    {
+      "id": "路径 A",
+      "name": "主路径 (反弹后回落)",
+      "probability": 0.0,
+      "color": "#ef4444",
+      "summary": "当前(nan) → 反弹 FVG(nan) → 新低(nan)"
+    },
+    {
+      "id": "路径 B",
+      "name": "次路径 (更深反弹)",
+      "probability": 0.0,
+      "color": "#22c55e",
+      "summary": "当前(nan) → 测试 OB(nan) → 回落(nan)"
+    },
+    {
+      "id": "路径 C",
+      "name": "极端路径 (直接破位)",
+      "probability": 100.0,
+      "color": "#3b82f6",
+      "summary": "当前(nan) → 直接下破(nan)"
+    }
+  ],
+  "calendar_events": [
+    {
+      "time": "20:15",
+      "flag": "🇺🇸",
+      "event": "ADP 就业 / 制造业数据"
+    },
+    {
+      "time": "22:30",
+      "flag": "🇺🇸",
+      "event": "EIA 原油库存"
+    },
+    {
+      "time": "22:45",
+      "flag": "🇺🇸",
+      "event": "美联储官员讲话 (关注)"
+    }
+  ],
+  "external": {
+    "dxy_impact": "偏强 (104.2, 日 +0.35%) → 利空黄金",
+    "news_headlines": [
+      "【样例】美联储官员发表鹰派言论",
+      "【样例】地缘局势推升避险需求"
+    ],
+    "macro_quotes": [
+      {
+        "name": "DXY",
+        "symbol": "TVC:DXY",
+        "close": 104.2,
+        "change_pct": 0.35,
+        "impact": "偏强 → 利空黄金",
+        "bias": "bearish",
+        "source": "tradingview"
+      }
+    ],
+    "social_sentiment": "偏多 58% / 偏空 42%（样例）",
+    "sources": {
+      "dxy": "sample",
+      "news": "sample",
+      "social": "sample"
+    }
+  },
+  "risk_control": [
+    "最大风险区：— 上方不做空",
+    "止损必执行，不扛单、不补仓",
+    "分批止盈：TP1 减仓50%，TP2 减仓30%"
+  ],
+  "footer_reminders": [
+    "今日美盘流动性释放时段注意滑点",
+    "重要数据/讲话前后缩小仓位或观望"
+  ],
+  "timeframes": {
+    "1h": {
+      "trend": "ranging",
+      "bos": "无",
+      "choch": "无",
+      "premium_discount": "unknown",
+      "equilibrium": null,
+      "volume_signal": "正常 1.0x",
+      "active_fvg_count": 0,
+      "ema_relation": {
+        "EMA20": "N/A",
+        "EMA50": "N/A",
+        "EMA610": "N/A",
+        "VWAP": "N/A"
+      },
+      "order_blocks": [],
+      "fvgs": []
+    },
+    "4h": {
+      "trend": "ranging",
+      "bos": "无",
+      "choch": "无",
+      "premium_discount": "unknown",
+      "equilibrium": null,
+      "volume_signal": "正常 1.0x",
+      "active_fvg_count": 0,
+      "ema_relation": {
+        "EMA20": "N/A",
+        "EMA50": "N/A",
+        "EMA610": "N/A",
+        "VWAP": "N/A"
+      },
+      "order_blocks": [],
+      "fvgs": []
+    },
+    "15m": {
+      "trend": "ranging",
+      "bos": "无",
+      "choch": "无",
+      "premium_discount": "unknown",
+      "equilibrium": null,
+      "volume_signal": "正常 1.0x",
+      "active_fvg_count": 0,
+      "ema_relation": {
+        "EMA20": "N/A",
+        "EMA50": "N/A",
+        "EMA610": "N/A",
+        "VWAP": "N/A"
+      },
+      "order_blocks": [],
+      "fvgs": []
+    }
+  },
+  "liquidity": [],
+  "fibonacci": [
+    {
+      "ratio": 0.382,
+      "price": NaN,
+      "significance": "浅回调阻力",
+      "probability": 0.65
+    },
+    {
+      "ratio": 0.5,
+      "price": NaN,
+      "significance": "均衡位",
+      "probability": 0.55
+    },
+    {
+      "ratio": 0.618,
+      "price": NaN,
+      "significance": "黄金分割阻力",
+      "probability": 0.7
+    },
+    {
+      "ratio": 0.786,
+      "price": NaN,
+      "significance": "深度回调",
+      "probability": 0.45
+    }
+  ],
+  "signals": [
+    {
+      "name": "右侧扫低做多",
+      "direction": "BUY",
+      "direction_cn": "买入",
+      "entry_low": 2639.52,
+      "entry_high": 2644.52,
+      "stop_loss": 2635.52,
+      "take_profits": [
+        2659.52,
+        2654.83,
+        2658.02
+      ],
+      "risk_reward": "1:2.7",
+      "sentiment_bias_pct": "0%",
+      "position_size": "15% 逆势轻仓",
+      "note": "流动性扫低后短多，严格止损",
+      "theme": "long"
+    }
+  ],
+  "projections": [
+    {
+      "name": "主路径 (反弹后回落)",
+      "probability": 0.0,
+      "color": "#ef4444",
+      "steps": [
+        {
+          "label": "当前",
+          "price": NaN
+        },
+        {
+          "label": "反弹 FVG",
+          "price": NaN
+        },
+        {
+          "label": "新低",
+          "price": NaN
+        }
+      ]
+    },
+    {
+      "name": "次路径 (更深反弹)",
+      "probability": 0.0,
+      "color": "#22c55e",
+      "steps": [
+        {
+          "label": "当前",
+          "price": NaN
+        },
+        {
+          "label": "测试 OB",
+          "price": NaN
+        },
+        {
+          "label": "回落",
+          "price": NaN
+        }
+      ]
+    },
+    {
+      "name": "极端路径 (直接破位)",
+      "probability": 100.0,
+      "color": "#64748b",
+      "steps": [
+        {
+          "label": "当前",
+          "price": NaN
+        },
+        {
+          "label": "直接下破",
+          "price": NaN
+        }
+      ]
+    }
+  ],
+  "invalidation": [
+    "15min 收盘价站稳 nan 上方 → 空头 thesis 失效",
+    "出现 Higher High + Higher Low 结构 → 趋势转多",
+    "价格有效填补所有 bearish FVG 并延续上行 → 降低做空优先级"
+  ],
+  "chart": {
+    "timeframe": "1d",
+    "swing_high": NaN,
+    "swing_low": NaN
+  },
+  "agent_trace": {
+    "context": {
+      "price": 2659.52,
+      "sample": true
+    },
+    "analyst_team": {
+      "technical": {
+        "agent": "technical_analyst",
+        "bias": "neutral",
+        "items": [
+          {
+            "category": "market",
+            "summary": "现价 nan，日涨跌 +nan (+nan%)",
+            "strength": NaN,
+            "timeframe": "1d",
+            "refs": {
+              "current_price": NaN,
+              "daily_change_pct": NaN
+            }
+          },
+          {
+            "category": "market",
+            "summary": "日高 nan / 日低 nan",
+            "strength": 0.5,
+            "timeframe": "1d",
+            "refs": {
+              "daily_high": NaN,
+              "daily_low": NaN
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "4h 无",
+            "strength": 0.2975,
+            "timeframe": "4h",
+            "refs": {}
+          },
+          {
+            "category": "technical",
+            "summary": "4h 无",
+            "strength": 0.315,
+            "timeframe": "4h",
+            "refs": {}
+          },
+          {
+            "category": "technical",
+            "summary": "1h 无",
+            "strength": 0.255,
+            "timeframe": "1h",
+            "refs": {}
+          },
+          {
+            "category": "technical",
+            "summary": "1h 无",
+            "strength": 0.27,
+            "timeframe": "1h",
+            "refs": {}
+          },
+          {
+            "category": "technical",
+            "summary": "15m 无",
+            "strength": 0.17,
+            "timeframe": "15m",
+            "refs": {}
+          },
+          {
+            "category": "technical",
+            "summary": "15m 无",
+            "strength": 0.18000000000000002,
+            "timeframe": "15m",
+            "refs": {}
+          },
+          {
+            "category": "technical",
+            "summary": "5m 无",
+            "strength": 0.1275,
+            "timeframe": "5m",
+            "refs": {}
+          },
+          {
+            "category": "technical",
+            "summary": "5m 无",
+            "strength": 0.135,
+            "timeframe": "5m",
+            "refs": {}
+          }
+        ],
+        "confidence": NaN,
+        "summary": "技术：结构 neutral / EMA neutral / 多周期投票 多 0% 空 0%"
+      },
+      "fundamentals": {
+        "agent": "fundamentals_analyst",
+        "bias": "bearish",
+        "items": [
+          {
+            "category": "fundamentals",
+            "summary": "DXY：偏强 → 利空黄金",
+            "strength": 0.6,
+            "timeframe": null,
+            "refs": {
+              "name": "DXY",
+              "symbol": "TVC:DXY",
+              "close": 104.2,
+              "change_pct": 0.35,
+              "impact": "偏强 → 利空黄金",
+              "bias": "bearish",
+              "source": "tradingview"
+            }
+          }
+        ],
+        "confidence": 0.6,
+        "summary": "基本面：DXY · 偏强 (104.2, 日 +0.35%) → 利空黄金"
+      },
+      "news": {
+        "agent": "news_analyst",
+        "bias": "neutral",
+        "items": [
+          {
+            "category": "news",
+            "summary": "脱敏示例快讯，非实时数据。",
+            "strength": 0.4275,
+            "timeframe": null,
+            "refs": {
+              "source": "jin10_flash",
+              "time": "2026-06-15 10:30",
+              "url": ""
+            }
+          },
+          {
+            "category": "news",
+            "summary": "事件风险汇总：【样例】美国 CPI 公布 · 高影响",
+            "strength": 0.3,
+            "timeframe": null,
+            "refs": {
+              "source": "jin10_calendar"
+            }
+          }
+        ],
+        "confidence": 0.36375,
+        "summary": "新闻：1 条（快讯 1 · 资讯 0） · 日历 0 · bias neutral"
+      },
+      "sentiment": {
+        "agent": "sentiment_analyst",
+        "bias": "neutral",
+        "items": [
+          {
+            "category": "sentiment",
+            "summary": "多周期结构情绪：多 0% / 空 0% / 震荡 100%",
+            "strength": 0.0,
+            "timeframe": null,
+            "refs": {
+              "bullish": 0.0,
+              "bearish": 0.0,
+              "ranging": 100.0
+            }
+          },
+          {
+            "category": "sentiment",
+            "summary": "社媒汇总：偏多 58% / 偏空 42%（样例）",
+            "strength": 0.45,
+            "timeframe": null,
+            "refs": {
+              "source": "tradingview_social"
+            }
+          }
+        ],
+        "confidence": 0.225,
+        "summary": "情绪：结构投票 多 0% / 空 0% · 偏多 58% / 偏空 42%（样例）"
+      }
+    },
+    "debate": {
+      "bullish": {
+        "agent": "bullish_researcher",
+        "direction": "bullish",
+        "items": [],
+        "confidence": 0.0,
+        "summary": "暂无明确看多结构证据"
+      },
+      "bearish": {
+        "agent": "bearish_researcher",
+        "direction": "bearish",
+        "items": [
+          {
+            "category": "analyst_fundamentals_analyst",
+            "summary": "[fundamentals analyst] DXY：偏强 → 利空黄金",
+            "strength": 0.36,
+            "timeframe": null,
+            "refs": {
+              "name": "DXY",
+              "symbol": "TVC:DXY",
+              "close": 104.2,
+              "change_pct": 0.35,
+              "impact": "偏强 → 利空黄金",
+              "bias": "bearish",
+              "source": "tradingview",
+              "analyst": "fundamentals_analyst"
+            }
+          }
+        ],
+        "confidence": 0.36,
+        "summary": "共 1 条看空证据，加权强度 0.36"
+      },
+      "consensus_bias": "bearish",
+      "consensus_strength": 0.9729729729729729,
+      "discussion_notes": [
+        "── Analyst Team 摘要 ──",
+        "technical_analyst: 技术：结构 neutral / EMA neutral / 多周期投票 多 0% 空 0%（neutral · nan%）",
+        "fundamentals_analyst: 基本面：DXY · 偏强 (104.2, 日 +0.35%) → 利空黄金（bearish · 60%）",
+        "news_analyst: 新闻：1 条（快讯 1 · 资讯 0） · 日历 0 · bias neutral（neutral · 36%）",
+        "sentiment_analyst: 情绪：结构投票 多 0% / 空 0% · 偏多 58% / 偏空 42%（样例）（neutral · 22%）",
+        "看多研究员：暂无明确看多结构证据",
+        "看空研究员：共 1 条看空证据，加权强度 0.36",
+        "多周期技术投票：多 0% / 空 0% / 震荡 100%",
+        "讨论结论：看空证据占优，关注反抽卖区"
+      ]
+    },
+    "proposal": {
+      "primary_direction": "long",
+      "signal_indices": [
+        0
+      ],
+      "rationale": [
+        "研究员共识：bearish（强度 97%）",
+        "多周期技术投票：多 0% / 空 0% / 震荡 100%",
+        "讨论结论：看空证据占优，关注反抽卖区",
+        "交易员：无做空区，保留扫低做多备选"
+      ],
+      "debate_bias": "bearish"
+    },
+    "risk_reviews": [
+      {
+        "profile": "aggressive",
+        "approved": true,
+        "allowed_signal_indices": [
+          0
+        ],
+        "position_scale": 1.0,
+        "notes": [
+          "激进：允许全部提案信号，标准仓位"
+        ]
+      },
+      {
+        "profile": "neutral",
+        "approved": true,
+        "allowed_signal_indices": [
+          0
+        ],
+        "position_scale": 0.7,
+        "notes": [
+          "中性：最多 2 个信号，仓位 70%"
+        ]
+      },
+      {
+        "profile": "conservative",
+        "approved": true,
+        "allowed_signal_indices": [
+          0
+        ],
+        "position_scale": 0.4,
+        "notes": [
+          "保守：仅主信号，仓位 40%"
+        ]
+      }
+    ],
+    "decision": {
+      "action": "reduce",
+      "primary_direction": "long",
+      "selected_signal_indices": [
+        0
+      ],
+      "confidence": 0.55,
+      "summary": "经理：保守风控通过，缩减至主信号执行"
+    },
+    "llm": null,
+    "stage_meta": {}
+  }
+}

@@ -1,6 +1,6 @@
 # Analyst Team 输入密度
 
-Analyst Team（技术 / 基本面 / 新闻 / 情绪）共享三层信息架构：
+Analyst Team（技术 / 基本面 / 新闻 / 情绪）共享三层信息架构。文档索引见 [README.md](./README.md)。
 
 | 层级 | 模块 | 内容 |
 |------|------|------|
