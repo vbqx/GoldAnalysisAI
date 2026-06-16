@@ -51,6 +51,7 @@
 | `AGENT_MODE` | `rule` / `llm` / `hybrid` | 智能体调度模式 |
 | `LLM_ENABLED` | `true` / `false` | 报告文案层开关 |
 | `LLM_STAGE_ANALYSTS` | `true` | Analyst Team LLM |
+| `LLM_ANALYST_ONLY` | `technical` / `fundamentals` / `news` / `sentiment` | 仅调试单个 Analyst LLM |
 | `LLM_STAGE_RESEARCH` | `true` | 看多/看空 LLM |
 | `LLM_STAGE_DEBATE` | `true` | 辩论 LLM |
 | `JIN10_API_TOKEN` | — | 金十 MCP |

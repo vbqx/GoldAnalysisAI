@@ -509,6 +509,7 @@ Trader 只消费 orchestrator 传入的 `signals`；Manager 按 index 重排 `re
 
 - **调度**：`agents/factory.py`，`AGENT_MODE=rule|llm|hybrid`
 - **分阶段开关**：`LLM_STAGE_ANALYSTS`、`LLM_STAGE_RESEARCH`、`LLM_STAGE_DEBATE`（`LLM_STAGE_ICT/TRADER/RISK/MANAGER` 已在 config 定义，factory 尚未接入）
+- **单 Analyst 调试**：`LLM_ANALYST_ONLY=technical|fundamentals|news|sentiment` 时，仅该 Analyst 走 LLM，其余使用规则输出补齐
 - **传输重试**：`agents/llm/base.py` 的 `stream_llm_json()` — SSE 断流时整次重打，最多 3 次、退避 1s/2s；`llm/client.py` 将 `ChunkedEncodingError` 等包装为 `LLMClientError`
 - **规则兜底**：重试耗尽或 JSON 解析失败 → hybrid 回退 `agents/bullish.py` 等规则实现；流水线不崩溃
 - **报告文案层**（流水线末尾）：`llm/analyst.py`，同样经 `stream_llm_json()`，`LLM_ENABLED` 独立开关

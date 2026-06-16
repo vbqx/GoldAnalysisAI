@@ -115,6 +115,8 @@ AGENT_MODE=hybrid
 LLM_STAGE_RESEARCH=true
 LLM_STAGE_DEBATE=true
 LLM_STAGE_ANALYSTS=true
+# 调试单个分析师时可设：technical / fundamentals / news / sentiment
+LLM_ANALYST_ONLY=
 LLM_ENABLED=true
 ```
 
