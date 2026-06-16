@@ -24,6 +24,7 @@ from src.agents.risk import run_risk_team as rule_risk
 from src.agents.trader import run_trader_agent as rule_trader
 from src.config import (
     AGENT_MODE,
+    LLM_ANALYST_ONLY,
     LLM_OVERRIDE_THRESHOLD,
     LLM_STAGE_ANALYSTS,
     LLM_STAGE_DEBATE,
@@ -135,6 +136,10 @@ def _analyst_team_aggregate_source(llm_picked: int, total: int = 4) -> StageSour
     return "hybrid"
 
 
+def _use_llm_analyst(stage: str) -> bool:
+    return not LLM_ANALYST_ONLY or stage == LLM_ANALYST_ONLY
+
+
 def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> AnalystTeam:
     prog = get_progress()
     prog.update("analyst_team", detail="技术 · 基本面 · 新闻 · 情绪")
@@ -153,7 +158,8 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
         pipeline.record("analyst_team", StageMeta(source="rule"))
         return rule_team
 
-    prog.update("analyst_team", detail="LLM 四位分析师…")
+    detail = f"LLM 单个分析师：{LLM_ANALYST_ONLY}" if LLM_ANALYST_ONLY else "LLM 四位分析师…"
+    prog.update("analyst_team", detail=detail)
     runners: list[tuple[str, AnalystReport, object]] = [
         ("technical", rule_team.technical, run_llm_technical_analyst),
         ("fundamentals", rule_team.fundamentals, run_llm_fundamentals_analyst),
@@ -164,6 +170,13 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
     llm_picked = 0
     picked: dict[str, AnalystReport] = {}
     for stage, rule_report, run_llm in runners:
+        if not _use_llm_analyst(stage):
+            picked[stage] = rule_report
+            pipeline.record(
+                stage,
+                StageMeta(source="rule", fallback_reason=f"LLM_ANALYST_ONLY={LLM_ANALYST_ONLY}，跳过 LLM"),
+            )
+            continue
         llm_report, trace = run_llm(ctx)
         report = _pick_analyst_report(stage, rule_report, llm_report, trace, pipeline)
         picked[stage] = report

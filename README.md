@@ -19,7 +19,7 @@ copy .env.example .env          # Windows
 streamlit run app.py
 ```
 
-浏览器打开 `http://localhost:8501`。
+浏览器打开 `http://localhost:8501`。启动后先在 **生成前配置** 面板选择规则 / LLM / 混合模式，点击「开始生成报告」后才拉取数据并生成报告。
 
 ## 多页面导航
 
@@ -115,6 +115,8 @@ AGENT_MODE=hybrid
 LLM_STAGE_RESEARCH=true
 LLM_STAGE_DEBATE=true
 LLM_STAGE_ANALYSTS=true
+# 调试单个分析师时可设：technical / fundamentals / news / sentiment
+LLM_ANALYST_ONLY=
 LLM_ENABLED=true
 ```
 

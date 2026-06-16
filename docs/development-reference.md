@@ -450,6 +450,8 @@ Orchestrator 随后注入：
 
 **分层原则**：viz 只读 `report`/`data`/`analyses`，不 import agents。
 
+运行前配置例外由 `src/core/run_config.py` 承担：Streamlit 面板生成 `RunConfig`，后台 worker 在调用 `run_analysis()` 前执行 `apply_run_config()`，同步 `AGENT_MODE` / `LLM_ENABLED` / `LLM_STAGE_*` 到已 import 的流水线模块。后续 Phase 2 应改为显式参数传递，减少模块全局状态。
+
 ---
 
 ## 6. 领域类型（`core/types.py`）
@@ -509,6 +511,7 @@ Trader 只消费 orchestrator 传入的 `signals`；Manager 按 index 重排 `re
 
 - **调度**：`agents/factory.py`，`AGENT_MODE=rule|llm|hybrid`
 - **分阶段开关**：`LLM_STAGE_ANALYSTS`、`LLM_STAGE_RESEARCH`、`LLM_STAGE_DEBATE`（`LLM_STAGE_ICT/TRADER/RISK/MANAGER` 已在 config 定义，factory 尚未接入）
+- **单 Analyst 调试**：`LLM_ANALYST_ONLY=technical|fundamentals|news|sentiment` 时，仅该 Analyst 走 LLM，其余使用规则输出补齐
 - **传输重试**：`agents/llm/base.py` 的 `stream_llm_json()` — SSE 断流时整次重打，最多 3 次、退避 1s/2s；`llm/client.py` 将 `ChunkedEncodingError` 等包装为 `LLMClientError`
 - **规则兜底**：重试耗尽或 JSON 解析失败 → hybrid 回退 `agents/bullish.py` 等规则实现；流水线不崩溃
 - **报告文案层**（流水线末尾）：`llm/analyst.py`，同样经 `stream_llm_json()`，`LLM_ENABLED` 独立开关

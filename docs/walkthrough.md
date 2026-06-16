@@ -17,22 +17,31 @@ flowchart LR
     A[app.py 导航] --> B[机构级分析报告]
     A --> C[短线策略]
     A --> D[LLM决策链]
-    B --> E[ensure_report 后台线程]
+    B --> E[生成前配置面板]
     C --> E
     D --> E
-    E --> F[run_analysis 流水线]
-    F --> G[session_state 会话缓存]
+    E --> F[用户点击开始生成]
+    F --> G[ensure_report 后台线程]
+    G --> H[run_analysis 流水线]
+    H --> I[session_state 会话缓存]
 ```
 
 三个页面共享同一份 `(report, data, analyses)`。**切换页面不会重新跑流水线**。
 
 ---
 
-## 2. 首次进入：报告生成
+## 2. 首次进入：生成前配置
 
-进入默认页 **机构级分析报告** 时：
+进入默认页 **机构级分析报告** 时，应用先显示 **生成前配置** 面板，不会立即拉取数据。
 
-1. 侧边栏显示 **「正在生成报告…」** 及进度
+1. 选择 **规则引擎**、**LLM 智能体** 或 **混合模式**
+2. LLM / 混合模式可选择是否启用 **LLM 报告文案**
+3. 高级调试可选择只运行单个 Analyst LLM（其余 Analyst 用规则输出补齐）
+4. 点击 **开始生成报告** 后，才进入数据拉取与报告生成
+
+生成开始后：
+
+1. 页面显示 **「正在生成报告…」** 及进度
 2. 步骤条按 [pipeline-steps.yaml](./pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative`）  
    中文含义：数据拉取 → 技术指标 → ICT 结构 → 分析师团队 → 看多/看空 → 辩论 → 交易 → 风控 → 经理 → 报告 →（可选）LLM 文案
 3. 生成过程中可切换到 **LLM决策链** 页查看实时输入输出
@@ -59,7 +68,7 @@ flowchart LR
 | 外部数据面板 | `report.external` | DXY、新闻、日历、社媒 |
 | 来源条 | `report.meta.stage_sources` | 各阶段规则/LLM 标识 |
 
-**操作**：点击侧边栏 **「刷新报告」** → 清空缓存 → 重新跑完整流水线。
+**操作**：点击侧边栏 **「重新配置 / 刷新报告」** → 清空缓存 → 回到生成前配置面板。
 
 ---
 

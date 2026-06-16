@@ -32,6 +32,12 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
+│                 RUN CONFIG GATE (Streamlit session)              │
+│  生成前配置：规则 / LLM / 混合 · LLM 文案 · 单 Analyst 调试        │
+│  用户点击「开始生成报告」后才进入 fetch                           │
+└────────────────────────────┬────────────────────────────────────┘
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
 │                     FETCH (fetch_pipeline.py)                    │
 │  TradingView bars → News + Fundamentals + Social 并行 → merge_external │
 │  finalize_market_context → derived (topics, countdown, spot/kline check) │
@@ -165,11 +171,24 @@ report, data, analyses = run_analysis()
 # 新增可选字段：
 # report["agent_trace"]["analyst_team"]  # 四位分析师报告
 # report["agent_trace"]["stage_meta"]    # 各阶段 rule/llm 来源
+# report["meta"]["run_config"]           # UI 选择的本次运行配置
 ```
 
 ---
 
-## 6. 后续迭代
+## 6. 运行配置面板迭代
+
+| Phase | 内容 | 状态 |
+|-------|------|------|
+| 1 | Streamlit 会话层门禁：首屏显示配置面板，点击后才后台生成；配置通过 `apply_run_config()` 同步到已 import 模块 | ✅ |
+| 2 | 将 `RunConfig` 参数显式传入 `run_analysis()` / `run_trade_agent_pipeline()` / factory，移除模块全局同步 | 🔲 |
+| 3 | UI 支持完整 stage matrix（Analyst / Research / Debate / Narrative 独立开关）与多用户隔离 | 🔲 |
+
+Phase 1 保持 `run_analysis()` 返回签名不变，适合快速解决“启动即拉数”的交互问题；Phase 2 是更彻底的架构清理。
+
+---
+
+## 7. 后续迭代
 
 | 优先级 | 任务 | 负责层 |
 |--------|------|--------|
@@ -186,7 +205,7 @@ report, data, analyses = run_analysis()
 
 ---
 
-## 7. 调试 agent_trace
+## 8. 调试 agent_trace
 
 ```python
 report, _, _ = run_analysis()
