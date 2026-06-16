@@ -19,7 +19,11 @@ def pytest_configure(config: pytest.Config) -> None:
 
 def _skip_offline_external_mock(request) -> bool:
     name = request.module.__name__
-    return name.endswith("test_external_sources") or name.endswith("test_external_apis")
+    return (
+        name.endswith("test_external_sources")
+        or name.endswith("test_external_apis")
+        or name.endswith("test_doc_pipeline_sync")
+    )
 
 
 @pytest.fixture(autouse=True)
