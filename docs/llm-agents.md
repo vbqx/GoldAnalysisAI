@@ -64,6 +64,8 @@ TradingView → enrich → ict_pa.analyze (规则事实)
 | `llm` | 启用阶段走 LLM；失败回退规则 |
 | `hybrid` | 规则先跑 baseline；LLM 置信度/强度 ≥ `LLM_OVERRIDE_THRESHOLD` 才覆盖 |
 
+Streamlit 启动后会先显示 **生成前配置** 面板；用户选择规则 / LLM / 混合后，`RunConfig` 会在后台 worker 开始前同步到 `agents/factory.py`、`orchestrator.py` 与报告文案层。`.env` 仍作为默认值与 API key/model 来源。
+
 ### 3.2 模型路由
 
 | 变量 | 用途 | 调用点 |
