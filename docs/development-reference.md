@@ -450,6 +450,8 @@ Orchestrator 随后注入：
 
 **分层原则**：viz 只读 `report`/`data`/`analyses`，不 import agents。
 
+运行前配置例外由 `src/core/run_config.py` 承担：Streamlit 面板生成 `RunConfig`，后台 worker 在调用 `run_analysis()` 前执行 `apply_run_config()`，同步 `AGENT_MODE` / `LLM_ENABLED` / `LLM_STAGE_*` 到已 import 的流水线模块。后续 Phase 2 应改为显式参数传递，减少模块全局状态。
+
 ---
 
 ## 6. 领域类型（`core/types.py`）

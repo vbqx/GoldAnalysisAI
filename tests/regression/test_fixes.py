@@ -67,6 +67,18 @@ def test_ensure_report_reruns_on_complete() -> None:
 
 
 @pytest.mark.regression
+def test_report_generation_requires_run_config_panel() -> None:
+    """RG-08: first page load gates generation behind run config."""
+    common_src = (ROOT / "src" / "viz" / "streamlit_common.py").read_text(encoding="utf-8")
+    run_config_src = (ROOT / "src" / "core" / "run_config.py").read_text(encoding="utf-8")
+    assert "生成前配置" in common_src
+    assert "开始生成报告" in common_src
+    assert "RUN_CONFIG_READY_KEY" in common_src
+    assert "_start_generation(counter, run_config)" in common_src
+    assert "apply_run_config" in run_config_src
+
+
+@pytest.mark.regression
 def test_llm_json_retry_helpers_present() -> None:
     """RG-06: LLM JSON parse + retry (#4)."""
     base_src = (ROOT / "src" / "agents" / "llm" / "base.py").read_text(encoding="utf-8")
