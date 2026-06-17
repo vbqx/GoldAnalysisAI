@@ -84,7 +84,17 @@ MVP: `viz/charts.py` + Plotly Candlestick
 - Equal Highs/Lows: 两个 swing 价位接近（<0.2%）
 - Stop Hunt: 极值外 2~5 点
 
-> 完整 ICT 体系还包含 Kill Zone、Premium/Discount、Breaker Block 等，MVP 未实现。
+#### Premium / Discount
+- 使用主 swing range 中点作为 equilibrium
+- 价格高于 / 低于 equilibrium 约 0.1% 判定为 premium / discount
+
+#### 技术输入密度
+- `analysis/technical_context.py` 统一 rule technical、LLM technical、最终 narrative 的技术上下文
+- 支撑/阻力从日高/日低、前收、swing、equilibrium、Fib、liquidity、OB/FVG 聚合
+- ATR14 / RSI14 / MACD / ADX14 由 OHLCV 计算，并参与技术 evidence
+- 技术质量评分检查 K 线数量、指标 warm-up、volume 有效性与 ICT 输入密度
+
+> 完整 ICT 体系还包含 Kill Zone、Breaker / Mitigation Block、Liquidity Sweep、PDH/PDL 与 session 高低点等；这些仍未实现。
 
 ### 2.5 右侧统计 & 交易计划
 
@@ -132,6 +142,7 @@ MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；
 3. 胜率是趋势投票，非历史回测统计
 4. DXY / 金十 / 社媒已接入实时 API，拉取失败时回退占位文案（UI 应区分 live / fallback）
 5. LLM 结论润色可选（`LLM_ENABLED`）；默认规则引擎生成结论文案
+6. Kill Zone、Breaker/Mitigation、Liquidity Sweep、PDH/PDL、session 高低点与跨周期 zone overlap 仍是后续输入缺口
 
 ---
 

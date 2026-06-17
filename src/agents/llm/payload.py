@@ -5,46 +5,19 @@ from __future__ import annotations
 from typing import Any
 
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
-from src.config import ANALYST_ICT_EVENTS_MAX, ANALYST_TEAM_ITEMS_MAX, PAYLOAD_EVIDENCE_MAX
+from src.analysis.technical_context import build_technical_context, fibonacci_context, timeframe_context
+from src.config import (
+    ANALYST_ICT_EVENTS_MAX,
+    ANALYST_SOCIAL_MAX,
+    ANALYST_TEAM_ITEMS_MAX,
+    PAYLOAD_EVIDENCE_MAX,
+)
 from src.core.types import AgentEvidence, AnalystTeam, MarketContext
-from src.data.context_builder import rank_ict_events
 from src.indicators.technical import ema_relation
 
 
 def _tf_block(tf: str, analysis: TimeframeAnalysis, *, price: float) -> dict[str, Any]:
-    return {
-        "timeframe": tf,
-        "trend": analysis.trend,
-        "bos": analysis.bos,
-        "choch": analysis.choch,
-        "premium_discount": analysis.premium_discount,
-        "volume_signal": analysis.volume_signal,
-        "swing_high": analysis.swing_high,
-        "swing_low": analysis.swing_low,
-        "events": rank_ict_events(analysis, limit=ANALYST_ICT_EVENTS_MAX),
-        "order_blocks": [
-            {"direction": ob.direction, "low": ob.low, "high": ob.high}
-            for ob in analysis.order_blocks[-5:]
-        ],
-        "active_fvgs": [
-            {"direction": f.direction, "low": f.low, "high": f.high}
-            for f in analysis.active_fvgs[:5]
-        ],
-        "liquidity": [
-            {"price": lz.price, "label": lz.label}
-            for lz in analysis.liquidity[:6]
-        ],
-        "distance_to_swing_high_pct": round(
-            (price - analysis.swing_high) / price * 100, 3
-        )
-        if analysis.swing_high
-        else None,
-        "distance_to_swing_low_pct": round(
-            (price - analysis.swing_low) / price * 100, 3
-        )
-        if analysis.swing_low
-        else None,
-    }
+    return timeframe_context(tf, analysis, price=price, event_limit=ANALYST_ICT_EVENTS_MAX)
 
 
 def analyst_team_payload(team: AnalystTeam) -> dict[str, Any]:
@@ -67,6 +40,11 @@ def analyst_team_payload(team: AnalystTeam) -> dict[str, Any]:
         }
         for role in ("technical", "fundamentals", "news", "sentiment")
     }
+
+
+def _fibonacci_block(ctx: MarketContext) -> dict[str, Any]:
+    """Use the same primary swing selection as rule technical evidence."""
+    return fibonacci_context(ctx)
 
 
 def market_payload(ctx: MarketContext, team: AnalystTeam | None = None) -> dict[str, Any]:
@@ -94,7 +72,8 @@ def technical_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
     ema_block = {}
     if last_5m is not None:
         ema_block = ema_relation(ctx.price, last_5m)
-    return {
+    payload = build_technical_context(ctx, event_limit=ANALYST_ICT_EVENTS_MAX)
+    payload.update({
         "symbol": "XAUUSD",
         "price": ctx.price,
         "metrics": ctx.metrics,
@@ -102,13 +81,11 @@ def technical_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
         "jin10_kline_summary": ctx.derived.get("jin10_kline_summary"),
         "spot_cross_check": ctx.derived.get("spot_cross_check"),
         "ema_vwap_relation": ema_block,
+        "technical_input_stats": ctx.context_stats.get("technical_inputs", {}),
+        "fibonacci": _fibonacci_block(ctx),
         "structure_sentiment": ctx.derived.get("structure_sentiment"),
-        "timeframes": [
-            _tf_block(tf, ctx.analyses[tf], price=ctx.price)
-            for tf in ("1d", "4h", "1h", "15m", "5m")
-            if tf in ctx.analyses
-        ],
-    }
+    })
+    return payload
 
 
 def fundamentals_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
@@ -174,7 +151,7 @@ def sentiment_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
             tf: ctx.analyses[tf].trend for tf in ("4h", "1h", "15m", "5m") if tf in ctx.analyses
         },
         "social_sentiment": ext.social_sentiment,
-        "social_posts": ext.social_posts,
+        "social_posts": ext.social_posts[:ANALYST_SOCIAL_MAX],
     }
 
 
