@@ -11,7 +11,11 @@ from src.agents.analysts.technical import run_technical_analyst
 from src.agents.analysts.fundamentals import run_fundamentals_analyst
 from src.agents.analysts.news import run_news_analyst
 from src.agents.analysts.sentiment import run_sentiment_analyst
-from src.agents.llm.payload import news_analyst_payload, sentiment_analyst_payload
+from src.agents.llm.payload import (
+    news_analyst_payload,
+    sentiment_analyst_payload,
+    technical_analyst_payload,
+)
 from src.analysis.ict_pa import FairValueGap, LiquidityZone, OrderBlock, TimeframeAnalysis
 from src.agents.llm.schemas import parse_analyst_report
 from src.core.types import CalendarEvent, ExternalFactors, HeadlineItem, MacroQuote, MarketContext
@@ -152,6 +156,10 @@ def test_context_stats_tracks_technical_inputs() -> None:
     assert tech["volume_signal_available"] == 5
     assert tech["liquidity_zones"] == 5
     assert "EMA20" in tech["by_timeframe"]["5m"]["indicator_ready"]
+    assert "ATR14" in tech["by_timeframe"]["5m"]["indicator_ready"]
+    assert "RSI14" in tech["by_timeframe"]["5m"]["indicator_ready"]
+    assert tech["by_timeframe"]["5m"]["volume_nonzero_ratio"] == 1.0
+    assert tech["quality"]["warnings"]
 
 
 def test_context_stats_tracks_other_analyst_inputs() -> None:
@@ -175,6 +183,25 @@ def test_technical_analyst_uses_extended_kline_inputs() -> None:
     assert any("成交量信号" in summary for summary in summaries)
     assert any("流动性" in summary for summary in summaries)
     assert any("Fib" in summary for summary in summaries)
+    assert any("ATR14" in summary for summary in summaries)
+    assert any("RSI14" in summary for summary in summaries)
+    assert any("MACD" in summary for summary in summaries)
+
+
+def test_technical_analyst_payload_uses_shared_context() -> None:
+    ctx = _technical_ctx()
+    payload = technical_analyst_payload(ctx)
+    assert payload["quality"]["score"] < 1
+    assert payload["indicators"]["5m"]["indicators"]["ATR14"] is not None
+    assert payload["fibonacci"]["nearest"]
+    assert payload["timeframes"][0]["timeframe"] == "1d"
+
+
+def test_technical_analyst_degrades_low_quality_inputs() -> None:
+    ctx = _minimal_ctx(ExternalFactors())
+    report = run_technical_analyst(ctx)
+    assert report.confidence <= 0.25
+    assert "输入质量" in report.summary
 
 
 def test_fundamentals_analyst_multi_quote_evidence() -> None:

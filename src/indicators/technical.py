@@ -1,4 +1,4 @@
-"""Technical indicators: EMA, VWAP, Fibonacci."""
+"""Technical indicators: EMA, VWAP, momentum, volatility, Fibonacci."""
 
 from __future__ import annotations
 
@@ -22,8 +22,86 @@ def add_vwap(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def add_atr(df: pd.DataFrame, period: int = 14) -> pd.DataFrame:
+    out = df.copy()
+    prev_close = out["Close"].shift(1)
+    tr = pd.concat(
+        [
+            out["High"] - out["Low"],
+            (out["High"] - prev_close).abs(),
+            (out["Low"] - prev_close).abs(),
+        ],
+        axis=1,
+    ).max(axis=1)
+    out[f"ATR{period}"] = tr.rolling(period, min_periods=period).mean()
+    return out
+
+
+def add_rsi(df: pd.DataFrame, period: int = 14) -> pd.DataFrame:
+    out = df.copy()
+    delta = out["Close"].diff()
+    gain = delta.clip(lower=0).rolling(period, min_periods=period).mean()
+    loss = (-delta.clip(upper=0)).rolling(period, min_periods=period).mean()
+    rs = gain / loss.replace(0, pd.NA)
+    rsi = 100 - (100 / (1 + rs))
+    rsi = rsi.mask((loss == 0) & (gain > 0), 100)
+    rsi = rsi.mask((loss == 0) & (gain == 0), 50)
+    out[f"RSI{period}"] = rsi
+    return out
+
+
+def add_macd(
+    df: pd.DataFrame,
+    *,
+    fast: int = 12,
+    slow: int = 26,
+    signal: int = 9,
+) -> pd.DataFrame:
+    out = df.copy()
+    ema_fast = out["Close"].ewm(span=fast, adjust=False).mean()
+    ema_slow = out["Close"].ewm(span=slow, adjust=False).mean()
+    out["MACD"] = ema_fast - ema_slow
+    out["MACD_SIGNAL"] = out["MACD"].ewm(span=signal, adjust=False).mean()
+    out["MACD_HIST"] = out["MACD"] - out["MACD_SIGNAL"]
+    return out
+
+
+def add_adx(df: pd.DataFrame, period: int = 14) -> pd.DataFrame:
+    out = df.copy()
+    up_move = out["High"].diff()
+    down_move = -out["Low"].diff()
+    plus_dm = up_move.where((up_move > down_move) & (up_move > 0), 0.0)
+    minus_dm = down_move.where((down_move > up_move) & (down_move > 0), 0.0)
+
+    prev_close = out["Close"].shift(1)
+    tr = pd.concat(
+        [
+            out["High"] - out["Low"],
+            (out["High"] - prev_close).abs(),
+            (out["Low"] - prev_close).abs(),
+        ],
+        axis=1,
+    ).max(axis=1)
+    tr_sum = tr.rolling(period, min_periods=period).sum()
+    plus_di = 100 * plus_dm.rolling(period, min_periods=period).sum() / tr_sum.replace(0, pd.NA)
+    minus_di = 100 * minus_dm.rolling(period, min_periods=period).sum() / tr_sum.replace(0, pd.NA)
+    dx = ((plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, pd.NA)) * 100
+    out[f"ADX{period}"] = dx.rolling(period, min_periods=period).mean()
+    return out
+
+
 def enrich(df: pd.DataFrame) -> pd.DataFrame:
-    return add_vwap(add_emas(df))
+    return add_adx(add_macd(add_rsi(add_atr(add_vwap(add_emas(df))))))
+
+
+def indicator_values(row: pd.Series) -> dict[str, float | None]:
+    values: dict[str, float | None] = {}
+    for col in ("ATR14", "RSI14", "ADX14", "MACD", "MACD_SIGNAL", "MACD_HIST"):
+        if col not in row or pd.isna(row[col]):
+            values[col] = None
+        else:
+            values[col] = round(float(row[col]), 4)
+    return values
 
 
 def ema_relation(price: float, row: pd.Series) -> dict[str, str]:

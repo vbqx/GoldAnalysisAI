@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from src.analysis.technical_context import build_technical_context
 from src.analysis.ict_pa import TimeframeAnalysis
 from src.core.types import ManagerDecision, MarketContext, ResearchDebate
 
@@ -48,6 +49,7 @@ def build_llm_context(
 ) -> dict[str, Any]:
     """Structured facts for the LLM — no raw OHLCV arrays."""
     signals = report.get("signals", [])[:5]
+    technical_context = build_technical_context(ctx)
     return {
         "symbol": report.get("meta", {}).get("symbol", "XAUUSD"),
         "price": ctx.price,
@@ -59,6 +61,7 @@ def build_llm_context(
             for tf in ("1d", "4h", "1h", "15m", "5m")
             if tf in ctx.analyses
         ],
+        "technical_context": technical_context,
         "debate": {
             "consensus_bias": debate.consensus_bias,
             "consensus_strength": debate.consensus_strength,

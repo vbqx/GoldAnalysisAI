@@ -104,7 +104,7 @@
 
 | 分析师 | 文件 | 输入 | 输出 |
 |--------|------|------|------|
-| Technical | `analysts/technical.py` | EMA/VWAP、ICT 多周期结构、Fib、技术输入密度 | `AnalystReport(bias, items, summary)` |
+| Technical | `analysts/technical.py` | EMA/VWAP、ATR/RSI/MACD/ADX、ICT 多周期结构、Fib、技术输入质量 | `AnalystReport(bias, items, summary)` |
 | Fundamentals | `analysts/fundamentals.py` | DXY / US10Y、宏观日历、事件倒计时、来源覆盖 | 黄金多空宏观偏向 |
 | News | `analysts/news.py` | 金十 MCP 快讯 + 资讯 + 日历、新闻主题、渠道密度 | 波动/事件风险（通常 neutral） |
 | Sentiment | `analysts/sentiment.py` | 结构情绪投票 + TV Ideas/Minds、社媒样本质量 | 短期情绪偏向 |
@@ -114,6 +114,7 @@
 - `AnalystReport` — 单个分析师报告（含 `bias: bullish|bearish|neutral`）
 - `AnalystTeam` — 四个报告容器，`to_dict()` 写入 `agent_trace.analyst_team`
 - `MarketContext.context_stats` — 写入技术输入和分角色输入密度，供报告 meta、LLM payload 与调试审计使用
+- `analysis/technical_context.py` — 共享技术上下文，供规则技术分析师、LLM 技术分析师 payload 与最终报告文案层复用
 
 **研究员整合**（`bullish.py` / `bearish.py`）：
 

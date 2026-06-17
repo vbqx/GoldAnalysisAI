@@ -17,7 +17,7 @@
 | **可审计** | `stage_meta` 标 `rule/llm/hybrid`；`meta.llm_io` 存完整 I/O |
 | **输入密度** | 结构化 `HeadlineItem` / `CalendarEvent` / `MacroQuote`；见 [analyst-context.md](./analyst-context.md) |
 
-`src/agents/llm/payload.py` 负责 Analyst Team、研究与辩论阶段的结构化输入；`src/llm/context.py` 只服务最终报告文案层。两者当前刻意分离，P2 再统一技术上下文构造，避免报告叙事 payload 影响分析师阶段的 JSON contract。
+`src/agents/llm/payload.py` 负责 Analyst Team、研究与辩论阶段的结构化输入；`src/llm/context.py` 只服务最终报告文案层。技术字段由 `analysis/technical_context.py` 统一构造，再分别嵌入技术 Analyst payload 与 narrative-only payload，避免两层 JSON contract 互相污染。
 
 ---
 

@@ -79,13 +79,13 @@ fetch_all_data()
 
 | 阶段 | 目标 | 落地内容 |
 |------|------|----------|
-| P0 | 技术输入可观测 | 在 `context_stats.technical_inputs` 记录每周期 K 线数量、结构事件、OB/FVG/liquidity、premium/discount、volume signal 与 EMA/VWAP readiness |
+| P0 | 技术输入可观测 | 在 `context_stats.technical_inputs` 记录每周期 K 线数量、结构事件、OB/FVG/liquidity、premium/discount、volume signal、volume 有效性与指标 readiness |
 | P1 | 技术 evidence 补齐 | 将 `1d` 趋势、premium/discount、equilibrium、volume signal、liquidity 与 Fibonacci 价位转成 `technical_analyst.items` |
-| P2 | 上下文统一 | 让规则技术分析师、LLM 技术分析师、最终叙事层共享同一组技术上下文字段，避免“算出来但没喂进去” |
-| P3 | 指标扩展 | 基于 OHLCV 增加 ATR、RSI/MACD、ADX 等少量互补指标，并用 warm-up 与 volume 有效性控制置信度 |
-| P4 | 质量降级 | 输入不足时降低 confidence，并在 summary 标注 K 线不足、volume 失真、外部源 fallback 或结构事件不足 |
+| P2 | 上下文统一 | `analysis/technical_context.py` 统一规则技术分析师、LLM 技术分析师、最终叙事层的技术上下文字段 |
+| P3 | 指标扩展 | 基于 OHLCV 增加 ATR14、RSI14、MACD、ADX14，并将动能/波动率/趋势强度转成 evidence |
+| P4 | 质量降级 | 技术质量评分检查 K 线数量、indicator warm-up、volume 有效性与 ICT 输入；输入不足时降低 confidence 并在 summary 标注原因 |
 
-当前实施范围：先落地 P0/P1 的规则链路与测试；P2-P4 作为后续迭代，不一次性扩大行为面。
+当前实施范围：P0-P4 已在规则技术分析师、LLM 技术 payload 与最终 narrative payload 中落地；后续可继续细化指标权重与历史回测校准。
 
 ## 其他分析师输入优化方案
 
@@ -103,8 +103,8 @@ fetch_all_data()
 
 - `context_builder.finalize_market_context()` 是唯一写入 `derived` 与 `context_stats` 的入口；规则分析师只消费 `MarketContext`，不重新 fetch 外部源。
 - `context_stats.technical_inputs` / `context_stats.analyst_inputs` 是可观测性与质量审计字段，不直接等同于交易信号。
-- 规则分析师负责把可用输入转成 `EvidenceItem`；LLM Analyst 使用 `agents/llm/payload.py` 的角色 payload；最终报告文案使用 `llm/context.py` 的 narrative-only payload。
-- 当前已完成 P0/P1：输入密度可观测 + 规则 evidence 补齐。P2 的共享 technical context 与 P4 的输入不足降级仍是后续工作。
+- 规则分析师负责把可用输入转成 `EvidenceItem`；技术上下文由 `analysis/technical_context.py` 共享给规则技术分析师、LLM Analyst payload 与最终 narrative payload。
+- 当前已完成 P0-P4：输入密度可观测、规则 evidence 补齐、共享 technical context、OHLCV 指标扩展、输入不足质量降级。
 
 ## 路线图状态（Phase 0–6）
 
@@ -129,6 +129,8 @@ fetch_all_data()
 - [x] 技术分析师 FVG/OB 距离现价 evidence
 - [x] 技术分析师补齐 `1d`、premium/discount、volume、liquidity 与 Fibonacci evidence
 - [x] 技术输入密度写入 `context_stats.technical_inputs`
+- [x] 技术上下文共享给 rule technical、LLM technical 与 narrative payload
+- [x] ATR14 / RSI14 / MACD / ADX14 指标扩展与质量降级
 - [x] fundamentals/news/sentiment 补齐输入密度、来源质量与主题/样本 evidence
 - [x] 分角色输入密度写入 `context_stats.analyst_inputs`
 - [x] 并行拉取 macro + news + social（`fetch_external_bundle` 三线程）
