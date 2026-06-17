@@ -15,11 +15,20 @@ def _tf_summary(tf: str, analysis: TimeframeAnalysis) -> dict[str, Any]:
         "bos": analysis.bos,
         "choch": analysis.choch,
         "premium_discount": analysis.premium_discount,
+        "equilibrium": analysis.equilibrium,
         "volume_signal": analysis.volume_signal,
         "swing_high": analysis.swing_high,
         "swing_low": analysis.swing_low,
         "active_fvg_count": len(analysis.active_fvgs),
         "order_block_count": len(analysis.order_blocks),
+        "active_fvgs": [
+            {"direction": fvg.direction, "low": fvg.low, "high": fvg.high}
+            for fvg in analysis.active_fvgs[:3]
+        ],
+        "order_blocks": [
+            {"direction": ob.direction, "low": ob.low, "high": ob.high}
+            for ob in analysis.order_blocks[-3:]
+        ],
         "liquidity": [
             {"price": lz.price, "label": lz.label}
             for lz in analysis.liquidity[:4]

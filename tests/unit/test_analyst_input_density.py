@@ -7,9 +7,11 @@ from unittest.mock import patch
 import pandas as pd
 import pytest
 
+from src.agents.analysts.technical import run_technical_analyst
 from src.agents.analysts.fundamentals import run_fundamentals_analyst
 from src.agents.analysts.news import run_news_analyst
 from src.agents.llm.payload import news_analyst_payload
+from src.analysis.ict_pa import FairValueGap, LiquidityZone, OrderBlock, TimeframeAnalysis
 from src.agents.llm.schemas import parse_analyst_report
 from src.core.types import CalendarEvent, ExternalFactors, HeadlineItem, MacroQuote, MarketContext
 from src.data.context_builder import (
@@ -19,6 +21,7 @@ from src.data.context_builder import (
 from src.data.fetch_pipeline import fetch_external_bundle
 from src.data.news_topics import cluster_headline_topics
 from src.data.sources.jin10_feed import fetch_jin10_kline
+from src.indicators.technical import enrich
 
 
 def _minimal_ctx(ext: ExternalFactors) -> MarketContext:
@@ -37,6 +40,54 @@ def _minimal_ctx(ext: ExternalFactors) -> MarketContext:
         metrics={"current_price": 101.5, "daily_change_pct": 1.0},
         price=101.5,
         external=ext,
+        source_label="test",
+    )
+    return finalize_market_context(ctx)
+
+
+def _technical_ctx() -> MarketContext:
+    idx = pd.date_range("2026-06-16", periods=32, freq="5min")
+    raw = pd.DataFrame(
+        {
+            "Open": [100.0 + i * 0.1 for i in range(32)],
+            "High": [101.0 + i * 0.1 for i in range(32)],
+            "Low": [99.0 + i * 0.1 for i in range(32)],
+            "Close": [100.5 + i * 0.1 for i in range(32)],
+            "Volume": [100 + i for i in range(31)] + [260],
+        },
+        index=idx,
+    )
+    enriched = {tf: enrich(raw.copy()) for tf in ("1d", "4h", "1h", "15m", "5m")}
+    now = idx[-1]
+    analyses = {
+        tf: TimeframeAnalysis(
+            timeframe=tf,
+            trend="bearish" if tf == "1d" else "bullish",
+            bos="bearish @ 101.0" if tf == "1d" else "bullish @ 102.0",
+            choch="无",
+            order_blocks=[OrderBlock(high=106.0, low=104.0, direction="bearish", time=now)],
+            fvgs=[FairValueGap(high=105.5, low=104.5, direction="bearish", time=now)],
+            active_fvgs=[FairValueGap(high=105.5, low=104.5, direction="bearish", time=now)],
+            liquidity=[LiquidityZone(price=106.5, kind="stop_hunt_high", label="Stop Hunt Above Highs")],
+            swing_high=110.0,
+            swing_low=90.0,
+            premium_discount="premium",
+            equilibrium=100.0,
+            volume_signal="放量 1.8x — 聪明钱可能活跃",
+        )
+        for tf in ("1d", "4h", "1h", "15m", "5m")
+    }
+    ctx = MarketContext(
+        enriched=enriched,
+        analyses=analyses,
+        metrics={
+            "current_price": 103.6,
+            "daily_change_pct": 1.0,
+            "daily_high": 104.1,
+            "daily_low": 102.1,
+        },
+        price=103.6,
+        external=ExternalFactors(),
         source_label="test",
     )
     return finalize_market_context(ctx)
@@ -65,6 +116,27 @@ def test_context_stats_counts_structured_fields() -> None:
     assert ctx.context_stats["headline_items"] == 2
     assert ctx.context_stats["calendar_events"] == 1
     assert ctx.context_stats["macro_quotes"] == 1
+
+
+def test_context_stats_tracks_technical_inputs() -> None:
+    ctx = _technical_ctx()
+    tech = ctx.context_stats["technical_inputs"]
+    assert tech["bars"]["1d"] == 32
+    assert tech["premium_discount_known"] == 5
+    assert tech["volume_signal_available"] == 5
+    assert tech["liquidity_zones"] == 5
+    assert "EMA20" in tech["by_timeframe"]["5m"]["indicator_ready"]
+
+
+def test_technical_analyst_uses_extended_kline_inputs() -> None:
+    ctx = _technical_ctx()
+    report = run_technical_analyst(ctx)
+    summaries = [item.summary for item in report.items]
+    assert any("1d 结构趋势偏空" in summary for summary in summaries)
+    assert any("Premium" in summary for summary in summaries)
+    assert any("成交量信号" in summary for summary in summaries)
+    assert any("流动性" in summary for summary in summaries)
+    assert any("Fib" in summary for summary in summaries)
 
 
 def test_fundamentals_analyst_multi_quote_evidence() -> None:

@@ -319,7 +319,7 @@ def analyze_timeframe(df: pd.DataFrame, timeframe: str) -> TimeframeAnalysis:
 
 def sentiment_score(analyses: dict[str, TimeframeAnalysis]) -> dict[str, float]:
     """Weighted bear/bull/range probabilities."""
-    weights = {"4h": 0.35, "1h": 0.30, "15m": 0.20, "5m": 0.15}
+    weights = {"1d": 0.20, "4h": 0.30, "1h": 0.25, "15m": 0.15, "5m": 0.10}
     bull = bear = neutral = 0.0
 
     for tf, weight in weights.items():
