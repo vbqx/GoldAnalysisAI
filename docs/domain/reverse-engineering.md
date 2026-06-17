@@ -84,7 +84,7 @@ MVP: `viz/charts.py` + Plotly Candlestick
 - Equal Highs/Lows: 两个 swing 价位接近（<0.2%）
 - Stop Hunt: 极值外 2~5 点
 
-> 完整 ICT 体系还包含 Kill Zone、Premium/Discount、Breaker Block 等，MVP 未实现。
+> 完整 ICT 体系还包含 Kill Zone、Breaker / Mitigation Block、Liquidity Sweep 等；Premium/Discount 已在当前 MVP 中以 swing range equilibrium 的简化方式实现。
 
 ### 2.5 右侧统计 & 交易计划
 

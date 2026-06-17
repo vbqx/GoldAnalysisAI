@@ -249,9 +249,10 @@ def compute_context_stats(ctx: MarketContext) -> dict[str, Any]:
 
 def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
     """Observability snapshot for K-line-derived technical inputs."""
-    from src.analysis.technical_context import technical_quality
+    from src.analysis.technical_context import support_resistance_context, technical_quality
 
     bars = {tf: len(df) for tf, df in ctx.enriched.items()}
+    sr = support_resistance_context(ctx)
     indicator_ready: dict[str, list[str]] = {}
     for tf, df in ctx.enriched.items():
         if df.empty:
@@ -290,6 +291,11 @@ def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
         "indicator_ready": indicator_ready,
         "volume_nonzero_ratio": {
             tf: _volume_nonzero_ratio(df) for tf, df in ctx.enriched.items()
+        },
+        "support_resistance": {
+            "resistance": len(sr.get("resistance") or []),
+            "support": len(sr.get("support") or []),
+            "neutral": len(sr.get("neutral") or []),
         },
         "quality": technical_quality(ctx),
     }
