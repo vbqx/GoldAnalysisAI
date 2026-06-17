@@ -84,8 +84,27 @@ fetch_all_data()
 | P2 | 上下文统一 | `analysis/technical_context.py` 统一规则技术分析师、LLM 技术分析师、最终叙事层的技术上下文字段 |
 | P3 | 指标扩展 | 基于 OHLCV 增加 ATR14、RSI14、MACD、ADX14，并将动能/波动率/趋势强度转成 evidence |
 | P4 | 质量降级 | 技术质量评分检查 K 线数量、indicator warm-up、volume 有效性与 ICT 输入；输入不足时降低 confidence 并在 summary 标注原因 |
+| P5 | 支撑阻力上下文 | 从日高/日低、swing、equilibrium、Fib、liquidity、OB/FVG 聚合 support/resistance/neutral levels，并输出最近支撑/压力 evidence |
 
-当前实施范围：P0-P4 已在规则技术分析师、LLM 技术 payload 与最终 narrative payload 中落地；后续可继续细化指标权重与历史回测校准。
+当前实施范围：P0-P5 已在规则技术分析师、LLM 技术 payload 与最终 narrative payload 中落地；后续可继续细化指标权重与历史回测校准。
+
+## ICT / PA / SMC 输入审计
+
+| 输入 | 状态 | 说明 |
+|------|------|------|
+| Swing structure | ✅ 简化实现 | 3-left/3-right 局部高低点 + 多周期 trend |
+| BOS / CHoCH | ✅ 简化实现 | 最新 close 相对近期 swing high/low 判定 |
+| FVG | ✅ 基础实现 | 三 K 缺口 + active FVG 过滤 |
+| Order Block | ⚠️ 启发式 | 三 K 推动前反向 K，未包含 mitigation/breaker 生命周期 |
+| Liquidity | ⚠️ 部分实现 | Equal highs/lows、stop hunt offset；尚未检测 sweep event |
+| Premium / Discount | ✅ 简化实现 | swing range 中点 equilibrium + premium/discount |
+| Volume / Displacement | ⚠️ 部分实现 | volume ratio + OB 内隐 displacement；尚未有 ATR 标准化 displacement |
+| Support / Resistance | ✅ 已实现 | P5 聚合日高/日低、swing、Fib、liquidity、OB/FVG，并进入 technical evidence |
+| Multi-TF confluence | ⚠️ 部分实现 | 趋势投票 + 最近 S/R；尚未有跨周期 zone overlap score |
+| Kill zones / Sessions | ❌ 未实现 | 未按 London/NY/Asia 时段标注结构事件 |
+| Breaker / Mitigation blocks | ❌ 未实现 | 仍需 OB/FVG lifecycle 状态 |
+| Liquidity sweep detection | ❌ 未实现 | 交易模板有“扫低”，但没有 wick sweep + reclaim 检测 |
+| PDH/PDL / prior sessions | ❌ 未实现 | 当前只有日高/日低/前收，缺前日/前周/Session 高低点记忆 |
 
 ## 其他分析师输入优化方案
 
@@ -104,7 +123,7 @@ fetch_all_data()
 - `context_builder.finalize_market_context()` 是唯一写入 `derived` 与 `context_stats` 的入口；规则分析师只消费 `MarketContext`，不重新 fetch 外部源。
 - `context_stats.technical_inputs` / `context_stats.analyst_inputs` 是可观测性与质量审计字段，不直接等同于交易信号。
 - 规则分析师负责把可用输入转成 `EvidenceItem`；技术上下文由 `analysis/technical_context.py` 共享给规则技术分析师、LLM Analyst payload 与最终 narrative payload。
-- 当前已完成 P0-P4：输入密度可观测、规则 evidence 补齐、共享 technical context、OHLCV 指标扩展、输入不足质量降级。
+- 当前已完成 P0-P5：输入密度可观测、规则 evidence 补齐、共享 technical context、OHLCV 指标扩展、输入不足质量降级、支撑阻力上下文。
 
 ## 路线图状态（Phase 0–6）
 
@@ -131,6 +150,7 @@ fetch_all_data()
 - [x] 技术输入密度写入 `context_stats.technical_inputs`
 - [x] 技术上下文共享给 rule technical、LLM technical 与 narrative payload
 - [x] ATR14 / RSI14 / MACD / ADX14 指标扩展与质量降级
+- [x] Support / resistance context 与最近支撑/压力 evidence
 - [x] fundamentals/news/sentiment 补齐输入密度、来源质量与主题/样本 evidence
 - [x] 分角色输入密度写入 `context_stats.analyst_inputs`
 - [x] 并行拉取 macro + news + social（`fetch_external_bundle` 三线程）

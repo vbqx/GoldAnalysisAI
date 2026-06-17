@@ -159,6 +159,8 @@ def test_context_stats_tracks_technical_inputs() -> None:
     assert "ATR14" in tech["by_timeframe"]["5m"]["indicator_ready"]
     assert "RSI14" in tech["by_timeframe"]["5m"]["indicator_ready"]
     assert tech["by_timeframe"]["5m"]["volume_nonzero_ratio"] == 1.0
+    assert tech["support_resistance"]["resistance"] >= 1
+    assert tech["support_resistance"]["support"] >= 1
     assert tech["quality"]["warnings"]
 
 
@@ -186,6 +188,8 @@ def test_technical_analyst_uses_extended_kline_inputs() -> None:
     assert any("ATR14" in summary for summary in summaries)
     assert any("RSI14" in summary for summary in summaries)
     assert any("MACD" in summary for summary in summaries)
+    assert any("上方压力" in summary for summary in summaries)
+    assert any("下方支撑" in summary for summary in summaries)
 
 
 def test_technical_analyst_payload_uses_shared_context() -> None:
@@ -194,6 +198,8 @@ def test_technical_analyst_payload_uses_shared_context() -> None:
     assert payload["quality"]["score"] < 1
     assert payload["indicators"]["5m"]["indicators"]["ATR14"] is not None
     assert payload["fibonacci"]["nearest"]
+    assert payload["support_resistance"]["nearest_resistance"]
+    assert payload["support_resistance"]["nearest_support"]
     assert payload["timeframes"][0]["timeframe"] == "1d"
 
 

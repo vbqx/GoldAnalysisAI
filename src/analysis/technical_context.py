@@ -51,6 +51,131 @@ def fibonacci_context(ctx: MarketContext) -> dict[str, Any]:
     }
 
 
+def support_resistance_context(ctx: MarketContext, *, limit: int = 12) -> dict[str, Any]:
+    """Compose auditable S/R levels from price action, ICT zones, and report metrics."""
+    levels: list[dict[str, Any]] = []
+
+    def add_level(
+        *,
+        price: float | None,
+        kind: str | None,
+        label: str,
+        source: str,
+        timeframe: str | None = None,
+        strength: float = 0.4,
+    ) -> None:
+        if price is None or price <= 0:
+            return
+        resolved_kind = kind or _level_kind(ctx.price, price)
+        levels.append(
+            {
+                "kind": resolved_kind,
+                "price": round(float(price), 2),
+                "label": label,
+                "source": source,
+                "timeframe": timeframe,
+                "strength": round(strength, 3),
+                "dist_pct": round(distance_pct(ctx.price, float(price)), 3),
+            }
+        )
+
+    def add_zone(
+        *,
+        low: float,
+        high: float,
+        preferred_kind: str,
+        label: str,
+        source: str,
+        timeframe: str | None,
+        strength: float,
+    ) -> None:
+        mid = (float(low) + float(high)) / 2
+        kind = _zone_kind(ctx.price, float(low), float(high), preferred_kind)
+        levels.append(
+            {
+                "kind": kind,
+                "price_low": round(float(low), 2),
+                "price_high": round(float(high), 2),
+                "price": round(mid, 2),
+                "label": label,
+                "source": source,
+                "timeframe": timeframe,
+                "strength": round(strength, 3),
+                "dist_pct": round(distance_pct(ctx.price, mid), 3),
+            }
+        )
+
+    metrics = ctx.metrics
+    add_level(price=metrics.get("daily_high"), kind="resistance", label="日内高点压力", source="daily_high", strength=0.65)
+    add_level(price=metrics.get("daily_low"), kind="support", label="日内低点支撑", source="daily_low", strength=0.65)
+    add_level(price=metrics.get("prev_close"), kind=None, label="前收/日开分界", source="prev_close", strength=0.45)
+
+    primary = primary_analysis(ctx)
+    if primary:
+        add_level(price=primary.swing_high, kind="resistance", label=f"{primary.timeframe} swing high 压力", source="swing_high", timeframe=primary.timeframe, strength=0.72)
+        add_level(price=primary.swing_low, kind="support", label=f"{primary.timeframe} swing low 支撑", source="swing_low", timeframe=primary.timeframe, strength=0.72)
+        add_level(price=primary.equilibrium, kind="neutral", label=f"{primary.timeframe} equilibrium 多空分界", source="equilibrium", timeframe=primary.timeframe, strength=0.55)
+
+    for row in (fibonacci_context(ctx).get("nearest") or [])[:4]:
+        add_level(
+            price=float(row["price"]),
+            kind=None,
+            label=f"Fib {row['ratio']:.3f} {row['significance']}",
+            source="fibonacci",
+            timeframe=fibonacci_context(ctx).get("timeframe"),
+            strength=float(row.get("probability", 0.45)),
+        )
+
+    for tf, weight in TF_WEIGHT.items():
+        analysis = ctx.analyses.get(tf)
+        if not analysis:
+            continue
+        for zone in analysis.liquidity[:3]:
+            kind = "support" if "low" in zone.kind or "buy" in zone.label.lower() else "resistance"
+            add_level(
+                price=zone.price,
+                kind=kind,
+                label=zone.label,
+                source=f"liquidity:{zone.kind}",
+                timeframe=tf,
+                strength=weight * 0.85,
+            )
+        for ob in analysis.order_blocks[-2:]:
+            add_zone(
+                low=ob.low,
+                high=ob.high,
+                preferred_kind="resistance" if ob.direction == "bearish" else "support",
+                label=f"{tf} OB {ob.direction}",
+                source="order_block",
+                timeframe=tf,
+                strength=weight * 0.8,
+            )
+        for fvg in analysis.active_fvgs[:2]:
+            add_zone(
+                low=fvg.low,
+                high=fvg.high,
+                preferred_kind="resistance" if fvg.direction == "bearish" else "support",
+                label=f"{tf} FVG {fvg.direction}",
+                source="fvg",
+                timeframe=tf,
+                strength=weight * 0.75,
+            )
+
+    deduped = _dedupe_levels(levels)
+    ranked = sorted(deduped, key=lambda row: (abs(float(row["dist_pct"])), -float(row["strength"])))
+    resistance = [row for row in ranked if row["kind"] == "resistance"][:limit]
+    support = [row for row in ranked if row["kind"] == "support"][:limit]
+    neutral = [row for row in ranked if row["kind"] == "neutral"][: max(3, limit // 3)]
+    return {
+        "levels": ranked[: limit * 2],
+        "resistance": resistance,
+        "support": support,
+        "neutral": neutral,
+        "nearest_resistance": resistance[0] if resistance else None,
+        "nearest_support": support[0] if support else None,
+    }
+
+
 def indicator_snapshot(ctx: MarketContext) -> dict[str, Any]:
     by_timeframe: dict[str, Any] = {}
     for tf in TF_ORDER:
@@ -143,6 +268,12 @@ def technical_quality(ctx: MarketContext, indicators: dict[str, Any] | None = No
     if structure_score < 0.4:
         warnings.append("ICT结构事件/流动性输入偏少")
 
+    sr = support_resistance_context(ctx)
+    sr_count = len(sr.get("support") or []) + len(sr.get("resistance") or [])
+    scores.append(min(sr_count / 4, 1.0))
+    if sr_count < 2:
+        warnings.append("支撑/阻力输入不足")
+
     score = round(sum(scores) / len(scores), 3) if scores else 0.0
     return {
         "score": score,
@@ -150,6 +281,7 @@ def technical_quality(ctx: MarketContext, indicators: dict[str, Any] | None = No
         "ict_events_total": ict_total,
         "liquidity_zones": liquidity_total,
         "premium_discount_known": premium_known,
+        "support_resistance_levels": sr_count,
     }
 
 
@@ -167,6 +299,7 @@ def build_technical_context(ctx: MarketContext, *, event_limit: int = 8) -> dict
         "quality": technical_quality(ctx, indicators),
         "indicators": indicators,
         "fibonacci": fibonacci_context(ctx),
+        "support_resistance": support_resistance_context(ctx),
         "timeframes": [
             timeframe_context(tf, ctx.analyses[tf], price=ctx.price, event_limit=event_limit)
             for tf in TF_ORDER
@@ -201,3 +334,31 @@ def _rank_ict_events(analysis: TimeframeAnalysis, *, limit: int) -> list[dict[st
         }
         for e in sorted_events[:limit]
     ]
+
+
+def _level_kind(price: float, level: float) -> str:
+    if level > price * 1.0005:
+        return "resistance"
+    if level < price * 0.9995:
+        return "support"
+    return "neutral"
+
+
+def _zone_kind(price: float, low: float, high: float, preferred: str) -> str:
+    if high < price:
+        return "support"
+    if low > price:
+        return "resistance"
+    if low <= price <= high:
+        return "neutral"
+    return preferred
+
+
+def _dedupe_levels(levels: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    best: dict[tuple[str, int], dict[str, Any]] = {}
+    for level in levels:
+        key = (str(level["kind"]), round(float(level["price"]) * 2))
+        current = best.get(key)
+        if current is None or float(level["strength"]) > float(current["strength"]):
+            best[key] = level
+    return list(best.values())

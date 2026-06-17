@@ -275,6 +275,63 @@ def _quality_evidence(technical_ctx: dict) -> list[EvidenceItem]:
     ]
 
 
+def _support_resistance_evidence(technical_ctx: dict) -> tuple[Bias, list[EvidenceItem]]:
+    sr = technical_ctx.get("support_resistance") or {}
+    items: list[EvidenceItem] = []
+    bull = bear = 0.0
+
+    nearest_resistance = sr.get("nearest_resistance")
+    nearest_support = sr.get("nearest_support")
+    for level, label, bias in (
+        (nearest_resistance, "上方压力", "bearish"),
+        (nearest_support, "下方支撑", "bullish"),
+    ):
+        if not level:
+            continue
+        dist_pct = float(level.get("dist_pct") or 0)
+        price_txt = _level_price_text(level)
+        strength = min(float(level.get("strength") or 0.35) + max(0.0, 0.25 - abs(dist_pct)) * 0.5, 0.85)
+        items.append(
+            EvidenceItem(
+                category="technical",
+                summary=f"{label} {price_txt}：{level.get('label')} · 距现价 {dist_pct:+.2f}%",
+                strength=strength,
+                timeframe=level.get("timeframe"),
+                refs={"source": "support_resistance", **level},
+            )
+        )
+        if abs(dist_pct) <= 0.25:
+            if bias == "bearish":
+                bear += strength
+            else:
+                bull += strength
+
+    neutral = sr.get("neutral") or []
+    if neutral:
+        level = neutral[0]
+        items.append(
+            EvidenceItem(
+                category="technical",
+                summary=f"多空分界 {_level_price_text(level)}：{level.get('label')}",
+                strength=min(float(level.get("strength") or 0.35), 0.6),
+                timeframe=level.get("timeframe"),
+                refs={"source": "support_resistance", **level},
+            )
+        )
+
+    if bull > bear + 0.1:
+        return "bullish", items
+    if bear > bull + 0.1:
+        return "bearish", items
+    return "neutral", items
+
+
+def _level_price_text(level: dict) -> str:
+    if "price_low" in level and "price_high" in level:
+        return f"{float(level['price_low']):.1f}-{float(level['price_high']):.1f}"
+    return f"{float(level.get('price') or 0):.1f}"
+
+
 def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
     technical_ctx = build_technical_context(ctx)
     market_items = MarketDataSource(ctx.enriched).fetch_evidence()
@@ -282,6 +339,7 @@ def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
     ict_bias, ict_items = _ict_context_evidence(ctx)
     fib_items = _fibonacci_evidence(ctx)
     indicator_bias, indicator_items = _indicator_evidence(technical_ctx)
+    sr_bias, sr_items = _support_resistance_evidence(technical_ctx)
     quality_items = _quality_evidence(technical_ctx)
 
     ema_items: list[EvidenceItem] = []
@@ -319,10 +377,11 @@ def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
         + ict_items
         + fib_items
         + indicator_items
+        + sr_items
         + quality_items
     )
 
-    biases = [struct_bias, ema_bias, ict_bias, indicator_bias]
+    biases = [struct_bias, ema_bias, ict_bias, indicator_bias, sr_bias]
     if vote["bullish"] > vote["bearish"] + 8:
         biases.append("bullish")
     elif vote["bearish"] > vote["bullish"] + 8:
@@ -340,7 +399,7 @@ def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
         bias = "neutral"
 
     summary = (
-        f"技术：结构 {struct_bias} / EMA {ema_bias} / ICT区位 {ict_bias} / 指标 {indicator_bias} / 多周期投票 "
+        f"技术：结构 {struct_bias} / EMA {ema_bias} / ICT区位 {ict_bias} / 指标 {indicator_bias} / 支撑阻力 {sr_bias} / 多周期投票 "
         f"多 {vote['bullish']:.0f}% 空 {vote['bearish']:.0f}%"
     )
     quality = technical_ctx.get("quality") or {}
