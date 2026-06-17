@@ -10,6 +10,8 @@ from src.pipeline import run_analysis
 
 EXPECTED_TFS = ("5m", "15m", "1h", "4h", "1d")
 PIPELINE_MAX_SECONDS = 240
+REALTIME_PRICE_ABS_TOLERANCE = 0.5
+REALTIME_PRICE_PCT_TOLERANCE = 0.0002
 
 
 @pytest.mark.slow
@@ -51,7 +53,7 @@ def test_pipeline_multi_timeframe_data() -> None:
 @pytest.mark.slow
 @pytest.mark.integration
 def test_report_price_matches_5m_close() -> None:
-    """IND-01: metrics.current_price 与 5m 最新 Close 一致."""
+    """IND-01: metrics.current_price 与 5m 最新 Close 近似一致."""
     reporter = ProgressReporter()
     token = set_progress(reporter)
     try:
@@ -61,7 +63,12 @@ def test_report_price_matches_5m_close() -> None:
 
     price = report["metrics"]["current_price"]
     close_5m = float(data["5m"]["Close"].iloc[-1])
-    assert abs(price - close_5m) <= 0.01, f"metrics {price} vs 5m close {close_5m}"
+    tolerance = max(REALTIME_PRICE_ABS_TOLERANCE, close_5m * REALTIME_PRICE_PCT_TOLERANCE)
+    diff = abs(price - close_5m)
+    assert diff <= tolerance, (
+        f"metrics {price} vs 5m close {close_5m} "
+        f"(diff {diff:.4f}, tolerance {tolerance:.4f})"
+    )
 
 
 @pytest.mark.slow

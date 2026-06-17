@@ -16,7 +16,7 @@ from typing import Any
 import pandas as pd
 
 from src.data.news_topics import cluster_headline_topics
-from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
+from src.analysis.ict_pa import sentiment_score
 from src.config import (
     ANALYST_CALENDAR_MAX,
     ANALYST_NEWS_MAX,
@@ -26,6 +26,21 @@ from src.config import (
 from src.core.types import CalendarEvent, ExternalFactors, HeadlineItem, MarketContext
 from src.data.sources.jin10_feed import fetch_jin10_kline, fetch_jin10_quote
 from src.indicators.technical import ema_relation
+
+_TECHNICAL_READY_COLUMNS = (
+    # Stats include legacy EMA/VWAP plus momentum/volatility columns; quality
+    # scoring in technical_context only evaluates TECHNICAL_INDICATORS.
+    "EMA20",
+    "EMA50",
+    "EMA610",
+    "VWAP",
+    "ATR14",
+    "RSI14",
+    "ADX14",
+    "MACD",
+    "MACD_SIGNAL",
+    "MACD_HIST",
+)
 
 
 def calendar_to_risk_text(events: list[CalendarEvent], *, limit: int = 6) -> str:
@@ -222,6 +237,8 @@ def compute_context_stats(ctx: MarketContext) -> dict[str, Any]:
         "macro_quotes": len(ext.macro_quotes),
         "social_posts": len(ext.social_posts),
         "ict_events_total": ict_events,
+        "technical_inputs": _technical_input_stats(ctx),
+        "analyst_inputs": _analyst_input_stats(ctx),
         "sources": list(ext.sources),
     }
     try:
@@ -232,22 +249,124 @@ def compute_context_stats(ctx: MarketContext) -> dict[str, Any]:
     return stats
 
 
+def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
+    """Observability snapshot for K-line-derived technical inputs."""
+    from src.analysis.technical_context import support_resistance_context, technical_quality
+
+    bars = {tf: len(df) for tf, df in ctx.enriched.items()}
+    sr = support_resistance_context(ctx)
+    indicator_ready: dict[str, list[str]] = {}
+    for tf, df in ctx.enriched.items():
+        if df.empty:
+            indicator_ready[tf] = []
+            continue
+        last = df.iloc[-1]
+        indicator_ready[tf] = [col for col in _TECHNICAL_READY_COLUMNS if col in last and pd.notna(last[col])]
+
+    by_timeframe: dict[str, Any] = {}
+    for tf, analysis in ctx.analyses.items():
+        by_timeframe[tf] = {
+            "bars": bars.get(tf, 0),
+            "ict_events": len(analysis.events),
+            "order_blocks": len(analysis.order_blocks),
+            "active_fvgs": len(analysis.active_fvgs),
+            "liquidity_zones": len(analysis.liquidity),
+            "premium_discount": analysis.premium_discount,
+            "volume_signal_available": analysis.volume_signal != "N/A",
+            "indicator_ready": indicator_ready.get(tf, []),
+            "volume_nonzero_ratio": _volume_nonzero_ratio(ctx.enriched.get(tf)),
+        }
+
+    return {
+        "bars": bars,
+        "timeframes": sorted(set(ctx.enriched) | set(ctx.analyses)),
+        "by_timeframe": by_timeframe,
+        "premium_discount_known": sum(
+            1 for a in ctx.analyses.values() if a.premium_discount != "unknown"
+        ),
+        "volume_signal_available": sum(
+            1 for a in ctx.analyses.values() if a.volume_signal != "N/A"
+        ),
+        "liquidity_zones": sum(len(a.liquidity) for a in ctx.analyses.values()),
+        "active_fvgs": sum(len(a.active_fvgs) for a in ctx.analyses.values()),
+        "order_blocks": sum(len(a.order_blocks) for a in ctx.analyses.values()),
+        "indicator_ready": indicator_ready,
+        "volume_nonzero_ratio": {
+            tf: _volume_nonzero_ratio(df) for tf, df in ctx.enriched.items()
+        },
+        "support_resistance": {
+            "resistance": len(sr.get("resistance") or []),
+            "support": len(sr.get("support") or []),
+            "neutral": len(sr.get("neutral") or []),
+        },
+        "quality": technical_quality(ctx),
+    }
+
+
+def _volume_nonzero_ratio(df: pd.DataFrame | None) -> float:
+    if df is None or df.empty or "Volume" not in df:
+        return 0.0
+    vol = df["Volume"].astype(float)
+    return round(float((vol > 0).sum() / len(vol)), 3)
+
+
+def _analyst_input_stats(ctx: MarketContext) -> dict[str, Any]:
+    """Role-level input density for the non-technical analysts.
+
+    These stats are audit metadata, not direct trading signals. The rule analysts
+    convert the same underlying inputs into EvidenceItem rows when useful.
+    """
+    ext = ctx.external
+    flash = sum(1 for h in ext.headline_items if h.source == "jin10_flash")
+    articles = sum(1 for h in ext.headline_items if h.source == "jin10_news")
+    high_impact = sum(1 for e in ext.calendar_events if e.importance >= 3.0)
+
+    social_kind_counts: dict[str, int] = {}
+    social_delta = 0.0
+    for post in ext.social_posts:
+        kind = str(post.get("kind") or "social")
+        social_kind_counts[kind] = social_kind_counts.get(kind, 0) + 1
+        try:
+            social_delta += float(post.get("bias_delta") or 0)
+        except (TypeError, ValueError):
+            continue
+
+    quote_names = [q.name for q in ext.macro_quotes]
+    return {
+        "fundamentals": {
+            "macro_quotes": len(ext.macro_quotes),
+            "quote_names": quote_names,
+            "has_dxy": "DXY" in quote_names,
+            "has_us10y": "US10Y" in quote_names,
+            "high_impact_calendar": high_impact,
+            "fetch_errors": [e for e in ext.fetch_errors if "dxy" in e.lower() or "us10y" in e.lower()][:3],
+        },
+        "news": {
+            "headline_items": len(ext.headline_items),
+            "flash": flash,
+            "articles": articles,
+            "calendar_events": len(ext.calendar_events),
+            "high_impact_calendar": high_impact,
+            "topics": ctx.derived.get("news_topics", []),
+            "live_sources": [
+                s for s in ext.sources if s in ("jin10_flash", "jin10_news", "jin10_calendar")
+            ],
+            "fetch_errors": [e for e in ext.fetch_errors if "jin10" in e.lower()][:3],
+        },
+        "sentiment": {
+            "structure_sentiment": ctx.derived.get("structure_sentiment", {}),
+            "social_posts": len(ext.social_posts),
+            "social_kind_counts": social_kind_counts,
+            "social_bias_delta": round(social_delta, 3),
+            "has_social_summary": bool(ext.social_sentiment and ext.social_sentiment != "—"),
+            "live_sources": [s for s in ext.sources if s == "tradingview_social"],
+        },
+    }
+
+
 def finalize_market_context(ctx: MarketContext) -> MarketContext:
     """Attach derived signals and density stats after assembly."""
     sync_external_legacy_fields(ctx.external)
     ctx.derived = build_derived_context(ctx)
     ctx.context_stats = compute_context_stats(ctx)
     return ctx
-
-
-def rank_ict_events(analysis: TimeframeAnalysis, *, limit: int) -> list[dict[str, Any]]:
-    """Prefer BOS/CHoCH over other structure events."""
-    priority = {"choch": 0, "bos": 1}
-    sorted_events = sorted(
-        analysis.events,
-        key=lambda e: (priority.get((e.kind or "").lower(), 9), -e.price),
-    )
-    return [
-        {"kind": e.kind, "direction": e.direction, "price": e.price}
-        for e in sorted_events[-limit:]
-    ]

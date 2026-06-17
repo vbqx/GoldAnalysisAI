@@ -1,9 +1,14 @@
-"""Serialize pipeline state into a compact LLM context payload."""
+"""Serialize pipeline state into a compact narrative-only LLM context payload.
+
+Analyst Team LLM stages use ``src.agents.llm.payload``. This module is only for
+the final report narrative layer after debate/trader/risk/manager have run.
+"""
 
 from __future__ import annotations
 
 from typing import Any
 
+from src.analysis.technical_context import build_technical_context
 from src.analysis.ict_pa import TimeframeAnalysis
 from src.core.types import ManagerDecision, MarketContext, ResearchDebate
 
@@ -15,11 +20,20 @@ def _tf_summary(tf: str, analysis: TimeframeAnalysis) -> dict[str, Any]:
         "bos": analysis.bos,
         "choch": analysis.choch,
         "premium_discount": analysis.premium_discount,
+        "equilibrium": analysis.equilibrium,
         "volume_signal": analysis.volume_signal,
         "swing_high": analysis.swing_high,
         "swing_low": analysis.swing_low,
         "active_fvg_count": len(analysis.active_fvgs),
         "order_block_count": len(analysis.order_blocks),
+        "active_fvgs": [
+            {"direction": fvg.direction, "low": fvg.low, "high": fvg.high}
+            for fvg in analysis.active_fvgs[:3]
+        ],
+        "order_blocks": [
+            {"direction": ob.direction, "low": ob.low, "high": ob.high}
+            for ob in analysis.order_blocks[-3:]
+        ],
         "liquidity": [
             {"price": lz.price, "label": lz.label}
             for lz in analysis.liquidity[:4]
@@ -35,6 +49,7 @@ def build_llm_context(
 ) -> dict[str, Any]:
     """Structured facts for the LLM — no raw OHLCV arrays."""
     signals = report.get("signals", [])[:5]
+    technical_context = build_technical_context(ctx)
     return {
         "symbol": report.get("meta", {}).get("symbol", "XAUUSD"),
         "price": ctx.price,
@@ -46,6 +61,7 @@ def build_llm_context(
             for tf in ("1d", "4h", "1h", "15m", "5m")
             if tf in ctx.analyses
         ],
+        "technical_context": technical_context,
         "debate": {
             "consensus_bias": debate.consensus_bias,
             "consensus_strength": debate.consensus_strength,
