@@ -65,11 +65,26 @@ fetch_all_data()
 ## 可观测性
 
 - `MarketContext.context_stats` — headline/calendar/macro/ICT 计数 + external payload 字节数
+- `MarketContext.context_stats["technical_inputs"]` — 技术侧 K 线、OB/FVG、liquidity、premium/discount、volume 与指标可用性
 - `report["meta"]["context_stats"]` — 写入报告 meta，便于对比生成批次
 - `derived.event_countdown` — 距下一高影响日历事件的小时数
 - `derived.jin10_kline_summary` — 金十 K 线与 TV 价格偏差摘要
 - Analyst Team `stage_io` input 含 `context_stats`（规则/LLM 双轨）
 - 单元测试：`tests/unit/test_analyst_input_density.py`
+
+## 技术分析输入优化方案
+
+问题：K 线与 ICT 引擎已经产出多周期结构，但规则版技术分析师只稳定消费部分输入，导致后续研究/辩论/报告可能基于过窄 evidence 做判断。
+
+| 阶段 | 目标 | 落地内容 |
+|------|------|----------|
+| P0 | 技术输入可观测 | 在 `context_stats.technical_inputs` 记录每周期 K 线数量、结构事件、OB/FVG/liquidity、premium/discount、volume signal 与 EMA/VWAP readiness |
+| P1 | 技术 evidence 补齐 | 将 `1d` 趋势、premium/discount、equilibrium、volume signal、liquidity 与 Fibonacci 价位转成 `technical_analyst.items` |
+| P2 | 上下文统一 | 让规则技术分析师、LLM 技术分析师、最终叙事层共享同一组技术上下文字段，避免“算出来但没喂进去” |
+| P3 | 指标扩展 | 基于 OHLCV 增加 ATR、RSI/MACD、ADX 等少量互补指标，并用 warm-up 与 volume 有效性控制置信度 |
+| P4 | 质量降级 | 输入不足时降低 confidence，并在 summary 标注 K 线不足、volume 失真、外部源 fallback 或结构事件不足 |
+
+当前实施范围：先落地 P0/P1 的规则链路与测试；P2-P4 作为后续迭代，不一次性扩大行为面。
 
 ## 路线图状态（Phase 0–6）
 
@@ -92,5 +107,7 @@ fetch_all_data()
 - [x] LLM 最小 evidence 条数校验（`LLM_MIN_ANALYST_ITEMS`）
 - [x] LLM items 自动补全 `refs.source`
 - [x] 技术分析师 FVG/OB 距离现价 evidence
+- [x] 技术分析师补齐 `1d`、premium/discount、volume、liquidity 与 Fibonacci evidence
+- [x] 技术输入密度写入 `context_stats.technical_inputs`
 - [x] 并行拉取 macro + news + social（`fetch_external_bundle` 三线程）
 - [x] LLM prompt 分 channel 细化（快讯 vs 资讯 vs 日历）

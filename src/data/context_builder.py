@@ -222,6 +222,7 @@ def compute_context_stats(ctx: MarketContext) -> dict[str, Any]:
         "macro_quotes": len(ext.macro_quotes),
         "social_posts": len(ext.social_posts),
         "ict_events_total": ict_events,
+        "technical_inputs": _technical_input_stats(ctx),
         "sources": list(ext.sources),
     }
     try:
@@ -230,6 +231,48 @@ def compute_context_stats(ctx: MarketContext) -> dict[str, Any]:
     except Exception:
         stats["external_payload_bytes"] = 0
     return stats
+
+
+def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
+    bars = {tf: len(df) for tf, df in ctx.enriched.items()}
+    indicator_ready: dict[str, list[str]] = {}
+    for tf, df in ctx.enriched.items():
+        if df.empty:
+            indicator_ready[tf] = []
+            continue
+        last = df.iloc[-1]
+        indicator_ready[tf] = [
+            col for col in ("EMA20", "EMA50", "EMA610", "VWAP") if col in last and pd.notna(last[col])
+        ]
+
+    by_timeframe: dict[str, Any] = {}
+    for tf, analysis in ctx.analyses.items():
+        by_timeframe[tf] = {
+            "bars": bars.get(tf, 0),
+            "ict_events": len(analysis.events),
+            "order_blocks": len(analysis.order_blocks),
+            "active_fvgs": len(analysis.active_fvgs),
+            "liquidity_zones": len(analysis.liquidity),
+            "premium_discount": analysis.premium_discount,
+            "volume_signal_available": analysis.volume_signal != "N/A",
+            "indicator_ready": indicator_ready.get(tf, []),
+        }
+
+    return {
+        "bars": bars,
+        "timeframes": sorted(set(ctx.enriched) | set(ctx.analyses)),
+        "by_timeframe": by_timeframe,
+        "premium_discount_known": sum(
+            1 for a in ctx.analyses.values() if a.premium_discount != "unknown"
+        ),
+        "volume_signal_available": sum(
+            1 for a in ctx.analyses.values() if a.volume_signal != "N/A"
+        ),
+        "liquidity_zones": sum(len(a.liquidity) for a in ctx.analyses.values()),
+        "active_fvgs": sum(len(a.active_fvgs) for a in ctx.analyses.values()),
+        "order_blocks": sum(len(a.order_blocks) for a in ctx.analyses.values()),
+        "indicator_ready": indicator_ready,
+    }
 
 
 def finalize_market_context(ctx: MarketContext) -> MarketContext:

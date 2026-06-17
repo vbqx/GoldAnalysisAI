@@ -8,7 +8,7 @@ from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
 from src.config import ANALYST_ICT_EVENTS_MAX, ANALYST_TEAM_ITEMS_MAX, PAYLOAD_EVIDENCE_MAX
 from src.core.types import AgentEvidence, AnalystTeam, MarketContext
 from src.data.context_builder import rank_ict_events
-from src.indicators.technical import ema_relation
+from src.indicators.technical import ema_relation, fibonacci_levels
 
 
 def _tf_block(tf: str, analysis: TimeframeAnalysis, *, price: float) -> dict[str, Any]:
@@ -69,6 +69,22 @@ def analyst_team_payload(team: AnalystTeam) -> dict[str, Any]:
     }
 
 
+def _fibonacci_block(ctx: MarketContext) -> dict[str, Any]:
+    primary = ctx.analyses.get("4h") or ctx.analyses.get("1h") or ctx.analyses.get("1d")
+    if not primary:
+        return {}
+    swing_high = primary.swing_high or ctx.metrics.get("daily_high")
+    swing_low = primary.swing_low or ctx.metrics.get("daily_low")
+    if not swing_high or not swing_low or swing_high <= swing_low:
+        return {}
+    return {
+        "timeframe": primary.timeframe,
+        "swing_high": swing_high,
+        "swing_low": swing_low,
+        "levels": fibonacci_levels(float(swing_high), float(swing_low)),
+    }
+
+
 def market_payload(ctx: MarketContext, team: AnalystTeam | None = None) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "symbol": "XAUUSD",
@@ -102,6 +118,8 @@ def technical_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
         "jin10_kline_summary": ctx.derived.get("jin10_kline_summary"),
         "spot_cross_check": ctx.derived.get("spot_cross_check"),
         "ema_vwap_relation": ema_block,
+        "technical_input_stats": ctx.context_stats.get("technical_inputs", {}),
+        "fibonacci": _fibonacci_block(ctx),
         "structure_sentiment": ctx.derived.get("structure_sentiment"),
         "timeframes": [
             _tf_block(tf, ctx.analyses[tf], price=ctx.price)
