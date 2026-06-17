@@ -143,8 +143,7 @@ def _ict_context_evidence(ctx: MarketContext) -> tuple[Bias, list[EvidenceItem]]
     return "neutral", items
 
 
-def _fibonacci_evidence(ctx: MarketContext) -> list[EvidenceItem]:
-    technical_ctx = build_technical_context(ctx)
+def _fibonacci_evidence(technical_ctx: dict, price: float) -> list[EvidenceItem]:
     fib = technical_ctx.get("fibonacci") or {}
     levels = fib.get("nearest") or fib.get("levels") or []
     timeframe = fib.get("timeframe")
@@ -154,7 +153,7 @@ def _fibonacci_evidence(ctx: MarketContext) -> list[EvidenceItem]:
     items: list[EvidenceItem] = []
     for row in levels[:3]:
         level = float(row["price"])
-        dist_pct = float(row.get("dist_pct", distance_pct(ctx.price, level)))
+        dist_pct = float(row.get("dist_pct", distance_pct(price, level)))
         items.append(
             EvidenceItem(
                 category="technical",
@@ -337,7 +336,7 @@ def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
     market_items = MarketDataSource(ctx.enriched).fetch_evidence()
     struct_bias, struct_items = _structure_bias(ctx.analyses)
     ict_bias, ict_items = _ict_context_evidence(ctx)
-    fib_items = _fibonacci_evidence(ctx)
+    fib_items = _fibonacci_evidence(technical_ctx, ctx.price)
     indicator_bias, indicator_items = _indicator_evidence(technical_ctx)
     sr_bias, sr_items = _support_resistance_evidence(technical_ctx)
     quality_items = _quality_evidence(technical_ctx)

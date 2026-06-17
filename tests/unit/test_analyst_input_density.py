@@ -18,7 +18,16 @@ from src.agents.llm.payload import (
 )
 from src.analysis.ict_pa import FairValueGap, LiquidityZone, OrderBlock, TimeframeAnalysis
 from src.agents.llm.schemas import parse_analyst_report
-from src.core.types import CalendarEvent, ExternalFactors, HeadlineItem, MacroQuote, MarketContext
+from src.core.types import (
+    AgentEvidence,
+    CalendarEvent,
+    ExternalFactors,
+    HeadlineItem,
+    MacroQuote,
+    ManagerDecision,
+    MarketContext,
+    ResearchDebate,
+)
 from src.data.context_builder import (
     build_jin10_kline_summary,
     finalize_market_context,
@@ -27,6 +36,7 @@ from src.data.fetch_pipeline import fetch_external_bundle
 from src.data.news_topics import cluster_headline_topics
 from src.data.sources.jin10_feed import fetch_jin10_kline
 from src.indicators.technical import enrich
+from src.llm.context import build_llm_context
 
 
 def _minimal_ctx(ext: ExternalFactors) -> MarketContext:
@@ -201,6 +211,28 @@ def test_technical_analyst_payload_uses_shared_context() -> None:
     assert payload["support_resistance"]["nearest_resistance"]
     assert payload["support_resistance"]["nearest_support"]
     assert payload["timeframes"][0]["timeframe"] == "1d"
+
+
+def test_narrative_context_includes_shared_technical_context() -> None:
+    ctx = _technical_ctx()
+    evidence = AgentEvidence(agent="test", direction="neutral", items=[], confidence=0.5, summary="ok")
+    debate = ResearchDebate(
+        bullish=evidence,
+        bearish=evidence,
+        consensus_bias="neutral",
+        consensus_strength=0.5,
+        discussion_notes=[],
+    )
+    decision = ManagerDecision(
+        action="wait",
+        primary_direction="wait",
+        selected_signal_indices=[],
+        confidence=0.5,
+        summary="wait",
+    )
+    payload = build_llm_context(ctx, debate, decision, {"meta": {"symbol": "XAUUSD"}})
+    assert payload["technical_context"]["support_resistance"]["nearest_resistance"]
+    assert payload["technical_context"]["indicators"]["5m"]["indicators"]["ATR14"] is not None
 
 
 def test_technical_analyst_degrades_low_quality_inputs() -> None:
