@@ -1,4 +1,9 @@
-"""Shared technical context for rule analysts, LLM payloads, and narrative."""
+"""Shared technical facts for rule analysts, LLM payloads, and narrative.
+
+This module is a context builder, not a signal engine: it normalizes OHLCV,
+ICT/PA/SMC facts, indicators, quality metadata, and support/resistance levels
+so downstream stages can create their own EvidenceItem rows or narratives.
+"""
 
 from __future__ import annotations
 
@@ -116,13 +121,14 @@ def support_resistance_context(ctx: MarketContext, *, limit: int = 12) -> dict[s
         add_level(price=primary.swing_low, kind="support", label=f"{primary.timeframe} swing low 支撑", source="swing_low", timeframe=primary.timeframe, strength=0.72)
         add_level(price=primary.equilibrium, kind="neutral", label=f"{primary.timeframe} equilibrium 多空分界", source="equilibrium", timeframe=primary.timeframe, strength=0.55)
 
-    for row in (fibonacci_context(ctx).get("nearest") or [])[:4]:
+    fib = fibonacci_context(ctx)
+    for row in (fib.get("nearest") or [])[:4]:
         add_level(
             price=float(row["price"]),
             kind=None,
             label=f"Fib {row['ratio']:.3f} {row['significance']}",
             source="fibonacci",
-            timeframe=fibonacci_context(ctx).get("timeframe"),
+            timeframe=fib.get("timeframe"),
             strength=float(row.get("probability", 0.45)),
         )
 

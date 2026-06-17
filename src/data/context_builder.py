@@ -16,7 +16,7 @@ from typing import Any
 import pandas as pd
 
 from src.data.news_topics import cluster_headline_topics
-from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
+from src.analysis.ict_pa import sentiment_score
 from src.config import (
     ANALYST_CALENDAR_MAX,
     ANALYST_NEWS_MAX,
@@ -28,6 +28,8 @@ from src.data.sources.jin10_feed import fetch_jin10_kline, fetch_jin10_quote
 from src.indicators.technical import ema_relation
 
 _TECHNICAL_READY_COLUMNS = (
+    # Stats include legacy EMA/VWAP plus momentum/volatility columns; quality
+    # scoring in technical_context only evaluates TECHNICAL_INDICATORS.
     "EMA20",
     "EMA50",
     "EMA610",
@@ -368,16 +370,3 @@ def finalize_market_context(ctx: MarketContext) -> MarketContext:
     ctx.derived = build_derived_context(ctx)
     ctx.context_stats = compute_context_stats(ctx)
     return ctx
-
-
-def rank_ict_events(analysis: TimeframeAnalysis, *, limit: int) -> list[dict[str, Any]]:
-    """Prefer BOS/CHoCH over other structure events."""
-    priority = {"choch": 0, "bos": 1}
-    sorted_events = sorted(
-        analysis.events,
-        key=lambda e: (priority.get((e.kind or "").lower(), 9), -e.price),
-    )
-    return [
-        {"kind": e.kind, "direction": e.direction, "price": e.price}
-        for e in sorted_events[-limit:]
-    ]
