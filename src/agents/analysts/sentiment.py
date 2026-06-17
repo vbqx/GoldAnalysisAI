@@ -31,6 +31,7 @@ def _social_bias_delta(posts: list[dict]) -> float:
 
 
 def _sentiment_context_evidence(ctx: MarketContext, vote: dict[str, float]) -> list[EvidenceItem]:
+    """Capture sample quality and structure/social disagreement for auditability."""
     ext = ctx.external
     items: list[EvidenceItem] = []
 

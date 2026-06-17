@@ -11,7 +11,7 @@ from src.agents.analysts.technical import run_technical_analyst
 from src.agents.analysts.fundamentals import run_fundamentals_analyst
 from src.agents.analysts.news import run_news_analyst
 from src.agents.analysts.sentiment import run_sentiment_analyst
-from src.agents.llm.payload import news_analyst_payload
+from src.agents.llm.payload import news_analyst_payload, sentiment_analyst_payload
 from src.analysis.ict_pa import FairValueGap, LiquidityZone, OrderBlock, TimeframeAnalysis
 from src.agents.llm.schemas import parse_analyst_report
 from src.core.types import CalendarEvent, ExternalFactors, HeadlineItem, MacroQuote, MarketContext
@@ -271,6 +271,16 @@ def test_news_analyst_payload_channels() -> None:
     assert payload["channels"]["articles"]["count"] == 1
     assert payload["channels"]["calendar"]["count"] == 1
     assert payload["news_topics"]
+
+
+def test_sentiment_analyst_payload_caps_social_posts() -> None:
+    ext = ExternalFactors(
+        social_sentiment="TV 社媒偏多",
+        social_posts=[{"title": f"post {i}", "bias_delta": 1} for i in range(30)],
+    )
+    ctx = _minimal_ctx(ext)
+    payload = sentiment_analyst_payload(ctx)
+    assert len(payload["social_posts"]) == 15
 
 
 @patch("src.data.fetch_pipeline._fetch_fundamentals_external")
