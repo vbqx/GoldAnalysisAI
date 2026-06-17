@@ -27,6 +27,19 @@ from src.core.types import CalendarEvent, ExternalFactors, HeadlineItem, MarketC
 from src.data.sources.jin10_feed import fetch_jin10_kline, fetch_jin10_quote
 from src.indicators.technical import ema_relation
 
+_TECHNICAL_READY_COLUMNS = (
+    "EMA20",
+    "EMA50",
+    "EMA610",
+    "VWAP",
+    "ATR14",
+    "RSI14",
+    "ADX14",
+    "MACD",
+    "MACD_SIGNAL",
+    "MACD_HIST",
+)
+
 
 def calendar_to_risk_text(events: list[CalendarEvent], *, limit: int = 6) -> str:
     if not events:
@@ -236,6 +249,8 @@ def compute_context_stats(ctx: MarketContext) -> dict[str, Any]:
 
 def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
     """Observability snapshot for K-line-derived technical inputs."""
+    from src.analysis.technical_context import technical_quality
+
     bars = {tf: len(df) for tf, df in ctx.enriched.items()}
     indicator_ready: dict[str, list[str]] = {}
     for tf, df in ctx.enriched.items():
@@ -243,9 +258,7 @@ def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
             indicator_ready[tf] = []
             continue
         last = df.iloc[-1]
-        indicator_ready[tf] = [
-            col for col in ("EMA20", "EMA50", "EMA610", "VWAP") if col in last and pd.notna(last[col])
-        ]
+        indicator_ready[tf] = [col for col in _TECHNICAL_READY_COLUMNS if col in last and pd.notna(last[col])]
 
     by_timeframe: dict[str, Any] = {}
     for tf, analysis in ctx.analyses.items():
@@ -258,6 +271,7 @@ def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
             "premium_discount": analysis.premium_discount,
             "volume_signal_available": analysis.volume_signal != "N/A",
             "indicator_ready": indicator_ready.get(tf, []),
+            "volume_nonzero_ratio": _volume_nonzero_ratio(ctx.enriched.get(tf)),
         }
 
     return {
@@ -274,7 +288,18 @@ def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
         "active_fvgs": sum(len(a.active_fvgs) for a in ctx.analyses.values()),
         "order_blocks": sum(len(a.order_blocks) for a in ctx.analyses.values()),
         "indicator_ready": indicator_ready,
+        "volume_nonzero_ratio": {
+            tf: _volume_nonzero_ratio(df) for tf, df in ctx.enriched.items()
+        },
+        "quality": technical_quality(ctx),
     }
+
+
+def _volume_nonzero_ratio(df: pd.DataFrame | None) -> float:
+    if df is None or df.empty or "Volume" not in df:
+        return 0.0
+    vol = df["Volume"].astype(float)
+    return round(float((vol > 0).sum() / len(vol)), 3)
 
 
 def _analyst_input_stats(ctx: MarketContext) -> dict[str, Any]:
