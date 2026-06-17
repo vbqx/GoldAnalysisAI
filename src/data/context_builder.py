@@ -223,6 +223,7 @@ def compute_context_stats(ctx: MarketContext) -> dict[str, Any]:
         "social_posts": len(ext.social_posts),
         "ict_events_total": ict_events,
         "technical_inputs": _technical_input_stats(ctx),
+        "analyst_inputs": _analyst_input_stats(ctx),
         "sources": list(ext.sources),
     }
     try:
@@ -272,6 +273,55 @@ def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
         "active_fvgs": sum(len(a.active_fvgs) for a in ctx.analyses.values()),
         "order_blocks": sum(len(a.order_blocks) for a in ctx.analyses.values()),
         "indicator_ready": indicator_ready,
+    }
+
+
+def _analyst_input_stats(ctx: MarketContext) -> dict[str, Any]:
+    ext = ctx.external
+    flash = sum(1 for h in ext.headline_items if h.source == "jin10_flash")
+    articles = sum(1 for h in ext.headline_items if h.source == "jin10_news")
+    high_impact = sum(1 for e in ext.calendar_events if e.importance >= 3.0)
+
+    social_kind_counts: dict[str, int] = {}
+    social_delta = 0.0
+    for post in ext.social_posts:
+        kind = str(post.get("kind") or "social")
+        social_kind_counts[kind] = social_kind_counts.get(kind, 0) + 1
+        try:
+            social_delta += float(post.get("bias_delta") or 0)
+        except (TypeError, ValueError):
+            continue
+
+    quote_names = [q.name for q in ext.macro_quotes]
+    return {
+        "fundamentals": {
+            "macro_quotes": len(ext.macro_quotes),
+            "quote_names": quote_names,
+            "has_dxy": "DXY" in quote_names,
+            "has_us10y": "US10Y" in quote_names,
+            "high_impact_calendar": high_impact,
+            "fetch_errors": [e for e in ext.fetch_errors if "dxy" in e.lower() or "us10y" in e.lower()][:3],
+        },
+        "news": {
+            "headline_items": len(ext.headline_items),
+            "flash": flash,
+            "articles": articles,
+            "calendar_events": len(ext.calendar_events),
+            "high_impact_calendar": high_impact,
+            "topics": ctx.derived.get("news_topics", []),
+            "live_sources": [
+                s for s in ext.sources if s in ("jin10_flash", "jin10_news", "jin10_calendar")
+            ],
+            "fetch_errors": [e for e in ext.fetch_errors if "jin10" in e.lower()][:3],
+        },
+        "sentiment": {
+            "structure_sentiment": ctx.derived.get("structure_sentiment", {}),
+            "social_posts": len(ext.social_posts),
+            "social_kind_counts": social_kind_counts,
+            "social_bias_delta": round(social_delta, 3),
+            "has_social_summary": bool(ext.social_sentiment and ext.social_sentiment != "—"),
+            "live_sources": [s for s in ext.sources if s == "tradingview_social"],
+        },
     }
 
 

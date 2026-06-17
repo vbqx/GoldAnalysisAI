@@ -10,6 +10,7 @@ import pytest
 from src.agents.analysts.technical import run_technical_analyst
 from src.agents.analysts.fundamentals import run_fundamentals_analyst
 from src.agents.analysts.news import run_news_analyst
+from src.agents.analysts.sentiment import run_sentiment_analyst
 from src.agents.llm.payload import news_analyst_payload
 from src.analysis.ict_pa import FairValueGap, LiquidityZone, OrderBlock, TimeframeAnalysis
 from src.agents.llm.schemas import parse_analyst_report
@@ -93,6 +94,31 @@ def _technical_ctx() -> MarketContext:
     return finalize_market_context(ctx)
 
 
+def _multi_analyst_ctx() -> MarketContext:
+    ctx = _technical_ctx()
+    ctx.external = ExternalFactors(
+        dxy_impact="DXY 偏强 → 利空黄金",
+        headline_items=[
+            HeadlineItem(source="jin10_flash", text="地缘冲突升级，避险买盘推升黄金"),
+            HeadlineItem(source="jin10_news", text="美联储官员暗示降息路径"),
+        ],
+        calendar_events=[
+            CalendarEvent(time="2026-06-16 20:30", region="美国", event="美国6月CPI年率", importance=3.0),
+        ],
+        macro_quotes=[
+            MacroQuote(name="DXY", symbol="TVC:DXY", close=104.0, change_pct=0.3, impact="偏强", bias="bearish"),
+            MacroQuote(name="US10Y", symbol="TVC:US10Y", close=4.2, change_pct=0.1, impact="上行", bias="bearish"),
+        ],
+        social_sentiment="TV 社媒偏多",
+        social_posts=[
+            {"kind": "ideas", "title": "Gold breakout setup", "author": "tv_user", "likes": 24, "bias_delta": 2},
+            {"kind": "minds", "text": "XAU looks bid", "author": "macro_user", "likes": 6, "bias_delta": 1},
+        ],
+        sources=["jin10_flash", "jin10_news", "jin10_calendar", "tradingview_social"],
+    )
+    return finalize_market_context(ctx)
+
+
 def test_context_stats_counts_structured_fields() -> None:
     ext = ExternalFactors(
         headline_items=[
@@ -128,6 +154,18 @@ def test_context_stats_tracks_technical_inputs() -> None:
     assert "EMA20" in tech["by_timeframe"]["5m"]["indicator_ready"]
 
 
+def test_context_stats_tracks_other_analyst_inputs() -> None:
+    ctx = _multi_analyst_ctx()
+    stats = ctx.context_stats["analyst_inputs"]
+    assert stats["fundamentals"]["has_dxy"] is True
+    assert stats["fundamentals"]["has_us10y"] is True
+    assert stats["news"]["flash"] == 1
+    assert stats["news"]["articles"] == 1
+    assert stats["news"]["topics"]
+    assert stats["sentiment"]["social_posts"] == 2
+    assert stats["sentiment"]["social_bias_delta"] == 3
+
+
 def test_technical_analyst_uses_extended_kline_inputs() -> None:
     ctx = _technical_ctx()
     report = run_technical_analyst(ctx)
@@ -153,6 +191,14 @@ def test_fundamentals_analyst_multi_quote_evidence() -> None:
     assert report.bias == "bearish"
 
 
+def test_fundamentals_analyst_uses_calendar_and_coverage_inputs() -> None:
+    ctx = _multi_analyst_ctx()
+    report = run_fundamentals_analyst(ctx)
+    summaries = [item.summary for item in report.items]
+    assert any("高影响宏观日历" in summary for summary in summaries)
+    assert any("宏观报价覆盖" in summary for summary in summaries)
+
+
 def test_news_analyst_structured_evidence_and_bias() -> None:
     ext = ExternalFactors(
         headline_items=[
@@ -168,6 +214,23 @@ def test_news_analyst_structured_evidence_and_bias() -> None:
     report = run_news_analyst(ctx)
     assert len(report.items) >= 2
     assert any("CPI" in i.summary for i in report.items)
+
+
+def test_news_analyst_uses_topics_and_channel_density() -> None:
+    ctx = _multi_analyst_ctx()
+    report = run_news_analyst(ctx)
+    summaries = [item.summary for item in report.items]
+    assert any("新闻输入密度" in summary for summary in summaries)
+    assert any("新闻主题" in summary for summary in summaries)
+
+
+def test_sentiment_analyst_uses_social_quality_and_structure_divergence() -> None:
+    ctx = _multi_analyst_ctx()
+    report = run_sentiment_analyst(ctx)
+    summaries = [item.summary for item in report.items]
+    assert any("社媒样本质量" in summary for summary in summaries)
+    assert any("社媒方向汇总" in summary for summary in summaries)
+    assert any("多周期结构分歧" in summary for summary in summaries)
 
 
 def test_cluster_headline_topics() -> None:
