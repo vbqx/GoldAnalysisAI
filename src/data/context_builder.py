@@ -235,6 +235,7 @@ def compute_context_stats(ctx: MarketContext) -> dict[str, Any]:
 
 
 def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
+    """Observability snapshot for K-line-derived technical inputs."""
     bars = {tf: len(df) for tf, df in ctx.enriched.items()}
     indicator_ready: dict[str, list[str]] = {}
     for tf, df in ctx.enriched.items():
@@ -277,6 +278,11 @@ def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
 
 
 def _analyst_input_stats(ctx: MarketContext) -> dict[str, Any]:
+    """Role-level input density for the non-technical analysts.
+
+    These stats are audit metadata, not direct trading signals. The rule analysts
+    convert the same underlying inputs into EvidenceItem rows when useful.
+    """
     ext = ctx.external
     flash = sum(1 for h in ext.headline_items if h.source == "jin10_flash")
     articles = sum(1 for h in ext.headline_items if h.source == "jin10_news")

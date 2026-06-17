@@ -10,6 +10,7 @@ from src.agents.analysts.base import build_report
 
 
 def _news_context_evidence(ctx: MarketContext, *, is_live: bool) -> list[EvidenceItem]:
+    """Add channel/topic/source quality evidence alongside raw headlines."""
     ext = ctx.external
     items: list[EvidenceItem] = []
     flash = sum(1 for h in ext.headline_items if h.source == "jin10_flash")

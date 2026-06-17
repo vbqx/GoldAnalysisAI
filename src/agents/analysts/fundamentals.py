@@ -25,6 +25,7 @@ def _bias_from_quotes(ctx: MarketContext) -> Bias:
 
 
 def _macro_context_evidence(ctx: MarketContext) -> list[EvidenceItem]:
+    """Turn macro input quality and event timing into auditable evidence."""
     ext = ctx.external
     items: list[EvidenceItem] = []
 

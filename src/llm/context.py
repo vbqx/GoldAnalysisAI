@@ -1,4 +1,8 @@
-"""Serialize pipeline state into a compact LLM context payload."""
+"""Serialize pipeline state into a compact narrative-only LLM context payload.
+
+Analyst Team LLM stages use ``src.agents.llm.payload``. This module is only for
+the final report narrative layer after debate/trader/risk/manager have run.
+"""
 
 from __future__ import annotations
 

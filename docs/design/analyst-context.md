@@ -99,6 +99,13 @@ fetch_all_data()
 
 后续迭代：基本面可加入实际利率/美元篮子，新闻可加入去重与事件影响窗口，情绪可加入社媒质量权重和异常样本过滤。
 
+## 架构边界与 Review 结论
+
+- `context_builder.finalize_market_context()` 是唯一写入 `derived` 与 `context_stats` 的入口；规则分析师只消费 `MarketContext`，不重新 fetch 外部源。
+- `context_stats.technical_inputs` / `context_stats.analyst_inputs` 是可观测性与质量审计字段，不直接等同于交易信号。
+- 规则分析师负责把可用输入转成 `EvidenceItem`；LLM Analyst 使用 `agents/llm/payload.py` 的角色 payload；最终报告文案使用 `llm/context.py` 的 narrative-only payload。
+- 当前已完成 P0/P1：输入密度可观测 + 规则 evidence 补齐。P2 的共享 technical context 与 P4 的输入不足降级仍是后续工作。
+
 ## 路线图状态（Phase 0–6）
 
 | Phase | 内容 | 状态 |

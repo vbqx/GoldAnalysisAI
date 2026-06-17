@@ -5,7 +5,12 @@ from __future__ import annotations
 from typing import Any
 
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
-from src.config import ANALYST_ICT_EVENTS_MAX, ANALYST_TEAM_ITEMS_MAX, PAYLOAD_EVIDENCE_MAX
+from src.config import (
+    ANALYST_ICT_EVENTS_MAX,
+    ANALYST_SOCIAL_MAX,
+    ANALYST_TEAM_ITEMS_MAX,
+    PAYLOAD_EVIDENCE_MAX,
+)
 from src.core.types import AgentEvidence, AnalystTeam, MarketContext
 from src.data.context_builder import rank_ict_events
 from src.indicators.technical import ema_relation, fibonacci_levels
@@ -70,6 +75,7 @@ def analyst_team_payload(team: AnalystTeam) -> dict[str, Any]:
 
 
 def _fibonacci_block(ctx: MarketContext) -> dict[str, Any]:
+    """Use the same primary swing selection as rule technical evidence."""
     primary = ctx.analyses.get("4h") or ctx.analyses.get("1h") or ctx.analyses.get("1d")
     if not primary:
         return {}
@@ -192,7 +198,7 @@ def sentiment_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
             tf: ctx.analyses[tf].trend for tf in ("4h", "1h", "15m", "5m") if tf in ctx.analyses
         },
         "social_sentiment": ext.social_sentiment,
-        "social_posts": ext.social_posts,
+        "social_posts": ext.social_posts[:ANALYST_SOCIAL_MAX],
     }
 
 
