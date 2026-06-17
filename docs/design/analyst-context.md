@@ -66,6 +66,7 @@ fetch_all_data()
 
 - `MarketContext.context_stats` — headline/calendar/macro/ICT 计数 + external payload 字节数
 - `MarketContext.context_stats["technical_inputs"]` — 技术侧 K 线、OB/FVG、liquidity、premium/discount、volume 与指标可用性
+- `MarketContext.context_stats["analyst_inputs"]` — 基本面 / 新闻 / 情绪分角色输入数量、来源覆盖与样本质量
 - `report["meta"]["context_stats"]` — 写入报告 meta，便于对比生成批次
 - `derived.event_countdown` — 距下一高影响日历事件的小时数
 - `derived.jin10_kline_summary` — 金十 K 线与 TV 价格偏差摘要
@@ -85,6 +86,18 @@ fetch_all_data()
 | P4 | 质量降级 | 输入不足时降低 confidence，并在 summary 标注 K 线不足、volume 失真、外部源 fallback 或结构事件不足 |
 
 当前实施范围：先落地 P0/P1 的规则链路与测试；P2-P4 作为后续迭代，不一次性扩大行为面。
+
+## 其他分析师输入优化方案
+
+目标：让 fundamentals / news / sentiment 三位分析师像技术分析师一样，把已经抓取或派生出的输入转成可审计 evidence，并把输入质量写入 `context_stats`。
+
+| 分析师 | 当前缺口 | P0/P1 落地 |
+|--------|----------|------------|
+| fundamentals | 主要消费 DXY/US10Y quote；日历高影响事件、事件倒计时、宏观来源覆盖没有稳定变成 evidence | 增加高影响日历、下一事件倒计时、DXY/US10Y 覆盖与 fetch error 质量 evidence |
+| news | 已有 headline/calendar evidence；但 topic 聚类、flash/article/calendar 渠道密度、来源质量没有进入规则输出 | 增加新闻主题、渠道密度、Jin10 live/fallback 状态 evidence |
+| sentiment | 已有结构投票和社媒帖子；但社媒样本数量、kind 分布、bias_delta 汇总、长短周期结构分歧没有进入 summary/evidence | 增加社媒样本质量、社媒 bias_delta、结构趋势分歧 evidence，并只在结构投票接近时用社媒作轻量 tie-break |
+
+后续迭代：基本面可加入实际利率/美元篮子，新闻可加入去重与事件影响窗口，情绪可加入社媒质量权重和异常样本过滤。
 
 ## 路线图状态（Phase 0–6）
 
@@ -109,5 +122,7 @@ fetch_all_data()
 - [x] 技术分析师 FVG/OB 距离现价 evidence
 - [x] 技术分析师补齐 `1d`、premium/discount、volume、liquidity 与 Fibonacci evidence
 - [x] 技术输入密度写入 `context_stats.technical_inputs`
+- [x] fundamentals/news/sentiment 补齐输入密度、来源质量与主题/样本 evidence
+- [x] 分角色输入密度写入 `context_stats.analyst_inputs`
 - [x] 并行拉取 macro + news + social（`fetch_external_bundle` 三线程）
 - [x] LLM prompt 分 channel 细化（快讯 vs 资讯 vs 日历）
