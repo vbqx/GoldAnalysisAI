@@ -26,6 +26,9 @@ from src.config import (
     AGENT_MODE,
     LLM_ANALYST_ONLY,
     LLM_OVERRIDE_THRESHOLD,
+    LLM_PARALLEL_ENABLED,
+    LLM_PARALLEL_MAX_WORKERS,
+    LLM_PARALLEL_RESEARCH,
     LLM_STAGE_ANALYSTS,
     LLM_STAGE_BULLISH,
     LLM_STAGE_BEARISH,
@@ -35,6 +38,7 @@ from src.config import (
     LLM_STAGE_MANAGER,
     LLM_STAGE_RESEARCH,
 )
+from src.core.parallel import run_parallel
 from src.core.progress import get_progress
 from src.analysis.report_engine import TradingSignal
 from src.core.types import (
@@ -145,14 +149,21 @@ def _use_llm_analyst(stage: str) -> bool:
     return not LLM_ANALYST_ONLY or stage == LLM_ANALYST_ONLY
 
 
+def _needs_rule_baseline() -> bool:
+    """Hybrid always needs rule output; pure LLM tries LLM first."""
+    return AGENT_MODE == "hybrid"
+
+
 def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> AnalystTeam:
     prog = get_progress()
     prog.update("analyst_team", detail="技术 · 基本面 · 新闻 · 情绪")
     t0 = time.perf_counter()
-    rule_team = rule_analyst_team(ctx)
+    use_llm = _use_llm_stage(LLM_STAGE_ANALYSTS)
+    rule_team = rule_analyst_team(ctx) if (not use_llm or _needs_rule_baseline()) else None
     input_payload = market_payload(ctx)
 
-    if not _use_llm_stage(LLM_STAGE_ANALYSTS):
+    if not use_llm:
+        assert rule_team is not None
         elapsed = int((time.perf_counter() - t0) * 1000)
         prog.stage_io(
             "analyst_team",
@@ -163,26 +174,52 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
         pipeline.record("analyst_team", StageMeta(source="rule"))
         return rule_team
 
-    detail = f"LLM 单个分析师：{LLM_ANALYST_ONLY}" if LLM_ANALYST_ONLY else "LLM 四位分析师…"
-    prog.update("analyst_team", detail=detail)
     runners: list[tuple[str, AnalystReport, object]] = [
-        ("technical", rule_team.technical, run_llm_technical_analyst),
-        ("fundamentals", rule_team.fundamentals, run_llm_fundamentals_analyst),
-        ("news", rule_team.news, run_llm_news_analyst),
-        ("sentiment", rule_team.sentiment, run_llm_sentiment_analyst),
+        ("technical", rule_team.technical if rule_team else None, run_llm_technical_analyst),
+        ("fundamentals", rule_team.fundamentals if rule_team else None, run_llm_fundamentals_analyst),
+        ("news", rule_team.news if rule_team else None, run_llm_news_analyst),
+        ("sentiment", rule_team.sentiment if rule_team else None, run_llm_sentiment_analyst),
     ]
 
-    llm_picked = 0
+    llm_tasks: list[tuple[str, object]] = []
     picked: dict[str, AnalystReport] = {}
     for stage, rule_report, run_llm in runners:
         if not _use_llm_analyst(stage):
+            assert rule_report is not None
             picked[stage] = rule_report
             pipeline.record(
                 stage,
                 StageMeta(source="rule", fallback_reason=f"LLM_ANALYST_ONLY={LLM_ANALYST_ONLY}，跳过 LLM"),
             )
             continue
-        llm_report, trace = run_llm(ctx)
+        llm_tasks.append((stage, run_llm))
+
+    parallel_count = len(llm_tasks)
+    if parallel_count > 1 and LLM_PARALLEL_ENABLED:
+        prog.update("analyst_team", detail=f"{parallel_count} 路 LLM 并行推理…")
+        llm_results = run_parallel(
+            [(stage, lambda fn=run_llm, c=ctx: fn(c)) for stage, run_llm in llm_tasks],
+            max_workers=min(LLM_PARALLEL_MAX_WORKERS, parallel_count),
+            label="analyst_team",
+        )
+    else:
+        detail = f"LLM 单个分析师：{LLM_ANALYST_ONLY}" if LLM_ANALYST_ONLY else "LLM 四位分析师…"
+        prog.update("analyst_team", detail=detail)
+        llm_results = {stage: run_llm(ctx) for stage, run_llm in llm_tasks}
+
+    llm_picked = 0
+    rule_fallback: AnalystTeam | None = rule_team
+    for stage, rule_report, _run_llm in runners:
+        if stage in picked:
+            continue
+        if stage not in llm_results:
+            continue
+        llm_report, trace = llm_results[stage]
+        if rule_report is None and AGENT_MODE == "llm" and (llm_report is None or trace.error):
+            if rule_fallback is None:
+                rule_fallback = rule_analyst_team(ctx)
+            rule_report = getattr(rule_fallback, stage)
+        assert rule_report is not None
         report = _pick_analyst_report(stage, rule_report, llm_report, trace, pipeline)
         picked[stage] = report
         if llm_report is not None and report is llm_report:
@@ -206,27 +243,85 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
 
 
 def run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam) -> AgentEvidence:
-    rule_result = rule_bullish(ctx, team)
-    if not _use_llm_stage(LLM_STAGE_BULLISH):
+    use_llm = _use_llm_stage(LLM_STAGE_BULLISH)
+    rule_result = rule_bullish(ctx, team) if (not use_llm or _needs_rule_baseline()) else None
+    if not use_llm:
         get_progress().update("bullish", detail="规则引擎")
         pipeline.record("bullish", StageMeta(source="rule"))
+        assert rule_result is not None
         return rule_result
 
     get_progress().update("bullish", detail="LLM 推理中…")
     llm_result, trace = run_llm_bullish(ctx, team)
+    if rule_result is None and (llm_result is None or trace.error):
+        rule_result = rule_bullish(ctx, team)
+    assert rule_result is not None
     return _pick_evidence("bullish", rule_result, llm_result, trace, pipeline)
 
 
 def run_bearish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam) -> AgentEvidence:
-    rule_result = rule_bearish(ctx, team)
-    if not _use_llm_stage(LLM_STAGE_BEARISH):
+    use_llm = _use_llm_stage(LLM_STAGE_BEARISH)
+    rule_result = rule_bearish(ctx, team) if (not use_llm or _needs_rule_baseline()) else None
+    if not use_llm:
         get_progress().update("bearish", detail="规则引擎")
         pipeline.record("bearish", StageMeta(source="rule"))
+        assert rule_result is not None
         return rule_result
 
     get_progress().update("bearish", detail="LLM 推理中…")
     llm_result, trace = run_llm_bearish(ctx, team)
+    if rule_result is None and (llm_result is None or trace.error):
+        rule_result = rule_bearish(ctx, team)
+    assert rule_result is not None
     return _pick_evidence("bearish", rule_result, llm_result, trace, pipeline)
+
+
+def research_uses_parallel_llm() -> bool:
+    """True when bullish/bearish LLM stages should run concurrently (saves wall time)."""
+    return (
+        LLM_PARALLEL_ENABLED
+        and LLM_PARALLEL_RESEARCH
+        and _use_llm_stage(LLM_STAGE_BULLISH)
+        and _use_llm_stage(LLM_STAGE_BEARISH)
+    )
+
+
+def run_research_team(
+    ctx: MarketContext,
+    pipeline: AgentPipelineMeta,
+    team: AnalystTeam,
+) -> tuple[AgentEvidence, AgentEvidence]:
+    """Run bullish and bearish research in parallel when both stages use LLM.
+
+    Called from ``orchestrator`` when ``research_uses_parallel_llm()`` is true.
+    Hybrid mode still computes rule baselines before picking LLM vs rule output.
+    """
+    bull_llm = _use_llm_stage(LLM_STAGE_BULLISH)
+    bear_llm = _use_llm_stage(LLM_STAGE_BEARISH)
+
+    if bull_llm and bear_llm and LLM_PARALLEL_ENABLED and LLM_PARALLEL_RESEARCH:
+        rule_bull = rule_bullish(ctx, team) if _needs_rule_baseline() else None
+        rule_bear = rule_bearish(ctx, team) if _needs_rule_baseline() else None
+        results = run_parallel(
+            [
+                ("bullish", lambda: run_llm_bullish(ctx, team)),
+                ("bearish", lambda: run_llm_bearish(ctx, team)),
+            ],
+            max_workers=2,
+            label="research",
+        )
+        bullish_llm, bull_trace = results.get("bullish", (None, None))
+        bearish_llm, bear_trace = results.get("bearish", (None, None))
+        if rule_bull is None and (bullish_llm is None or (bull_trace and bull_trace.error)):
+            rule_bull = rule_bullish(ctx, team)
+        if rule_bear is None and (bearish_llm is None or (bear_trace and bear_trace.error)):
+            rule_bear = rule_bearish(ctx, team)
+        assert rule_bull is not None and rule_bear is not None
+        bullish = _pick_evidence("bullish", rule_bull, bullish_llm, bull_trace, pipeline)
+        bearish = _pick_evidence("bearish", rule_bear, bearish_llm, bear_trace, pipeline)
+        return bullish, bearish
+
+    raise RuntimeError("run_research_team called without parallel LLM enabled")
 
 
 def _pick_debate(

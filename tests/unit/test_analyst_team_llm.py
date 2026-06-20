@@ -173,6 +173,34 @@ def test_factory_analyst_team_llm_can_limit_to_single_specialist(monkeypatch) ->
     assert "LLM_ANALYST_ONLY=technical" in (meta.stages["fundamentals"].fallback_reason or "")
 
 
+def test_factory_analyst_team_parallel_faster(monkeypatch) -> None:
+    import time
+
+    ctx = _sample_context()
+    monkeypatch.setattr(agent_factory, "AGENT_MODE", "hybrid")
+    monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", True)
+    monkeypatch.setattr(agent_factory, "LLM_PARALLEL_ENABLED", True)
+    monkeypatch.setattr(agent_factory, "LLM_PARALLEL_MAX_WORKERS", 4)
+    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
+    delay = 0.08
+
+    def slow(_ctx):
+        from src.core.types import LLMStageTrace
+
+        time.sleep(delay)
+        return None, LLMStageTrace(stage="x", model="m", error="skip")
+
+    t0 = time.perf_counter()
+    with patch.object(agent_factory, "run_llm_technical_analyst", side_effect=slow), patch.object(
+        agent_factory, "run_llm_fundamentals_analyst", side_effect=slow
+    ), patch.object(agent_factory, "run_llm_news_analyst", side_effect=slow), patch.object(
+        agent_factory, "run_llm_sentiment_analyst", side_effect=slow
+    ):
+        agent_factory.run_analyst_team(ctx, AgentPipelineMeta())
+    elapsed = time.perf_counter() - t0
+    assert elapsed < delay * 3
+
+
 def test_factory_analyst_team_llm_disabled_uses_rule(monkeypatch) -> None:
     ctx = _sample_context()
     monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", False)

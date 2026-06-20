@@ -8,10 +8,12 @@ from src.agents import factory as agent_factory
 from src.config import AGENT_MODE, LLM_ENABLED
 from src.analysis.ict_pa import analyze_timeframe
 from src.analysis.report_engine import build_report, compute_trading_signals, parse_risk_events_calendar
+from src.core.parallel import run_parallel
 from src.core.progress import get_progress
 from src.core.types import AgentPipelineMeta, AgentTrace
 from src.data.aggregator import assemble_market_context
 from src.data.fetch_pipeline import fetch_all_data
+from src.data.tradingview import compute_price_drift_1d
 from src.indicators.technical import enrich
 from src.llm.analyst import apply_llm_to_report, run_llm_analysis
 from src.log import get_logger
@@ -49,18 +51,20 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     )
 
     prog.start("indicators", "计算技术指标")
-    enriched = {tf: enrich(df) for tf, df in raw.items()}
+    enriched = run_parallel(
+        [(tf, lambda t=tf, d=df: enrich(d)) for tf, df in raw.items()],
+        max_workers=5,
+        label="indicators",
+    )
     prog.done("indicators")
     log.debug("indicators enriched for %s", list(enriched.keys()))
 
     prog.start("ict", "ICT 结构分析", "5m · 15m · 1h · 4h · 1d")
-    analyses = {
-        "5m": analyze_timeframe(enriched["5m"], "5m"),
-        "15m": analyze_timeframe(enriched["15m"], "15m"),
-        "1h": analyze_timeframe(enriched["1h"], "1h"),
-        "4h": analyze_timeframe(enriched["4h"], "4h"),
-        "1d": analyze_timeframe(enriched["1d"], "1d"),
-    }
+    analyses = run_parallel(
+        [(tf, lambda t=tf: analyze_timeframe(enriched[t], t)) for tf in ("5m", "15m", "1h", "4h", "1d")],
+        max_workers=5,
+        label="ict",
+    )
     prog.done("ict")
     for tf, a in analyses.items():
         log.debug(
@@ -96,13 +100,19 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         analyst_team.sentiment.bias,
     )
 
-    prog.start("bullish", "看多研究")
-    bullish = agent_factory.run_bullish(ctx, pipeline_meta, analyst_team)
-    prog.done("bullish", f"{len(bullish.items)} 条 · 置信 {bullish.confidence:.0%}")
-
-    prog.start("bearish", "看空研究")
-    bearish = agent_factory.run_bearish(ctx, pipeline_meta, analyst_team)
-    prog.done("bearish", f"{len(bearish.items)} 条 · 置信 {bearish.confidence:.0%}")
+    if agent_factory.research_uses_parallel_llm():
+        prog.start("bullish", "看多研究", "与看空并行 LLM")
+        prog.start_sibling("bearish", "看空研究", "与看多并行 LLM")
+        bullish, bearish = agent_factory.run_research_team(ctx, pipeline_meta, analyst_team)
+        prog.done("bullish", f"{len(bullish.items)} 条 · 置信 {bullish.confidence:.0%}")
+        prog.done("bearish", f"{len(bearish.items)} 条 · 置信 {bearish.confidence:.0%}")
+    else:
+        prog.start("bullish", "看多研究")
+        bullish = agent_factory.run_bullish(ctx, pipeline_meta, analyst_team)
+        prog.done("bullish", f"{len(bullish.items)} 条 · 置信 {bullish.confidence:.0%}")
+        prog.start("bearish", "看空研究")
+        bearish = agent_factory.run_bearish(ctx, pipeline_meta, analyst_team)
+        prog.done("bearish", f"{len(bearish.items)} 条 · 置信 {bearish.confidence:.0%}")
     log.info(
         "research bullish=%d items (conf=%.2f) bearish=%d items (conf=%.2f)",
         len(bullish.items),
@@ -160,6 +170,12 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     report["meta"]["data_source"] = ctx.source_label
     report["meta"]["agent_mode"] = AGENT_MODE
     report["meta"]["stage_sources"] = pipeline_meta.to_dict()
+    drift_1d = compute_price_drift_1d(raw["5m"], raw["1d"])
+    report["meta"]["price_drift_1d"] = drift_1d
+    if abs(drift_1d) > 0.5:
+        report["meta"].setdefault("warnings", []).append(
+            f"独立 1d 收盘与 5m 聚合 1d 相差 {drift_1d:+.2f} 点，请以 5m 现价为准核对执行价"
+        )
     prog.done("report")
 
     report["external"] = {
@@ -209,13 +225,23 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     report["agent_trace"] = trace.to_dict()
     report["meta"]["generation_steps"] = prog.snapshot()
     report["meta"]["llm_io"] = prog.llm_io_snapshot()
+    llm_latencies = [r.get("latency_ms") or 0 for r in report["meta"]["llm_io"] if r.get("kind") != "rule"]
+    if llm_latencies:
+        report["meta"]["llm_stages_wall_ms"] = max(llm_latencies)
 
     if decision.selected_signal_indices:
         sig_dicts = report["signals"]
         ordered = [sig_dicts[i] for i in decision.selected_signal_indices if i < len(sig_dicts)]
         rest = [s for j, s in enumerate(sig_dicts) if j not in decision.selected_signal_indices]
-        report["signals"] = ordered + rest
-        log.debug("signals reordered by manager: %s", decision.selected_signal_indices)
+        combined = ordered + rest
+        sent = report.get("sentiment") or {}
+        bearish_dominant = sent.get("bearish", 0) >= sent.get("bullish", 0)
+        pref_theme = "short" if bearish_dominant else "long"
+        combined.sort(key=lambda s: 0 if s.get("theme") == pref_theme else 1)
+        for sig in combined:
+            sig["signal_role"] = "primary" if sig.get("theme") == pref_theme else "alternate"
+        report["signals"] = combined
+        log.debug("signals reordered by manager + sentiment theme: %s", decision.selected_signal_indices)
 
     elapsed = time.perf_counter() - t0
     log.info(
