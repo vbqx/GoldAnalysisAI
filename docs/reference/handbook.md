@@ -192,9 +192,9 @@ build_report(signals=…)  →  dict  report
 | `sentiment_score(analyses)` | `sentiment` |
 | `fibonacci_levels(...)` | `fibonacci` |
 | （传入 `signals` 或内部 `generate_trading_signals`） | `signals` |
-| `build_conclusion(...)` | `conclusion` |
+| `build_conclusion(...)` | `conclusion`（按 bullish/bearish/ranging 主导情绪选主策略与信号主题） |
 | `ema_relation(...)` | `timeframes[*].ema_relation` |
-| `trend_projections(...)` | `projections` |
+| `trend_projections(...)` | `projections`（主路径随主导情绪切换：看多回调上行 / 看空反弹回落 / 震荡区间） |
 | `build_path_summary(...)` | `path_summary` |
 | `build_key_levels(...)` | `key_levels` |
 | `build_resistance_support(...)` | `resistance_levels`, `support_levels` |
@@ -251,11 +251,12 @@ build_report(signals=…)  →  dict  report
 | 项 | 值 |
 |----|-----|
 | 周期 | 5m，约 360 根 K 线 |
-| 绘制 | K 线、成交量、SMC 叠加（OB/FVG/BOS/CHoCH）、路径预测虚线 |
-| 不绘制 | EMA/VWAP 曲线、MACD/RSI/ADX/ATR 副图、Fibonacci 水平线 |
+| 绘制 | K 线、成交量、SMC 叠加（OB/FVG/需求区/BOS/CHoCH） |
+| 不绘制 | EMA/VWAP 曲线、MACD/RSI/ADX/ATR 副图、Fibonacci 水平线、路径预测虚线 |
 | 指标去向 | 流水线 `enrich()` 照常计算；侧边栏 **指标校验**（`indicator_snapshot`）展示；agent/LLM 输入照常使用 |
+| 路径推演 | 底栏 **未来走势推演** 卡片（`path_summary`）；不在主图叠层 |
 
-路径预测虚线与 K 线共用默认价格轴（无独立 `proj` 轴）；5m 主图右侧预留约 20 根空白用于展示推演步长（每步约 3 小时）。单元测试：`tests/unit/test_chart_projections.py`。
+主图 preset 含 `show_projections: false`；调用方可用 `show_projections=True` 显式恢复虚线（测试用）。单元测试：`tests/unit/test_chart_projections.py`。
 
 **UI 数据分工**：
 
@@ -384,7 +385,7 @@ GoldAnalysisAI/
 | `bos`, `choch` | 结构突破描述字符串 |
 | `order_blocks`, `fvgs`, `active_fvgs` | 区域列表 |
 | `liquidity` | 流动性价位 |
-| `swing_high`, `swing_low` | 最近摆动极值 |
+| `swing_high`, `swing_low` | 最近结构摆动极值（每侧最近 2 个 swing，非全窗口历史极值） |
 | `events` | `StructureEvent` 列表（BOS/CHoCH） |
 
 算法为 **启发式 MVP**，详见 [reverse-engineering.md](../domain/reverse-engineering.md)。

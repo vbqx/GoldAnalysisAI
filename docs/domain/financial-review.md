@@ -152,12 +152,12 @@ TradingView OHLCV → 技术指标 → ICT/PA 结构识别 → 多 Agent 决策 
 
 ---
 
-### F-006 | ~~P1~~ **已修复** | `build_conclusion` 硬编码价格
+### F-006 | ~~P1~~ **已修复** | `build_conclusion` 硬编码价格 / 情绪错配
 
 | 项 | 内容 |
 |----|------|
-| **状态** | ✅ 当前 `build_conclusion` 从 `signals[0]` 动态生成区间，无固定四位数价位。 |
-| **测试** | FIN-06 保留回归。 |
+| **状态** | ✅ 从 `signals` 动态生成区间；`must_do` / `starred` / `action` 按 bullish、bearish、ranging 主导情绪与 `signal.theme` 对齐（看多不再套用看空模板）。 |
+| **测试** | FIN-06 保留回归；`test_bullish_conclusion_uses_long_plan_not_short_template`。 |
 
 ---
 

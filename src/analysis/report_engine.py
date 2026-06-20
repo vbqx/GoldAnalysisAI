@@ -247,8 +247,86 @@ def trend_projections(
     swing_low: float,
     sentiment: dict[str, float],
 ) -> list[dict[str, Any]]:
-    mid_rally = swing_low + (swing_high - swing_low) * 0.382
-    deep_rally = swing_low + (swing_high - swing_low) * 0.618
+    range_size = max(swing_high - swing_low, 1e-9)
+    pullback_shallow = swing_high - range_size * 0.382
+    pullback_deep = swing_high - range_size * 0.618
+    mid_rally = swing_low + range_size * 0.382
+    deep_rally = swing_low + range_size * 0.618
+
+    bull = sentiment.get("bullish", 0)
+    bear = sentiment.get("bearish", 0)
+    ranging = sentiment.get("ranging", 0)
+
+    if bull > bear and bull >= ranging:
+        return [
+            {
+                "name": "主路径 (回调后上行)",
+                "probability": bull,
+                "color": "#22c55e",
+                "steps": [
+                    {"label": "当前", "price": price},
+                    {"label": "回踩支撑", "price": round(pullback_shallow, 2)},
+                    {"label": "上破前高", "price": round(swing_high + range_size * 0.1, 2)},
+                ],
+            },
+            {
+                "name": "次路径 (深回调后修复)",
+                "probability": ranging,
+                "color": "#64748b",
+                "steps": [
+                    {"label": "当前", "price": price},
+                    {"label": "测试深支撑", "price": round(pullback_deep, 2)},
+                    {"label": "回到中枢", "price": round((swing_high + swing_low) / 2, 2)},
+                ],
+            },
+            {
+                "name": "风险路径 (跌破支撑)",
+                "probability": bear,
+                "color": "#ef4444",
+                "steps": [
+                    {"label": "当前", "price": price},
+                    {"label": "跌破支撑", "price": round(swing_low - range_size * 0.1, 2)},
+                ],
+            },
+        ]
+
+    if ranging >= max(bull, bear):
+        return [
+            {
+                "name": "主路径 (区间震荡)",
+                "probability": ranging,
+                "color": "#64748b",
+                "steps": [
+                    {"label": "当前", "price": price},
+                    {"label": "回归中枢", "price": round((swing_high + swing_low) / 2, 2)},
+                    {
+                        "label": "测试区间边界",
+                        "price": round(
+                            swing_high if price < (swing_high + swing_low) / 2 else swing_low,
+                            2,
+                        ),
+                    },
+                ],
+            },
+            {
+                "name": "上破路径",
+                "probability": bull,
+                "color": "#22c55e",
+                "steps": [
+                    {"label": "当前", "price": price},
+                    {"label": "上破前高", "price": round(swing_high + range_size * 0.1, 2)},
+                ],
+            },
+            {
+                "name": "下破路径",
+                "probability": bear,
+                "color": "#ef4444",
+                "steps": [
+                    {"label": "当前", "price": price},
+                    {"label": "跌破前低", "price": round(swing_low - range_size * 0.1, 2)},
+                ],
+            },
+        ]
 
     return [
         {
@@ -288,36 +366,71 @@ def build_conclusion(
     primary_trend: str,
     signals: list[TradingSignal],
 ) -> dict[str, Any]:
-    if sentiment["bearish"] >= sentiment["bullish"]:
+    bearish = sentiment["bearish"]
+    bullish = sentiment["bullish"]
+    ranging = sentiment.get("ranging", 0)
+    if ranging >= max(bearish, bullish):
+        mood = "震荡中性 ↔"
+        direction = "多空优势不明显，优先等待区间边界确认"
+        action = "不追涨杀跌，等待支撑/阻力区的确认信号"
+        dominant_theme = "neutral"
+    elif bearish >= bullish:
         mood = "弱势偏空 ↓"
         direction = "主方向偏空，当前处于逆势反弹阶段"
         action = "不追多，优先等待反弹至阻力区做空"
+        dominant_theme = "short"
     else:
         mood = "偏强偏多 ↑"
         direction = "主方向偏多，关注回调支撑"
         action = "不追空，优先等待回调至需求区做多"
+        dominant_theme = "long"
 
-    if signals:
-        first = signals[0]
+    primary_signal = None
+    if dominant_theme != "neutral":
+        primary_signal = next((s for s in signals if s.theme == dominant_theme), None)
+    if primary_signal is None and signals:
+        primary_signal = signals[0]
+
+    if primary_signal:
+        first = primary_signal
         zone = f"{first.entry_low:.0f}-{first.entry_high:.0f}"
-        if sentiment["bearish"] >= sentiment["bullish"]:
+        if dominant_theme == "short":
             action = f"不追多，优先等待 {zone} 反弹至阻力区做空"
-        else:
+        elif dominant_theme == "long":
             action = f"不追空，优先等待 {zone} 附近回调做多"
+        else:
+            action = f"等待 {zone} 区域确认方向后再参与"
+
+    short_sig = next((s for s in signals if s.theme == "short"), None)
+    long_sig = next((s for s in signals if s.theme == "long"), None)
+    if dominant_theme == "long":
+        must_do = [
+            "★ 主策略：回调至需求/支撑区分批做多",
+            "★ 次策略：冲高至阻力区后只做轻仓逆势短空",
+            "★ 风控：单笔风险 ≤ 2%，跌破结构支撑减仓或退出",
+        ]
+    elif dominant_theme == "neutral":
+        must_do = [
+            "★ 主策略：等待区间边界确认，不在中枢追单",
+            "★ 次策略：突破后回踩/反抽确认再跟随",
+            "★ 风控：单笔风险 ≤ 2%，事件前降低仓位",
+        ]
+    else:
+        must_do = [
+            "★ 主策略：反弹至 FVG/OB 阻力区分批做空",
+            "★ 次策略：扫低流动性后短多（逆势轻仓）",
+            "★ 风控：单笔风险 ≤ 2%，止损必执行",
+        ]
 
     return {
         "market_sentiment": mood,
         "direction_summary": direction,
         "action": action,
         "header_conclusion": f"{direction}。{action}",
-        "must_do": [
-            "★ 主策略：反弹至 FVG/OB 阻力区分批做空",
-            "★ 次策略：扫低流动性后短多（逆势轻仓）",
-            "★ 风控：单笔风险 ≤ 2%，止损必执行",
-        ],
+        "must_do": must_do,
         "starred": [
-            f"最佳做空区：{signals[0].entry_low:.0f}-{signals[0].entry_high:.0f}" if signals else "等待结构确认",
-            f"最佳做多区：{signals[-1].entry_low:.0f}-{signals[-1].entry_high:.0f}" if len(signals) > 2 else "暂不建议追多",
+            f"最佳做空区：{short_sig.entry_low:.0f}-{short_sig.entry_high:.0f}" if short_sig else "暂不建议追空",
+            f"最佳做多区：{long_sig.entry_low:.0f}-{long_sig.entry_high:.0f}" if long_sig else "暂不建议追多",
             "失效条件见下方「失效条件」模块",
         ],
     }

@@ -10,8 +10,8 @@ import pandas as pd
 import pytest
 
 from src.agents.risk import run_risk_team
-from src.analysis.ict_pa import FairValueGap, TimeframeAnalysis
-from src.analysis.report_engine import build_conclusion, generate_trading_signals
+from src.analysis.ict_pa import FairValueGap, TimeframeAnalysis, analyze_timeframe
+from src.analysis.report_engine import build_conclusion, generate_trading_signals, trend_projections
 from src.core.types import TransactionProposal
 from src.indicators.technical import fibonacci_levels
 from src.indicators.verify import indicator_snapshot
@@ -114,6 +114,99 @@ def test_fin_06_conclusion_no_hardcoded_price_without_signals() -> None:
     )
     assert "4389" not in conclusion["action"]
     assert "4396" not in conclusion["action"]
+
+
+@pytest.mark.financial
+def test_bullish_conclusion_uses_long_plan_not_short_template() -> None:
+    ts = pd.Timestamp("2026-06-01")
+    a5 = TimeframeAnalysis("5m", "bullish", "—", "—", swing_high=4300.0, swing_low=4200.0)
+    a15 = TimeframeAnalysis("15m", "bullish", "—", "—", swing_high=4300.0, swing_low=4200.0)
+    signals = generate_trading_signals(
+        4250.0,
+        a5,
+        a15,
+        4300.0,
+        4200.0,
+        {"bearish": 20.0, "bullish": 65.0, "ranging": 15.0},
+    )
+    conclusion = build_conclusion(
+        {"bearish": 20.0, "bullish": 65.0, "ranging": 15.0},
+        "bullish",
+        signals,
+    )
+    assert "做多" in conclusion["must_do"][0]
+    assert "最佳做多区" in conclusion["starred"][1]
+    assert "最佳做空区" not in conclusion["action"]
+
+
+@pytest.mark.financial
+def test_bullish_projection_primary_path_is_upside() -> None:
+    projections = trend_projections(
+        4250.0,
+        4300.0,
+        4200.0,
+        {"bearish": 20.0, "bullish": 65.0, "ranging": 15.0},
+    )
+    assert projections[0]["name"] == "主路径 (回调后上行)"
+    assert projections[0]["color"] == "#22c55e"
+    assert projections[0]["steps"][-1]["price"] > 4300.0
+
+
+@pytest.mark.financial
+def test_analyze_timeframe_uses_recent_swing_range() -> None:
+    idx = pd.date_range("2026-06-01", periods=36, freq="5min")
+    high = [
+        100,
+        103,
+        106,
+        110,
+        105,
+        102,
+        99,
+        96,
+        94,
+        97,
+        101,
+        104,
+        108,
+        112,
+        109,
+        106,
+        103,
+        101,
+        99,
+        98,
+        101,
+        104,
+        107,
+        109,
+        106,
+        103,
+        100,
+        98,
+        96,
+        95,
+        97,
+        100,
+        103,
+        105,
+        104,
+        103,
+    ]
+    low = [x - 2 for x in high]
+    low[8] = 70
+    df = pd.DataFrame(
+        {
+            "Open": high,
+            "High": high,
+            "Low": low,
+            "Close": [(h + l) / 2 for h, l in zip(high, low)],
+            "Volume": [100] * len(high),
+        },
+        index=idx,
+    )
+    analysis = analyze_timeframe(df, "5m")
+    assert analysis.swing_low != 70
 
 
 @pytest.mark.financial

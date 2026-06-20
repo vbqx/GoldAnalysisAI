@@ -53,9 +53,9 @@ MVP: `ict_pa.analyze_timeframe()`
 机构报告主图使用 **5 分钟** Lightweight Charts（`report_views.py` + `lightweight_chart.py`）：
 
 - K 线 + 成交量
-- SMC 叠加：Bearish/Bullish FVG、Order Block、BOS/CHoCH 标记
-- 虚线 = 三种路径投影（与 `report_engine.trend_projections()` 一致，宏观 swing 级别示意）
-- **不绘制** EMA/VWAP 曲线与 MACD/RSI/ADX 副图（避免主图叠层混乱）
+- SMC 叠加：Bearish/Bullish FVG、Order Block、需求/流动性区、BOS/CHoCH 标记
+- **不绘制** EMA/VWAP 曲线、MACD/RSI/ADX 副图、路径预测虚线（避免主图叠层混乱）
+- 路径推演见底栏 **未来走势推演**（`report["path_summary"]`，源自 `trend_projections()`）
 
 技术指标仍在 `enrich()` 管道计算，供 agent/LLM 使用，并在侧边栏 **指标校验** 表展示（含 RSI14、MACD、ADX14、ATR14 等）。
 
@@ -65,6 +65,8 @@ MVP: `ict_pa.analyze_timeframe()`
 
 #### Swing Points
 在左右各 N 根 K 线范围内的局部极值。原报告可能用 3~5 根。
+
+`swing_high` / `swing_low` 取**每侧最近 2 个**摆动高/低点（`_recent_swing_range`），避免全窗口 `max/min` 被陈旧极端价位拉偏支撑阻力与 Fib 区间。
 
 #### BOS / CHoCH
 ```
@@ -120,8 +122,8 @@ MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；
 
 ### 2.6 底部区域
 
-- **Fibonacci** — 最近 swing high→low 的 0.382/0.5/0.618
-- **路径投影** — 三路径 + 概率（来自 sentiment 权重）
+- **Fibonacci** — 最近 swing high→low 的 0.382/0.5/0.618（swing 来自近期结构边界）
+- **路径投影** — 三路径 + 概率（`trend_projections` 主路径随 bullish / bearish / ranging 主导情绪切换；底栏卡片展示，非主图虚线）
 - **失效条件** — 15min 站稳某价位、出现 bullish CHoCH 等
 
 ---

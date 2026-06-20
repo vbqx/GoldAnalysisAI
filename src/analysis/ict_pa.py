@@ -260,6 +260,19 @@ def _premium_discount(
     return "equilibrium", eq
 
 
+def _recent_swing_range(swings: list[SwingPoint], *, per_side: int = 2) -> tuple[float | None, float | None]:
+    """Use recent structure bounds instead of stale full-window extremes."""
+    if not swings:
+        return None, None
+    highs = [s.price for s in swings if s.kind == "high"][-per_side:]
+    lows = [s.price for s in swings if s.kind == "low"][-per_side:]
+    if not highs:
+        highs = [s.price for s in swings if s.kind == "high"]
+    if not lows:
+        lows = [s.price for s in swings if s.kind == "low"]
+    return (max(highs) if highs else None, min(lows) if lows else None)
+
+
 def _volume_signal(df: pd.DataFrame) -> str:
     if "Volume" not in df.columns or len(df) < 21:
         return "N/A"
@@ -292,10 +305,7 @@ def analyze_timeframe(df: pd.DataFrame, timeframe: str) -> TimeframeAnalysis:
         else:
             choch_status = label
 
-    highs = [s.price for s in swings if s.kind == "high"]
-    lows = [s.price for s in swings if s.kind == "low"]
-    swing_high = max(highs) if highs else None
-    swing_low = min(lows) if lows else None
+    swing_high, swing_low = _recent_swing_range(swings)
     price = float(df["Close"].iloc[-1])
     pd_zone, eq = _premium_discount(swing_high, swing_low, price)
 
