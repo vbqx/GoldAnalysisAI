@@ -45,9 +45,9 @@ TradingView → enrich → ict_pa.analyze (规则事实)
      │                        │                        │
      └────────────────────────┴────────────────────────┘
                               ▼
-              交易员 → 风控 → 经理  (当前规则)
+              交易员 → 风控 → 经理  (规则；trader 含 F-014 结构门控)
                               ▼
-              report_engine.build_report
+              report_engine.build_report（信号重排 + signal_role 在 orchestrator）
                               ▼
               llm/analyst.py 报告文案层 (LLM_ENABLED)
                               ▼
@@ -125,6 +125,16 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | `llm/analyst.py` | 文案层经 `stream_llm_json()`；失败写入 `llm_analysis.error`，不中断 pipeline |
 
 单元测试：`tests/unit/test_llm_transport.py`。
+
+### 3.5 规则智能体 — 金融 Review 三处改动（2026-06-20）
+
+| 模块 | Finding | 行为摘要 | 单测 |
+|------|---------|----------|------|
+| `debate.py` | F-013 | `combined = 研究分 + sentiment_pct/50`；证据接近时以结构情绪 tiebreaker | `test_debate_coherence.py` |
+| `trader.py` | F-014 | `sentiment_score` 门控主方向；偏空优先 short（强多共识 strength≥0.6 例外） | `test_trader_sentiment.py` |
+| `factory.py` | — | `run_research_team` 并行 LLM 看多/看空；`run_parallel` 并行 Analyst Team | `test_research_parallel.py` |
+
+编排层 `orchestrator.py`：研究阶段按 `research_uses_parallel_llm()` 分支；报告组装后按 sentiment 重排信号并写入 `signal_role`。门禁：`tests/tools/coherence_check.py`（rule 模式 `issues: []`）。
 
 ---
 
@@ -219,7 +229,7 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | **P4** | 报告文案层 | ✅ |
 | **P1** | Analyst Team LLM 双轨（`LLM_STAGE_ANALYSTS`） | ✅ |
 | **P1** | 真实 News/DXY/社媒 API | ✅ |
-| **P1** | 流水线并行（bull/bear、Analyst×4） | 🔲 |
+| **P1** | 流水线并行（bull/bear、Analyst×4） | ✅ |
 | **P1** | LLM 交易员 | 🔲 |
 | **P2** | LLM 风控 + 经理 | 🔲 |
 | **P3** | ICT Interpreter | 🔲 |

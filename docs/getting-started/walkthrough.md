@@ -49,7 +49,7 @@ flowchart LR
 2. 步骤条按 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative`）  
    中文含义：数据拉取 → 技术指标 → ICT 结构 → 分析师团队 → 看多/看空 → 辩论 → 交易 → 风控 → 经理 → 报告 →（可选）LLM 文案
 3. 生成过程中可切换到 **LLM决策链** 页查看实时输入输出
-4. 完成后渲染机构报告，主图为 **1 日 K 线**
+4. 完成后渲染机构报告，主图为 **5 分钟 K 线**（SMC 叠加 + 路径预测；技术指标见侧边栏「指标校验」）
 
 | 模式 | 典型耗时 |
 |------|----------|
@@ -66,9 +66,10 @@ flowchart LR
 |------|----------|------|
 | 顶栏指标 | `report.metrics` | 现价、日涨跌、日高/低、情绪摘要 |
 | 顶栏四格 | `market_overview` / `liquidity` / `conclusion` / `sentiment` | 市场总览、流动性、结论要点、多空结构权重饼图（最右） |
-| 多周期结构 | `data` + `report.timeframes` | 三列：4H/1H/15M 快照 K 线 + 结构文字（BOS/OB/FVG） |
-| 日线主图 | `data["1d"]` + `analyses["1d"]` | 左侧宽栏，EMA/VWAP + OB/FVG + A/B/C 推演 |
+| 多周期结构 | `data` + `report.timeframes` | 三列：4H/1H/15M 条带 K 线 + 结构文字（BOS/OB/FVG） |
+| 5 分钟主图 | `data["5m"]` + `analyses["5m"]` | 中间宽栏：K 线 + 成交量 + SMC 叠加 + 路径预测虚线（不绘 EMA/MACD 副图） |
 | 交易计划 | `report.signals` | 右侧栏，最多 3 条计划卡片 |
+| 指标校验 | 侧边栏 expander | 5m/15m：EMA/VWAP/RSI/MACD/ADX/ATR 等（供人工核对，非主图绘制） |
 | 底栏四格 | `fibonacci` / `path_summary` / 风控 / `conclusion` | Fib、走势推演、失效条件、最终结论 |
 | 外部数据 | `report.external`（摘要） | 完整面板见 **外部数据** 导航页 |
 

@@ -30,8 +30,10 @@
 |-------|--------|------|
 | 调整 EMA/VWAP/Fib | `indicators/technical.py` | `pytest tests/unit/test_indicators.py` |
 | 调整 Swing/BOS/OB/FVG | `analysis/ict_pa.py` | 查看 `analyses["5m"]` 或 DEBUG 日志 |
+| 改辩论/共识逻辑 | `agents/debate.py` | `pytest tests/unit/test_debate_coherence.py` |
 | 改交易信号几何 | `analysis/report_engine.py` | `pytest tests/unit/test_financial_review.py` |
-| 改辩论/共识逻辑 | `agents/debate.py` | 单元测试 + 看 `agent_trace.debate` |
+| 规则模式一致性门禁 | `tests/tools/coherence_check.py` | `$env:AGENT_MODE="rule"; python tests/tools/coherence_check.py` |
+| 金融实跑快照 | `tests/tools/financial_review_run.py` | 输出 `tests/reports/financial_review_snapshot.json` |
 | 改新闻分析师逻辑 | `agents/analysts/news.py` | `pytest tests/unit/test_analyst_input_density.py` |
 | 接入新外部数据源 | `data/sources/` + `fetch_pipeline.py` | `pytest tests/unit/test_external_sources.py` |
 | 金十 MCP 参数 | `config.py` + `jin10_feed.py` | `python tests/run.py --external` |

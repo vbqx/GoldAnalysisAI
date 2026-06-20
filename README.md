@@ -25,7 +25,7 @@ streamlit run app.py
 
 | 页面 | 文件 | 说明 |
 |------|------|------|
-| 机构级分析报告 | `views/1_机构级分析报告.py` | 机构完整报告，主图日线 |
+| 机构级分析报告 | `views/1_机构级分析报告.py` | 机构完整报告，主图 5 分钟 |
 | 外部数据 | `views/4_外部数据.py` | 新闻/日历/DXY/社媒，**fetch 完成后即可查看** |
 | 短线策略 | `views/2_短线策略.py` | 短线策略图，**切换不重新生成** |
 | LLM决策链 | `views/3_LLM决策链.py` | 智能体决策、LLM 文案、生成与智能体 I/O |
@@ -98,7 +98,7 @@ GoldAnalysisAI/
 | LLM 双轨 + 来源标识 | ✅ |
 | 智能体 I/O（Analyst Team + LLM） | ✅ LLM决策链页 |
 | LLM 传输重试 + 混合模式规则兜底 | ✅ |
-| 主图日线 (1d) | ✅ |
+| 主图 5 分钟 (5m) | ✅ |
 
 ## LLM 配置（硅基流动示例）
 
@@ -121,20 +121,27 @@ LLM_ENABLED=true
 ```bash
 pip install -r requirements-dev.txt
 
-# 快速：单元 + 回归（无网络，约 77 项，推荐 CI / 日常）
+# 快速：单元 + 回归（无网络，约 88 项，推荐 CI / 日常）
 python tests/run.py
 
 # 外部 API 冒烟（DXY / 金十 MCP / TV 社媒，需网络）
 python tests/run.py --external
 
-# 金融 Review：FIN-* 单测
+# 金融 Review：FIN-* 单测（发版前建议配合 coherence_check）
 python tests/run.py --financial
 
-# 完整：含流水线集成（需 .env + TradingView，约 2–3 分钟）
+# 完整：含流水线集成（需 .env + TradingView；规则模式约 1 分钟，hybrid+LLM 约 5–6 分钟）
 python tests/run.py --full
+
+# 规则模式一致性检查（P0 门禁；输出 tests/reports/coherence_check.json）
+$env:AGENT_MODE="rule"; $env:LLM_ENABLED="false"; python tests/tools/coherence_check.py
 ```
 
+**金融三阶段修复**（2026-06-20）：F-003/F-013/F-014（P0）+ UI/配置（P1）+ 数据质量/Agent 边界（P2）已落地；详见 [docs/domain/financial-review.md §7](docs/domain/financial-review.md#7-修复路径规划2026-06-20)。
+
 用例目录与维护说明见 [tests/README.md](tests/README.md)、[tests/cases/catalog.yaml](tests/cases/catalog.yaml)。
+
+**主图说明**：机构报告主图为 **5 分钟 K 线**（K 线 + 成交量 + SMC 叠加 + 路径预测虚线）；EMA/MACD/RSI 等技术指标在流水线中计算并供 agent 使用，在侧边栏 **「指标校验」** 展示，不绘制在主图上。
 
 ## 免责声明
 

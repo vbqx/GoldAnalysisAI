@@ -199,7 +199,7 @@ Phase 1 保持 `run_analysis()` 返回签名不变，适合快速解决“启动
 | **P1** | 信号生成去重（trader 与 build_report 共用一次 `generate_trading_signals`） | ✅ |
 | **P1** | Analyst Team LLM 双轨（每分析师独立 Prompt） | ✅ `agents/llm/stages/analysts/` |
 | **P1** | 真实 News / DXY / 社媒 API | ✅ `data/sources/` |
-| **P1** | 流水线并行（bull/bear、Analyst×4） | 🔲 见 development.md §11 |
+| **P1** | 流水线并行（bull/bear、Analyst×4） | ✅ |
 | **P2** | LLM 交易员 / 风控 / 经理 | `agents/llm/stages/` |
 | **P3** | ICT Interpreter | `ict_pa.py` |
 

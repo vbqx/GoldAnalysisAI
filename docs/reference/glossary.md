@@ -48,9 +48,12 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 | **FVG（Fair Value Gap，公平价值缺口）** | 三根 K 线形成的价格缺口 |
 | **流动性区（Liquidity）** | 等高/等低、扫止损等价位聚集区 |
 | **溢价/折价区** | 相对最近 swing 区间的上方/下方 |
-| **win_rate（报告字段名）** | ⚠️ **不是历史胜率**；实为 `sentiment_score` 的结构偏多权重 |
+| **win_rate（报告字段名）** | ⚠️ **不是历史胜率**；已逐步替换为 `sentiment_bias_pct`（结构偏多/偏空权重 %） |
+| **sentiment_bias_pct** | 信号卡片展示的「结构权重」，数值来自 `sentiment_score` 对应分量（如 bearish 45%） |
 | **sentiment_score** | 多周期趋势加权 → 饼图多/空/震荡比例 |
-| **risk_reward** | 风险收益比展示；部分模板仍为固定文案（见 F-003） |
+| **coherence_check** | `tests/tools/coherence_check.py` — 规则模式跑完整流水线，校验结论/辩论/信号几何一致性；P0 门禁 |
+| **主策略 / 逆势备选** | `signal_role`：`primary` 与结构主导方向一致；`alternate` 为逆势方案，UI 徽章区分 |
+| **risk_reward** | 风险收益比展示；> 1:8 时标注「远端限价」 |
 
 ---
 

@@ -68,7 +68,7 @@ streamlit run app.py    # http://localhost:8501
 
 ```bash
 pip install -r requirements-dev.txt
-python tests/run.py              # 快速：单元 + 回归（约 77 项，无网络）
+python tests/run.py              # 快速：单元 + 回归（约 88 项，无网络）
 python tests/run.py --external     # 外部 API 冒烟
 python tests/run.py --financial    # 金融 Review FIN-*
 python tests/run.py --full         # 含完整流水线

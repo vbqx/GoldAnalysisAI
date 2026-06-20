@@ -50,12 +50,16 @@ MVP: `ict_pa.analyze_timeframe()`
 
 ### 2.3 主图（5min 执行结构）
 
-- K 线 + EMA20(紫) / EMA50(黄) / EMA610(红) + VWAP(蓝)
-- 绿色区域 = 需求/流动性区（最近 swing low 附近）
-- 粉红/橙色 = Bearish FVG / OB（反弹做空区）
-- 虚线 = 三种路径投影
+机构报告主图使用 **5 分钟** Lightweight Charts（`report_views.py` + `lightweight_chart.py`）：
 
-MVP: `viz/charts.py` + Plotly Candlestick
+- K 线 + 成交量
+- SMC 叠加：Bearish/Bullish FVG、Order Block、BOS/CHoCH 标记
+- 虚线 = 三种路径投影（与 `report_engine.trend_projections()` 一致，宏观 swing 级别示意）
+- **不绘制** EMA/VWAP 曲线与 MACD/RSI/ADX 副图（避免主图叠层混乱）
+
+技术指标仍在 `enrich()` 管道计算，供 agent/LLM 使用，并在侧边栏 **指标校验** 表展示（含 RSI14、MACD、ADX14、ATR14 等）。
+
+短线策略页（`views/2_短线策略.py`）仍展示 15m + 5m 执行级图表。
 
 ### 2.4 ICT/PA 核心算法（简化版）
 

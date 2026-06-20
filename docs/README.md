@@ -63,7 +63,8 @@ docs/
 | 文档 | 说明 |
 |------|------|
 | [reverse-engineering.md](./domain/reverse-engineering.md) | 报告各区块算法反推 |
-| [financial-review.md](./domain/financial-review.md) | 金融逻辑评审 F-001～F-012 |
+| [financial-review.md](./domain/financial-review.md) | 金融逻辑评审 F-001～F-014、**§7 修复路径** |
+| [financial-review-run-2026-06-20.md](./domain/financial-review-run-2026-06-20.md) | 实跑评审快照 |
 
 ### integrations — 外部集成
 
@@ -106,7 +107,8 @@ README.md（快速开始）
 2. **修改报告字段**：更新 `examples/report-schema.md`，并运行 `python scripts/export_sample_report.py`。
 3. **新增术语**：写入 `reference/glossary.md`。
 4. **修改界面动线**：同步 `getting-started/walkthrough.md`。
-5. **持续集成**：`.github/workflows/docs.yml` 自动校验文档与代码一致。
+5. **金融修复**：合并 Phase 1–3 相关改动后须跑 `coherence_check.py`（零 issue）与 `python tests/run.py --financial`；修复路径见 [domain/financial-review.md §7](./domain/financial-review.md#7-修复路径规划2026-06-20)。
+6. **持续集成**：`.github/workflows/docs.yml` 自动校验文档与代码一致。
 
 ---
 

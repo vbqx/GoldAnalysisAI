@@ -231,7 +231,7 @@ build_report(signals=…)  →  dict  report
 | `render_llm_decision_page()` | `src/viz/decision_page.py` | LLM 决策链（独立页） |
 | `ensure_report()` | `src/viz/streamlit_common.py` | session 缓存 + 生成进度 |
 | `_embed_chart()` | `src/viz/report_views.py` | 图表 iframe 封装 |
-| `build_lightweight_chart_html()` | `src/viz/lightweight_chart.py` | K 线、EMA/VWAP、OB/FVG  overlay |
+| `build_lightweight_chart_html()` | `src/viz/lightweight_chart.py` | K 线、成交量、OB/FVG overlay、路径预测虚线 |
 | `_serialize_overlays()` | `src/viz/lightweight_chart.py` | 结构区、投影线 |
 | `render_header()` 等 | `src/viz/dashboard_components.py` | `report` 各字段 → HTML |
 | `render_external_data_panel()` | `src/viz/dashboard_components.py` | 外部拉取数据面板（DXY/新闻/日历/社媒） |
@@ -244,7 +244,18 @@ build_report(signals=…)  →  dict  report
 | `render_llm_sidebar()` | `src/viz/llm_view.py` | LLM 深度分析文案 |
 | `indicator_snapshot()` | `src/indicators/verify.py` | 指标校验表 |
 
-机构报告**主图**使用 **1d 日线**（`report_views.py` + `lightweight_chart.py`）。
+机构报告**主图**使用 **5m 五分钟**（`report_views.py` → `data["5m"]` + `analyses["5m"]`，宏观结构参考 `analyses["15m"]`）。
+
+**主图 variant（`CHART_VARIANTS["main"]`）**：
+
+| 项 | 值 |
+|----|-----|
+| 周期 | 5m，约 360 根 K 线 |
+| 绘制 | K 线、成交量、SMC 叠加（OB/FVG/BOS/CHoCH）、路径预测虚线 |
+| 不绘制 | EMA/VWAP 曲线、MACD/RSI/ADX/ATR 副图、Fibonacci 水平线 |
+| 指标去向 | 流水线 `enrich()` 照常计算；侧边栏 **指标校验**（`indicator_snapshot`）展示；agent/LLM 输入照常使用 |
+
+路径预测虚线与 K 线共用默认价格轴（无独立 `proj` 轴）；5m 主图右侧预留约 20 根空白用于展示推演步长（每步约 3 小时）。单元测试：`tests/unit/test_chart_projections.py`。
 
 **UI 数据分工**：
 
@@ -324,7 +335,7 @@ GoldAnalysisAI/
 ### 5.1 `app.py` 与多页面
 
 - **`app.py`**：`st.navigation` 注册四页；预加载 `.env`；不显示为侧边栏「app」
-- **`views/1_机构级分析报告.py`**：机构一页式布局（顶栏四格、多周期结构、日线主图 + 交易计划、底栏四格）
+- **`views/1_机构级分析报告.py`**：机构一页式布局（顶栏四格、多周期结构、5 分钟主图 + 交易计划、底栏四格）
 - **`views/4_外部数据.py`**：`ensure_external_data()`，fetch 完成后展示 DXY/新闻/日历/社媒与二次加工摘要
 - **`views/2_短线策略.py`**：`ensure_report(show_generation_ui=False)`，秒开
 - **`views/3_LLM决策链.py`**：决策链、LLM 文案、`meta.llm_io` 完整记录
@@ -397,13 +408,15 @@ GoldAnalysisAI/
 
 | 阶段 | factory 入口 | 规则实现 | LLM 实现 |
 |------|-------------|----------|----------|
-| Research | `run_bullish` / `run_bearish` | `bullish.py` / `bearish.py`（整合 Analyst 同向证据） | `llm/stages/bullish.py` 等 |
-| Debate | `run_debate` | `debate.py`（含 Analyst 摘要） | `llm/stages/debate.py` |
-| Trade | `run_trader` | `trader.py` | P1 规划中 |
+| Research | `run_bullish` / `run_bearish` / `run_research_team` | `bullish.py` / `bearish.py` | `llm/stages/bullish.py` 等；LLM 时可并行 |
+| Debate | `run_debate` | `debate.py`（F-013：结构情绪 tiebreaker） | `llm/stages/debate.py` |
+| Trade | `run_trader` | `trader.py`（整合 `sentiment_score` 结构门控） | P1 规划中 |
 | Risk | `run_risk` | `risk.py` | P2 规划中 |
 | Manager | `run_manager` | `manager.py` | P2 规划中 |
 
 `run_manager` 优先级：**conservative** → **neutral** → **aggressive**；全否决则 `action="wait"`。
+
+**决策链数据流（规则模式）**：`sentiment_score(analyses)` → 结论层 + **trader 门控**（偏空优先 short）→ debate 共识 → 风控 → 经理重排（short/long 置顶 + `signal_role`）。
 
 ### 5.6 报告引擎 `analysis/report_engine.py`
 
@@ -564,10 +577,10 @@ python tests/tools/chart_compare.py
 
 | 项目 | 行为 |
 |------|------|
-| 报告生成 | 用户确认「开始生成报告」或「重新配置 / 刷新报告」后全量执行，约 2–3 分钟（规则）或 5–6 分钟（全开 LLM） |
+| 报告生成 | 用户确认「开始生成报告」或「重新配置 / 刷新报告」后全量执行，约 2–3 分钟（规则）或 3–5 分钟（全开 LLM，4 分析师 + 多空并行） |
 | 切换页面 | 复用 `session_state` 缓存，秒开 |
-| LLM 耗时 | 研究阶段 30–90s/次属正常（V4-Pro）；传输断流自动重试，不拖垮整条 pipeline |
-| 数据拉取 | 2 次 TV 请求 + resample，典型 3–15s |
+| LLM 耗时 | 研究阶段 30–90s/次属正常（V4-Pro）；**4 分析师与看多/看空默认并行**，墙钟时间约等于最慢一路；传输断流自动重试 |
+| 数据拉取 | 每次生成均实时拉取 TV K 线（2 次 WS + 本地 resample），典型 3–15s |
 
 ---
 
@@ -592,10 +605,12 @@ python tests/tools/chart_compare.py
 自动化测试见 [`tests/`](../tests/README.md) 与 [`tests/cases/catalog.yaml`](../tests/cases/catalog.yaml)。
 
 ```bash
-python tests/run.py --fast       # 日常 / CI（约 77 项）
+python tests/run.py --fast       # 日常 / CI（约 88 项）
 python tests/run.py --external   # 外部 API 冒烟（需网络）
 python tests/run.py --financial  # FIN-* 金融 Review
-python tests/run.py --full       # 发版前（含流水线）
+python tests/run.py --full       # 发版前（含流水线；hybrid+LLM 约 5–6 分钟）
+python tests/tools/coherence_check.py  # 规则模式一致性检查（需 TV）
+python tests/tools/financial_review_run.py  # 金融评审实跑快照
 ```
 
 手工检查（尚未自动化，见 catalog `UI-*` / `FIN-UI-*`）：
@@ -604,7 +619,7 @@ python tests/run.py --full       # 发版前（含流水线）
 - [ ] 生成步骤含 `Analyst Team`；I/O 含四位分析师 LLM 或规则输出
 - [ ] 「LLM决策链」三 Tab：智能体决策 / LLM 文案 / 生成与 LLM I/O
 - [ ] **外部数据**页在 fetch 完成后展示 DXY/新闻/日历/TV 社媒与二次加工摘要（实时或明确占位/回退说明）
-- [ ] 机构页顶栏四格 + 多周期结构（4H/1H/15M）+ 日线主图与交易计划分栏
+- [ ] 机构页顶栏四格 + 多周期结构（4H/1H/15M）+ **5 分钟主图**与交易计划分栏
 - [ ] Analyst Team 四列 badge 与 stage_sources 一致
 - [ ] 两种报告模式渲染正常；结构权重标注「非回测胜率」
 
@@ -615,7 +630,7 @@ python tests/run.py --full       # 发版前（含流水线）
 | P1 | Analyst Team LLM 双轨（`LLM_STAGE_ANALYSTS`） | ✅ |
 | P1 | 信号生成去重（trader / report 共用） | ✅ |
 | P1 | 真实 News / DXY / 社媒 API | ✅ |
-| P1 | 流水线并行（bull/bear、Analyst×4、risk×3） | 🔲 |
+| P1 | 流水线并行（bull/bear、Analyst×4） | ✅ |
 | P4 | 报告文案层 | ✅ |
 | P1 | LLM 交易员 | 🔲 |
 | P2 | LLM 风控 + 经理 | 🔲 |
