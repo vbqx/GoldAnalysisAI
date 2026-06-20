@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from src.indicators.technical import ema_relation
+from src.indicators.technical import ema_relation, indicator_values
 
 
 def indicator_snapshot(df: pd.DataFrame, timeframe: str) -> dict:
@@ -31,6 +31,7 @@ def indicator_snapshot(df: pd.DataFrame, timeframe: str) -> dict:
             row[f"{col}_diff"] = round(price - val, 2)
 
     row["ema_relation"] = ema_relation(price, last)
+    row.update(indicator_values(last))
 
     notes: list[str] = []
     if "Volume" in df.columns:
@@ -82,6 +83,11 @@ def indicator_table_rows(snapshots: list[dict]) -> list[dict]:
                 "EMA50": s.get("EMA50", "—"),
                 "EMA610": s.get("EMA610", "—"),
                 "VWAP": s.get("VWAP", "—"),
+                "RSI14": s.get("RSI14", "—"),
+                "MACD": s.get("MACD", "—"),
+                "MACD_SIG": s.get("MACD_SIGNAL", "—"),
+                "ADX14": s.get("ADX14", "—"),
+                "ATR14": s.get("ATR14", "—"),
                 "EMA20差": s.get("EMA20_diff", "—"),
                 "VWAP差": s.get("VWAP_diff", "—"),
             }

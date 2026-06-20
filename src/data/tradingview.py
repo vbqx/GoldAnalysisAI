@@ -107,6 +107,15 @@ def _resample(df: pd.DataFrame, rule: str) -> pd.DataFrame:
     return ohlcv.dropna()
 
 
+def compute_price_drift_1d(df_5m: pd.DataFrame, df_1d: pd.DataFrame) -> float:
+    """Difference between independent 1d close and 5m-resampled 1d close (F-005)."""
+    if df_5m.empty or df_1d.empty:
+        return 0.0
+    resampled_close = float(_resample(df_5m, "1d")["Close"].iloc[-1])
+    independent_close = float(df_1d["Close"].iloc[-1])
+    return round(independent_close - resampled_close, 4)
+
+
 def _fetch_bars(
     interval: "Interval",
     n_bars: int,

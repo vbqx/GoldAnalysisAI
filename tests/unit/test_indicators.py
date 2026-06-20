@@ -80,3 +80,36 @@ def test_indicator_table_rows_columns() -> None:
     rows = indicator_table_rows(snaps)
     assert rows[0]["周期"] == "5m"
     assert "EMA20" in rows[0] and "VWAP差" in rows[0]
+
+
+def test_indicator_snapshot_includes_oscillators() -> None:
+    """IND-10: indicator_snapshot 含 RSI/MACD/ADX/ATR 字段."""
+    df = _sample_ohlcv(50)
+    for col, val in (
+        ("RSI14", 55.0),
+        ("MACD", 1.2),
+        ("MACD_SIGNAL", 0.8),
+        ("ADX14", 28.0),
+        ("ATR14", 12.5),
+    ):
+        df[col] = val
+    snap = indicator_snapshot(df, "5m")
+    for key in ("RSI14", "MACD", "MACD_SIGNAL", "ADX14", "ATR14"):
+        assert key in snap
+        assert snap[key] is not None
+
+
+def test_indicator_table_rows_includes_oscillator_columns() -> None:
+    """IND-10: 侧边栏校验表格含 RSI/MACD/ADX/ATR 列."""
+    df = _sample_ohlcv(50)
+    for col in ("RSI14", "MACD", "MACD_SIGNAL", "ADX14", "ATR14"):
+        df[col] = 1.0
+    rows = indicator_table_rows([indicator_snapshot(df, "5m")])
+    for col in ("RSI14", "MACD", "MACD_SIG", "ADX14", "ATR14"):
+        assert col in rows[0]
+
+
+def test_indicator_table_rows_error_row() -> None:
+    rows = indicator_table_rows([{"timeframe": "5m", "error": "empty dataframe"}])
+    assert rows[0]["周期"] == "5m"
+    assert rows[0]["状态"] == "empty dataframe"
