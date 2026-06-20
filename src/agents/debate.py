@@ -1,4 +1,11 @@
-"""Research debate — bull vs bear discussion → consensus."""
+"""Research debate — bull vs bear discussion → consensus.
+
+Financial review (F-013): consensus must align with multi-TF structure sentiment when
+research scores are close. Scoring uses ``combined = conf×items + sentiment_pct/50``
+(not ``/100``). When ``|bull_pct - bear_pct| >= 10`` and combined scores differ by
+less than 2.0, tiebreaker picks the dominant structure direction (bearish/bullish).
+Audit trail: tiebreaker rationale is appended to ``discussion_notes``.
+"""
 
 from __future__ import annotations
 
@@ -42,10 +49,25 @@ def run_debate(
     notes.append(f"看空研究员：{bearish.summary}")
     notes.append(f"多周期技术投票：多 {bull_pct:.0f}% / 空 {bear_pct:.0f}% / 震荡 {sentiment.get('ranging', 0):.0f}%")
 
-    combined_bull = bull_score + bull_pct / 100
-    combined_bear = bear_score + bear_pct / 100
+    # F-013: structure sentiment weighted at pct/50 so 4h-dominant mood can break ties.
+    combined_bull = bull_score + bull_pct / 50
+    combined_bear = bear_score + bear_pct / 50
 
-    if abs(combined_bull - combined_bear) < 0.15:
+    # Tiebreaker when research is ambiguous but structure has a clear lean (>=10% gap).
+    if abs(bull_pct - bear_pct) >= 10 and abs(combined_bull - combined_bear) < 2.0:
+        if bear_pct > bull_pct:
+            bias = "bearish"
+            strength = min(combined_bear / (combined_bull + combined_bear + 0.01), 1.0)
+            notes.append("讨论结论：研究证据接近，结构情绪偏空占主导（tiebreaker）")
+        elif bull_pct > bear_pct:
+            bias = "bullish"
+            strength = min(combined_bull / (combined_bull + combined_bear + 0.01), 1.0)
+            notes.append("讨论结论：研究证据接近，结构情绪偏多占主导（tiebreaker）")
+        else:
+            bias = "neutral"
+            strength = 0.5
+            notes.append("讨论结论：多空证据接近，倾向震荡/等待确认")
+    elif abs(combined_bull - combined_bear) < 0.15:
         bias: Bias = "neutral"
         strength = 0.5
         notes.append("讨论结论：多空证据接近，倾向震荡/等待确认")
