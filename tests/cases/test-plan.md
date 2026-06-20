@@ -1,6 +1,6 @@
 # GoldAnalysisAI 测试用例设计
 
-> 版本：v1.0 · 2026-06-14  
+> 版本：v1.1 · 2026-06-20  
 > 范围：UI 布局 → 指标显示 → 整体功能 → 性能  
 > 用例明细见 [catalog.yaml](./catalog.yaml)
 
@@ -47,7 +47,7 @@
 | UIL-10 | 顶栏指标卡 | 6 格 header-grid：现价/日涨跌/日高低/情绪/美元/结论 |
 | UIL-11 | 来源 Banner | agent-source-bar 各阶段 chip 可见 |
 | UIL-12 | 总览四格 | 市场总览 / 路径 / 流动性 / 今日要点 |
-| UIL-13 | 三列主区 | 左：4H/1H/15m 迷你图+面板；中：日线主图；右：情绪+路径+计划 |
+| UIL-13 | 三列主区 | 左：4H/1H/15m 条带图+面板；中：**5 分钟主图**（K 线+量+SMC+路径虚线）；右：交易计划 |
 | UIL-14 | 底部四列 | Fibonacci 表 / 投影图 / 风控失效 / 最终结论 |
 | UIL-15 | 页脚 | footer-bar + 品牌行 |
 
@@ -93,7 +93,7 @@
 
 | ID | 场景 | 验收要点 |
 |----|------|----------|
-| IND-10 | 5m/15m 表格 | 列：周期/K线数/现价/EMA20/50/610/VWAP/差值 |
+| IND-10 | 5m/15m 表格 | 列：周期/K线数/现价/EMA20/50/610/VWAP/**RSI14/MACD/MACD_SIG/ADX14/ATR14**/差值 |
 | IND-11 | 现价一致 | 5m 与 15m 表格现价相同 |
 | IND-12 | EMA610 说明 | bars<610 时 notes 含历史不足提示 |
 | IND-13 | VWAP 偏差 | 偏离>5% 时有 notes 警告 |
@@ -109,7 +109,9 @@
 
 | ID | 场景 | 验收要点 |
 |----|------|----------|
-| IND-30 | 日线主图 iframe | 高度≥500；含水印；含 overlay |
+| IND-30 | 5m 主图 iframe | 高度约 420；含水印；含 OB/FVG/BOS/CHoCH overlay + 路径预测虚线；**不**绘制 EMA/MACD/RSI 副图 |
+| IND-34 | 路径预测对齐 | 虚线与 K 线共用默认价格轴；方向与 `trend_projections()` 一致（`test_chart_projections.py`） |
+| IND-35 | 一致性检查 | `coherence_check.py` 规则模式无 issue，或 issues 已登记为已知 Finding |
 | IND-31 | 情绪甜甜圈 | Plotly 渲染；三分类占比合计 100% |
 | IND-32 | Fibonacci 表 | 4 行比例/价位/含义 |
 | IND-33 | 交易信号 | entry_low/high、stop_loss、take_profits 齐全 |
@@ -157,8 +159,8 @@
 
 | ID | 场景 | 阈值（参考） | 测量方式 |
 |----|------|--------------|----------|
-| PERF-01 | 首次完整流水线 | ≤ 240s（含 LLM） | integration test 计时 |
-| PERF-02 | 纯规则流水线 | ≤ 30s | LLM 全关 |
+| PERF-01 | 首次完整流水线 | rule ≤ 240s；hybrid+LLM ≤ 320s（并行后目标 180–220s） | integration test 分层计时 |
+| PERF-02 | 纯规则流水线 | ≤ 30s（实测约 8–10s 含 TV 拉取） | `apply_run_config(rule)` 或 `coherence_check.py` |
 | PERF-03 | 数据拉取阶段 | ≤ 20s | generation_steps 耗时 |
 | PERF-04 | 页面切换（已缓存） | ≤ 3s 可交互 | 手工 / E2E |
 | PERF-05 | 图表 HTML 生成 | ≤ 2s / 图 | unit 计时 |

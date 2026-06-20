@@ -21,8 +21,10 @@ tests/
 ├── regression/               # 回归测试（Issue 修复项、约定检查）
 ├── tools/                    # 开发辅助（非 pytest 用例）
 │   ├── chart_compare.py      # 生成对比用 HTML
+│   ├── coherence_check.py    # 规则模式流水线一致性检查
 │   └── github/               # Issue 批量创建/关单
 └── reports/                  # 测试输出（gitignore）
+    └── coherence_check.json  # 一致性检查报告（由 coherence_check.py 生成）
 ```
 
 ## 快速开始
@@ -31,7 +33,7 @@ tests/
 # 安装开发依赖（含 pytest）
 pip install -r requirements-dev.txt
 
-# 快速测试：单元 + 回归（默认，无网络，约 77 项）
+# 快速测试：单元 + 回归（默认，无网络，约 88 项）
 python tests/run.py
 
 # 金融 Review 单测（FIN-*）
@@ -71,6 +73,16 @@ streamlit run tests/dashboard.py --server.port 8502
 
 打开 http://localhost:8502 ，选择套件后点击「开始」。支持 **快速**、**金融 Review（FIN-*）**、**集成** 等套件；界面约 1 秒刷新。
 
+## Phase 门禁（金融 Review）
+
+| 阶段 | 必跑命令 | 通过标准 |
+|------|----------|----------|
+| **P0（日常/CI）** | `coherence_check.py`（rule 模式） | exit 0，`issues: []` |
+| **发版前** | `python tests/run.py --financial` + `coherence_check` | FIN-* 全绿 + 零 issue |
+| **完整回归** | `python tests/run.py --full` | 含集成；PERF ≤ 320s |
+
+修复路径权威文档：[docs/domain/financial-review.md §7](../docs/domain/financial-review.md#7-修复路径规划2026-06-20)。
+
 ## 用例维护
 
 1. 在 [`cases/test-plan.md`](cases/test-plan.md) 设计场景，在 [`cases/catalog.yaml`](cases/catalog.yaml) 登记用例（`UIL-*` / `IND-*` / `FN-*` / `FIN-*` / `PERF-*` / `UT-*` / `IT-*` / `RG-*`）
@@ -84,8 +96,24 @@ streamlit run tests/dashboard.py --server.port 8502
 |------|------|
 | `streamlit run tests/dashboard.py --server.port 8502` | **测试面板 UI**（实时进度与日志） |
 | `python tests/tools/chart_compare.py` | 跑流水线并输出 `_chart_test.html` |
+| `python tests/tools/coherence_check.py` | 规则模式跑完整流水线，校验结构/辩论/信号/指标一致性，输出 `reports/coherence_check.json` |
+| `python tests/tools/financial_review_run.py` | 规则模式实跑快照，输出 `reports/financial_review_snapshot.json`（金融评审用） |
 | `python tests/tools/github/create_issues.py` | 从系统测试报告批量创建 GitHub Issue |
 | `python tests/tools/github/close_issues.py` | 关单并附评论（维护用） |
+
+### 一致性检查（coherence_check）
+
+```bash
+# Windows PowerShell
+$env:AGENT_MODE="rule"; $env:LLM_ENABLED="false"; python tests/tools/coherence_check.py
+
+# Linux/macOS
+AGENT_MODE=rule LLM_ENABLED=false python tests/tools/coherence_check.py
+```
+
+检查项：指标校验字段完整性、1d 结构 vs 技术分析师 bias、情绪 vs 结论、辩论 vs 结构情绪、信号 TP/SL 几何、路径预测价格范围。退出码 `0` 表示无 issue。
+
+> **注意**：`tests/integration/` 通过 `conftest.load_dotenv()` 读取 `.env`，命令行 `$env:AGENT_MODE` 不会自动覆盖模块级配置；集成测试实际行为以 `.env` 为准。规则模式集成验证请使用 `coherence_check.py` 或在测试中显式调用 `apply_run_config()`。
 
 ## 与 `scripts/` 的关系
 

@@ -2,7 +2,7 @@
 
 > 来源：[docs/domain/financial-review.md](../../docs/domain/financial-review.md) §6  
 > 登记：[catalog.yaml](./catalog.yaml)（`FIN-*` / `FIN-UI-*`）  
-> 版本：v1.0 · 2026-06-14
+> 版本：v1.1 · 2026-06-20
 
 ---
 
@@ -23,8 +23,8 @@
 |---------|------|---------|--------|-------------|
 | F-001 风控 approved 逻辑 | P0 | FIN-01 | 单元 | Sprint 1 |
 | F-002 win_rate 命名误导 | P0 | FIN-02, FIN-UI-01 | 单元 + 手工 | Sprint 1 |
-| F-003 risk_reward 硬编码 | P1 | FIN-03 | 单元 | Sprint 1 |
-| F-004 止损 magic number | P1 | FIN-04 | 单元 | Sprint 2 |
+| F-003 risk_reward / 做空 TP 几何 | P1 | FIN-03, FIN-INT-03 | 单元 + `coherence_check` | Sprint 1 ✅ |
+| F-004 止损 magic number | P1 | FIN-04 | 单元 | Sprint 2 ✅ |
 | F-005 双源价格不一致 | P1 | FIN-05, FIN-INT-01 | 集成 | Sprint 2 |
 | F-006 结论硬编码价位 | P1 | FIN-06 | 单元 | Sprint 1 |
 | F-007 Fib probability 伪精度 | P2 | FIN-07, FIN-UI-01 | 单元 + 手工 | Sprint 2 |
@@ -33,7 +33,9 @@
 | F-010 占位外部因子 | P2 | FIN-10, FIN-UI-02 | 单元 + 手工 | Sprint 3 |
 | F-011 Agent 链边界 | P2 | FIN-11 | 单元 | Sprint 3 |
 | F-012 文档列名 | P3 | — | 文档 | Backlog |
-| §8 合规披露 | — | FIN-UI-05 | 手工 | Sprint 1 |
+| F-013 规则辩论 vs 结构情绪 | **P0** | FIN-13, FIN-INT-03 | 单元 + `coherence_check` | **Phase 1-B** ✅ |
+| F-014 交易员逆势置顶 | P1 | FIN-14, FIN-INT-03 | 单元 | **Phase 1-C** ✅ |
+| §8 合规披露 | — | FIN-UI-05, FIN-UI-06 | 手工 | Phase 2 |
 
 **已有覆盖（不必重复实现）：**
 
@@ -42,6 +44,8 @@
 | INT-01 现价 vs 5m | `IND-01` / `IT-01`（已实现） |
 | INT-02 signals schema | `IT-03` / `IND-33`（已实现） |
 | IND-12 EMA610 notes | `IND-12`（已实现） |
+| 规则模式一致性 | `coherence_check.py` / `FIN-INT-03`（已实现脚本） |
+| 路径预测对齐 | `test_chart_projections.py` / `IND-34`（已实现） |
 
 ---
 
@@ -77,16 +81,21 @@
 
 ---
 
-### FIN-03 · risk_reward 计算（F-003）
+### FIN-03 · 信号几何与 risk_reward（F-003）
 
 **模块：** `report_engine.generate_trading_signals`  
-**优先级：** P1
+**优先级：** **P0** · Phase 1-A
 
 对每个 signal：
 
 - SELL：`stop_loss > entry_mid > take_profits[0]`
 - BUY：`stop_loss < entry_mid < take_profits[0]`
 - 展示 `risk_reward` 与 `(TP1-entry)/(entry-SL)` 一致（容差 ±0.1）；无法计算时为 `N/A`
+- **回归 fixture**：price=4155.40, FVG entry 4149.83 → TP1 必须 < 4149.83
+
+```python
+# 计划路径：tests/unit/test_financial_review.py
+```
 
 ---
 
@@ -186,6 +195,38 @@
 
 ---
 
+### FIN-13 · 辩论与结构情绪同向（F-013）
+
+**模块：** `src/agents/debate.py`  
+**优先级：** **P0** · Phase 1-B
+
+| 给定（2026-06-20 快照） | 期望 |
+|-------------------------|------|
+| bull_score=10.44, bear_score=8.78, sentiment 25/45/30 | `consensus_bias=bearish`（不得为 bullish） |
+| sentiment 50/50, combined 接近 | `consensus_bias=neutral` |
+
+```python
+# 计划路径：tests/unit/test_debate_coherence.py
+```
+
+---
+
+### FIN-14 · 交易员尊重结构主导（F-014）
+
+**模块：** `src/agents/trader.py`  
+**优先级：** P1 · Phase 1-C
+
+| 给定 | 期望 |
+|------|------|
+| sentiment bearish≥bullish，debate bearish，有 short+long 信号 | `primary_direction=short` |
+| 同上，仅有 long 远端信号 | `primary_direction=long` 且标注备选（UI Phase 2） |
+
+```python
+# 计划路径：tests/unit/test_trader_sentiment.py
+```
+
+---
+
 ## 4. 集成测试（需 TradingView）
 
 ### FIN-INT-01 · 1d 双源价差（F-005）
@@ -200,6 +241,16 @@
 | 验收 |
 |------|
 | 5m 末 bar 时间与当前 UTC 差 < 可配置阈值（如 24h，周末除外） |
+
+### FIN-INT-03 · 规则模式一致性门禁（F-003, F-013, F-014）
+
+**工具：** `tests/tools/coherence_check.py`  
+**门禁：** 退出码 0，`issues` 为空
+
+### FIN-INT-05 · 实跑快照回归
+
+**工具：** `tests/tools/financial_review_run.py`  
+**验收：** `signals[*].geom_ok` 全 true；`debate.consensus_bias` 与 sentiment 主导同向
 
 ---
 
