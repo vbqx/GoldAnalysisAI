@@ -42,7 +42,7 @@ def build_projection_chart(projections: list[dict]) -> go.Figure:
                 x=[s["label"] for s in steps],
                 y=[s["price"] for s in steps],
                 mode="lines+markers+text",
-                name=f"{proj['name']} ({proj['probability']}%)",
+                name=f"{proj['name']} (结构权重 {proj['probability']}%)",
                 line=dict(color=proj["color"], dash="dash", width=2),
                 text=[f"{s['price']}" for s in steps],
                 textposition="top center",

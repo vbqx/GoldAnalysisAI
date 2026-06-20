@@ -6,6 +6,7 @@ from src.core.run_config import (
     RunConfig,
     apply_run_config,
     coerce_run_config,
+    is_advanced_run_config,
     run_config_for_mode,
     run_config_from_env,
     run_config_widget_state,
@@ -63,6 +64,34 @@ def test_run_config_widget_state_marks_advanced_partial_analyst() -> None:
     assert state["run_config_advanced"] is True
     assert state["run_config_llm_technical"] is True
     assert state["run_config_llm_fundamentals"] is False
+
+
+def test_is_advanced_run_config_partial_analyst() -> None:
+    cfg = run_config_for_mode("llm").normalized()
+    assert is_advanced_run_config(cfg) is False
+
+    partial = RunConfig(
+        agent_mode="llm",
+        llm_enabled=True,
+        llm_stage_analysts=True,
+        llm_stage_bullish=True,
+        llm_stage_bearish=True,
+        llm_stage_debate=True,
+        llm_analyst_only="technical",
+    )
+    assert is_advanced_run_config(partial) is True
+
+
+def test_is_advanced_run_config_disabled_stage() -> None:
+    cfg = RunConfig(
+        agent_mode="hybrid",
+        llm_enabled=True,
+        llm_stage_analysts=True,
+        llm_stage_bullish=False,
+        llm_stage_bearish=True,
+        llm_stage_debate=True,
+    )
+    assert is_advanced_run_config(cfg) is True
 
 
 def test_apply_run_config_updates_import_bound_modules() -> None:

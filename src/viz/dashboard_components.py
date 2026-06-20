@@ -15,7 +15,12 @@ _SOURCE_LABELS = {
     "jin10_calendar": "金十财经日历",
     "tradingview_social": "TV Ideas/Minds",
     "tradingview_dxy": "TV DXY",
+    "placeholder": "占位/回退",
 }
+
+
+def _is_placeholder_source(src: str) -> bool:
+    return src == "placeholder" or src.endswith("_placeholder") or "placeholder" in src.lower()
 
 DASHBOARD_CSS = """
 <style>
@@ -309,6 +314,7 @@ iframe { border: none; display: block; }
   .ext-grid { grid-template-columns: 1fr; }
 }
 .ext-src-chip { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: #fff7ed; border: 1px solid #fed7aa; font-size: 10px; font-weight: 600; color: #9a3412; }
+.ext-src-placeholder { background: #ffedd5; border-color: #fb923c; color: #c2410c; }
 .ext-kind { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
 .external-feed h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 
@@ -344,6 +350,9 @@ def _source_tags(sources: list[str]) -> str:
         return ""
     chips = []
     for src in sources:
+        if _is_placeholder_source(src):
+            chips.append('<span class="ext-src-chip ext-src-placeholder">占位/回退</span>')
+            continue
         label = _SOURCE_LABELS.get(src, src)
         chips.append(f'<span class="ext-src-chip">{html.escape(label)}</span>')
     return "".join(chips)
@@ -480,7 +489,7 @@ def render_bottom_row(report: dict[str, Any], conclusion: dict[str, Any]) -> str
     paths = report.get("path_summary", [])
     path_html = "".join(
         f'<div class="path-card" style="border-color:{p["color"]}">'
-        f'<b>{p["id"]} · {p["probability"]}%</b> {html.escape(str(p["name"]))}'
+        f'<b>{p["id"]} · 结构权重 {p["probability"]}%</b> {html.escape(str(p["name"]))}'
         f'<span class="summary">{html.escape(str(p.get("summary", "")))}</span></div>'
         for p in paths[:3]
     )
@@ -490,7 +499,7 @@ def render_bottom_row(report: dict[str, Any], conclusion: dict[str, Any]) -> str
 
     return f"""
 <div class="bottom-grid">
-  <div class="panel-box compact"><h4>Fib 回调参考</h4>
+  <div class="panel-box compact"><h4>Fib 回调参考 <span style="font-size:10px;color:#94a3b8;font-weight:normal">（展示权重非统计概率）</span></h4>
     <table class="mini-table"><thead><tr>{fib_head}</tr></thead><tbody>{fib_body}</tbody></table>
   </div>
   <div class="panel-box compact"><h4>未来走势推演</h4>{path_html or "<p>—</p>"}</div>
@@ -590,7 +599,7 @@ def _render_plans_text(plans: list[dict]) -> str:
 def render_path_cards(paths: list[dict]) -> str:
     return "".join(
         f'<div class="path-card" style="border-color:{p["color"]}">'
-        f'<b>{p["id"]} · {p["probability"]}%</b> {p["name"]}</div>'
+        f'<b>{p["id"]} · 结构权重 {p["probability"]}%</b> {p["name"]}</div>'
         for p in paths
     )
 
@@ -609,16 +618,20 @@ def render_trading_plans(signals: list[dict]) -> str:
     if not signals:
         return "<p>暂无交易计划</p>"
     cards = []
-    themes = ["short", "short alt", "long"]
     for i, sig in enumerate(signals[:3]):
-        theme = themes[i] if i < len(themes) else ("long" if sig.get("theme") == "long" else "short")
-        css_theme = theme.replace(" alt", "")
-        alt = " alt" if "alt" in theme else ""
+        role = sig.get("signal_role", "primary")
+        role_badge = (
+            '<span style="font-size:10px;color:#64748b;margin-left:6px">逆势备选</span>'
+            if role == "alternate"
+            else '<span style="font-size:10px;color:#0ea5e9;margin-left:6px">主策略</span>'
+        )
+        css_theme = "short" if sig.get("theme") == "short" else "long"
+        alt = " alt" if role == "alternate" else ""
         tps = sig.get("take_profits", [])
         tp_lines = "".join(f"<div><b>TP{n}：</b>{tps[n-1]}</div>" for n in range(1, min(4, len(tps) + 1)))
         cards.append(f"""
 <div class="plan-card {css_theme}{alt}">
-  <div class="head">{sig['name']}</div>
+  <div class="head">{sig['name']}{role_badge}</div>
   <div class="body">
     <div><b>方向：</b>{sig.get('direction_cn', sig['direction'])}</div>
     <div><b>入场：</b>{sig['entry_low']} ~ {sig['entry_high']}</div>

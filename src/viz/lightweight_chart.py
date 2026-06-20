@@ -19,6 +19,14 @@ LINE_COLORS = {
 MAX_FVG_ZONES = 2
 MAX_OB_ZONES = 2
 
+_PROJECTION_STEP_GAP: dict[str, pd.Timedelta] = {
+    "5m": pd.Timedelta(hours=3),
+    "15m": pd.Timedelta(hours=6),
+    "1h": pd.Timedelta(hours=12),
+    "4h": pd.Timedelta(days=1),
+    "1d": pd.Timedelta(days=5),
+}
+
 TF_LABELS = {
     "5m": "5min周期 (执行结构)",
     "15m": "15min周期 (中间结构)",
@@ -29,14 +37,15 @@ TF_LABELS = {
 
 CHART_VARIANTS: dict[str, dict[str, Any]] = {
     "main": {
-        "height": 520,
-        "bars": 365,
+        "height": 420,
+        "bars": 360,
         "volume": True,
         "overlay_header": True,
-        "line_labels": True,
+        "line_labels": False,
         "zone_labels": True,
-        "top_margin": 0.10,
-        "bottom_margin": 0.28,
+        "show_indicators": False,
+        "top_margin": 0.08,
+        "bottom_margin": 0.22,
         "header_lines": 3,
     },
     "mini": {
@@ -348,7 +357,7 @@ def _build_projections(
         return []
 
     last_ts = plot_df.index[-1]
-    point_gap = pd.Timedelta(days=5) if timeframe == "1d" else pd.Timedelta(minutes=60)
+    point_gap = _PROJECTION_STEP_GAP.get(timeframe, pd.Timedelta(hours=4))
     lines: list[dict[str, Any]] = []
 
     for proj in report["projections"]:
@@ -357,7 +366,7 @@ def _build_projections(
         for i, step_info in enumerate(proj["steps"]):
             if i > 0:
                 t = t + point_gap
-            points.append({"time": _to_unix(t), "value": float(step_info["price"])})
+            points.append({"time": _to_unix(t), "value": round(float(step_info["price"]), 2)})
         if len(points) >= 2:
             lines.append({
                 "color": proj["color"],
@@ -409,6 +418,8 @@ def build_lightweight_chart_html(
     chg_cls = "up" if chg >= 0 else "down"
 
     tf_label = TF_LABELS.get(timeframe, f"{timeframe}周期")
+    if variant == "main" and timeframe == "5m":
+        tf_label = "5min周期 (主图)"
     tf_num = {"5m": "5", "15m": "15", "1h": "60", "4h": "240", "1d": "D"}.get(timeframe, timeframe)
 
     smc_note = ""
@@ -466,13 +477,16 @@ def build_lightweight_chart_html(
 
     legend_html = ""
     if header_lines >= 3:
-        legend_html = f"""
+        price_legend = ""
+        if show_indicators:
+            price_legend = """
     <div style="font-size:11px;color:#64748b;margin-top:1px;">
       <span style="color:#a855f7;">EMA20(紫)</span>
       <span style="margin-left:8px;color:#eab308;">EMA50(黄)</span>
       <span style="margin-left:8px;color:#3b82f6;">VWAP(蓝)</span>
       <span style="margin-left:8px;color:#ef4444;">EMA610(红)</span>
-    </div>
+    </div>"""
+        legend_html = f"""{price_legend}
     <div style="font-size:11px;color:#94a3b8;margin-top:1px;">{smc_note}</div>"""
 
     header_inner = f'<div id="tv-ohlc-line" class="tv-ohlc-line">{default_ohlc_html}</div>{legend_html}'
@@ -493,6 +507,8 @@ def build_lightweight_chart_html(
     volumes_json = json.dumps(volumes)
     lines_json = json.dumps(line_series)
     overlays_json = json.dumps(overlays)
+    volume_margins_json = json.dumps({"top": 0.78, "bottom": 0})
+    seconds_visible = timeframe == "5m"
     candle_times_json = json.dumps([c["time"] for c in candles])
     candle_map_json = json.dumps({c["time"]: c for c in candles})
     zone_font = "11px" if variant == "main" else ("9px" if variant == "strip" else "10px")
@@ -580,7 +596,7 @@ def build_lightweight_chart_html(
       autoScale: true,
       alignLabels: true,
     }},
-    timeScale: {{ borderColor: '#e2e8f0', timeVisible: true, secondsVisible: false }},
+    timeScale: {{ borderColor: '#e2e8f0', timeVisible: true, secondsVisible: {json.dumps(seconds_visible)} }},
     handleScale: {{
       mouseWheel: true,
       pinch: true,
@@ -596,6 +612,14 @@ def build_lightweight_chart_html(
   }});
 
   const overlays = {overlays_json};
+  const volumeMargins = {volume_margins_json};
+
+  function applyScaleMargins(scaleId, margins) {{
+    chart.priceScale(scaleId).applyOptions({{
+      scaleMargins: {{ top: margins.top, bottom: margins.bottom }},
+      autoScale: true,
+    }});
+  }}
 
   function formatOhlc(c, time) {{
     const idx = candleTimes.indexOf(time);
@@ -671,7 +695,7 @@ def build_lightweight_chart_html(
       priceScaleId: 'volume',
     }});
     volSeries.setData({volumes_json});
-    chart.priceScale('volume').applyOptions({{ scaleMargins: {{ top: 0.78, bottom: 0 }} }});
+    applyScaleMargins('volume', volumeMargins);
   }}
 
   const lines = {lines_json};
@@ -701,16 +725,11 @@ def build_lightweight_chart_html(
       candleSeries.setMarkers(overlays.markers);
     }}
 
-    chart.priceScale('proj').applyOptions({{
-      visible: false,
-      autoScale: true,
-    }});
     for (const proj of overlays.projections || []) {{
       const s = chart.addLineSeries({{
         color: proj.color,
         lineWidth: 2,
         lineStyle: LightweightCharts.LineStyle.Dashed,
-        priceScaleId: 'proj',
         priceLineVisible: false,
         lastValueVisible: false,
         title: '',
@@ -721,6 +740,12 @@ def build_lightweight_chart_html(
   }}
 
   chart.timeScale().fitContent();
+  if ({json.dumps(variant == "main")} && overlays.projections && overlays.projections.length && candleTimes.length) {{
+    chart.timeScale().setVisibleLogicalRange({{
+      from: 0,
+      to: candleTimes.length - 1 + 20,
+    }});
+  }}
   positionZoneLabels(candleSeries);
 
   if (ohlcEl) {{

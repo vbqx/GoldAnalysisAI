@@ -150,18 +150,18 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
     st.markdown('<div class="tf-main-row-anchor"></div>', unsafe_allow_html=True)
     chart_col, plan_col = st.columns([2.55, 0.95], gap="small")
     with chart_col:
-        st.markdown('<p class="section-h tight">日线主图</p>', unsafe_allow_html=True)
+        st.markdown('<p class="section-h tight">5分钟主图</p>', unsafe_allow_html=True)
         _embed_chart(
             data,
-            analyses["1d"],
+            analyses["5m"],
             report,
-            analyses["4h"],
-            "1d",
+            analyses["15m"],
+            "5m",
             variant="main",
             watermark=WATERMARK_TEXT,
             projections=True,
             show_title=False,
-            iframe_height=380,
+            iframe_height=chart_iframe_height("main"),
         )
     with plan_col:
         st.markdown('<p class="section-h tight">交易计划</p>', unsafe_allow_html=True)

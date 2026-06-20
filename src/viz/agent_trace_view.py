@@ -30,6 +30,19 @@ def render_agent_trace_panel(report: dict) -> None:
     proposal = trace.get("proposal", {})
     risk_reviews = trace.get("risk_reviews", [])
 
+    sentiment = report.get("sentiment") or {}
+    debate_bias = debate.get("consensus_bias")
+    if debate_bias in ("bullish", "bearish") and sentiment:
+        bear = float(sentiment.get("bearish", 0))
+        bull = float(sentiment.get("bullish", 0))
+        struct_bias = "bearish" if bear >= bull else "bullish" if bull > bear else "neutral"
+        if struct_bias in ("bullish", "bearish") and debate_bias != struct_bias:
+            st.warning(
+                "辩论共识与结构情绪主导方向不一致："
+                f"辩论={debate_bias}，结构情绪主导={struct_bias}。"
+                "请以经理决策与风控结论为准，并核对信号主/备选标签。"
+            )
+
     c1, c2, c3 = st.columns(3)
     mgr_meta = stage_meta.get("manager") or {}
     with c1:

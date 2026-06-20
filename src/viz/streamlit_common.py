@@ -72,21 +72,21 @@ class _ModuleSyncProgressReporter(ProgressReporter):
         self._sync()
 
     def _sync(self) -> None:
-        prev = _LIVE_GEN_STATE.get(self._counter, {})
-        external = self.external_snapshot or prev.get("external")
-        _LIVE_GEN_STATE[self._counter] = {
-            "steps": self.snapshot(),
-            "llm_io": self.llm_io_snapshot(),
-            "external": external,
-        }
+        with self._lock:
+            prev = _LIVE_GEN_STATE.get(self._counter, {})
+            external = self.external_snapshot or prev.get("external")
+            snapshot = {
+                "steps": self.snapshot(),
+                "llm_io": self.llm_io_snapshot(),
+                "external": external,
+            }
+        _LIVE_GEN_STATE[self._counter] = snapshot
 
     def _on_change(self) -> None:
         self._sync()
 
     def _on_llm_chunk(self, stage: str, chunk: str) -> None:
-        rec = self._find_llm(stage)
-        if rec:
-            rec.output += chunk
+        super()._on_llm_chunk(stage, chunk)
         self._sync()
 
     def llm_begin(self, stage: str, model: str, messages: list[dict[str, str]]) -> None:

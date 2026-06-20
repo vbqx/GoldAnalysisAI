@@ -110,7 +110,6 @@ def run_config_widget_state(config: RunConfig) -> dict[str, object]:
     preset = run_config_for_mode(
         cfg.agent_mode,
         llm_enabled=cfg.llm_enabled,
-        llm_analyst_only=cfg.llm_analyst_only,
     )
     advanced = cfg.fingerprint() != preset.fingerprint()
     only = cfg.llm_analyst_only
@@ -139,7 +138,7 @@ def run_config_widget_state(config: RunConfig) -> dict[str, object]:
 
 def is_advanced_run_config(config: RunConfig) -> bool:
     cfg = config.normalized()
-    preset = run_config_for_mode(cfg.agent_mode, llm_enabled=cfg.llm_enabled, llm_analyst_only=cfg.llm_analyst_only)
+    preset = run_config_for_mode(cfg.agent_mode, llm_enabled=cfg.llm_enabled)
     return cfg.fingerprint() != preset.fingerprint()
 
 
@@ -210,6 +209,9 @@ def apply_run_config(run_config: RunConfig) -> None:
     agent_factory.LLM_STAGE_MANAGER = cfg.llm_stage_manager
     agent_factory.LLM_STAGE_RESEARCH = cfg.llm_stage_bullish or cfg.llm_stage_bearish
     agent_factory.LLM_ANALYST_ONLY = cfg.llm_analyst_only
+    agent_factory.LLM_PARALLEL_ENABLED = app_config.LLM_PARALLEL_ENABLED
+    agent_factory.LLM_PARALLEL_MAX_WORKERS = app_config.LLM_PARALLEL_MAX_WORKERS
+    agent_factory.LLM_PARALLEL_RESEARCH = app_config.LLM_PARALLEL_RESEARCH
 
     orchestrator.AGENT_MODE = cfg.agent_mode
     orchestrator.LLM_ENABLED = cfg.llm_enabled
