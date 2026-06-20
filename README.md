@@ -141,7 +141,7 @@ $env:AGENT_MODE="rule"; $env:LLM_ENABLED="false"; python tests/tools/coherence_c
 
 用例目录与维护说明见 [tests/README.md](tests/README.md)、[tests/cases/catalog.yaml](tests/cases/catalog.yaml)。
 
-**主图说明**：机构报告主图为 **5 分钟 K 线**（K 线 + 成交量 + SMC 叠加 + 路径预测虚线）；EMA/MACD/RSI 等技术指标在流水线中计算并供 agent 使用，在侧边栏 **「指标校验」** 展示，不绘制在主图上。
+**主图说明**：机构报告主图为 **5 分钟 K 线**（K 线 + 成交量 + SMC 结构/支撑阻力叠加）；路径推演在底栏卡片展示。EMA/MACD/RSI 等在流水线中计算并供 agent 使用，在侧边栏 **「指标校验」** 展示，不绘制在主图上。
 
 ## 免责声明
 

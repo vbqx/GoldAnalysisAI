@@ -159,7 +159,7 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
             "5m",
             variant="main",
             watermark=WATERMARK_TEXT,
-            projections=True,
+            projections=False,
             show_title=False,
             iframe_height=chart_iframe_height("main"),
         )

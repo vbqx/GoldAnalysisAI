@@ -44,6 +44,7 @@ CHART_VARIANTS: dict[str, dict[str, Any]] = {
         "line_labels": False,
         "zone_labels": True,
         "show_indicators": False,
+        "show_projections": False,
         "top_margin": 0.08,
         "bottom_margin": 0.22,
         "header_lines": 3,
@@ -241,6 +242,7 @@ def _serialize_overlays(
     *,
     timeframe: str = "1h",
     macro_analysis: TimeframeAnalysis | None = None,
+    include_projections: bool = True,
 ) -> dict[str, Any]:
     """Build zones (filled blocks), minimal reference lines, and structure markers."""
     t_min = plot_df.index.min()
@@ -338,11 +340,16 @@ def _serialize_overlays(
                 }
             )
 
+    projections = (
+        _build_projections(plot_df, report, timeframe=timeframe)
+        if include_projections
+        else []
+    )
     return {
         "priceLines": price_lines,
         "zones": zones,
         "markers": markers,
-        "projections": _build_projections(plot_df, report, timeframe=timeframe),
+        "projections": projections,
     }
 
 
@@ -389,7 +396,7 @@ def build_lightweight_chart_html(
     bars: int | None = None,
     variant: str = "main",
     watermark: str | None = None,
-    show_projections: bool = True,
+    show_projections: bool | None = None,
 ) -> str:
     """Build HTML/JS for TradingView Lightweight Charts with volume + SMC zones."""
     preset = CHART_VARIANTS.get(variant, CHART_VARIANTS["main"])
@@ -400,6 +407,8 @@ def build_lightweight_chart_html(
     show_line_labels = bool(preset["line_labels"])
     show_zone_labels = bool(preset["zone_labels"])
     show_indicators = bool(preset.get("show_indicators", True))
+    if show_projections is None:
+        show_projections = bool(preset.get("show_projections", True))
     show_overlays = bool(preset.get("show_overlays", True))
     top_margin = float(preset["top_margin"])
     bottom_margin = float(preset["bottom_margin"])
@@ -454,12 +463,11 @@ def build_lightweight_chart_html(
     overlays = (
         _serialize_overlays(
             analysis, report, plot_df, timeframe=timeframe, macro_analysis=macro_analysis,
+            include_projections=show_projections,
         )
         if analysis is not None and report is not None and show_overlays
         else {"priceLines": [], "zones": [], "markers": [], "projections": []}
     )
-    if not show_projections:
-        overlays["projections"] = []
 
     last_bar = candles[-1] if candles else {"open": 0, "high": 0, "low": 0, "close": 0}
     last_o, last_h, last_l, last_c = last_bar["open"], last_bar["high"], last_bar["low"], last_bar["close"]

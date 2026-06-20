@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
+from src.analysis.ict_pa import TimeframeAnalysis
 from src.analysis.report_engine import trend_projections
 from src.viz.lightweight_chart import _build_projections, build_lightweight_chart_html
 
@@ -49,7 +50,9 @@ def test_projection_lines_share_candle_price_scale() -> None:
             4155.4, 4210.69, 4121.95, {"bearish": 45, "bullish": 25, "ranging": 30}
         )
     }
-    html = build_lightweight_chart_html(df, report=report, timeframe="5m", variant="main")
+    html = build_lightweight_chart_html(
+        df, report=report, timeframe="5m", variant="main", show_projections=True
+    )
     assert "priceScaleId: 'proj'" not in html
     assert "priceScale('proj')" not in html
 
@@ -75,6 +78,67 @@ def test_main_variant_hides_ema_macd_overlays() -> None:
     html = build_lightweight_chart_html(df, timeframe="5m", variant="main")
     assert "const showIndicators = false" in html
     assert "let bodyHeight = 420" in html
+
+
+def test_main_variant_hides_projection_lines() -> None:
+    """5m main chart: structure/S&R only — no dashed path overlays."""
+    idx = pd.date_range("2026-06-20 08:00", periods=50, freq="5min")
+    df = pd.DataFrame(
+        {
+            "Open": [4150.0] * 50,
+            "High": [4160.0] * 50,
+            "Low": [4140.0] * 50,
+            "Close": [4155.4] * 50,
+            "Volume": [100] * 50,
+        },
+        index=idx,
+    )
+    report = {
+        "projections": trend_projections(
+            4155.4, 4210.69, 4121.95, {"bearish": 45, "bullish": 25, "ranging": 30}
+        ),
+        "chart": {"swing_low": 4121.95, "swing_high": 4210.69},
+    }
+    analysis = TimeframeAnalysis(
+        "5m", "bearish", "—", "—", swing_high=4210.69, swing_low=4121.95
+    )
+    html = build_lightweight_chart_html(
+        df, analysis=analysis, report=report, timeframe="5m", variant="main"
+    )
+    assert '"projections": []' in html
+
+
+def test_explicit_projection_flag_overrides_main_variant_default() -> None:
+    """Callers can opt the main chart back into dashed path overlays."""
+    idx = pd.date_range("2026-06-20 08:00", periods=50, freq="5min")
+    df = pd.DataFrame(
+        {
+            "Open": [4150.0] * 50,
+            "High": [4160.0] * 50,
+            "Low": [4140.0] * 50,
+            "Close": [4155.4] * 50,
+            "Volume": [100] * 50,
+        },
+        index=idx,
+    )
+    report = {
+        "projections": trend_projections(
+            4155.4, 4210.69, 4121.95, {"bearish": 45, "bullish": 25, "ranging": 30}
+        ),
+        "chart": {"swing_low": 4121.95, "swing_high": 4210.69},
+    }
+    analysis = TimeframeAnalysis(
+        "5m", "bearish", "—", "—", swing_high=4210.69, swing_low=4121.95
+    )
+    html = build_lightweight_chart_html(
+        df,
+        analysis=analysis,
+        report=report,
+        timeframe="5m",
+        variant="main",
+        show_projections=True,
+    )
+    assert '"projections": [{"color":' in html
 
 
 def test_main_variant_includes_volume() -> None:
