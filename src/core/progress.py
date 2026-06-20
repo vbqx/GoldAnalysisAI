@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 import time
 from contextvars import ContextVar
 from dataclasses import dataclass, field
@@ -84,6 +85,7 @@ class ProgressReporter:
         self.state = PipelineProgressState()
         self.llm_io: list[LLMIORecord] = []
         self.external_snapshot: dict[str, Any] | None = None
+        self._lock = threading.RLock()
 
     def set_external_snapshot(self, data: dict[str, Any]) -> None:
         self.external_snapshot = data
@@ -91,6 +93,14 @@ class ProgressReporter:
 
     def start(self, step_id: str, label: str, detail: str = "") -> None:
         self._finish_running()
+        step = PipelineProgressStep(
+            id=step_id, label=label, status="running", detail=detail, started_at=time.perf_counter()
+        )
+        self.state.steps.append(step)
+        self._on_change()
+
+    def start_sibling(self, step_id: str, label: str, detail: str = "") -> None:
+        """Mark an additional step running without finishing other running steps."""
         step = PipelineProgressStep(
             id=step_id, label=label, status="running", detail=detail, started_at=time.perf_counter()
         )
@@ -136,7 +146,8 @@ class ProgressReporter:
         return self.state.to_dict()
 
     def llm_io_snapshot(self) -> list[dict[str, Any]]:
-        return [r.to_dict() for r in self.llm_io]
+        with self._lock:
+            return [r.to_dict() for r in self.llm_io]
 
     def stage_io(
         self,
@@ -149,27 +160,29 @@ class ProgressReporter:
     ) -> None:
         """Record rule-based stage input/output for the generation I/O panel."""
         resolved_label = label or STAGE_LABELS.get(stage, stage)
-        self.llm_io.append(
-            LLMIORecord(
-                stage=stage,
-                label=resolved_label,
-                model="规则引擎",
-                messages=[{"role": "user", "content": input_text}],
-                output=output_text,
-                latency_ms=latency_ms,
-                kind="rule",
+        with self._lock:
+            self.llm_io.append(
+                LLMIORecord(
+                    stage=stage,
+                    label=resolved_label,
+                    model="规则引擎",
+                    messages=[{"role": "user", "content": input_text}],
+                    output=output_text,
+                    latency_ms=latency_ms,
+                    kind="rule",
+                )
             )
-        )
 
     def llm_begin(self, stage: str, model: str, messages: list[dict[str, str]]) -> None:
         label = STAGE_LABELS.get(stage, stage)
-        existing = self._find_llm(stage)
-        if existing is not None and not existing.output and existing.error is None:
-            existing.model = model
-            existing.messages = list(messages)
-            existing.latency_ms = None
-        else:
-            self.llm_io.append(LLMIORecord(stage=stage, label=label, model=model, messages=messages))
+        with self._lock:
+            existing = self._find_llm(stage)
+            if existing is not None and not existing.output and existing.error is None:
+                existing.model = model
+                existing.messages = list(messages)
+                existing.latency_ms = None
+            else:
+                self.llm_io.append(LLMIORecord(stage=stage, label=label, model=model, messages=messages))
         self._on_llm_begin(stage, model, messages, label)
 
     def run_llm_stream(self, stage: str, chunk_iter) -> str:
@@ -181,11 +194,12 @@ class ProgressReporter:
         return "".join(parts)
 
     def llm_end(self, stage: str, output: str, *, error: str | None = None, latency_ms: int | None = None) -> None:
-        rec = self._find_llm(stage)
-        if rec:
-            rec.output = output
-            rec.error = error
-            rec.latency_ms = latency_ms
+        with self._lock:
+            rec = self._find_llm(stage)
+            if rec:
+                rec.output = output
+                rec.error = error
+                rec.latency_ms = latency_ms
         self._on_llm_end(stage, output, error=error)
 
     def _find_llm(self, stage: str) -> LLMIORecord | None:
@@ -198,7 +212,10 @@ class ProgressReporter:
         pass
 
     def _on_llm_chunk(self, stage: str, chunk: str) -> None:
-        pass
+        with self._lock:
+            rec = self._find_llm(stage)
+            if rec:
+                rec.output += chunk
 
     def _on_llm_end(self, stage: str, output: str, *, error: str | None = None) -> None:
         pass
