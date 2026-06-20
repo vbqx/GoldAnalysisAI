@@ -10,8 +10,10 @@ import pandas as pd
 
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
 from src.core.types import MarketContext
+from src.config import RISK_REWARD_DISPLAY_CAP, SIGNAL_SL_BELOW_SWING, SIGNAL_SWEEP_OFFSET
 from src.data.fetcher import daily_metrics, utc8_now
 from src.indicators.technical import ema_relation, fibonacci_levels
+from src.indicators.verify import indicator_snapshot
 from src.log import get_logger
 
 log = get_logger(__name__)
@@ -36,6 +38,7 @@ class TradingSignal:
     position_size: str
     note: str
     theme: str  # "short" | "long"
+    signal_role: str = "primary"  # "primary" | "alternate"
 
 
 def _nearest_zone(price: float, zones: list, direction: str) -> tuple[float, float] | None:
@@ -52,6 +55,24 @@ def _nearest_zone(price: float, zones: list, direction: str) -> tuple[float, flo
         return candidates[0]
     candidates.sort(key=lambda x: x[1], reverse=True)
     return candidates[0]
+
+
+def _sell_fvg_targets(
+    entry_low: float,
+    entry_high: float,
+    swing_low: float,
+) -> tuple[float, float, float, float] | None:
+    """SELL FVG: SL above entry, TP1 below entry_mid. Returns None if geometry invalid."""
+    entry_mid = (entry_low + entry_high) / 2
+    zone_width = max(entry_high - entry_low, 0.01)
+    min_sl_dist = max(zone_width * 0.25, 0.5)
+    sl = max(entry_high + zone_width * 0.5, entry_mid + min_sl_dist)
+    tp1 = entry_mid - max(zone_width * 1.5, entry_mid * 0.003)
+    tp2 = swing_low + (entry_mid - swing_low) * 0.3
+    tp3 = swing_low
+    if sl <= entry_mid or tp1 >= entry_mid:
+        return None
+    return round(sl, 2), round(tp1, 2), round(tp2, 2), round(tp3, 2)
 
 
 def _compute_risk_reward(
@@ -74,7 +95,10 @@ def _compute_risk_reward(
         reward = tp1 - entry_mid
     if risk <= 0 or reward <= 0:
         return "N/A"
-    return f"1:{reward / risk:.1f}"
+    ratio = reward / risk
+    if ratio > RISK_REWARD_DISPLAY_CAP:
+        return f"1:{RISK_REWARD_DISPLAY_CAP:.0f}+（远端限价）"
+    return f"1:{ratio:.1f}"
 
 
 def compute_trading_signals(ctx: MarketContext) -> list[TradingSignal]:
@@ -117,70 +141,79 @@ def generate_trading_signals(
     fvg_zone = _nearest_zone(price, bear_fvgs, "bearish")
     if fvg_zone:
         entry_low, entry_high = fvg_zone[0], fvg_zone[1]
-        sl = entry_high + (entry_high - entry_low) * 0.5
-        tp1 = price - (entry_high - price) * 1.5
-        tp2 = swing_low + (price - swing_low) * 0.3
-        tp3 = swing_low
-        signals.append(
-            TradingSignal(
-                name="激进反抽做空",
+        targets = _sell_fvg_targets(entry_low, entry_high, swing_low)
+        if targets:
+            sl, tp1, tp2, tp3 = targets
+            el, eh = round(entry_low, 2), round(entry_high, 2)
+            tps = [tp1, tp2, tp3]
+            rr = _compute_risk_reward(
                 direction="SELL",
-                direction_cn="卖出",
-                entry_low=round(entry_low, 2),
-                entry_high=round(entry_high, 2),
-                stop_loss=round(sl, 2),
-                take_profits=[round(tp1, 2), round(tp2, 2), round(tp3, 2)],
-                risk_reward=_compute_risk_reward(
-                    direction="SELL",
-                    entry_low=round(entry_low, 2),
-                    entry_high=round(entry_high, 2),
-                    stop_loss=round(sl, 2),
-                    take_profits=[round(tp1, 2), round(tp2, 2), round(tp3, 2)],
-                ),
-                sentiment_bias_pct=f"{bear_pct}%",
-                position_size="30% 试探仓",
-                note="反弹至 FVG / 流动性回补后做空",
-                theme="short",
+                entry_low=el,
+                entry_high=eh,
+                stop_loss=sl,
+                take_profits=tps,
             )
-        )
+            if rr != "N/A":
+                signals.append(
+                    TradingSignal(
+                        name="激进反抽做空",
+                        direction="SELL",
+                        direction_cn="卖出",
+                        entry_low=el,
+                        entry_high=eh,
+                        stop_loss=sl,
+                        take_profits=tps,
+                        risk_reward=rr,
+                        sentiment_bias_pct=f"{bear_pct}%",
+                        position_size="30% 试探仓",
+                        note="反弹至 FVG / 流动性回补后做空",
+                        theme="short",
+                    )
+                )
 
     if bear_obs:
         ob = sorted(bear_obs, key=lambda o: o.low)[-1]
-        mid = (ob.low + ob.high) / 2
-        tp1 = mid - (ob.high - ob.low) * 2
-        tp2 = swing_low + (mid - swing_low) * 0.5
-        tp3 = swing_low
-        signals.append(
-            TradingSignal(
-                name="保守反抽做空",
-                direction="SELL",
-                direction_cn="卖出",
-                entry_low=round(ob.low, 2),
-                entry_high=round(ob.high, 2),
-                stop_loss=round(ob.high + (ob.high - ob.low), 2),
-                take_profits=[round(tp1, 2), round(tp2, 2), round(tp3, 2)],
-                risk_reward=_compute_risk_reward(
-                    direction="SELL",
-                    entry_low=round(ob.low, 2),
-                    entry_high=round(ob.high, 2),
-                    stop_loss=round(ob.high + (ob.high - ob.low), 2),
-                    take_profits=[round(tp1, 2), round(tp2, 2), round(tp3, 2)],
-                ),
-                sentiment_bias_pct=f"{max(bear_pct - 5, 45)}%",
-                position_size="20% 标准仓",
-                note="更高时间框架 Order Block 反弹做空",
-                theme="short",
-            )
+        entry_low, entry_high = round(ob.low, 2), round(ob.high, 2)
+        mid = (entry_low + entry_high) / 2
+        zone_width = max(entry_high - entry_low, 0.01)
+        sl = round(entry_high + zone_width, 2)
+        tp1 = round(mid - zone_width * 2, 2)
+        tp2 = round(swing_low + (mid - swing_low) * 0.5, 2)
+        tp3 = round(swing_low, 2)
+        tps = [tp1, tp2, tp3]
+        rr = _compute_risk_reward(
+            direction="SELL",
+            entry_low=entry_low,
+            entry_high=entry_high,
+            stop_loss=sl,
+            take_profits=tps,
         )
+        if sl > mid > tp1 and rr != "N/A":
+            signals.append(
+                TradingSignal(
+                    name="保守反抽做空",
+                    direction="SELL",
+                    direction_cn="卖出",
+                    entry_low=entry_low,
+                    entry_high=entry_high,
+                    stop_loss=sl,
+                    take_profits=tps,
+                    risk_reward=rr,
+                    sentiment_bias_pct=f"{max(bear_pct - 5, 45)}%",
+                    position_size="20% 标准仓",
+                    note="更高时间框架 Order Block 反弹做空",
+                    theme="short",
+                )
+            )
 
     if bull_obs or swing_low:
-        sweep_low = swing_low - 5
+        sweep_low = swing_low - SIGNAL_SWEEP_OFFSET
         tp1 = price
         tp2 = swing_low + (swing_high - swing_low) * 0.382
         tp3 = swing_low + (swing_high - swing_low) * 0.5
         entry_low_r = round(sweep_low, 2)
         entry_high_r = round(swing_low, 2)
-        sl_r = round(swing_low - 9, 2)
+        sl_r = round(swing_low - SIGNAL_SL_BELOW_SWING, 2)
         tps = [round(tp1, 2), round(tp2, 2), round(tp3, 2)]
         signals.append(
             TradingSignal(
@@ -520,6 +553,17 @@ def build_report(
         sentiment.get("ranging"),
     )
 
+    indicator_notes: list[str] = []
+    for tf in ("5m", "15m"):
+        snap = indicator_snapshot(data[tf], tf)
+        for note in snap.get("notes", []):
+            if note not in indicator_notes:
+                indicator_notes.append(note)
+
+    meta_warnings: list[str] = []
+    if indicator_notes:
+        meta_warnings.extend(indicator_notes)
+
     return {
         "meta": {
             "symbol": "XAUUSD",
@@ -528,6 +572,8 @@ def build_report(
             "strategy_subtitle": "PA + ICT + SMC | 5min / 15min 简版执行策略",
             "updated_at": utc8_now().strftime("%Y-%m-%d %H:%M (UTC+8)"),
             "methodology": "Price Action + ICT + SMC",
+            "indicator_notes": indicator_notes,
+            "warnings": meta_warnings,
         },
         "metrics": metrics,
         "sentiment": sentiment,

@@ -151,6 +151,88 @@ def test_fin_09_vwap_zero_volume_should_warn() -> None:
 
 
 @pytest.mark.financial
+def test_fin_09_indicator_notes_surface_in_report_meta() -> None:
+    """FIN-09: build_report merges indicator_snapshot notes into meta."""
+    idx = pd.date_range("2026-01-01", periods=20, freq="5min")
+    df = pd.DataFrame(
+        {
+            "Open": 4200.0,
+            "High": 4201.0,
+            "Low": 4199.0,
+            "Close": 4200.0,
+            "Volume": 0,
+            "EMA20": 4200.0,
+            "EMA50": 4200.0,
+            "EMA610": 4200.0,
+            "VWAP": 4200.0,
+        },
+        index=idx,
+    )
+    from src.analysis.report_engine import build_report
+
+    analyses = {
+        tf: TimeframeAnalysis(tf, "ranging", "—", "—", swing_high=4300.0, swing_low=4200.0)
+        for tf in ("5m", "15m", "1h", "4h", "1d")
+    }
+    data = {tf: df for tf in ("5m", "15m", "1h", "4h", "1d")}
+    report = build_report(data, analyses, signals=[])
+    notes = report["meta"].get("indicator_notes", [])
+    assert any("VWAP" in n or "Volume" in n for n in notes)
+
+
+@pytest.mark.financial
+def test_fin_03_fvg_below_price_snapshot_regression() -> None:
+    """FIN-03: FVG zone below price — TP1 must stay below entry (2026-06-20 snapshot)."""
+    ts = pd.Timestamp("2026-06-01")
+    fvg = FairValueGap(high=4149.90, low=4149.76, direction="bearish", time=ts)
+    a5 = TimeframeAnalysis(
+        timeframe="5m",
+        trend="bearish",
+        bos="—",
+        choch="—",
+        fvgs=[fvg],
+        active_fvgs=[fvg],
+        swing_high=4595.33,
+        swing_low=4023.87,
+    )
+    a15 = TimeframeAnalysis("15m", "bearish", "—", "—", swing_high=4595.33, swing_low=4023.87)
+    signals = generate_trading_signals(
+        4155.40, a5, a15, 4595.33, 4023.87, {"bearish": 45.0, "bullish": 25.0, "ranging": 30.0}
+    )
+    sell = next((s for s in signals if s.name == "激进反抽做空"), None)
+    assert sell is not None
+    entry_mid = (sell.entry_low + sell.entry_high) / 2
+    assert sell.stop_loss > entry_mid > sell.take_profits[0]
+    assert sell.risk_reward != "N/A"
+
+
+@pytest.mark.financial
+def test_fin_03_conservative_ob_sell_geometry() -> None:
+    """FIN-03: 保守 OB 做空 SL > entry > TP1，几何无效时不输出."""
+    from src.analysis.ict_pa import OrderBlock
+
+    ts = pd.Timestamp("2026-06-01")
+    ob = OrderBlock(high=4220.0, low=4210.0, direction="bearish", time=ts)
+    a5 = TimeframeAnalysis(
+        timeframe="5m",
+        trend="bearish",
+        bos="—",
+        choch="—",
+        order_blocks=[ob],
+        swing_high=4300.0,
+        swing_low=4200.0,
+    )
+    a15 = TimeframeAnalysis("15m", "bearish", "—", "—", swing_high=4300.0, swing_low=4200.0)
+    signals = generate_trading_signals(
+        4215.0, a5, a15, 4300.0, 4200.0, {"bearish": 60.0, "bullish": 30.0, "ranging": 10.0}
+    )
+    ob_sig = next((s for s in signals if s.name == "保守反抽做空"), None)
+    assert ob_sig is not None
+    entry_mid = (ob_sig.entry_low + ob_sig.entry_high) / 2
+    assert ob_sig.stop_loss > entry_mid > ob_sig.take_profits[0]
+
+
+@pytest.mark.financial
 def test_fin_03_sell_signal_sl_entry_tp_order() -> None:
     """FIN-03: SELL 信号几何方向 SL > entry > TP1."""
     ts = pd.Timestamp("2026-06-01")

@@ -75,6 +75,11 @@ PROJECT_NAME = os.getenv("PROJECT_NAME", "GoldAnalysisAI")
 GITHUB_REPO = os.getenv("GITHUB_REPO", "github.com/vbqx/GoldAnalysisAI")
 WATERMARK_TEXT = os.getenv("WATERMARK_TEXT", PROJECT_NAME)
 
+# Trading signal geometry (F-004)
+SIGNAL_SWEEP_OFFSET = float(os.getenv("SIGNAL_SWEEP_OFFSET", "5"))
+SIGNAL_SL_BELOW_SWING = float(os.getenv("SIGNAL_SL_BELOW_SWING", "9"))
+RISK_REWARD_DISPLAY_CAP = float(os.getenv("RISK_REWARD_DISPLAY_CAP", "8"))
+
 # Logging: DEBUG | INFO | WARNING | ERROR (default INFO)
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 # Optional file path, e.g. logs/goldanalysisai.log
@@ -154,3 +159,7 @@ def _stage_flag_or(name: str, default: bool) -> bool:
 
 LLM_STAGE_BULLISH = _stage_flag_or("LLM_STAGE_BULLISH", LLM_STAGE_RESEARCH)
 LLM_STAGE_BEARISH = _stage_flag_or("LLM_STAGE_BEARISH", LLM_STAGE_RESEARCH)
+
+LLM_PARALLEL_ENABLED = os.getenv("LLM_PARALLEL_ENABLED", "true").lower() in ("1", "true", "yes")
+LLM_PARALLEL_MAX_WORKERS = max(1, int(os.getenv("LLM_PARALLEL_MAX_WORKERS", "4")))
+LLM_PARALLEL_RESEARCH = os.getenv("LLM_PARALLEL_RESEARCH", "true").lower() in ("1", "true", "yes")
