@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 import pandas as pd
@@ -39,6 +39,13 @@ class TradingSignal:
     note: str
     theme: str  # "short" | "long"
     signal_role: str = "primary"  # "primary" | "alternate"
+    setup_type: str = ""
+    status: str = "candidate"  # candidate | watch | active | invalid
+    trigger_confirmed: bool = False
+    trigger_note: str = "等待触发确认"
+    score_total: float = 0.0
+    score_grade: str = "C"
+    score_reasons: list[str] = field(default_factory=list)
 
 
 def _nearest_zone(price: float, zones: list, direction: str) -> tuple[float, float] | None:
@@ -101,6 +108,145 @@ def _compute_risk_reward(
     return f"1:{ratio:.1f}"
 
 
+def _risk_reward_ratio(
+    *,
+    direction: str,
+    entry_low: float,
+    entry_high: float,
+    stop_loss: float,
+    take_profits: list[float],
+) -> float:
+    if not take_profits:
+        return 0.0
+    entry_mid = (entry_low + entry_high) / 2
+    tp1 = take_profits[0]
+    if direction == "SELL":
+        risk = stop_loss - entry_mid
+        reward = entry_mid - tp1
+    else:
+        risk = entry_mid - stop_loss
+        reward = tp1 - entry_mid
+    if risk <= 0 or reward <= 0:
+        return 0.0
+    return reward / risk
+
+
+def _grade(score: float) -> str:
+    if score >= 80:
+        return "A"
+    if score >= 65:
+        return "B"
+    if score >= 50:
+        return "C"
+    return "D"
+
+
+def _zone_relation(
+    *,
+    price: float,
+    direction: str,
+    entry_low: float,
+    entry_high: float,
+) -> tuple[str, float]:
+    if direction == "SELL":
+        if entry_high < price:
+            return "passed", (entry_high - price) / price * 100
+        if entry_low <= price <= entry_high:
+            return "inside", 0.0
+        return "ahead", (entry_low - price) / price * 100
+    if entry_low > price:
+        return "passed", (price - entry_low) / price * 100
+    if entry_low <= price <= entry_high:
+        return "inside", 0.0
+    return "ahead", (price - entry_high) / price * 100
+
+
+def _setup_status_and_score(
+    *,
+    name: str,
+    direction: str,
+    theme: str,
+    setup_type: str,
+    price: float,
+    entry_low: float,
+    entry_high: float,
+    stop_loss: float,
+    take_profits: list[float],
+    sentiment: dict[str, float],
+    trigger_confirmed: bool = False,
+) -> tuple[str, bool, str, float, str, list[str]]:
+    relation, distance_pct = _zone_relation(
+        price=price,
+        direction=direction,
+        entry_low=entry_low,
+        entry_high=entry_high,
+    )
+    rr = _risk_reward_ratio(
+        direction=direction,
+        entry_low=entry_low,
+        entry_high=entry_high,
+        stop_loss=stop_loss,
+        take_profits=take_profits,
+    )
+
+    reasons: list[str] = []
+    aligned_pct = sentiment.get("bearish" if theme == "short" else "bullish", 0.0)
+    opposite_pct = sentiment.get("bullish" if theme == "short" else "bearish", 0.0)
+
+    structure_score = min(aligned_pct / 100 * 35, 35)
+    if aligned_pct >= opposite_pct:
+        reasons.append(f"结构方向支持 {aligned_pct:.0f}%")
+    else:
+        reasons.append(f"逆主结构，结构支持仅 {aligned_pct:.0f}%")
+
+    if relation == "passed":
+        location_score = 6
+        reasons.append("候选区已被现价越过，等待重新确认")
+    elif relation == "inside":
+        location_score = 18
+        reasons.append("价格正在候选区内，等待触发信号")
+    elif 0 <= distance_pct <= 1.2:
+        location_score = 20
+        reasons.append(f"候选区距现价 {distance_pct:.2f}%")
+    else:
+        location_score = 12
+        reasons.append(f"候选区距现价较远 {distance_pct:.2f}%")
+
+    rr_score = 20 if rr >= 1.5 else 12 if rr >= 1.0 else 4
+    reasons.append(f"几何盈亏比约 1:{rr:.1f}" if rr else "几何盈亏比无效")
+
+    trigger_score = 20 if trigger_confirmed else 6
+    if trigger_confirmed:
+        trigger_note = "触发确认已满足"
+        reasons.append("已有触发确认")
+    elif setup_type == "liquidity_sweep_long":
+        trigger_note = "等待扫低流动性后收回 + 5m 结构转强"
+        reasons.append("尚未确认 sweep + reclaim")
+    elif direction == "SELL":
+        trigger_note = "等待反抽失败 + 5m 收盘重新走弱"
+        reasons.append("尚未确认反抽失败")
+    else:
+        trigger_note = "等待回踩支撑后转强"
+        reasons.append("尚未确认回踩转强")
+
+    score = round(structure_score + location_score + rr_score + trigger_score, 1)
+
+    if rr <= 0:
+        status = "invalid"
+        score = min(score, 35)
+    elif trigger_confirmed:
+        status = "active"
+    elif relation == "inside":
+        status = "watch"
+    else:
+        status = "candidate"
+
+    if name == "右侧扫低做多" and not trigger_confirmed:
+        status = "candidate"
+
+    return status, trigger_confirmed, trigger_note, score, _grade(score), reasons
+
+
 def compute_trading_signals(ctx: MarketContext) -> list[TradingSignal]:
     """Single entry point for pipeline signal generation (trader + report share this)."""
     analyses = ctx.analyses
@@ -154,6 +300,18 @@ def generate_trading_signals(
                 take_profits=tps,
             )
             if rr != "N/A":
+                status, trigger_ok, trigger_note, score, grade, reasons = _setup_status_and_score(
+                    name="激进反抽做空",
+                    direction="SELL",
+                    theme="short",
+                    setup_type="fvg_retest_short",
+                    price=price,
+                    entry_low=el,
+                    entry_high=eh,
+                    stop_loss=sl,
+                    take_profits=tps,
+                    sentiment=sentiment,
+                )
                 signals.append(
                     TradingSignal(
                         name="激进反抽做空",
@@ -168,6 +326,13 @@ def generate_trading_signals(
                         position_size="30% 试探仓",
                         note="反弹至 FVG / 流动性回补后做空",
                         theme="short",
+                        setup_type="fvg_retest_short",
+                        status=status,
+                        trigger_confirmed=trigger_ok,
+                        trigger_note=trigger_note,
+                        score_total=score,
+                        score_grade=grade,
+                        score_reasons=reasons,
                     )
                 )
 
@@ -189,6 +354,18 @@ def generate_trading_signals(
             take_profits=tps,
         )
         if sl > mid > tp1 and rr != "N/A":
+            status, trigger_ok, trigger_note, score, grade, reasons = _setup_status_and_score(
+                name="保守反抽做空",
+                direction="SELL",
+                theme="short",
+                setup_type="ob_retest_short",
+                price=price,
+                entry_low=entry_low,
+                entry_high=entry_high,
+                stop_loss=sl,
+                take_profits=tps,
+                sentiment=sentiment,
+            )
             signals.append(
                 TradingSignal(
                     name="保守反抽做空",
@@ -203,6 +380,13 @@ def generate_trading_signals(
                     position_size="20% 标准仓",
                     note="更高时间框架 Order Block 反弹做空",
                     theme="short",
+                    setup_type="ob_retest_short",
+                    status=status,
+                    trigger_confirmed=trigger_ok,
+                    trigger_note=trigger_note,
+                    score_total=score,
+                    score_grade=grade,
+                    score_reasons=reasons,
                 )
             )
 
@@ -215,6 +399,25 @@ def generate_trading_signals(
         entry_high_r = round(swing_low, 2)
         sl_r = round(swing_low - SIGNAL_SL_BELOW_SWING, 2)
         tps = [round(tp1, 2), round(tp2, 2), round(tp3, 2)]
+        rr = _compute_risk_reward(
+            direction="BUY",
+            entry_low=entry_low_r,
+            entry_high=entry_high_r,
+            stop_loss=sl_r,
+            take_profits=tps,
+        )
+        status, trigger_ok, trigger_note, score, grade, reasons = _setup_status_and_score(
+            name="右侧扫低做多",
+            direction="BUY",
+            theme="long",
+            setup_type="liquidity_sweep_long",
+            price=price,
+            entry_low=entry_low_r,
+            entry_high=entry_high_r,
+            stop_loss=sl_r,
+            take_profits=tps,
+            sentiment=sentiment,
+        )
         signals.append(
             TradingSignal(
                 name="右侧扫低做多",
@@ -224,17 +427,18 @@ def generate_trading_signals(
                 entry_high=entry_high_r,
                 stop_loss=sl_r,
                 take_profits=tps,
-                risk_reward=_compute_risk_reward(
-                    direction="BUY",
-                    entry_low=entry_low_r,
-                    entry_high=entry_high_r,
-                    stop_loss=sl_r,
-                    take_profits=tps,
-                ),
+                risk_reward=rr,
                 sentiment_bias_pct=f"{bull_pct}%",
                 position_size="15% 逆势轻仓",
                 note="流动性扫低后短多，严格止损",
                 theme="long",
+                setup_type="liquidity_sweep_long",
+                status=status,
+                trigger_confirmed=trigger_ok,
+                trigger_note=trigger_note,
+                score_total=score,
+                score_grade=grade,
+                score_reasons=reasons,
             )
         )
 

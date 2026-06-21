@@ -617,6 +617,12 @@ def render_calendar(events: list[dict]) -> str:
 def render_trading_plans(signals: list[dict]) -> str:
     if not signals:
         return "<p>暂无交易计划</p>"
+    status_labels = {
+        "candidate": ("候选区", "#64748b"),
+        "watch": ("等待触发", "#f59e0b"),
+        "active": ("已触发", "#16a34a"),
+        "invalid": ("已失效", "#94a3b8"),
+    }
     cards = []
     for i, sig in enumerate(signals[:3]):
         role = sig.get("signal_role", "primary")
@@ -629,15 +635,29 @@ def render_trading_plans(signals: list[dict]) -> str:
         alt = " alt" if role == "alternate" else ""
         tps = sig.get("take_profits", [])
         tp_lines = "".join(f"<div><b>TP{n}：</b>{tps[n-1]}</div>" for n in range(1, min(4, len(tps) + 1)))
+        status = sig.get("status", "candidate")
+        status_text, status_color = status_labels.get(status, status_labels["candidate"])
+        source_badge = (
+            '<span style="font-size:10px;color:#7c3aed;margin-left:6px">LLM点位</span>'
+            if str(sig.get("setup_type", "")).startswith("llm_")
+            else ""
+        )
+        grade = html.escape(str(sig.get("score_grade") or "—"))
+        score = html.escape(str(sig.get("score_total") or "—"))
+        trigger_note = html.escape(str(sig.get("trigger_note") or "等待触发确认"))
+        reasons = sig.get("score_reasons") or []
+        reason_text = "；".join(html.escape(str(x)) for x in reasons[:2])
         cards.append(f"""
 <div class="plan-card {css_theme}{alt}">
-  <div class="head">{sig['name']}{role_badge}</div>
+  <div class="head">{html.escape(str(sig['name']))}{role_badge}{source_badge}<span style="font-size:10px;color:{status_color};margin-left:6px">{status_text}</span></div>
   <div class="body">
     <div><b>方向：</b>{sig.get('direction_cn', sig['direction'])}</div>
     <div><b>入场：</b>{sig['entry_low']} ~ {sig['entry_high']}</div>
     <div><b>止损：</b>{sig['stop_loss']}</div>
     {tp_lines}
     <div><b>盈亏比：</b>{sig['risk_reward']} | <b>结构权重：</b>{sig.get('sentiment_bias_pct', sig.get('win_rate', '—'))} <span style="color:#94a3b8;font-size:11px">（非回测胜率）</span></div>
+    <div><b>信号质量：</b>{grade} / {score} · {trigger_note}</div>
+    <div style="color:#64748b;font-size:11px;">{reason_text}</div>
   </div>
 </div>""")
     return f'<div class="plan-stack">{"".join(cards)}</div>'

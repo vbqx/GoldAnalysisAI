@@ -15,6 +15,7 @@ from src.analysis.report_engine import build_conclusion, generate_trading_signal
 from src.core.types import TransactionProposal
 from src.indicators.technical import fibonacci_levels
 from src.indicators.verify import indicator_snapshot
+from src.viz.dashboard_components import render_trading_plans
 
 
 def _proposal(*, bias: str = "neutral", direction: str = "short") -> TransactionProposal:
@@ -102,6 +103,9 @@ def test_fin_04_sweep_long_geometry() -> None:
     assert long_sig.entry_low == 4195.0
     assert long_sig.entry_high == 4200.0
     assert long_sig.stop_loss == 4191.0
+    assert long_sig.status == "candidate"
+    assert long_sig.trigger_confirmed is False
+    assert "扫低" in long_sig.trigger_note
 
 
 @pytest.mark.financial
@@ -297,6 +301,8 @@ def test_fin_03_fvg_below_price_snapshot_regression() -> None:
     entry_mid = (sell.entry_low + sell.entry_high) / 2
     assert sell.stop_loss > entry_mid > sell.take_profits[0]
     assert sell.risk_reward != "N/A"
+    assert sell.status == "candidate"
+    assert any("越过" in reason for reason in sell.score_reasons)
 
 
 @pytest.mark.financial
@@ -347,3 +353,88 @@ def test_fin_03_sell_signal_sl_entry_tp_order() -> None:
     sell = next(s for s in signals if s.direction == "SELL")
     entry_mid = (sell.entry_low + sell.entry_high) / 2
     assert sell.stop_loss > entry_mid > sell.take_profits[0]
+
+
+@pytest.mark.financial
+def test_signal_quality_fields_are_present() -> None:
+    ts = pd.Timestamp("2026-06-01")
+    fvg = FairValueGap(high=4220.0, low=4210.0, direction="bearish", time=ts)
+    a5 = TimeframeAnalysis(
+        timeframe="5m",
+        trend="bearish",
+        bos="—",
+        choch="—",
+        fvgs=[fvg],
+        active_fvgs=[fvg],
+        swing_high=4300.0,
+        swing_low=4200.0,
+    )
+    a15 = TimeframeAnalysis("15m", "bearish", "—", "—")
+    signals = generate_trading_signals(
+        4215.0,
+        a5,
+        a15,
+        4300.0,
+        4200.0,
+        {"bearish": 60.0, "bullish": 30.0, "ranging": 10.0},
+    )
+    sig = signals[0]
+    assert sig.setup_type
+    assert sig.status in {"candidate", "watch", "active", "invalid"}
+    assert sig.score_grade in {"A", "B", "C", "D"}
+    assert sig.score_total > 0
+    assert sig.score_reasons
+
+
+@pytest.mark.financial
+def test_trading_plan_ui_surfaces_status_and_score() -> None:
+    html = render_trading_plans(
+        [
+            {
+                "name": "右侧扫低做多",
+                "direction": "BUY",
+                "direction_cn": "买入",
+                "entry_low": 4195.0,
+                "entry_high": 4200.0,
+                "stop_loss": 4191.0,
+                "take_profits": [4215.0],
+                "risk_reward": "1:1.5",
+                "sentiment_bias_pct": "35%",
+                "theme": "long",
+                "status": "candidate",
+                "score_grade": "C",
+                "score_total": 52.0,
+                "trigger_note": "等待扫低流动性后收回 + 5m 结构转强",
+                "score_reasons": ["尚未确认 sweep + reclaim"],
+            }
+        ]
+    )
+    assert "候选区" in html
+    assert "信号质量" in html
+    assert "等待扫低流动性后收回" in html
+
+
+def test_trading_plan_ui_marks_llm_levels() -> None:
+    html = render_trading_plans(
+        [
+            {
+                "name": "LLM建议做空",
+                "direction": "SELL",
+                "direction_cn": "做空",
+                "entry_low": 4205,
+                "entry_high": 4210,
+                "stop_loss": 4218,
+                "take_profits": [4195, 4184],
+                "risk_reward": "1:1.2",
+                "sentiment_bias_pct": "70%",
+                "theme": "short",
+                "setup_type": "llm_fvg",
+                "status": "candidate",
+                "score_grade": "C",
+                "score_total": 62.5,
+                "score_reasons": ["结构方向支持 70%"],
+            }
+        ]
+    )
+
+    assert "LLM点位" in html
