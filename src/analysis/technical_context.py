@@ -138,13 +138,14 @@ def support_resistance_context(ctx: MarketContext, *, limit: int = 12) -> dict[s
             continue
         for zone in analysis.liquidity[:3]:
             kind = "support" if "low" in zone.kind or "buy" in zone.label.lower() else "resistance"
+            zone_strength = max(float(getattr(zone, "strength", 0.5)), 0.35)
             add_level(
                 price=zone.price,
                 kind=kind,
                 label=zone.label,
                 source=f"liquidity:{zone.kind}",
                 timeframe=tf,
-                strength=weight * 0.85,
+                strength=weight * 0.85 * zone_strength,
             )
         for ob in analysis.order_blocks[-2:]:
             add_zone(
@@ -230,7 +231,13 @@ def timeframe_context(
             for f in analysis.active_fvgs[:fvg_limit]
         ],
         "liquidity": [
-            {"price": lz.price, "kind": lz.kind, "label": lz.label}
+            {
+                "price": lz.price,
+                "kind": lz.kind,
+                "label": lz.label,
+                "strength": lz.strength,
+                "swept": lz.swept,
+            }
             for lz in analysis.liquidity[:liquidity_limit]
         ],
         "distance_to_swing_high_pct": round(distance_pct(price, analysis.swing_high), 3)

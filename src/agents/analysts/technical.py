@@ -122,16 +122,19 @@ def _ict_context_evidence(ctx: MarketContext) -> tuple[Bias, list[EvidenceItem]]
         )
         for zone in liquidity[:2]:
             dist_pct = distance_pct(price, float(zone.price))
+            zone_strength = max(float(getattr(zone, "strength", 0.5)), 0.35)
             items.append(
                 EvidenceItem(
                     category="technical",
                     summary=f"{tf} 流动性 {zone.label} @ {zone.price:.1f} · 距现价 {dist_pct:+.2f}%",
-                    strength=weight * 0.65,
+                    strength=weight * 0.65 * zone_strength,
                     timeframe=tf,
                     refs={
                         "liquidity": zone.kind,
                         "price": round(float(zone.price), 2),
                         "dist_pct": round(dist_pct, 3),
+                        "strength": zone.strength,
+                        "swept": zone.swept,
                     },
                 )
             )

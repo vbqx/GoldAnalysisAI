@@ -48,6 +48,13 @@ class TradingSignal:
     score_reasons: list[str] = field(default_factory=list)
 
 
+@dataclass
+class _SweepQuality:
+    confirmed: bool
+    score_bonus: float
+    reasons: list[str]
+
+
 def _nearest_zone(price: float, zones: list, direction: str) -> tuple[float, float] | None:
     candidates = []
     for z in zones:
@@ -227,7 +234,7 @@ def _setup_status_and_score(
     if trigger_confirmed:
         trigger_note = "触发确认已满足"
         reasons.append("已有触发确认")
-    elif setup_type == "liquidity_sweep_long":
+    elif "liquidity_sweep" in setup_type:
         trigger_note = "等待扫低流动性后收回 + 5m 结构转强"
         reasons.append("尚未确认 sweep + reclaim")
     elif direction == "SELL":
@@ -259,6 +266,50 @@ def _setup_status_and_score(
         status = "candidate"
 
     return status, trigger_confirmed, trigger_note, score, _grade(score), reasons
+
+
+def _has_bullish_structure_shift(*analyses: TimeframeAnalysis) -> bool:
+    return any(
+        event.direction == "bullish" and event.kind in ("BOS", "CHoCH")
+        for analysis in analyses
+        for event in analysis.events
+    )
+
+
+def _sweep_reclaim_confirmed(
+    *,
+    price: float,
+    swing_low: float,
+    analysis_5m: TimeframeAnalysis,
+    analysis_15m: TimeframeAnalysis,
+) -> _SweepQuality:
+    """Confirm sweep long only after liquidity is taken and reclaimed."""
+    recent_low = analysis_5m.recent_low
+    close = analysis_5m.last_close if analysis_5m.last_close is not None else price
+    atr = analysis_5m.atr or analysis_15m.atr or SIGNAL_SWEEP_OFFSET
+    sweep_buffer = max(atr * 0.10, 0.5)
+    reclaim_buffer = max(atr * 0.05, 0.2)
+    sweep_depth = max(swing_low - recent_low, 0.0) if recent_low is not None else 0.0
+    reclaim_depth = close - swing_low
+    swept = recent_low is not None and sweep_depth >= sweep_buffer
+    reclaimed = reclaim_depth >= reclaim_buffer
+    shifted = _has_bullish_structure_shift(analysis_5m, analysis_15m)
+    reasons: list[str] = [
+        f"sweep depth {sweep_depth:.2f} vs buffer {sweep_buffer:.2f}",
+        f"reclaim {reclaim_depth:.2f} vs required {reclaim_buffer:.2f}",
+    ]
+    if shifted:
+        reasons.append("bullish BOS/CHoCH confirmed")
+    else:
+        reasons.append("missing bullish BOS/CHoCH")
+    score_bonus = 0.0
+    if swept:
+        score_bonus += 3.0
+    if reclaimed:
+        score_bonus += 4.0
+    if shifted:
+        score_bonus += 3.0
+    return _SweepQuality(swept and reclaimed and shifted, score_bonus, reasons)
 
 
 def compute_trading_signals(ctx: MarketContext) -> list[TradingSignal]:
@@ -405,13 +456,22 @@ def generate_trading_signals(
             )
 
     if bull_obs or swing_low:
-        sweep_low = swing_low - SIGNAL_SWEEP_OFFSET
+        sweep_quality = _sweep_reclaim_confirmed(
+            price=price,
+            swing_low=swing_low,
+            analysis_5m=analysis_5m,
+            analysis_15m=analysis_15m,
+        )
+        atr = analysis_5m.atr or analysis_15m.atr or 0.0
+        sweep_entry_offset = max(atr * 0.35, SIGNAL_SWEEP_OFFSET)
+        stop_buffer = max(atr * 0.65, SIGNAL_SL_BELOW_SWING)
+        sweep_low = swing_low - sweep_entry_offset
         tp1 = price
         tp2 = swing_low + (swing_high - swing_low) * 0.382
         tp3 = swing_low + (swing_high - swing_low) * 0.5
         entry_low_r = round(sweep_low, 2)
         entry_high_r = round(swing_low, 2)
-        sl_r = round(swing_low - SIGNAL_SL_BELOW_SWING, 2)
+        sl_r = round(swing_low - stop_buffer, 2)
         tps = [round(tp1, 2), round(tp2, 2), round(tp3, 2)]
         rr = _compute_risk_reward(
             direction="BUY",
@@ -431,7 +491,12 @@ def generate_trading_signals(
             stop_loss=sl_r,
             take_profits=tps,
             sentiment=sentiment,
+            trigger_confirmed=sweep_quality.confirmed,
         )
+        if sweep_quality.score_bonus:
+            score = min(100.0, round(score + sweep_quality.score_bonus, 1))
+            grade = _grade(score)
+        reasons.extend(sweep_quality.reasons)
         signals.append(
             TradingSignal(
                 name="右侧扫低做多",

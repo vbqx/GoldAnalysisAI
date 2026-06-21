@@ -10,7 +10,14 @@ import pandas as pd
 import pytest
 
 from src.agents.risk import run_risk_team
-from src.analysis.ict_pa import FairValueGap, TimeframeAnalysis, analyze_timeframe
+from src.analysis.ict_pa import (
+    FairValueGap,
+    StructureEvent,
+    SwingPoint,
+    TimeframeAnalysis,
+    _liquidity_from_swings,
+    analyze_timeframe,
+)
 from src.analysis.report_engine import TradingSignal, build_conclusion, build_strategy_plans, generate_trading_signals, trend_projections
 from src.core.types import TransactionProposal
 from src.indicators.technical import fibonacci_levels
@@ -106,6 +113,94 @@ def test_fin_04_sweep_long_geometry() -> None:
     assert long_sig.status == "candidate"
     assert long_sig.trigger_confirmed is False
     assert "扫低" in long_sig.trigger_note
+
+
+@pytest.mark.financial
+def test_sweep_long_requires_reclaim_and_structure_shift() -> None:
+    a5 = TimeframeAnalysis(
+        "5m",
+        "ranging",
+        "-",
+        "bullish @ 4204.00",
+        swing_high=4300.0,
+        swing_low=4200.0,
+        events=[
+            StructureEvent(
+                kind="CHoCH",
+                direction="bullish",
+                price=4204.0,
+                time=pd.Timestamp("2026-06-01"),
+            )
+        ],
+        last_close=4202.0,
+        recent_low=4198.5,
+    )
+    a15 = TimeframeAnalysis("15m", "ranging", "-", "-", swing_high=4300.0, swing_low=4200.0)
+
+    signals = generate_trading_signals(
+        4202.0, a5, a15, 4300.0, 4200.0, {"bearish": 35.0, "bullish": 45.0, "ranging": 20.0}
+    )
+    long_sig = next(s for s in signals if s.direction == "BUY")
+
+    assert long_sig.trigger_confirmed is True
+    assert long_sig.status == "active"
+    assert any("confirmed" in reason for reason in long_sig.score_reasons)
+
+
+@pytest.mark.financial
+def test_sweep_long_without_structure_shift_stays_candidate() -> None:
+    a5 = TimeframeAnalysis(
+        "5m",
+        "ranging",
+        "-",
+        "-",
+        swing_high=4300.0,
+        swing_low=4200.0,
+        last_close=4202.0,
+        recent_low=4198.5,
+    )
+    a15 = TimeframeAnalysis("15m", "ranging", "-", "-", swing_high=4300.0, swing_low=4200.0)
+
+    signals = generate_trading_signals(
+        4202.0, a5, a15, 4300.0, 4200.0, {"bearish": 35.0, "bullish": 45.0, "ranging": 20.0}
+    )
+    long_sig = next(s for s in signals if s.direction == "BUY")
+
+    assert long_sig.trigger_confirmed is False
+    assert long_sig.status == "candidate"
+
+
+@pytest.mark.financial
+def test_sweep_long_without_reclaim_stays_candidate() -> None:
+    a5 = TimeframeAnalysis(
+        "5m",
+        "ranging",
+        "-",
+        "bullish @ 4204.00",
+        swing_high=4300.0,
+        swing_low=4200.0,
+        events=[
+            StructureEvent(
+                kind="CHoCH",
+                direction="bullish",
+                price=4204.0,
+                time=pd.Timestamp("2026-06-01"),
+            )
+        ],
+        atr=10.0,
+        last_close=4199.0,
+        recent_low=4197.0,
+    )
+    a15 = TimeframeAnalysis("15m", "ranging", "-", "-", swing_high=4300.0, swing_low=4200.0)
+
+    signals = generate_trading_signals(
+        4199.0, a5, a15, 4300.0, 4200.0, {"bearish": 35.0, "bullish": 45.0, "ranging": 20.0}
+    )
+    long_sig = next(s for s in signals if s.direction == "BUY")
+
+    assert long_sig.trigger_confirmed is False
+    assert long_sig.status == "candidate"
+    assert any("reclaim" in reason for reason in long_sig.score_reasons)
 
 
 @pytest.mark.financial
@@ -211,6 +306,46 @@ def test_analyze_timeframe_uses_recent_swing_range() -> None:
     )
     analysis = analyze_timeframe(df, "5m")
     assert analysis.swing_low != 70
+
+
+@pytest.mark.financial
+def test_analyze_timeframe_carries_atr_and_recent_prices() -> None:
+    idx = pd.date_range("2026-06-01", periods=20, freq="5min")
+    df = pd.DataFrame(
+        {
+            "Open": [100.0 + i * 0.1 for i in range(20)],
+            "High": [101.0 + i * 0.1 for i in range(20)],
+            "Low": [99.0 + i * 0.1 for i in range(20)],
+            "Close": [100.5 + i * 0.1 for i in range(20)],
+            "Volume": [100] * 20,
+            "ATR14": [None] * 19 + [12.5],
+        },
+        index=idx,
+    )
+
+    analysis = analyze_timeframe(df, "5m")
+
+    assert analysis.atr == 12.5
+    assert analysis.last_close == pytest.approx(102.4)
+    assert analysis.recent_high == pytest.approx(102.9)
+    assert analysis.recent_low == pytest.approx(100.5)
+
+
+@pytest.mark.financial
+def test_liquidity_stop_hunt_offset_scales_with_atr() -> None:
+    ts = pd.Timestamp("2026-06-01")
+    swings = [
+        SwingPoint(1, 4200.0, "low", ts),
+        SwingPoint(2, 4210.0, "high", ts),
+        SwingPoint(3, 4201.0, "low", ts),
+        SwingPoint(4, 4212.0, "high", ts),
+    ]
+
+    zones = _liquidity_from_swings(swings, price=4210.0, atr=40.0, recent_low=4191.0)
+    stop_low = next(z for z in zones if z.kind == "stop_hunt_low")
+
+    assert stop_low.price == 4191.0
+    assert stop_low.swept is True
 
 
 @pytest.mark.financial

@@ -42,6 +42,8 @@ class LiquidityZone:
     price: float
     kind: str
     label: str
+    strength: float = 0.5
+    swept: bool = False
 
 
 @dataclass
@@ -68,6 +70,10 @@ class TimeframeAnalysis:
     premium_discount: str = "unknown"
     equilibrium: float | None = None
     volume_signal: str = "N/A"
+    atr: float | None = None
+    last_close: float | None = None
+    recent_high: float | None = None
+    recent_low: float | None = None
 
 
 def _find_swings(df: pd.DataFrame, left: int = 3, right: int = 3) -> list[SwingPoint]:
@@ -208,21 +214,62 @@ def _detect_order_blocks(df: pd.DataFrame, swings: list[SwingPoint], lookback: i
     return obs[-4:]
 
 
-def _liquidity_from_swings(swings: list[SwingPoint]) -> list[LiquidityZone]:
+def _liquidity_from_swings(
+    swings: list[SwingPoint],
+    *,
+    price: float | None = None,
+    atr: float | None = None,
+    recent_high: float | None = None,
+    recent_low: float | None = None,
+) -> list[LiquidityZone]:
     zones: list[LiquidityZone] = []
     highs = [s for s in swings if s.kind == "high"]
     lows = [s for s in swings if s.kind == "low"]
+    reference_price = price or (swings[-1].price if swings else 0)
+    atr_value = atr if atr and atr > 0 else None
+    equal_tol = max((atr_value or 0) * 0.15, reference_price * 0.0005 if reference_price else 0.5)
+    stop_offset = max((atr_value or 0) * 0.25, 2.0)
 
-    if len(highs) >= 2 and abs(highs[-1].price - highs[-2].price) / highs[-1].price < 0.002:
-        zones.append(LiquidityZone(highs[-1].price, "equal_highs", "Equal Highs / Sell-side Liquidity"))
+    if len(highs) >= 2:
+        distance = abs(highs[-1].price - highs[-2].price)
+        if distance <= equal_tol:
+            strength = max(0.35, min(1.0, 1 - distance / max(equal_tol, 0.01)))
+            swept_line = max(highs[-1].price, highs[-2].price) + equal_tol * 0.5
+            swept = recent_high is not None and recent_high > swept_line
+            zones.append(
+                LiquidityZone(
+                    highs[-1].price,
+                    "equal_highs",
+                    "Equal Highs / Sell-side Liquidity",
+                    round(strength, 2),
+                    swept,
+                )
+            )
 
-    if len(lows) >= 2 and abs(lows[-1].price - lows[-2].price) / lows[-1].price < 0.002:
-        zones.append(LiquidityZone(lows[-1].price, "equal_lows", "Equal Lows / Buy-side Liquidity"))
+    if len(lows) >= 2:
+        distance = abs(lows[-1].price - lows[-2].price)
+        if distance <= equal_tol:
+            strength = max(0.35, min(1.0, 1 - distance / max(equal_tol, 0.01)))
+            swept_line = min(lows[-1].price, lows[-2].price) - equal_tol * 0.5
+            swept = recent_low is not None and recent_low < swept_line
+            zones.append(
+                LiquidityZone(
+                    lows[-1].price,
+                    "equal_lows",
+                    "Equal Lows / Buy-side Liquidity",
+                    round(strength, 2),
+                    swept,
+                )
+            )
 
     if highs:
-        zones.append(LiquidityZone(highs[-1].price + 2, "stop_hunt_high", "Stop Hunt Above Highs"))
+        sweep_price = highs[-1].price + stop_offset
+        swept = recent_high is not None and recent_high >= sweep_price
+        zones.append(LiquidityZone(round(sweep_price, 2), "stop_hunt_high", "Stop Hunt Above Highs", 0.55, swept))
     if lows:
-        zones.append(LiquidityZone(lows[-1].price - 2, "stop_hunt_low", "Stop Hunt Below Lows"))
+        sweep_price = lows[-1].price - stop_offset
+        swept = recent_low is not None and recent_low <= sweep_price
+        zones.append(LiquidityZone(round(sweep_price, 2), "stop_hunt_low", "Stop Hunt Below Lows", 0.55, swept))
 
     return zones
 
@@ -289,6 +336,15 @@ def _volume_signal(df: pd.DataFrame) -> str:
     return f"正常 {ratio:.1f}x"
 
 
+def _last_numeric(df: pd.DataFrame, column: str) -> float | None:
+    if column not in df.columns or df.empty:
+        return None
+    value = df[column].iloc[-1]
+    if pd.isna(value):
+        return None
+    return float(value)
+
+
 def analyze_timeframe(df: pd.DataFrame, timeframe: str) -> TimeframeAnalysis:
     swings = _find_swings(df)
     trend = _infer_trend(swings)
@@ -307,6 +363,10 @@ def analyze_timeframe(df: pd.DataFrame, timeframe: str) -> TimeframeAnalysis:
 
     swing_high, swing_low = _recent_swing_range(swings)
     price = float(df["Close"].iloc[-1])
+    recent = df.iloc[-5:] if len(df) >= 5 else df
+    atr = _last_numeric(df, "ATR14")
+    recent_high = float(recent["High"].max()) if not recent.empty else None
+    recent_low = float(recent["Low"].min()) if not recent.empty else None
     pd_zone, eq = _premium_discount(swing_high, swing_low, price)
 
     return TimeframeAnalysis(
@@ -317,13 +377,23 @@ def analyze_timeframe(df: pd.DataFrame, timeframe: str) -> TimeframeAnalysis:
         order_blocks=obs,
         fvgs=fvgs,
         active_fvgs=_active_fvgs(df, fvgs),
-        liquidity=_liquidity_from_swings(swings),
+        liquidity=_liquidity_from_swings(
+            swings,
+            price=price,
+            atr=atr,
+            recent_high=recent_high,
+            recent_low=recent_low,
+        ),
         swing_high=swing_high,
         swing_low=swing_low,
         events=events,
         premium_discount=pd_zone,
         equilibrium=eq,
         volume_signal=_volume_signal(df),
+        atr=atr,
+        last_close=price,
+        recent_high=recent_high,
+        recent_low=recent_low,
     )
 
 

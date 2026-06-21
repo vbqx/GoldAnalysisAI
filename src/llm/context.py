@@ -35,7 +35,13 @@ def _tf_summary(tf: str, analysis: TimeframeAnalysis) -> dict[str, Any]:
             for ob in analysis.order_blocks[-3:]
         ],
         "liquidity": [
-            {"price": lz.price, "label": lz.label}
+            {
+                "price": lz.price,
+                "kind": lz.kind,
+                "label": lz.label,
+                "strength": lz.strength,
+                "swept": lz.swept,
+            }
             for lz in analysis.liquidity[:4]
         ],
     }

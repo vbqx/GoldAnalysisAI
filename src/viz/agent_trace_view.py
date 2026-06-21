@@ -17,6 +17,72 @@ def _badge_md(meta: dict) -> str:
     return f":gray-badge[{label}]"
 
 
+def _stage_source_text(stage_meta: dict, stage: str) -> str:
+    meta = stage_meta.get(stage) or {}
+    label = stage_meta_label(meta)
+    if meta.get("fallback_reason"):
+        return f"{label}（{meta['fallback_reason']}）"
+    return label
+
+
+def _decision_flow_markdown(report: dict, trace: dict) -> str:
+    meta = report.get("meta") or {}
+    stage_meta = trace.get("stage_meta") or {}
+    team = trace.get("analyst_team") or {}
+    debate = trace.get("debate") or {}
+    proposal = trace.get("proposal") or {}
+    decision = trace.get("decision") or {}
+    signals = report.get("signals") or []
+    sentiment = report.get("sentiment") or {}
+    metrics = report.get("metrics") or {}
+    conclusion = report.get("conclusion") or {}
+    levels = trace.get("llm_levels") or []
+    validated = trace.get("validated_plans") or []
+
+    analyst_bits = []
+    for key, label in (
+        ("technical", "技术"),
+        ("fundamentals", "基本面"),
+        ("news", "新闻"),
+        ("sentiment", "情绪"),
+    ):
+        row = team.get(key) or {}
+        analyst_bits.append(f"{label}={row.get('bias', '—')}")
+
+    signal_bits = []
+    for idx, sig in enumerate(signals[:3], start=1):
+        signal_bits.append(
+            f"{idx}. {sig.get('name', '信号')} {sig.get('direction', '')} "
+            f"{sig.get('entry_low', '—')}~{sig.get('entry_high', '—')} "
+            f"状态={sig.get('status', '—')} 质量={sig.get('score_grade', '—')}/{sig.get('score_total', '—')}"
+        )
+
+    accepted = sum(1 for row in validated if row.get("accepted"))
+    rejected = len(validated) - accepted
+    llm_level_line = (
+        f"LLM 点位提出 {len(levels)} 条，校验通过 {accepted} 条，拒绝 {rejected} 条"
+        if levels or validated
+        else _stage_source_text(stage_meta, "llm_levels")
+    )
+
+    return "\n".join(
+        [
+            f"- **数据**：{meta.get('data_source', '—')}，当前价 {metrics.get('current_price', '—')}，更新时间 {meta.get('updated_at', '—')}。",
+            f"- **结构**：多 {sentiment.get('bullish', '—')}% / 空 {sentiment.get('bearish', '—')}% / 震荡 {sentiment.get('ranging', '—')}%。",
+            f"- **分析师团队**（{_stage_source_text(stage_meta, 'analyst_team')}）：{'; '.join(analyst_bits)}。",
+            f"- **多空研究**：看多={_stage_source_text(stage_meta, 'bullish')}；看空={_stage_source_text(stage_meta, 'bearish')}。",
+            f"- **辩论**（{_stage_source_text(stage_meta, 'debate')}）：共识 {debate.get('consensus_bias', '—')}，强度 {float(debate.get('consensus_strength') or 0):.0%}。",
+            f"- **点位**：{llm_level_line}。",
+            f"- **交易员**（{_stage_source_text(stage_meta, 'trader')}）：主方向 {proposal.get('primary_direction', '—')}，信号 {proposal.get('signal_indices', [])}。",
+            f"- **风控/经理**：经理动作 {decision.get('action', '—')}，方向 {decision.get('primary_direction', '—')}，置信 {float(decision.get('confidence') or 0):.0%}。",
+            f"- **结论**：{conclusion.get('market_sentiment', '—')}；{decision.get('summary', '')}",
+            "",
+            "**候选信号**",
+            *(f"- {line}" for line in signal_bits),
+        ]
+    )
+
+
 def render_agent_trace_panel(report: dict) -> None:
     trace = report.get("agent_trace")
     if not trace:
@@ -61,6 +127,9 @@ def render_agent_trace_panel(report: dict) -> None:
 
     st.markdown("**经理摘要**")
     st.markdown(decision.get("summary", "—"))
+
+    st.markdown("**本次决策流程摘要**")
+    st.markdown(_decision_flow_markdown(report, trace))
 
     if analyst_team:
         team_meta = stage_meta.get("analyst_team") or {}
