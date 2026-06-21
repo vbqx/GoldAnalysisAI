@@ -87,8 +87,8 @@ MVP: `ict_pa.analyze_timeframe()`
 - 看涨 OB: 大阴 → 阳 → 大阳突破
 
 #### Liquidity
-- Equal Highs/Lows: 两个 swing 价位接近（<0.2%）
-- Stop Hunt: 极值外 2~5 点
+- Equal Highs/Lows: 两个 swing 价位在 ATR/价格缩放容差内接近
+- Stop Hunt: 最近 swing 极值外侧，偏移使用 ATR 缩放并保留最小点数下限
 
 #### Premium / Discount
 - 使用主 swing range 中点作为 equilibrium
@@ -100,7 +100,7 @@ MVP: `ict_pa.analyze_timeframe()`
 - ATR14 / RSI14 / MACD / ADX14 由 OHLCV 计算，并参与技术 evidence
 - 技术质量评分检查 K 线数量、指标 warm-up、volume 有效性与 ICT 输入密度
 
-> 完整 ICT 体系还包含 Kill Zone、Breaker / Mitigation Block、Liquidity Sweep、PDH/PDL 与 session 高低点等；这些仍未实现。
+> 完整 ICT 体系还包含 Kill Zone、Breaker / Mitigation Block、PDH/PDL 与 session 高低点等；当前 liquidity sweep 只实现了规则确认的一部分，不等同于完整 ICT 事件模型。
 
 ### 2.5 右侧统计 & 交易计划
 
@@ -114,7 +114,7 @@ score_bear = 0.35×4H_bear + 0.30×1H_bear + ...
 |------|------|
 | 激进做空 | 最近 bearish FVG 下沿~上沿 |
 | 保守做空 | 更高 TF 的 bearish OB |
-| 扫低做多 | swing low 下方 3~5 点 |
+| 扫低做多 | swing low 下方 ATR/配置偏移，且需要 sweep + reclaim 质量确认 |
 
 SL/TP 按 zone 宽度或 swing 极值推算，RR 1:2~1:4。
 
@@ -148,18 +148,13 @@ MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；
 3. 胜率是趋势投票，非历史回测统计
 4. DXY / 金十 / 社媒已接入实时 API，拉取失败时回退占位文案（UI 应区分 live / fallback）
 5. LLM 结论润色可选（`LLM_ENABLED`）；默认规则引擎生成结论文案
-6. Kill Zone、Breaker/Mitigation、Liquidity Sweep、PDH/PDL、session 高低点与跨周期 zone overlap 仍是后续输入缺口
+6. Kill Zone、Breaker/Mitigation、PDH/PDL、session 高低点与跨周期 zone overlap 仍是后续输入缺口；liquidity sweep 目前为规则确认的部分实现
 
 ---
 
-## 5. 推荐迭代路线
+## 5. 文档边界
 
-```
-Phase 1 (当前 MVP)  → 规则引擎 + Streamlit + 外部数据 + LLM 双轨
-Phase 2             → HTML/PDF 静态报告导出
-Phase 3             → ICT Interpreter + 流水线并行
-Phase 4             → 信号回测 + 真实胜率
-```
+本文只做报告结构与算法反推，不维护后续迭代。当前路线图见 [roadmap.md](../planning/roadmap.md)。
 
 ---
 

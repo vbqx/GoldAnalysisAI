@@ -23,7 +23,7 @@
 | **Manager** | `agents/manager.py` | ✅ 最终执行/观望决策 |
 | **LLM 报告文案** | `llm/analyst.py` | ✅ 流水线末尾（`LLM_ENABLED`） |
 | **流式 LLM I/O** | `viz/pipeline_progress.py` | ✅ 生成时实时展示 |
-| **Execution** | （未来）券商/MT5 API | 🔲 未实现 |
+| **Execution** | 券商/MT5 API | 当前未接入 |
 | **Streamlit UI** | `app.py` + `views/*` + `viz/*` | ✅ 三页：机构 / 短线 / LLM 决策 |
 
 ---
@@ -178,34 +178,17 @@ report, data, analyses = run_analysis()
 
 ---
 
-## 6. 运行配置面板迭代
+## 6. 运行配置边界
 
-| Phase | 内容 | 状态 |
-|-------|------|------|
-| 1 | Streamlit 会话层门禁：首屏显示配置面板，点击后才后台生成；配置通过 `apply_run_config()` 同步到已 import 模块 | ✅ |
-| 2 | 将 `RunConfig` 参数显式传入 `run_analysis()` / `run_trade_agent_pipeline()` / factory，移除模块全局同步 | 🔲 |
-| 3 | UI 支持完整 stage matrix（Analyst / Research / Debate / Narrative 独立开关）与多用户隔离 | 🔲 |
+Streamlit 首屏先展示运行配置，用户确认后再触发数据拉取与分析。当前为了保持 `run_analysis()` 返回签名兼容，配置通过 `apply_run_config()` 同步到已 import 模块。
 
-Phase 1 保持 `run_analysis()` 返回签名不变，适合快速解决“启动即拉数”的交互问题；Phase 2 是更彻底的架构清理。
+后续是否改为显式传递 `RunConfig` 属于路线图事项，见 [roadmap.md](../planning/roadmap.md#运行配置与-ui)。
 
 ---
 
-## 7. 后续迭代
+## 7. 交易信号合同
 
-| 优先级 | 任务 | 负责层 |
-|--------|------|--------|
-| **P0** | Analyst Team 规则版 + 接入流水线 | ✅ `agents/analysts/` |
-| **P0** | LLM 研究 + 辩论 + 流式 I/O | ✅ 见 [llm-agents.md](./llm-agents.md) |
-| **P1** | 信号生成去重（trader 与 build_report 共用一次 `generate_trading_signals`） | ✅ |
-| **P1** | Analyst Team LLM 双轨（每分析师独立 Prompt） | ✅ `agents/llm/stages/analysts/` |
-| **P1** | 真实 News / DXY / 社媒 API | ✅ `data/sources/` |
-| **P1** | 流水线并行（bull/bear、Analyst×4） | ✅ |
-| **P2** | LLM 交易员 / 风控 / 经理 | `agents/llm/stages/` |
-| **P3** | ICT Interpreter | `ict_pa.py` |
-
-### 7.1 交易信号下一阶段模型
-
-交易信号不再只表示「可执行买卖计划」，而是兼容四种状态：
+交易信号兼容四种状态：
 
 | 状态 | 含义 |
 |------|------|
@@ -214,7 +197,7 @@ Phase 1 保持 `run_analysis()` 返回签名不变，适合快速解决“启动
 | `active` | 触发条件已满足，可作为执行计划 |
 | `invalid` | 几何、方向或结构条件失效 |
 
-第一阶段保持 `TradingSignal` 旧字段兼容，同时新增：
+`TradingSignal` 保持旧字段兼容，同时包含：
 
 - `setup_type`
 - `status`
@@ -224,13 +207,58 @@ Phase 1 保持 `run_analysis()` 返回签名不变，适合快速解决“启动
 - `score_grade`
 - `score_reasons`
 
-后续再拆出 `SetupZone` / `ExecutionTrigger` / `TradePlan` 独立类型，避免一次性破坏 UI 与 agent 链路。
-
 完整 LLM 设计见 **[llm-agents.md](./llm-agents.md)**。
 
 ---
 
-## 8. 调试 agent_trace
+## 8. 执行层
+
+### 8.1 LLM 点位层
+
+保留原有研究链路：
+
+```text
+Analyst Team -> Bullish/Bearish Researchers -> Debate
+```
+
+在 Debate 之后新增面向执行的点位层：
+
+```text
+Rule candidate signals -> LLM Level Proposer -> Level Validator -> Trader
+```
+
+`LLM Level Proposer` 让模型基于已有证据提出具体 entry/stop/target。`Level Validator` 保持确定性校验，只把有效建议转换成现有 `TradingSignal` 类型。这是 LLM 点位与当前 Trader/Risk/UI 框架的嵌合点。
+
+主要代码路径：
+
+- `src/agents/llm/stages/levels.py`
+- `src/agents/llm/payload.py::level_proposer_payload`
+- `src/agents/llm/schemas.py::parse_level_proposals`
+- `src/analysis/level_validator.py::validate_llm_levels`
+- `src/core/orchestrator.py` between Debate and Trader
+
+### 8.2 流动性质量层
+
+流动性现在作为证据层处理，而不是独立的交易指令。
+
+```text
+Swings + ATR -> Liquidity zones -> Sweep quality -> TradingSignal status/score
+```
+
+实施边界：
+
+1. `ict_pa.py` 负责确定性市场结构输入：swing、ATR、最近高低收盘和流动性区。
+2. `report_engine.py` 负责执行就绪度：sweep long 必须同时满足扫穿深度、收盘收回和 bullish BOS/CHoCH。
+3. `TradingSignal.score_reasons` 承载可审计原因，供 UI 和 LLM 决策链展示。
+4. LLM 点位可以引用流动性证据，但是否接受、降级或拒绝仍由确定性校验决定。
+
+这不会替换现有的 Analyst Team -> Bull/Bear -> Debate 架构。流动性层同时服务规则候选信号和 LLM 点位上下文，但不替代研究智能体。
+
+金融侧验收见 [financial-review.md](../domain/financial-review.md#2026-06-21-流动性可靠性验收口径)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)。
+
+---
+
+## 9. 调试 agent_trace
 
 ```python
 report, _, _ = run_analysis()
@@ -257,28 +285,3 @@ print(report["agent_trace"]["debate"]["discussion_notes"])
 
 ---
 
-## 2026-06-21 Architecture Update: LLM 点位提案
-
-> 中文命名：**LLM 点位提案**。该阶段让大模型提出候选入场区、止损和止盈目标，但不会直接生成最终交易信号；所有提案必须先经过确定性的 `Level Validator` 校验，校验通过后才会转换为现有 `TradingSignal`。
-
-The new architecture keeps the previous research stack intact:
-
-```text
-Analyst Team -> Bullish/Bearish Researchers -> Debate
-```
-
-A new execution-facing layer is added after Debate:
-
-```text
-Rule candidate signals -> LLM 点位提案 (LLM Level Proposer) -> Level Validator -> Trader
-```
-
-`LLM Level Proposer` lets the model suggest concrete entry/stop/target levels from the existing evidence. `Level Validator` remains deterministic and converts only valid proposals into the existing `TradingSignal` type. This is the integration point between LLM-generated levels and the current Trader/Risk/UI framework.
-
-Primary code paths:
-
-- `src/agents/llm/stages/levels.py`
-- `src/agents/llm/payload.py::level_proposer_payload`
-- `src/agents/llm/schemas.py::parse_level_proposals`
-- `src/analysis/level_validator.py::validate_llm_levels`
-- `src/core/orchestrator.py` between Debate and Trader

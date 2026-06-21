@@ -77,16 +77,16 @@ fetch_all_data()
 
 问题：K 线与 ICT 引擎已经产出多周期结构，但规则版技术分析师只稳定消费部分输入，导致后续研究/辩论/报告可能基于过窄 evidence 做判断。
 
-| 阶段 | 目标 | 落地内容 |
-|------|------|----------|
-| P0 | 技术输入可观测 | 在 `context_stats.technical_inputs` 记录每周期 K 线数量、结构事件、OB/FVG/liquidity、premium/discount、volume signal、volume 有效性与指标 readiness |
-| P1 | 技术 evidence 补齐 | 将 `1d` 趋势、premium/discount、equilibrium、volume signal、liquidity 与 Fibonacci 价位转成 `technical_analyst.items` |
-| P2 | 上下文统一 | `analysis/technical_context.py` 统一规则技术分析师、LLM 技术分析师、最终叙事层的技术上下文字段 |
-| P3 | 指标扩展 | 基于 OHLCV 增加 ATR14、RSI14、MACD、ADX14，并将动能/波动率/趋势强度转成 evidence |
-| P4 | 质量降级 | 技术质量评分检查 K 线数量、indicator warm-up、volume 有效性与 ICT 输入；输入不足时降低 confidence 并在 summary 标注原因 |
-| P5 | 支撑阻力上下文 | 从日高/日低、swing、equilibrium、Fib、liquidity、OB/FVG 聚合 support/resistance/neutral levels，并输出最近支撑/压力 evidence |
+| 能力 | 当前落地内容 |
+|------|--------------|
+| 技术输入可观测 | 在 `context_stats.technical_inputs` 记录每周期 K 线数量、结构事件、OB/FVG/liquidity、premium/discount、volume signal、volume 有效性与指标 readiness |
+| 技术 evidence 补齐 | 将 `1d` 趋势、premium/discount、equilibrium、volume signal、liquidity 与 Fibonacci 价位转成 `technical_analyst.items` |
+| 上下文统一 | `analysis/technical_context.py` 统一规则技术分析师、LLM 技术分析师、最终叙事层的技术上下文字段 |
+| 指标扩展 | 基于 OHLCV 增加 ATR14、RSI14、MACD、ADX14，并将动能/波动率/趋势强度转成 evidence |
+| 质量降级 | 技术质量评分检查 K 线数量、indicator warm-up、volume 有效性与 ICT 输入；输入不足时降低 confidence 并在 summary 标注原因 |
+| 支撑阻力上下文 | 从日高/日低、swing、equilibrium、Fib、liquidity、OB/FVG 聚合 support/resistance/neutral levels，并输出最近支撑/压力 evidence |
 
-当前实施范围：P0-P5 已在规则技术分析师、LLM 技术 payload 与最终 narrative payload 中落地；后续可继续细化指标权重与历史回测校准。
+以上能力已在规则技术分析师、LLM 技术 payload 与最终 narrative payload 中落地；指标权重和历史校准计划见 [roadmap.md](../planning/roadmap.md)。
 
 ## ICT / PA / SMC 输入审计
 
@@ -96,62 +96,33 @@ fetch_all_data()
 | BOS / CHoCH | ✅ 简化实现 | 最新 close 相对近期 swing high/low 判定 |
 | FVG | ✅ 基础实现 | 三 K 缺口 + active FVG 过滤 |
 | Order Block | ⚠️ 启发式 | 三 K 推动前反向 K，未包含 mitigation/breaker 生命周期 |
-| Liquidity | ⚠️ 部分实现 | Equal highs/lows、stop hunt offset；尚未检测 sweep event |
+| Liquidity | ⚠️ 部分实现 | Equal highs/lows、stop hunt offset 已随 ATR/价格缩放，并记录 `swept` 标记 |
 | Premium / Discount | ✅ 简化实现 | swing range 中点 equilibrium + premium/discount |
 | Volume / Displacement | ⚠️ 部分实现 | volume ratio + OB 内隐 displacement；尚未有 ATR 标准化 displacement |
 | Support / Resistance | ✅ 已实现 | P5 聚合日高/日低、swing、Fib、liquidity、OB/FVG，并进入 technical evidence |
 | Multi-TF confluence | ⚠️ 部分实现 | 趋势投票 + 最近 S/R；尚未有跨周期 zone overlap score |
 | Kill zones / Sessions | ❌ 未实现 | 未按 London/NY/Asia 时段标注结构事件 |
 | Breaker / Mitigation blocks | ❌ 未实现 | 仍需 OB/FVG lifecycle 状态 |
-| Liquidity sweep detection | ❌ 未实现 | 交易模板有“扫低”，但没有 wick sweep + reclaim 检测 |
+| Liquidity sweep detection | ⚠️ 部分实现 | `report_engine` 已对 sweep long 检查扫穿深度、收回和 bullish BOS/CHoCH；尚未形成完整 session/kill zone 级 ICT 事件模型 |
 | PDH/PDL / prior sessions | ❌ 未实现 | 当前只有日高/日低/前收，缺前日/前周/Session 高低点记忆 |
 
 ## 其他分析师输入优化方案
 
 目标：让 fundamentals / news / sentiment 三位分析师像技术分析师一样，把已经抓取或派生出的输入转成可审计 evidence，并把输入质量写入 `context_stats`。
 
-| 分析师 | 当前缺口 | P0/P1 落地 |
-|--------|----------|------------|
-| fundamentals | 主要消费 DXY/US10Y quote；日历高影响事件、事件倒计时、宏观来源覆盖没有稳定变成 evidence | 增加高影响日历、下一事件倒计时、DXY/US10Y 覆盖与 fetch error 质量 evidence |
-| news | 已有 headline/calendar evidence；但 topic 聚类、flash/article/calendar 渠道密度、来源质量没有进入规则输出 | 增加新闻主题、渠道密度、Jin10 live/fallback 状态 evidence |
-| sentiment | 已有结构投票和社媒帖子；但社媒样本数量、kind 分布、bias_delta 汇总、长短周期结构分歧没有进入 summary/evidence | 增加社媒样本质量、社媒 bias_delta、结构趋势分歧 evidence，并只在结构投票接近时用社媒作轻量 tie-break |
-
-后续迭代：基本面可加入实际利率/美元篮子，新闻可加入去重与事件影响窗口，情绪可加入社媒质量权重和异常样本过滤。
+| 分析师 | 当前输入覆盖 | 输出约束 |
+|--------|--------------|----------|
+| fundamentals | DXY/US10Y quote、高影响日历、下一事件倒计时、来源覆盖与 fetch error | 只把已抓取或明确 fallback 的宏观输入转成 evidence |
+| news | headline/calendar evidence、新闻主题、渠道密度、Jin10 live/fallback 状态 | 区分快讯、资讯和日历，不把 fallback 当实时事实 |
+| sentiment | 结构投票、社媒帖子、样本质量、bias_delta、长短周期结构分歧 | 社媒仅作轻量辅助，不能覆盖结构主导方向 |
 
 ## 架构边界与 Review 结论
 
 - `context_builder.finalize_market_context()` 是唯一写入 `derived` 与 `context_stats` 的入口；规则分析师只消费 `MarketContext`，不重新 fetch 外部源。
 - `context_stats.technical_inputs` / `context_stats.analyst_inputs` 是可观测性与质量审计字段，不直接等同于交易信号。
 - 规则分析师负责把可用输入转成 `EvidenceItem`；技术上下文由 `analysis/technical_context.py` 共享给规则技术分析师、LLM Analyst payload 与最终 narrative payload。
-- 当前已完成 P0-P5：输入密度可观测、规则 evidence 补齐、共享 technical context、OHLCV 指标扩展、输入不足质量降级、支撑阻力上下文。
+- 当前已完成：输入密度可观测、规则 evidence 补齐、共享 technical context、OHLCV 指标扩展、输入不足质量降级、支撑阻力上下文。
 
-## 路线图状态（Phase 0–6）
+## 专项边界
 
-| Phase | 内容 | 状态 |
-|-------|------|------|
-| 0 | context_stats 基线 + 密度测试 | ✅ |
-| 1 | HeadlineItem/CalendarEvent/MacroQuote + US10Y + get_quote/kline | ✅ |
-| 2 | 按角色 payload 选编 + 配置上限 | ✅ |
-| 3 | 规则分析师加深 + 去重 fetch | ✅ |
-| 4 | LLM prompt 分 channel + min items + source | ✅ |
-| 5 | 辩论层 topics/calendar/countdown | ✅ |
-| 6 | 可观测性 + 并行 fetch + 全量测试 | ✅ |
-
-## 后续迭代（Phase 3+）
-
-- [x] 金十 MCP `get_quote` spot 与 TV 价格交叉校验（`derived.spot_cross_check`）
-- [x] 金十 MCP `get_kline` 摘要（`derived.jin10_kline_summary`）
-- [x] 新闻主题聚类（`derived.news_topics` → 辩论层）
-- [x] 日历事件倒计时（`derived.event_countdown`）
-- [x] LLM 最小 evidence 条数校验（`LLM_MIN_ANALYST_ITEMS`）
-- [x] LLM items 自动补全 `refs.source`
-- [x] 技术分析师 FVG/OB 距离现价 evidence
-- [x] 技术分析师补齐 `1d`、premium/discount、volume、liquidity 与 Fibonacci evidence
-- [x] 技术输入密度写入 `context_stats.technical_inputs`
-- [x] 技术上下文共享给 rule technical、LLM technical 与 narrative payload
-- [x] ATR14 / RSI14 / MACD / ADX14 指标扩展与质量降级
-- [x] Support / resistance context 与最近支撑/压力 evidence
-- [x] fundamentals/news/sentiment 补齐输入密度、来源质量与主题/样本 evidence
-- [x] 分角色输入密度写入 `context_stats.analyst_inputs`
-- [x] 并行拉取 macro + news + social（`fetch_external_bundle` 三线程）
-- [x] LLM prompt 分 channel 细化（快讯 vs 资讯 vs 日历）
+流动性质量专项不在本文重复维护。实现边界见 [architecture.md §8.2](./architecture.md#82-流动性质量层)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)，金融验收见 [financial-review.md](../domain/financial-review.md#2026-06-21-流动性可靠性验收口径)。

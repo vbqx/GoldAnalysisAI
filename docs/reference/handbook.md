@@ -101,7 +101,7 @@ build_report(signals=…)  →  dict  report
 | 6 | `merge_external()` | `src/data/aggregator.py` | → `ExternalFactors` |
 | 7 | `finalize_market_context()` | `src/data/context_builder.py` | derived 信号 + context_stats |
 
-详见 [analyst-context.md](../design/analyst-context.md)（三层架构、配置项、Phase 0–6 状态）。
+详见 [analyst-context.md](../design/analyst-context.md)（输入合同、配置项与质量审计字段）。
 
 **TradingView 细节**（步骤 2 内部）：
 
@@ -411,9 +411,10 @@ GoldAnalysisAI/
 |------|-------------|----------|----------|
 | Research | `run_bullish` / `run_bearish` / `run_research_team` | `bullish.py` / `bearish.py` | `llm/stages/bullish.py` 等；LLM 时可并行 |
 | Debate | `run_debate` | `debate.py`（F-013：结构情绪 tiebreaker） | `llm/stages/debate.py` |
-| Trade | `run_trader` | `trader.py`（整合 `sentiment_score` 结构门控） | P1 规划中 |
-| Risk | `run_risk` | `risk.py` | P2 规划中 |
-| Manager | `run_manager` | `manager.py` | P2 规划中 |
+| Level Proposer | `run_level_proposer` | `compute_trading_signals(ctx)` 候选信号 | `llm/stages/levels.py`，输出后必须经 `level_validator.py` |
+| Trade | `run_trader` | `trader.py`（整合 `sentiment_score` 结构门控） | 预留开关，当前回退规则 |
+| Risk | `run_risk` | `risk.py` | 预留开关，当前回退规则 |
+| Manager | `run_manager` | `manager.py` | 预留开关，当前回退规则 |
 
 `run_manager` 优先级：**conservative** → **neutral** → **aggressive**；全否决则 `action="wait"`。
 
@@ -451,7 +452,7 @@ Orchestrator 随后注入：
 
 `TradingSignal` dataclass 字段：`entry_low/high`, `stop_loss`, `take_profits[]`, `theme`（`"short"|"long"`）等。
 
-下一阶段信号字段已开始兼容「交易假设」语义：
+当前信号字段已兼容「交易假设」语义：
 
 | 字段 | 说明 |
 |------|------|
@@ -462,7 +463,7 @@ Orchestrator 随后注入：
 | `score_total`, `score_grade` | 信号质量评分与等级 |
 | `score_reasons` | 评分依据 / 降级原因 |
 
-当前实现仍返回 `TradingSignal`，用于兼容 trader/risk/UI；后续可拆分为 `SetupZone`、`ExecutionTrigger`、`TradePlan`。
+当前实现仍返回 `TradingSignal`，用于兼容 trader/risk/UI。类型拆分计划见 [roadmap.md](../planning/roadmap.md#交易假设系统)。
 
 ### 5.7 可视化层 `src/viz/`
 
@@ -479,7 +480,7 @@ Orchestrator 随后注入：
 
 **分层原则**：viz 只读 `report`/`data`/`analyses`，不 import agents。
 
-运行前配置例外由 `src/core/run_config.py` 承担：Streamlit 面板生成 `RunConfig`，后台 worker 在调用 `run_analysis()` 前执行 `apply_run_config()`，同步 `AGENT_MODE` / `LLM_ENABLED` / `LLM_STAGE_*` 到已 import 的流水线模块。后续 Phase 2 应改为显式参数传递，减少模块全局状态。
+运行前配置例外由 `src/core/run_config.py` 承担：Streamlit 面板生成 `RunConfig`，后台 worker 在调用 `run_analysis()` 前执行 `apply_run_config()`，同步 `AGENT_MODE` / `LLM_ENABLED` / `LLM_STAGE_*` 到已 import 的流水线模块。显式参数传递计划见 [roadmap.md](../planning/roadmap.md#运行配置与-ui)。
 
 ---
 
@@ -622,7 +623,7 @@ python tests/tools/chart_compare.py
 
 ---
 
-## 11. 测试与路线图
+## 11. 测试
 
 自动化测试见 [`tests/`](../tests/README.md) 与 [`tests/cases/catalog.yaml`](../tests/cases/catalog.yaml)。
 
@@ -645,20 +646,7 @@ python tests/tools/financial_review_run.py  # 金融评审实跑快照
 - [ ] Analyst Team 四列 badge 与 stage_sources 一致
 - [ ] 两种报告模式渲染正常；结构权重标注「非回测胜率」
 
-| 优先级 | 任务 | 状态 |
-|--------|------|------|
-| P0 | Analyst Team 规则版 + 智能体 I/O | ✅ |
-| P0 | factory + LLM 研究 + 辩论 + 流式 I/O + 传输重试 | ✅ |
-| P1 | Analyst Team LLM 双轨（`LLM_STAGE_ANALYSTS`） | ✅ |
-| P1 | 信号生成去重（trader / report 共用） | ✅ |
-| P1 | 真实 News / DXY / 社媒 API | ✅ |
-| P1 | 流水线并行（bull/bear、Analyst×4） | ✅ |
-| P4 | 报告文案层 | ✅ |
-| P1 | LLM 交易员 | 🔲 |
-| P2 | LLM 风控 + 经理 | 🔲 |
-| P3 | ICT Interpreter + DXY | 🔲 |
-| P5 | HTML/PDF 导出 | 🔲 |
-| P6 | 回测 | 🔲 |
+后续计划统一维护在 [roadmap.md](../planning/roadmap.md)。
 
 ---
 
@@ -675,6 +663,7 @@ python tests/tools/financial_review_run.py  # 金融评审实跑快照
 | [architecture.md](../design/architecture.md) | TradingAgents 对照 |
 | [llm-agents.md](../design/llm-agents.md) | LLM 双轨、传输重试、智能体 I/O、硅基流动配置 |
 | [analyst-context.md](../design/analyst-context.md) | Analyst Team 输入密度与配置 |
+| [roadmap.md](../planning/roadmap.md) | 后续迭代、优先级和专项计划 |
 | [jin10-mcp.md](../integrations/jin10-mcp.md) | 金十 MCP 接入 |
 | [financial-review.md](../domain/financial-review.md) | 金融逻辑评审与 FIN-* 用例追溯 |
 | [reverse-engineering.md](../domain/reverse-engineering.md) | 报告各区块算法反推 |
@@ -689,22 +678,22 @@ python tests/tools/financial_review_run.py  # 金融评审实跑快照
 
 ---
 
-## 2026-06-21 Handbook Note: LLM Level Stage
+## LLM 点位阶段速查
 
-Pipeline stage order now includes an optional LLM level stage:
+流水线现在包含可选的 LLM 点位阶段。架构背景见 [architecture.md §8.1](../design/architecture.md#81-llm-点位层)，本节只保留调用顺序和字段速查。
 
 | Order | Function | File | Output |
 |------|----------|------|--------|
-| 4 | `compute_trading_signals(ctx)` | `src/analysis/report_engine.py` | deterministic `list[TradingSignal]` candidates |
-| 4.5 | `agent_factory.run_level_proposer(...)` | `src/agents/factory.py` | raw `list[LevelProposal]`, enabled by `LLM_STAGE_LEVELS` |
-| 4.6 | `validate_llm_levels(ctx, proposals)` | `src/analysis/level_validator.py` | accepted LLM proposals converted to `TradingSignal`, plus audit rows |
-| 5 | `agent_factory.run_trader(..., signals)` | `src/agents/factory.py` | `TransactionProposal` over rule + validated LLM signals |
+| 4 | `compute_trading_signals(ctx)` | `src/analysis/report_engine.py` | 规则候选 `list[TradingSignal]` |
+| 4.5 | `agent_factory.run_level_proposer(...)` | `src/agents/factory.py` | LLM 原始 `list[LevelProposal]`，由 `LLM_STAGE_LEVELS` 开启 |
+| 4.6 | `validate_llm_levels(ctx, proposals)` | `src/analysis/level_validator.py` | 通过校验的 LLM 点位转换为 `TradingSignal`，并输出审计行 |
+| 5 | `agent_factory.run_trader(..., signals)` | `src/agents/factory.py` | 基于规则 + 已校验 LLM 信号生成 `TransactionProposal` |
 
-New report fields:
+新增报告字段：
 
 - `report["llm_levels"]`
 - `report["validated_plans"]`
 - `report["agent_trace"]["llm_levels"]`
 - `report["agent_trace"]["validated_plans"]`
 
-The LLM level stage is proposal-only. Invalid geometry is rejected before Trader/Risk see it.
+LLM 点位阶段只负责提出建议；无效几何会在 Trader/Risk 消费前被拒绝。

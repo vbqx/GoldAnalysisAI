@@ -1,114 +1,67 @@
 # GoldAnalysisAI 文档中心
 
-项目文档按用途分目录存放。测试说明见 [`tests/README.md`](../tests/README.md)。
+文档按“先读核心，再查细节”的方式维护。新内容优先合并到现有核心文档，避免为每次迭代新增一份说明。
 
 ---
 
-## 目录结构
+## 核心阅读路径
 
-```
-docs/
-├── getting-started/     # 入门：心智模型、环境、界面动线
-├── reference/           # 参考：手册、术语、速查、流水线步骤
-├── design/              # 设计：架构、LLM、分析师输入
-├── domain/              # 领域：算法反推、金融评审
-├── integrations/        # 集成：外部数据源
-└── examples/            # 报告 JSON 样例与字段说明
-```
-
----
-
-## 按角色阅读
-
-| 角色 | 建议路径 |
+| 目标 | 阅读顺序 |
 |------|----------|
-| **新用户** | [README.md](../README.md) → [getting-started/setup.md](./getting-started/setup.md) |
-| **开发者（首次读代码）** | **[getting-started/onboarding.md](./getting-started/onboarding.md)** → `orchestrator.py` → [reference/cheat-sheet.md](./reference/cheat-sheet.md) |
-| **开发者（查参考）** | [reference/handbook.md](./reference/handbook.md) · [reference/glossary.md](./reference/glossary.md) · [examples/report-schema.md](./examples/report-schema.md) |
-| **数据 / 集成** | [integrations/jin10-mcp.md](./integrations/jin10-mcp.md) → [design/analyst-context.md](./design/analyst-context.md) |
-| **测试 / 质量** | [tests/README.md](../tests/README.md) → [domain/financial-review.md](./domain/financial-review.md) |
-| **产品 / 界面** | [getting-started/walkthrough.md](./getting-started/walkthrough.md) → [domain/reverse-engineering.md](./domain/reverse-engineering.md) |
+| 快速跑起来 | [../README.md](../README.md) -> [getting-started/setup.md](./getting-started/setup.md) |
+| 第一次读代码 | [getting-started/onboarding.md](./getting-started/onboarding.md) -> [reference/cheat-sheet.md](./reference/cheat-sheet.md) |
+| 理解架构 | [design/architecture.md](./design/architecture.md) -> [design/llm-agents.md](./design/llm-agents.md) |
+| 查看后续计划 | [planning/roadmap.md](./planning/roadmap.md) |
+| 理解金融可信度 | [domain/financial-review.md](./domain/financial-review.md) |
+| 查接口和字段 | [reference/handbook.md](./reference/handbook.md) -> [examples/report-schema.md](./examples/report-schema.md) |
+| 查测试策略 | [../tests/README.md](../tests/README.md) -> [../tests/cases/README.md](../tests/cases/README.md) |
 
 ---
 
-## 文档索引
+## 权威文档分工
 
-### getting-started — 入门
+| 文档 | 维护边界 |
+|------|----------|
+| [design/architecture.md](./design/architecture.md) | 稳定架构事实：系统分层、agent 链路、执行层和代码边界 |
+| [design/llm-agents.md](./design/llm-agents.md) | LLM 双轨、prompt/payload、阶段开关和审计字段 |
+| [design/analyst-context.md](./design/analyst-context.md) | 分析师输入密度、technical context、上下文字段来源 |
+| [domain/financial-review.md](./domain/financial-review.md) | 金融风险发现、修复路径和验收记录 |
+| [planning/roadmap.md](./planning/roadmap.md) | 后续迭代、优先级、专项计划和完成定义 |
+| [reference/handbook.md](./reference/handbook.md) | 详细开发手册：调用链、模块说明、调试和扩展方法 |
+| [reference/pipeline-steps.yaml](./reference/pipeline-steps.yaml) | 流水线步骤的机器可校验清单 |
 
-| 文档 | 说明 |
-|------|------|
-| **[onboarding.md](./getting-started/onboarding.md)** | 15 分钟心智模型、读码路线、刷新报告步骤表 |
-| [setup.md](./getting-started/setup.md) | 环境搭建、配置、运行与测试 |
-| [walkthrough.md](./getting-started/walkthrough.md) | 界面三页操作动线、流程图、验证清单 |
+同一主题只维护一个权威位置：
 
-### reference — 参考
-
-| 文档 | 说明 |
-|------|------|
-| [handbook.md](./reference/handbook.md) | 完整数据流、模块说明、调试与常见问题 |
-| [glossary.md](./reference/glossary.md) | 术语表：ICT、分析师团队、混合模式、胜率字段等 |
-| [cheat-sheet.md](./reference/cheat-sheet.md) | 改功能 → 文件 → 测试，一页速查 |
-| [pipeline-steps.yaml](./reference/pipeline-steps.yaml) | 流水线步骤权威列表（与代码 CI 同步） |
-
-### design — 架构与设计
-
-| 文档 | 说明 |
-|------|------|
-| [architecture.md](./design/architecture.md) | 与 TradingAgents 对照、分层数据流 |
-| [llm-agents.md](./design/llm-agents.md) | 大模型双轨调度、审计字段 |
-| [analyst-context.md](./design/analyst-context.md) | 分析师团队输入密度 |
-
-### domain — 领域参考
-
-| 文档 | 说明 |
-|------|------|
-| [reverse-engineering.md](./domain/reverse-engineering.md) | 报告各区块算法反推 |
-| [financial-review.md](./domain/financial-review.md) | 金融逻辑评审 F-001～F-014、**§7 修复路径** |
-| [financial-review-run-2026-06-20.md](./domain/financial-review-run-2026-06-20.md) | 实跑评审快照 |
-
-### integrations — 外部集成
-
-| 文档 | 说明 |
-|------|------|
-| [jin10-mcp.md](./integrations/jin10-mcp.md) | 金十 MCP 接入 |
-
-### examples — 样例
-
-| 文档 | 说明 |
-|------|------|
-| [report-schema.md](./examples/report-schema.md) | 报告 JSON 字段说明 |
-| [sample-report.json](./examples/sample-report.json) | 脱敏样例（`scripts/export_sample_report.py` 生成） |
+- 架构事实放 `design/architecture.md`。
+- LLM 行为放 `design/llm-agents.md`。
+- 金融可信度和验收放 `domain/financial-review.md`。
+- 后续计划放 `planning/roadmap.md`。
+- 代码调用细节放 `reference/handbook.md`。
 
 ---
 
-## 文档关系
+## 参考与归档
 
-```
-README.md（快速开始）
-    │
-    ├── getting-started/onboarding.md ──► walkthrough.md（界面动线）
-    │         │
-    │         ├── reference/cheat-sheet.md ◄── pipeline-steps.yaml（CI 同步）
-    │         ├── reference/glossary.md（术语）
-    │         └── examples/（报告 JSON 样例）
-    │
-    ├── getting-started/setup.md（环境搭建）
-    │         └── reference/handbook.md（详细参考）
-    │
-    ├── design/architecture.md ──► llm-agents.md
-    └── domain/financial-review.md
-```
+| 目录 | 内容 |
+|------|------|
+| `getting-started/` | 入门、环境搭建、界面动线 |
+| `reference/` | 手册、术语、速查、流水线 YAML |
+| `domain/` | 金融评审、实跑快照、报告算法反推 |
+| `planning/` | 路线图、优先级、专项任务 |
+| `integrations/` | 外部数据源接入说明 |
+| `examples/` | 报告 schema 和样例 JSON |
+
+`domain/financial-review-run-2026-06-20.md` 是一次实跑快照，作为审计记录保留，不作为当前架构事实源。
 
 ---
 
 ## 维护约定
 
-1. **新增流水线步骤**：同时修改 `orchestrator.py` / `fetch_pipeline.py`、`reference/pipeline-steps.yaml`、上手指南中的步骤表；运行 `pytest tests/regression/test_doc_pipeline_sync.py`。
-2. **修改报告字段**：更新 `examples/report-schema.md`，并运行 `python scripts/export_sample_report.py`。
-3. **新增术语**：写入 `reference/glossary.md`。
-4. **修改界面动线**：同步 `getting-started/walkthrough.md`。
-5. **金融修复**：合并 Phase 1–3 相关改动后须跑 `coherence_check.py`（零 issue）与 `python tests/run.py --financial`；修复路径见 [domain/financial-review.md §7](./domain/financial-review.md#7-修复路径规划2026-06-20)。
-6. **持续集成**：`.github/workflows/docs.yml` 自动校验文档与代码一致。
+1. 新增流水线步骤：同步 `orchestrator.py` / `fetch_pipeline.py`、`reference/pipeline-steps.yaml`，并运行 `pytest tests/regression/test_doc_pipeline_sync.py`。
+2. 修改报告字段：更新 `examples/report-schema.md`，必要时重新生成 `examples/sample-report.json`。
+3. 修改 agent 或 LLM 阶段：已实现的稳定链路更新 `design/architecture.md` 或 `design/llm-agents.md`；未实现计划更新 `planning/roadmap.md`。
+4. 修改金融交易逻辑：更新 `domain/financial-review.md` 的发现项或验收记录；后续批次更新 `planning/roadmap.md`，并跑 `tests/unit` 与 coherence 检查。
+5. 读取中文文档作为补丁上下文时，使用 `python scripts/show_utf8.py <path> --start N --count M`，避免未初始化 PowerShell 编码导致上下文乱码。
 
 ---
 

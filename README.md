@@ -146,3 +146,24 @@ $env:AGENT_MODE="rule"; $env:LLM_ENABLED="false"; python tests/tools/coherence_c
 ## 免责声明
 
 本项目仅供学习研究，不构成投资建议。
+
+---
+
+## Windows 终端编码
+
+如果在 PowerShell 中看到中文文档、日志或 pytest 输出乱码，先在项目根目录执行：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+. .\scripts\dev-env.ps1
+```
+
+该脚本会设置 UTF-8 控制台和 Python UTF-8 输出。`Set-ExecutionPolicy -Scope Process` 只影响当前 PowerShell 窗口，不修改系统策略。后续所有本地命令建议在同一个 PowerShell 会话中运行。
+
+读取含中文的源码或文档时，优先使用：
+
+```powershell
+python scripts/show_utf8.py docs/domain/financial-review.md --start 520 --count 40
+```
+
+不要用未初始化编码环境下的 `Get-Content` 作为补丁上下文来源；它可能把 UTF-8 无 BOM 文件按系统 ANSI 解码，导致看到的文本与磁盘真实内容不一致。
