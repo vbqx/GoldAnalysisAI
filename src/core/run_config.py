@@ -38,6 +38,7 @@ class RunConfig:
     llm_stage_bullish: bool = False
     llm_stage_bearish: bool = False
     llm_stage_debate: bool = False
+    llm_stage_levels: bool = False
     llm_stage_trader: bool = False
     llm_stage_risk: bool = False
     llm_stage_manager: bool = False
@@ -54,6 +55,7 @@ class RunConfig:
                 llm_stage_bullish=False,
                 llm_stage_bearish=False,
                 llm_stage_debate=False,
+                llm_stage_levels=False,
                 llm_stage_trader=False,
                 llm_stage_risk=False,
                 llm_stage_manager=False,
@@ -66,6 +68,7 @@ class RunConfig:
             llm_stage_bullish=bool(self.llm_stage_bullish),
             llm_stage_bearish=bool(self.llm_stage_bearish),
             llm_stage_debate=bool(self.llm_stage_debate),
+            llm_stage_levels=bool(self.llm_stage_levels),
             llm_stage_trader=bool(self.llm_stage_trader),
             llm_stage_risk=bool(self.llm_stage_risk),
             llm_stage_manager=bool(self.llm_stage_manager),
@@ -129,6 +132,7 @@ def run_config_widget_state(config: RunConfig) -> dict[str, object]:
         "run_config_stage_bullish": cfg.llm_stage_bullish,
         "run_config_stage_bearish": cfg.llm_stage_bearish,
         "run_config_stage_debate": cfg.llm_stage_debate,
+        "run_config_stage_levels": cfg.llm_stage_levels,
         "run_config_stage_trader": cfg.llm_stage_trader,
         "run_config_stage_risk": cfg.llm_stage_risk,
         "run_config_stage_manager": cfg.llm_stage_manager,
@@ -153,6 +157,7 @@ def run_config_from_env() -> RunConfig:
         llm_stage_bullish=app_config.LLM_STAGE_BULLISH,
         llm_stage_bearish=app_config.LLM_STAGE_BEARISH,
         llm_stage_debate=app_config.LLM_STAGE_DEBATE,
+        llm_stage_levels=app_config.LLM_STAGE_LEVELS,
         llm_stage_trader=app_config.LLM_STAGE_TRADER,
         llm_stage_risk=app_config.LLM_STAGE_RISK,
         llm_stage_manager=app_config.LLM_STAGE_MANAGER,
@@ -171,6 +176,7 @@ def run_config_for_mode(mode: AgentMode, *, llm_enabled: bool = True, llm_analys
         llm_stage_bullish=True,
         llm_stage_bearish=True,
         llm_stage_debate=True,
+        llm_stage_levels=True,
         llm_stage_trader=False,
         llm_stage_risk=False,
         llm_stage_manager=False,
@@ -193,6 +199,7 @@ def apply_run_config(run_config: RunConfig) -> None:
     app_config.LLM_STAGE_BULLISH = cfg.llm_stage_bullish
     app_config.LLM_STAGE_BEARISH = cfg.llm_stage_bearish
     app_config.LLM_STAGE_DEBATE = cfg.llm_stage_debate
+    app_config.LLM_STAGE_LEVELS = cfg.llm_stage_levels
     app_config.LLM_STAGE_TRADER = cfg.llm_stage_trader
     app_config.LLM_STAGE_RISK = cfg.llm_stage_risk
     app_config.LLM_STAGE_MANAGER = cfg.llm_stage_manager
@@ -204,6 +211,7 @@ def apply_run_config(run_config: RunConfig) -> None:
     agent_factory.LLM_STAGE_BULLISH = cfg.llm_stage_bullish
     agent_factory.LLM_STAGE_BEARISH = cfg.llm_stage_bearish
     agent_factory.LLM_STAGE_DEBATE = cfg.llm_stage_debate
+    agent_factory.LLM_STAGE_LEVELS = cfg.llm_stage_levels
     agent_factory.LLM_STAGE_TRADER = cfg.llm_stage_trader
     agent_factory.LLM_STAGE_RISK = cfg.llm_stage_risk
     agent_factory.LLM_STAGE_MANAGER = cfg.llm_stage_manager

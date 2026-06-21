@@ -7,10 +7,11 @@ import time
 from src.agents import factory as agent_factory
 from src.config import AGENT_MODE, LLM_ENABLED
 from src.analysis.ict_pa import analyze_timeframe
+from src.analysis.level_validator import validate_llm_levels
 from src.analysis.report_engine import build_report, compute_trading_signals, parse_risk_events_calendar
 from src.core.parallel import run_parallel
 from src.core.progress import get_progress
-from src.core.types import AgentPipelineMeta, AgentTrace
+from src.core.types import AgentPipelineMeta, AgentTrace, StageMeta
 from src.data.aggregator import assemble_market_context
 from src.data.fetch_pipeline import fetch_all_data
 from src.data.tradingview import compute_price_drift_1d
@@ -132,6 +133,18 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
 
     prog.start("trader", "交易员提案")
     signals = compute_trading_signals(ctx)
+    llm_level_proposals = []
+    level_validation = []
+    if agent_factory.LLM_STAGE_LEVELS and AGENT_MODE != "rule":
+        prog.update("trader", detail="LLM level proposal")
+        llm_level_proposals = agent_factory.run_level_proposer(ctx, analyst_team, debate, pipeline_meta, signals)
+        llm_signals, level_validation = validate_llm_levels(ctx, llm_level_proposals)
+        signals = llm_signals + signals
+    else:
+        pipeline_meta.record(
+            "llm_levels",
+            StageMeta(source="rule", fallback_reason="LLM_STAGE_LEVELS disabled"),
+        )
     proposal, signals = agent_factory.run_trader(ctx, debate, pipeline_meta, signals)
     prog.done("trader", f"{proposal.primary_direction} · {len(proposal.signal_indices)} 信号")
     log.info(
@@ -170,6 +183,8 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     report["meta"]["data_source"] = ctx.source_label
     report["meta"]["agent_mode"] = AGENT_MODE
     report["meta"]["stage_sources"] = pipeline_meta.to_dict()
+    report["llm_levels"] = [p.to_dict() for p in llm_level_proposals]
+    report["validated_plans"] = level_validation
     drift_1d = compute_price_drift_1d(raw["5m"], raw["1d"])
     report["meta"]["price_drift_1d"] = drift_1d
     if abs(drift_1d) > 0.5:
@@ -216,6 +231,8 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         context=ctx.to_dict(),
         analyst_team=analyst_team.to_dict(),
         debate=debate.to_dict(),
+        llm_levels=[p.to_dict() for p in llm_level_proposals],
+        validated_plans=level_validation,
         proposal=proposal.to_dict(),
         risk_reviews=[r.to_dict() for r in risk_reviews],
         decision=decision.to_dict(),

@@ -96,6 +96,25 @@ class ResearchDebate:
 
 
 @dataclass
+class LevelProposal:
+    """LLM proposed trade level, before deterministic validation."""
+
+    direction: Literal["BUY", "SELL"]
+    entry_low: float
+    entry_high: float
+    stop_loss: float
+    take_profits: list[float]
+    setup_type: str
+    reason: str
+    confidence: float
+    invalidation: str = ""
+    source: str = "llm"
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
 class TransactionProposal:
     primary_direction: Literal["long", "short", "wait"]
     signal_indices: list[int]
@@ -288,6 +307,8 @@ class AgentTrace:
     context: dict[str, Any]
     analyst_team: dict[str, Any]
     debate: dict[str, Any]
+    llm_levels: list[dict[str, Any]]
+    validated_plans: list[dict[str, Any]]
     proposal: dict[str, Any]
     risk_reviews: list[dict[str, Any]]
     decision: dict[str, Any]

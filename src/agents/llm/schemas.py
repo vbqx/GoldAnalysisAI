@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from src.config import ANALYST_TEAM_ITEMS_MAX, LLM_MIN_ANALYST_ITEMS, PAYLOAD_EVIDENCE_MAX
-from src.core.types import AgentEvidence, AnalystReport, Bias, EvidenceItem, ResearchDebate
+from src.core.types import AgentEvidence, AnalystReport, Bias, EvidenceItem, LevelProposal, ResearchDebate
 
 _DEFAULT_ITEM_SOURCE = {
     "technical": "tradingview_ict",
@@ -36,6 +36,13 @@ def _clamp_strength(v: Any) -> float:
     except (TypeError, ValueError):
         return 0.3
     return max(0.0, min(1.0, f))
+
+
+def _float_field(row: dict[str, Any], name: str) -> float:
+    try:
+        return float(row[name])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError(f"level proposal missing numeric {name}") from exc
 
 
 def parse_analyst_report(data: dict[str, Any], *, agent: str) -> AnalystReport:
@@ -146,3 +153,54 @@ def parse_research_debate(
         consensus_strength=strength,
         discussion_notes=notes,
     )
+
+
+def parse_level_proposals(data: dict[str, Any]) -> list[LevelProposal]:
+    raw_setups = data.get("setups") or data.get("levels") or []
+    if not isinstance(raw_setups, list):
+        raise ValueError("level proposer returned non-list setups")
+
+    proposals: list[LevelProposal] = []
+    for row in raw_setups[:5]:
+        if not isinstance(row, dict):
+            continue
+        direction = str(row.get("direction", "")).upper()
+        if direction not in ("BUY", "SELL"):
+            continue
+
+        entry_low = _float_field(row, "entry_low")
+        entry_high = _float_field(row, "entry_high")
+        if entry_low > entry_high:
+            entry_low, entry_high = entry_high, entry_low
+
+        tps_raw = row.get("take_profits") or row.get("targets") or []
+        if not isinstance(tps_raw, list):
+            tps_raw = [tps_raw]
+        take_profits: list[float] = []
+        for tp in tps_raw[:3]:
+            try:
+                take_profits.append(float(tp))
+            except (TypeError, ValueError):
+                continue
+        if not take_profits:
+            raise ValueError("level proposal missing take_profits")
+
+        reason = str(row.get("reason", "")).strip()
+        if not reason:
+            reason = "LLM proposed level based on supplied market structure."
+
+        proposals.append(
+            LevelProposal(
+                direction=direction,  # type: ignore[arg-type]
+                entry_low=round(entry_low, 2),
+                entry_high=round(entry_high, 2),
+                stop_loss=round(_float_field(row, "stop_loss"), 2),
+                take_profits=[round(tp, 2) for tp in take_profits],
+                setup_type=str(row.get("setup_type", "llm_level")).strip() or "llm_level",
+                reason=reason,
+                confidence=_clamp_strength(row.get("confidence", 0.5)),
+                invalidation=str(row.get("invalidation", "")).strip(),
+            )
+        )
+
+    return proposals

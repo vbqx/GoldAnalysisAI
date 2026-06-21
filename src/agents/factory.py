@@ -19,6 +19,7 @@ from src.agents.llm.stages.analysts import (
 from src.agents.llm.stages.bearish import run_llm_bearish
 from src.agents.llm.stages.bullish import run_llm_bullish
 from src.agents.llm.stages.debate import run_llm_debate
+from src.agents.llm.stages.levels import run_llm_level_proposer
 from src.agents.manager import run_manager as rule_manager
 from src.agents.risk import run_risk_team as rule_risk
 from src.agents.trader import run_trader_agent as rule_trader
@@ -33,6 +34,7 @@ from src.config import (
     LLM_STAGE_BULLISH,
     LLM_STAGE_BEARISH,
     LLM_STAGE_DEBATE,
+    LLM_STAGE_LEVELS,
     LLM_STAGE_TRADER,
     LLM_STAGE_RISK,
     LLM_STAGE_MANAGER,
@@ -46,6 +48,7 @@ from src.core.types import (
     AgentPipelineMeta,
     AnalystReport,
     AnalystTeam,
+    LevelProposal,
     ManagerDecision,
     MarketContext,
     ResearchDebate,
@@ -370,6 +373,33 @@ def run_debate(
     get_progress().update("debate", detail="LLM 辩论中…")
     llm_result, trace = run_llm_debate(bullish, bearish, analyses, ctx=ctx, team=team)
     return _pick_debate(rule_result, llm_result, trace, pipeline)
+
+
+def run_level_proposer(
+    ctx: MarketContext,
+    team: AnalystTeam,
+    debate: ResearchDebate,
+    pipeline: AgentPipelineMeta,
+    rule_signals: list[TradingSignal],
+) -> list[LevelProposal]:
+    if not _use_llm_stage(LLM_STAGE_LEVELS):
+        log.info("llm_levels disabled or unavailable; using rule candidates only")
+        pipeline.record("llm_levels", StageMeta(source="rule", fallback_reason="LLM_LEVELS disabled"))
+        return []
+
+    get_progress().update("llm_levels", detail="LLM 点位建议")
+    proposals, trace = run_llm_level_proposer(ctx, team, debate, rule_signals)
+    if proposals is not None and not trace.error:
+        log.info("llm_levels accepted as stage output proposals=%d", len(proposals))
+        pipeline.record("llm_levels", StageMeta(source="llm", llm=trace))
+        return proposals
+
+    log.warning("llm_levels fallback to rule candidates reason=%s", trace.error or "no proposals")
+    pipeline.record(
+        "llm_levels",
+        StageMeta(source="rule", fallback_reason=trace.error or "LLM levels returned no proposals", llm=trace),
+    )
+    return []
 
 
 def run_trader(

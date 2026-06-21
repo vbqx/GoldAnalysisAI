@@ -12,7 +12,7 @@ from src.config import (
     ANALYST_TEAM_ITEMS_MAX,
     PAYLOAD_EVIDENCE_MAX,
 )
-from src.core.types import AgentEvidence, AnalystTeam, MarketContext
+from src.core.types import AgentEvidence, AnalystTeam, MarketContext, ResearchDebate
 from src.indicators.technical import ema_relation
 
 
@@ -208,3 +208,42 @@ def evidence_payload(evidence: AgentEvidence) -> dict[str, Any]:
             for i in sorted(evidence.items, key=lambda x: -x.strength)[:cap]
         ],
     }
+
+
+def _signal_payload(signal: Any) -> dict[str, Any]:
+    return {
+        "name": getattr(signal, "name", ""),
+        "direction": getattr(signal, "direction", ""),
+        "entry_low": getattr(signal, "entry_low", None),
+        "entry_high": getattr(signal, "entry_high", None),
+        "stop_loss": getattr(signal, "stop_loss", None),
+        "take_profits": getattr(signal, "take_profits", []),
+        "theme": getattr(signal, "theme", ""),
+        "setup_type": getattr(signal, "setup_type", ""),
+        "status": getattr(signal, "status", ""),
+        "score_grade": getattr(signal, "score_grade", ""),
+        "score_total": getattr(signal, "score_total", 0),
+        "note": getattr(signal, "note", ""),
+    }
+
+
+def level_proposer_payload(
+    ctx: MarketContext,
+    team: AnalystTeam,
+    debate: ResearchDebate,
+    rule_signals: list[Any],
+) -> dict[str, Any]:
+    payload = market_payload(ctx, team)
+    payload["debate"] = {
+        "consensus_bias": debate.consensus_bias,
+        "consensus_strength": debate.consensus_strength,
+        "discussion_notes": debate.discussion_notes[-5:],
+    }
+    payload["rule_candidate_signals"] = [_signal_payload(s) for s in rule_signals[:5]]
+    payload["level_constraints"] = {
+        "scope": "Use only levels supported by supplied price, ICT structures, FVG/OB zones, swings, liquidity, Fib and candidate signals.",
+        "geometry": "SELL requires stop_loss above entry and TP below entry. BUY requires stop_loss below entry and TP above entry.",
+        "execution": "Return candidate zones, not market orders. Include invalidation and trigger expectation in reason.",
+        "risk": "Prefer TP1 risk/reward >= 1.0; avoid entries already far behind current price.",
+    }
+    return payload
