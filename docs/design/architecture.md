@@ -74,7 +74,7 @@
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                     TRADER AGENT                                 │
-│   compute_trading_signals(ctx) → 选 index · debate → Proposal    │
+│   compute_trading_signals(ctx) → 候选区/触发状态/评分 → Proposal │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -203,6 +203,29 @@ Phase 1 保持 `run_analysis()` 返回签名不变，适合快速解决“启动
 | **P2** | LLM 交易员 / 风控 / 经理 | `agents/llm/stages/` |
 | **P3** | ICT Interpreter | `ict_pa.py` |
 
+### 7.1 交易信号下一阶段模型
+
+交易信号不再只表示「可执行买卖计划」，而是兼容四种状态：
+
+| 状态 | 含义 |
+|------|------|
+| `candidate` | 候选交易区，仅观察 |
+| `watch` | 价格接近候选区，等待触发确认 |
+| `active` | 触发条件已满足，可作为执行计划 |
+| `invalid` | 几何、方向或结构条件失效 |
+
+第一阶段保持 `TradingSignal` 旧字段兼容，同时新增：
+
+- `setup_type`
+- `status`
+- `trigger_confirmed`
+- `trigger_note`
+- `score_total`
+- `score_grade`
+- `score_reasons`
+
+后续再拆出 `SetupZone` / `ExecutionTrigger` / `TradePlan` 独立类型，避免一次性破坏 UI 与 agent 链路。
+
 完整 LLM 设计见 **[llm-agents.md](./llm-agents.md)**。
 
 ---
@@ -220,3 +243,29 @@ print(report["agent_trace"]["debate"]["discussion_notes"])
 可在 Streamlit「LLM决策链」页查看：
 - **智能体决策** — Analyst Team 四列 + 辩论/风控/经理
 - **生成与 LLM I/O** — `analyst_team` 规则 I/O + LLM 阶段整理摘要
+
+---
+
+## 2026-06-21 Architecture Update: LLM Levels
+
+The new architecture keeps the previous research stack intact:
+
+```text
+Analyst Team -> Bullish/Bearish Researchers -> Debate
+```
+
+A new execution-facing layer is added after Debate:
+
+```text
+Rule candidate signals -> LLM Level Proposer -> Level Validator -> Trader
+```
+
+`LLM Level Proposer` lets the model suggest concrete entry/stop/target levels from the existing evidence. `Level Validator` remains deterministic and converts only valid proposals into the existing `TradingSignal` type. This is the integration point between LLM-generated levels and the current Trader/Risk/UI framework.
+
+Primary code paths:
+
+- `src/agents/llm/stages/levels.py`
+- `src/agents/llm/payload.py::level_proposer_payload`
+- `src/agents/llm/schemas.py::parse_level_proposals`
+- `src/analysis/level_validator.py::validate_llm_levels`
+- `src/core/orchestrator.py` between Debate and Trader

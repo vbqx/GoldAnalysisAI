@@ -451,6 +451,19 @@ Orchestrator 随后注入：
 
 `TradingSignal` dataclass 字段：`entry_low/high`, `stop_loss`, `take_profits[]`, `theme`（`"short"|"long"`）等。
 
+下一阶段信号字段已开始兼容「交易假设」语义：
+
+| 字段 | 说明 |
+|------|------|
+| `setup_type` | `fvg_retest_short` / `ob_retest_short` / `liquidity_sweep_long` |
+| `status` | `candidate` / `watch` / `active` / `invalid` |
+| `trigger_confirmed` | 是否已有触发确认 |
+| `trigger_note` | 缺少或已满足的触发条件 |
+| `score_total`, `score_grade` | 信号质量评分与等级 |
+| `score_reasons` | 评分依据 / 降级原因 |
+
+当前实现仍返回 `TradingSignal`，用于兼容 trader/risk/UI；后续可拆分为 `SetupZone`、`ExecutionTrigger`、`TradePlan`。
+
 ### 5.7 可视化层 `src/viz/`
 
 | 模块 | 职责 |
@@ -511,6 +524,14 @@ AgentTrace            # 全链路审计（含 analyst_team）
 - `generate_trading_signals()` — 信号几何与模板逻辑
 - `compute_trading_signals(ctx)` — 从 `MarketContext` 组装参数（orchestrator 入口）
 - `build_report(..., signals=...)` — 传入则跳过内部生成
+
+交易信号优化方向：
+
+1. FVG / OB / swing 先生成候选区；
+2. 通过 `status` 与 `trigger_confirmed` 表示是否可执行；
+3. 未触发的 sweep long 只能作为候选，不应被表达成 active 入场；
+4. SELL 区已经低于现价时应降级，等待重新反抽确认；
+5. UI 必须展示「等待触发 / 候选区 / 已触发」状态。
 
 Trader 只消费 orchestrator 传入的 `signals`；Manager 按 index 重排 `report["signals"]`。
 
@@ -665,3 +686,25 @@ python tests/tools/financial_review_run.py  # 金融评审实跑快照
 ## 免责声明
 
 本项目仅供学习研究，不构成投资建议。
+
+---
+
+## 2026-06-21 Handbook Note: LLM Level Stage
+
+Pipeline stage order now includes an optional LLM level stage:
+
+| Order | Function | File | Output |
+|------|----------|------|--------|
+| 4 | `compute_trading_signals(ctx)` | `src/analysis/report_engine.py` | deterministic `list[TradingSignal]` candidates |
+| 4.5 | `agent_factory.run_level_proposer(...)` | `src/agents/factory.py` | raw `list[LevelProposal]`, enabled by `LLM_STAGE_LEVELS` |
+| 4.6 | `validate_llm_levels(ctx, proposals)` | `src/analysis/level_validator.py` | accepted LLM proposals converted to `TradingSignal`, plus audit rows |
+| 5 | `agent_factory.run_trader(..., signals)` | `src/agents/factory.py` | `TransactionProposal` over rule + validated LLM signals |
+
+New report fields:
+
+- `report["llm_levels"]`
+- `report["validated_plans"]`
+- `report["agent_trace"]["llm_levels"]`
+- `report["agent_trace"]["validated_plans"]`
+
+The LLM level stage is proposal-only. Invalid geometry is rejected before Trader/Risk see it.

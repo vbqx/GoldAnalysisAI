@@ -98,6 +98,7 @@ LLM_STAGE_ANALYSTS=true
 LLM_STAGE_RESEARCH=true
 LLM_STAGE_DEBATE=true
 LLM_STAGE_ICT=false
+LLM_STAGE_LEVELS=true
 LLM_STAGE_TRADER=false
 LLM_STAGE_RISK=false
 LLM_STAGE_MANAGER=false
@@ -250,3 +251,30 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 ## 免责声明
 
 LLM 输出仅供研究，不构成投资建议。规则硬约束层始终保留最终安全边界。
+
+---
+
+## 2026-06-21 Architecture Update: LLM Level Proposer
+
+The existing Analyst Team, Bullish Researcher, Bearish Researcher and Debate stages remain the research layer. The new level stage is inserted after Debate and before Trader; it does not replace the long/short debate architecture.
+
+Current execution chain:
+
+```text
+Analyst Team -> Bullish/Bearish Research -> Debate
+  -> compute_trading_signals(ctx)
+  -> LLM Level Proposer (LLM_STAGE_LEVELS)
+  -> Level Validator
+  -> Trader -> Risk -> Manager -> Report
+```
+
+The LLM level stage proposes candidate BUY/SELL zones only. The deterministic validator checks stop/target geometry, risk/reward direction and the existing setup scoring rules, then converts accepted proposals into `TradingSignal` so Trader, Risk and UI keep their current contracts.
+
+Audit fields:
+
+- `report["llm_levels"]`: raw structured LLM proposals.
+- `report["validated_plans"]`: validator accept/reject audit.
+- `report["agent_trace"]["llm_levels"]` and `report["agent_trace"]["validated_plans"]`.
+- `report["meta"]["stage_sources"]["llm_levels"]`.
+
+`LLM_STAGE_RISK` remains planned. It still falls back to rule risk until a dedicated LLM risk-review prompt and validator are implemented.

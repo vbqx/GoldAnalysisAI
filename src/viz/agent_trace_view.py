@@ -27,6 +27,8 @@ def render_agent_trace_panel(report: dict) -> None:
     analyst_team = trace.get("analyst_team") or {}
     decision = trace.get("decision", {})
     debate = trace.get("debate", {})
+    llm_levels = trace.get("llm_levels") or []
+    validated_plans = trace.get("validated_plans") or []
     proposal = trace.get("proposal", {})
     risk_reviews = trace.get("risk_reviews", [])
 
@@ -110,6 +112,48 @@ def render_agent_trace_panel(report: dict) -> None:
         st.markdown("**交易员理由**")
         for line in proposal.get("rationale", [])[:4]:
             st.markdown(f"- {line}")
+
+    levels_meta = stage_meta.get("llm_levels") or {}
+    if llm_levels or validated_plans or "llm_levels" in stage_meta:
+        st.markdown(f"**LLM点位提议** {_badge_md(levels_meta)}")
+        if llm_levels:
+            st.dataframe(
+                [
+                    {
+                        "方向": p.get("direction", "—"),
+                        "入场": f"{p.get('entry_low', '—')} ~ {p.get('entry_high', '—')}",
+                        "止损": p.get("stop_loss", "—"),
+                        "止盈": " / ".join(str(x) for x in p.get("take_profits", [])),
+                        "置信": f"{float(p.get('confidence', 0)):.0%}",
+                        "类型": p.get("setup_type", "—"),
+                    }
+                    for p in llm_levels
+                ],
+                width="stretch",
+                hide_index=True,
+            )
+        else:
+            st.caption("本次没有 LLM 点位提议，或该阶段未启用。")
+
+        if validated_plans:
+            st.markdown("**点位校验**")
+            st.dataframe(
+                [
+                    {
+                        "序号": row.get("index", ""),
+                        "结果": "通过" if row.get("accepted") else "拒绝",
+                        "原因": row.get("reason", ""),
+                        "方向": (row.get("proposal") or {}).get("direction", "—"),
+                        "入场": (
+                            f"{(row.get('proposal') or {}).get('entry_low', '—')} ~ "
+                            f"{(row.get('proposal') or {}).get('entry_high', '—')}"
+                        ),
+                    }
+                    for row in validated_plans
+                ],
+                width="stretch",
+                hide_index=True,
+            )
 
     risk_meta = stage_meta.get("risk") or {}
     st.markdown(f"**风控** {_badge_md(risk_meta)}")
