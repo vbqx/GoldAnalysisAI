@@ -51,7 +51,7 @@ def _sanitize(obj):
 
 def _sample_context() -> MarketContext:
     idx = pd.date_range("2026-06-01", periods=120, freq="5min", tz="UTC")
-    close = 2650.0 + pd.Series(range(120), dtype=float) * 0.08
+    close = pd.Series(2650.0 + pd.Series(range(120), dtype=float).to_numpy() * 0.08, index=idx)
     df = pd.DataFrame(
         {
             "Open": close - 0.5,
@@ -141,11 +141,15 @@ def main() -> int:
         "social_sentiment": ctx.external.social_sentiment,
         "sources": ctx.external.sources,
     }
+    report["llm_levels"] = []
+    report["validated_plans"] = []
 
     trace = AgentTrace(
         context={"price": ctx.price, "sample": True},
         analyst_team=team.to_dict(),
         debate=debate.to_dict(),
+        llm_levels=[],
+        validated_plans=[],
         proposal=proposal.to_dict(),
         risk_reviews=[r.to_dict() for r in risk_reviews],
         decision=decision.to_dict(),

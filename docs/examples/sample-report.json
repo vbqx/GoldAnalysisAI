@@ -4,10 +4,16 @@
     "title": "XAUUSD 黄金/美元 机构级交易分析报告 (PA + ICT + SMC)",
     "strategy_title": "XAUUSD 黄金 短线交易策略图",
     "strategy_subtitle": "PA + ICT + SMC | 5min / 15min 简版执行策略",
-    "updated_at": "2026-06-16 08:39 (UTC+8)",
+    "updated_at": "2026-06-22 00:41 (UTC+8)",
     "methodology": "Price Action + ICT + SMC",
+    "indicator_notes": [
+      "EMA610 仅基于 120 根 K 线，历史不足 610 根时与 TV 长周期 EMA 可能有偏差"
+    ],
+    "warnings": [
+      "EMA610 仅基于 120 根 K 线，历史不足 610 根时与 TV 长周期 EMA 可能有偏差"
+    ],
     "data_source": "OANDA:XAUUSD (sample)",
-    "agent_mode": "rule",
+    "agent_mode": "hybrid",
     "stage_sources": {},
     "context_stats": {
       "headline_count": 1,
@@ -19,12 +25,12 @@
     "disclaimer": "脱敏样例 JSON，仅供文档与测试参考，非 live 报告"
   },
   "metrics": {
-    "current_price": NaN,
-    "daily_change": NaN,
-    "daily_change_pct": NaN,
-    "daily_high": NaN,
-    "daily_low": NaN,
-    "prev_close": NaN
+    "current_price": 2659.52,
+    "daily_change": -8.5,
+    "daily_change_pct": -0.32,
+    "daily_high": 2671.52,
+    "daily_low": 2644.52,
+    "prev_close": 2659.44
   },
   "sentiment": {
     "bullish": 0.0,
@@ -32,18 +38,18 @@
     "ranging": 100.0
   },
   "conclusion": {
-    "market_sentiment": "弱势偏空 ↓",
-    "direction_summary": "主方向偏空，当前处于逆势反弹阶段",
-    "action": "不追多，优先等待 2640-2645 反弹至阻力区做空",
-    "header_conclusion": "主方向偏空，当前处于逆势反弹阶段。不追多，优先等待 2640-2645 反弹至阻力区做空",
+    "market_sentiment": "震荡中性 ↔",
+    "direction_summary": "多空优势不明显，优先等待区间边界确认",
+    "action": "等待 2640-2645 区域确认方向后再参与",
+    "header_conclusion": "多空优势不明显，优先等待区间边界确认。等待 2640-2645 区域确认方向后再参与",
     "must_do": [
-      "★ 主策略：反弹至 FVG/OB 阻力区分批做空",
-      "★ 次策略：扫低流动性后短多（逆势轻仓）",
-      "★ 风控：单笔风险 ≤ 2%，止损必执行"
+      "★ 主策略：等待区间边界确认，不在中枢追单",
+      "★ 次策略：突破后回踩/反抽确认再跟随",
+      "★ 风控：单笔风险 ≤ 2%，事件前降低仓位"
     ],
     "starred": [
-      "最佳做空区：2640-2645",
-      "暂不建议追多",
+      "暂不建议追空",
+      "最佳做多区：2640-2645",
       "失效条件见下方「失效条件」模块"
     ]
   },
@@ -51,23 +57,35 @@
     "4H 结构：震荡 | BOS 无 | CHoCH 无",
     "1H 结构：震荡 | BOS 无 | CHoCH 无",
     "15m 结构：震荡 | BOS 无 | CHoCH 无",
-    "现价 nan，日幅 nan-nan",
-    "主方向偏空，当前处于逆势反弹阶段"
+    "现价 2659.52，日幅 2659-2661",
+    "多空优势不明显，优先等待区间边界确认"
   ],
   "key_levels": [
     {
-      "price": NaN,
+      "price_low": 2658.52,
+      "price_high": 2670.52,
+      "label": "下方支撑",
+      "kind": "support"
+    },
+    {
+      "price_low": 2657.52,
+      "price_high": 2661.52,
+      "label": "当前分界",
+      "kind": "neutral"
+    },
+    {
+      "price": 2660.52,
       "label": "上方强压",
       "kind": "resistance"
     },
     {
-      "price_low": NaN,
-      "price_high": NaN,
+      "price_low": 2658.44,
+      "price_high": 2660.44,
       "label": "Daily Open",
       "kind": "neutral"
     },
     {
-      "price": NaN,
+      "price": 2659.52,
       "label": "前段中枢 / 均衡",
       "kind": "neutral"
     },
@@ -76,26 +94,14 @@
       "price_high": 2644.52,
       "label": "反抽压力",
       "kind": "resistance"
-    },
-    {
-      "price_low": NaN,
-      "price_high": NaN,
-      "label": "当前分界",
-      "kind": "neutral"
-    },
-    {
-      "price_low": NaN,
-      "price_high": NaN,
-      "label": "下方支撑",
-      "kind": "support"
     }
   ],
   "resistance_levels": [
-    "nan：上方强压",
+    "2661：上方强压",
     "2640-2645：反抽压力"
   ],
   "support_levels": [
-    "nan-nan：下方支撑"
+    "2659-2671：下方支撑"
   ],
   "strategy_plans": [
     {
@@ -110,24 +116,24 @@
   "path_summary": [
     {
       "id": "路径 A",
-      "name": "主路径 (反弹后回落)",
-      "probability": 0.0,
+      "name": "主路径 (区间震荡)",
+      "probability": 100.0,
       "color": "#ef4444",
-      "summary": "当前(nan) → 反弹 FVG(nan) → 新低(nan)"
+      "summary": "当前(2659.52) → 回归中枢(2659.52) → 测试区间边界(2658.52)"
     },
     {
       "id": "路径 B",
-      "name": "次路径 (更深反弹)",
+      "name": "上破路径",
       "probability": 0.0,
       "color": "#22c55e",
-      "summary": "当前(nan) → 测试 OB(nan) → 回落(nan)"
+      "summary": "当前(2659.52) → 上破前高(2660.72)"
     },
     {
       "id": "路径 C",
-      "name": "极端路径 (直接破位)",
-      "probability": 100.0,
+      "name": "下破路径",
+      "probability": 0.0,
       "color": "#3b82f6",
-      "summary": "当前(nan) → 直接下破(nan)"
+      "summary": "当前(2659.52) → 跌破前低(2658.32)"
     }
   ],
   "calendar_events": [
@@ -190,10 +196,10 @@
       "volume_signal": "正常 1.0x",
       "active_fvg_count": 0,
       "ema_relation": {
-        "EMA20": "N/A",
-        "EMA50": "N/A",
-        "EMA610": "N/A",
-        "VWAP": "N/A"
+        "EMA20": "附近",
+        "EMA50": "附近",
+        "EMA610": "上方",
+        "VWAP": "上方"
       },
       "order_blocks": [],
       "fvgs": []
@@ -207,10 +213,10 @@
       "volume_signal": "正常 1.0x",
       "active_fvg_count": 0,
       "ema_relation": {
-        "EMA20": "N/A",
-        "EMA50": "N/A",
-        "EMA610": "N/A",
-        "VWAP": "N/A"
+        "EMA20": "附近",
+        "EMA50": "附近",
+        "EMA610": "上方",
+        "VWAP": "上方"
       },
       "order_blocks": [],
       "fvgs": []
@@ -224,10 +230,10 @@
       "volume_signal": "正常 1.0x",
       "active_fvg_count": 0,
       "ema_relation": {
-        "EMA20": "N/A",
-        "EMA50": "N/A",
-        "EMA610": "N/A",
-        "VWAP": "N/A"
+        "EMA20": "附近",
+        "EMA50": "附近",
+        "EMA610": "上方",
+        "VWAP": "上方"
       },
       "order_blocks": [],
       "fvgs": []
@@ -237,25 +243,25 @@
   "fibonacci": [
     {
       "ratio": 0.382,
-      "price": NaN,
+      "price": 2659.28,
       "significance": "浅回调阻力",
       "probability": 0.65
     },
     {
       "ratio": 0.5,
-      "price": NaN,
+      "price": 2659.52,
       "significance": "均衡位",
       "probability": 0.55
     },
     {
       "ratio": 0.618,
-      "price": NaN,
+      "price": 2659.76,
       "significance": "黄金分割阻力",
       "probability": 0.7
     },
     {
       "ratio": 0.786,
-      "price": NaN,
+      "price": 2660.09,
       "significance": "深度回调",
       "probability": 0.45
     }
@@ -277,74 +283,88 @@
       "sentiment_bias_pct": "0%",
       "position_size": "15% 逆势轻仓",
       "note": "流动性扫低后短多，严格止损",
-      "theme": "long"
+      "theme": "long",
+      "signal_role": "primary",
+      "setup_type": "liquidity_sweep_long",
+      "status": "candidate",
+      "trigger_confirmed": false,
+      "trigger_note": "等待扫低流动性后收回 + 5m 结构转强",
+      "score_total": 50.0,
+      "score_grade": "C",
+      "score_reasons": [
+        "结构方向支持 0%",
+        "候选区距现价 0.56%",
+        "几何盈亏比约 1:2.7",
+        "尚未确认 sweep + reclaim",
+        "sweep depth 0.00 vs buffer 0.50",
+        "reclaim 15.00 vs required 0.20",
+        "missing bullish BOS/CHoCH"
+      ]
     }
   ],
   "projections": [
     {
-      "name": "主路径 (反弹后回落)",
-      "probability": 0.0,
-      "color": "#ef4444",
-      "steps": [
-        {
-          "label": "当前",
-          "price": NaN
-        },
-        {
-          "label": "反弹 FVG",
-          "price": NaN
-        },
-        {
-          "label": "新低",
-          "price": NaN
-        }
-      ]
-    },
-    {
-      "name": "次路径 (更深反弹)",
-      "probability": 0.0,
-      "color": "#22c55e",
-      "steps": [
-        {
-          "label": "当前",
-          "price": NaN
-        },
-        {
-          "label": "测试 OB",
-          "price": NaN
-        },
-        {
-          "label": "回落",
-          "price": NaN
-        }
-      ]
-    },
-    {
-      "name": "极端路径 (直接破位)",
+      "name": "主路径 (区间震荡)",
       "probability": 100.0,
       "color": "#64748b",
       "steps": [
         {
           "label": "当前",
-          "price": NaN
+          "price": 2659.52
         },
         {
-          "label": "直接下破",
-          "price": NaN
+          "label": "回归中枢",
+          "price": 2659.52
+        },
+        {
+          "label": "测试区间边界",
+          "price": 2658.52
+        }
+      ]
+    },
+    {
+      "name": "上破路径",
+      "probability": 0.0,
+      "color": "#22c55e",
+      "steps": [
+        {
+          "label": "当前",
+          "price": 2659.52
+        },
+        {
+          "label": "上破前高",
+          "price": 2660.72
+        }
+      ]
+    },
+    {
+      "name": "下破路径",
+      "probability": 0.0,
+      "color": "#ef4444",
+      "steps": [
+        {
+          "label": "当前",
+          "price": 2659.52
+        },
+        {
+          "label": "跌破前低",
+          "price": 2658.32
         }
       ]
     }
   ],
   "invalidation": [
-    "15min 收盘价站稳 nan 上方 → 空头 thesis 失效",
+    "15min 收盘价站稳 2660.52 上方 → 空头 thesis 失效",
     "出现 Higher High + Higher Low 结构 → 趋势转多",
     "价格有效填补所有 bearish FVG 并延续上行 → 降低做空优先级"
   ],
   "chart": {
     "timeframe": "1d",
-    "swing_high": NaN,
-    "swing_low": NaN
+    "swing_high": 2660.52,
+    "swing_low": 2658.52
   },
+  "llm_levels": [],
+  "validated_plans": [],
   "agent_trace": {
     "context": {
       "price": 2659.52,
@@ -357,83 +377,430 @@
         "items": [
           {
             "category": "market",
-            "summary": "现价 nan，日涨跌 +nan (+nan%)",
-            "strength": NaN,
+            "summary": "现价 2659.52，日涨跌 +0.08 (+0.00%)",
+            "strength": 0.001,
             "timeframe": "1d",
             "refs": {
-              "current_price": NaN,
-              "daily_change_pct": NaN
+              "current_price": 2659.52,
+              "daily_change_pct": 0.003
             }
           },
           {
             "category": "market",
-            "summary": "日高 nan / 日低 nan",
+            "summary": "日高 2660.52 / 日低 2658.52",
             "strength": 0.5,
             "timeframe": "1d",
             "refs": {
-              "daily_high": NaN,
-              "daily_low": NaN
+              "daily_high": 2660.52,
+              "daily_low": 2658.52
+            }
+          },
+          {
+            "category": "market",
+            "summary": "价格位于 EMA20 上方 (2658.76)",
+            "strength": 0.4,
+            "timeframe": "5m",
+            "refs": {
+              "EMA20": 2658.76
+            }
+          },
+          {
+            "category": "market",
+            "summary": "价格位于 EMA50 上方 (2657.58)",
+            "strength": 0.4,
+            "timeframe": "5m",
+            "refs": {
+              "EMA50": 2657.5768
+            }
+          },
+          {
+            "category": "market",
+            "summary": "价格位于 VWAP 上方 (2654.76)",
+            "strength": 0.4,
+            "timeframe": "5m",
+            "refs": {
+              "VWAP": 2654.76
             }
           },
           {
             "category": "technical",
-            "summary": "4h 无",
-            "strength": 0.2975,
-            "timeframe": "4h",
-            "refs": {}
-          },
-          {
-            "category": "technical",
-            "summary": "4h 无",
-            "strength": 0.315,
-            "timeframe": "4h",
-            "refs": {}
-          },
-          {
-            "category": "technical",
-            "summary": "1h 无",
-            "strength": 0.255,
-            "timeframe": "1h",
-            "refs": {}
-          },
-          {
-            "category": "technical",
-            "summary": "1h 无",
-            "strength": 0.27,
-            "timeframe": "1h",
-            "refs": {}
-          },
-          {
-            "category": "technical",
-            "summary": "15m 无",
-            "strength": 0.17,
-            "timeframe": "15m",
-            "refs": {}
-          },
-          {
-            "category": "technical",
-            "summary": "15m 无",
-            "strength": 0.18000000000000002,
-            "timeframe": "15m",
-            "refs": {}
-          },
-          {
-            "category": "technical",
-            "summary": "5m 无",
-            "strength": 0.1275,
+            "summary": "价格位于 EMA20 附近",
+            "strength": 0.45,
             "timeframe": "5m",
-            "refs": {}
+            "refs": {
+              "EMA20": "附近"
+            }
           },
           {
             "category": "technical",
-            "summary": "5m 无",
+            "summary": "价格位于 EMA50 附近",
+            "strength": 0.45,
+            "timeframe": "5m",
+            "refs": {
+              "EMA50": "附近"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "价格位于 EMA610 上方",
+            "strength": 0.45,
+            "timeframe": "5m",
+            "refs": {
+              "EMA610": "上方"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "价格位于 VWAP 上方",
+            "strength": 0.45,
+            "timeframe": "5m",
+            "refs": {
+              "VWAP": "上方"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1d 成交量信号：正常 1.0x",
+            "strength": 0.09,
+            "timeframe": "1d",
+            "refs": {
+              "volume_signal": "正常 1.0x"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "4h 成交量信号：正常 1.0x",
             "strength": 0.135,
+            "timeframe": "4h",
+            "refs": {
+              "volume_signal": "正常 1.0x"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1h 成交量信号：正常 1.0x",
+            "strength": 0.1125,
+            "timeframe": "1h",
+            "refs": {
+              "volume_signal": "正常 1.0x"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "15m 成交量信号：正常 1.0x",
+            "strength": 0.0675,
+            "timeframe": "15m",
+            "refs": {
+              "volume_signal": "正常 1.0x"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "5m 成交量信号：正常 1.0x",
+            "strength": 0.045,
             "timeframe": "5m",
-            "refs": {}
+            "refs": {
+              "volume_signal": "正常 1.0x"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "4h Fib 0.500 均衡位 2658.0 · 距现价 +0.06%",
+            "strength": 0.55,
+            "timeframe": "4h",
+            "refs": {
+              "fibonacci": 0.5,
+              "price": 2658.02,
+              "dist_pct": 0.056
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "4h Fib 0.618 黄金分割阻力 2661.2 · 距现价 -0.06%",
+            "strength": 0.7,
+            "timeframe": "4h",
+            "refs": {
+              "fibonacci": 0.618,
+              "price": 2661.21,
+              "dist_pct": -0.064
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "4h Fib 0.382 浅回调阻力 2654.8 · 距现价 +0.18%",
+            "strength": 0.65,
+            "timeframe": "4h",
+            "refs": {
+              "fibonacci": 0.382,
+              "price": 2654.83,
+              "dist_pct": 0.176
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1d RSI14 100.0 · 超买",
+            "strength": 0.09,
+            "timeframe": "1d",
+            "refs": {
+              "indicator": "RSI14",
+              "value": 100.0,
+              "bias": "bearish"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1d ADX14 100.0 · 趋势强",
+            "strength": 0.1,
+            "timeframe": "1d",
+            "refs": {
+              "indicator": "ADX14",
+              "value": 100.0
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1d MACD 0.56/0.56 · 动能偏多",
+            "strength": 0.09,
+            "timeframe": "1d",
+            "refs": {
+              "indicator": "MACD",
+              "macd": 0.5599,
+              "signal": 0.5598
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1d ATR14 2.00 · 波动 0.08%",
+            "strength": 0.07,
+            "timeframe": "1d",
+            "refs": {
+              "indicator": "ATR14",
+              "value": 2.0,
+              "atr_pct": 0.075
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "4h RSI14 100.0 · 超买",
+            "strength": 0.135,
+            "timeframe": "4h",
+            "refs": {
+              "indicator": "RSI14",
+              "value": 100.0,
+              "bias": "bearish"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "4h ADX14 100.0 · 趋势强",
+            "strength": 0.15,
+            "timeframe": "4h",
+            "refs": {
+              "indicator": "ADX14",
+              "value": 100.0
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "4h MACD 0.56/0.56 · 动能偏多",
+            "strength": 0.135,
+            "timeframe": "4h",
+            "refs": {
+              "indicator": "MACD",
+              "macd": 0.5599,
+              "signal": 0.5598
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "4h ATR14 2.00 · 波动 0.08%",
+            "strength": 0.105,
+            "timeframe": "4h",
+            "refs": {
+              "indicator": "ATR14",
+              "value": 2.0,
+              "atr_pct": 0.075
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1h RSI14 100.0 · 超买",
+            "strength": 0.1125,
+            "timeframe": "1h",
+            "refs": {
+              "indicator": "RSI14",
+              "value": 100.0,
+              "bias": "bearish"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1h ADX14 100.0 · 趋势强",
+            "strength": 0.125,
+            "timeframe": "1h",
+            "refs": {
+              "indicator": "ADX14",
+              "value": 100.0
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1h MACD 0.56/0.56 · 动能偏多",
+            "strength": 0.1125,
+            "timeframe": "1h",
+            "refs": {
+              "indicator": "MACD",
+              "macd": 0.5599,
+              "signal": 0.5598
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "1h ATR14 2.00 · 波动 0.08%",
+            "strength": 0.0875,
+            "timeframe": "1h",
+            "refs": {
+              "indicator": "ATR14",
+              "value": 2.0,
+              "atr_pct": 0.075
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "15m RSI14 100.0 · 超买",
+            "strength": 0.0675,
+            "timeframe": "15m",
+            "refs": {
+              "indicator": "RSI14",
+              "value": 100.0,
+              "bias": "bearish"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "15m ADX14 100.0 · 趋势强",
+            "strength": 0.075,
+            "timeframe": "15m",
+            "refs": {
+              "indicator": "ADX14",
+              "value": 100.0
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "15m MACD 0.56/0.56 · 动能偏多",
+            "strength": 0.0675,
+            "timeframe": "15m",
+            "refs": {
+              "indicator": "MACD",
+              "macd": 0.5599,
+              "signal": 0.5598
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "15m ATR14 2.00 · 波动 0.08%",
+            "strength": 0.0525,
+            "timeframe": "15m",
+            "refs": {
+              "indicator": "ATR14",
+              "value": 2.0,
+              "atr_pct": 0.075
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "5m RSI14 100.0 · 超买",
+            "strength": 0.045,
+            "timeframe": "5m",
+            "refs": {
+              "indicator": "RSI14",
+              "value": 100.0,
+              "bias": "bearish"
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "5m ADX14 100.0 · 趋势强",
+            "strength": 0.05,
+            "timeframe": "5m",
+            "refs": {
+              "indicator": "ADX14",
+              "value": 100.0
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "5m MACD 0.56/0.56 · 动能偏多",
+            "strength": 0.045,
+            "timeframe": "5m",
+            "refs": {
+              "indicator": "MACD",
+              "macd": 0.5599,
+              "signal": 0.5598
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "5m ATR14 2.00 · 波动 0.08%",
+            "strength": 0.035,
+            "timeframe": "5m",
+            "refs": {
+              "indicator": "ATR14",
+              "value": 2.0,
+              "atr_pct": 0.075
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "上方压力 2661.2：Fib 0.618 黄金分割阻力 · 距现价 -0.06%",
+            "strength": 0.793,
+            "timeframe": "4h",
+            "refs": {
+              "source": "fibonacci",
+              "kind": "resistance",
+              "price": 2661.21,
+              "label": "Fib 0.618 黄金分割阻力",
+              "timeframe": "4h",
+              "strength": 0.7,
+              "dist_pct": -0.064
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "下方支撑 2658.0：Fib 0.500 均衡位 · 距现价 +0.06%",
+            "strength": 0.647,
+            "timeframe": "4h",
+            "refs": {
+              "source": "fibonacci",
+              "kind": "support",
+              "price": 2658.02,
+              "label": "Fib 0.500 均衡位",
+              "timeframe": "4h",
+              "strength": 0.55,
+              "dist_pct": 0.056
+            }
+          },
+          {
+            "category": "technical",
+            "summary": "技术输入质量 94%：ICT结构事件/流动性输入偏少",
+            "strength": 0.5,
+            "timeframe": null,
+            "refs": {
+              "source": "technical_quality",
+              "score": 0.941,
+              "warnings": [
+                "ICT结构事件/流动性输入偏少"
+              ],
+              "ict_events_total": 0,
+              "liquidity_zones": 0,
+              "premium_discount_known": 0,
+              "support_resistance_levels": 5
+            }
           }
         ],
-        "confidence": NaN,
-        "summary": "技术：结构 neutral / EMA neutral / 多周期投票 多 0% 空 0%"
+        "confidence": 0.2385,
+        "summary": "技术：结构 neutral / EMA bullish / ICT区位 neutral / 指标 neutral / 支撑阻力 bearish / 多周期投票 多 0% 空 0% / 输入质量 94%（ICT结构事件/流动性输入偏少）"
       },
       "fundamentals": {
         "agent": "fundamentals_analyst",
@@ -453,10 +820,25 @@
               "bias": "bearish",
               "source": "tradingview"
             }
+          },
+          {
+            "category": "fundamentals",
+            "summary": "宏观报价覆盖：DXY；缺少 US10Y",
+            "strength": 0.35,
+            "timeframe": null,
+            "refs": {
+              "source": "input_density",
+              "quote_names": [
+                "DXY"
+              ],
+              "missing": [
+                "US10Y"
+              ]
+            }
           }
         ],
-        "confidence": 0.6,
-        "summary": "基本面：DXY · 偏强 (104.2, 日 +0.35%) → 利空黄金"
+        "confidence": 0.475,
+        "summary": "基本面：DXY · 高影响日历 0 · 偏强 (104.2, 日 +0.35%) → 利空黄金"
       },
       "news": {
         "agent": "news_analyst",
@@ -481,9 +863,22 @@
             "refs": {
               "source": "jin10_calendar"
             }
+          },
+          {
+            "category": "news",
+            "summary": "新闻输入密度：快讯 1 · 资讯 0 · 日历 0",
+            "strength": 0.425,
+            "timeframe": null,
+            "refs": {
+              "source": "input_density",
+              "flash": 1,
+              "articles": 0,
+              "calendar_events": 0,
+              "is_live": false
+            }
           }
         ],
-        "confidence": 0.36375,
+        "confidence": 0.3842,
         "summary": "新闻：1 条（快讯 1 · 资讯 0） · 日历 0 · bias neutral"
       },
       "sentiment": {
@@ -512,7 +907,7 @@
           }
         ],
         "confidence": 0.225,
-        "summary": "情绪：结构投票 多 0% / 空 0% · 偏多 58% / 偏空 42%（样例）"
+        "summary": "情绪：结构投票 多 0% / 空 0% · 社媒delta +0.0 · 偏多 58% / 偏空 42%（样例）"
       }
     },
     "debate": {
@@ -530,7 +925,7 @@
           {
             "category": "analyst_fundamentals_analyst",
             "summary": "[fundamentals analyst] DXY：偏强 → 利空黄金",
-            "strength": 0.36,
+            "strength": 0.285,
             "timeframe": null,
             "refs": {
               "name": "DXY",
@@ -542,32 +937,50 @@
               "source": "tradingview",
               "analyst": "fundamentals_analyst"
             }
+          },
+          {
+            "category": "analyst_fundamentals_analyst",
+            "summary": "[fundamentals analyst] 宏观报价覆盖：DXY；缺少 US10Y",
+            "strength": 0.1662,
+            "timeframe": null,
+            "refs": {
+              "source": "input_density",
+              "quote_names": [
+                "DXY"
+              ],
+              "missing": [
+                "US10Y"
+              ],
+              "analyst": "fundamentals_analyst"
+            }
           }
         ],
-        "confidence": 0.36,
-        "summary": "共 1 条看空证据，加权强度 0.36"
+        "confidence": 0.2256,
+        "summary": "共 2 条看空证据，加权强度 0.23"
       },
       "consensus_bias": "bearish",
-      "consensus_strength": 0.9729729729729729,
+      "consensus_strength": 0.9783,
       "discussion_notes": [
         "── Analyst Team 摘要 ──",
-        "technical_analyst: 技术：结构 neutral / EMA neutral / 多周期投票 多 0% 空 0%（neutral · nan%）",
-        "fundamentals_analyst: 基本面：DXY · 偏强 (104.2, 日 +0.35%) → 利空黄金（bearish · 60%）",
-        "news_analyst: 新闻：1 条（快讯 1 · 资讯 0） · 日历 0 · bias neutral（neutral · 36%）",
-        "sentiment_analyst: 情绪：结构投票 多 0% / 空 0% · 偏多 58% / 偏空 42%（样例）（neutral · 22%）",
+        "technical_analyst: 技术：结构 neutral / EMA bullish / ICT区位 neutral / 指标 neutral / 支撑阻力 bearish / 多周期投票 多 0% 空 0% / 输入质量 94%（ICT结构事件/流动性输入偏少）（neutral · 24%）",
+        "fundamentals_analyst: 基本面：DXY · 高影响日历 0 · 偏强 (104.2, 日 +0.35%) → 利空黄金（bearish · 48%）",
+        "news_analyst: 新闻：1 条（快讯 1 · 资讯 0） · 日历 0 · bias neutral（neutral · 38%）",
+        "sentiment_analyst: 情绪：结构投票 多 0% / 空 0% · 社媒delta +0.0 · 偏多 58% / 偏空 42%（样例）（neutral · 22%）",
         "看多研究员：暂无明确看多结构证据",
-        "看空研究员：共 1 条看空证据，加权强度 0.36",
+        "看空研究员：共 2 条看空证据，加权强度 0.23",
         "多周期技术投票：多 0% / 空 0% / 震荡 100%",
         "讨论结论：看空证据占优，关注反抽卖区"
       ]
     },
+    "llm_levels": [],
+    "validated_plans": [],
     "proposal": {
       "primary_direction": "long",
       "signal_indices": [
         0
       ],
       "rationale": [
-        "研究员共识：bearish（强度 97%）",
+        "研究员共识：bearish（强度 98%）",
         "多周期技术投票：多 0% / 空 0% / 震荡 100%",
         "讨论结论：看空证据占优，关注反抽卖区",
         "交易员：无做空区，保留扫低做多备选"

@@ -25,6 +25,8 @@ python scripts/export_sample_report.py
 | `agent_trace` | 对象 | LLM决策链页决策审计 | 编排器注入 |
 | `llm_analysis` | 对象 | LLM 深度文案（可选） | `llm/analyst.py` |
 | `calendar_events` | 数组 | 财经日历 | 金十实时或占位 |
+| `llm_levels` | 数组 | LLM 原始点位建议审计 | `LLM_STAGE_LEVELS` 开启时 |
+| `validated_plans` | 数组 | LLM 点位 validator 接受/拒绝记录 | `level_validator.py` |
 
 ---
 
@@ -93,8 +95,15 @@ python scripts/export_sample_report.py
 | `win_rate` | ⚠️ 结构偏多权重字符串，**非历史胜率** |
 | `risk_reward` | 展示用风险收益比（部分为固定模板） |
 | `position_size` | 描述性仓位档位 |
+| `signal_role` | `primary` / `alternate`，表示是否与结构主导方向一致 |
+| `setup_type` | setup 类型，如 `fvg_retest_short`、`liquidity_sweep_long`、`llm_fvg` |
+| `status` | `candidate` / `watch` / `active` / `invalid` |
+| `trigger_confirmed` | 触发条件是否满足 |
+| `trigger_note` | 触发或降级说明 |
+| `score_total` / `score_grade` | 信号质量评分与等级 |
+| `score_reasons` | 评分依据、触发缺口或降级原因 |
 
-经理可能按 `decision.selected_signal_indices` 重排顺序。
+经理可能按 `decision.selected_signal_indices` 重排顺序；orchestrator 会按结构主导方向写入 `signal_role`。`setup_type` 以 `llm_` 开头时表示来源为已通过 validator 的 LLM 点位建议。
 
 ---
 
@@ -115,12 +124,16 @@ python scripts/export_sample_report.py
   },
   "proposal": { "primary_direction": "short", "signal_indices": [0] },
   "risk_reviews": [ { "profile": "conservative", "approved": true } ],
-  "decision": { "action": "execute", "summary": "..." }
+  "decision": { "action": "execute", "summary": "..." },
+  "llm_levels": [],
+  "validated_plans": []
 }
 ```
 
 在「LLM决策链」页 **智能体决策** 标签页中可视化。  
 `decision.action` 常见值：`execute`（执行）、`reduce`（减仓）、`wait`（观望）。
+
+`agent_trace.llm_levels` 与 `agent_trace.validated_plans` 是决策链页展示 LLM 点位建议和确定性校验结果的审计字段；顶层 `llm_levels` / `validated_plans` 保留同一批数据，便于导出和回放。
 
 ---
 
