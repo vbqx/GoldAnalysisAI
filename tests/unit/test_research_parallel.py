@@ -88,6 +88,40 @@ def test_research_parallel_faster_than_serial(monkeypatch) -> None:
     assert parallel_elapsed < delay * 1.75
 
 
+def test_research_parallel_llm_mode_without_rule_baseline(monkeypatch) -> None:
+    from src.agents.analysts import run_analyst_team as rule_analyst_team
+
+    ctx = _sample_context()
+    team = rule_analyst_team(ctx)
+    monkeypatch.setattr(agent_factory, "AGENT_MODE", "llm")
+    monkeypatch.setattr(agent_factory, "LLM_STAGE_BULLISH", True)
+    monkeypatch.setattr(agent_factory, "LLM_STAGE_BEARISH", True)
+    monkeypatch.setattr(agent_factory, "LLM_PARALLEL_ENABLED", True)
+    monkeypatch.setattr(agent_factory, "LLM_PARALLEL_RESEARCH", True)
+    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
+
+    def fake_bull(_ctx, _team):
+        from src.core.types import LLMStageTrace
+
+        return _fake_evidence("bull llm"), LLMStageTrace(stage="bullish", model="m", latency_ms=1)
+
+    def fake_bear(_ctx, _team):
+        from src.core.types import LLMStageTrace
+
+        return _fake_evidence("bear llm"), LLMStageTrace(stage="bearish", model="m", latency_ms=1)
+
+    meta = AgentPipelineMeta()
+    with patch.object(agent_factory, "run_llm_bullish", side_effect=fake_bull), patch.object(
+        agent_factory, "run_llm_bearish", side_effect=fake_bear
+    ):
+        bull, bear = agent_factory.run_research_team(ctx, meta, team)
+
+    assert bull.summary == "bull llm"
+    assert bear.summary == "bear llm"
+    assert meta.stages["bullish"].source == "llm"
+    assert meta.stages["bearish"].source == "llm"
+
+
 def test_research_uses_parallel_llm_flag(monkeypatch) -> None:
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_ENABLED", True)
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_RESEARCH", True)

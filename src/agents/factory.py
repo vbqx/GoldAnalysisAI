@@ -157,6 +157,19 @@ def _needs_rule_baseline() -> bool:
     return AGENT_MODE == "hybrid"
 
 
+def _llm_stage_ok(llm_result, trace) -> bool:
+    return llm_result is not None and not (trace and trace.error)
+
+
+def _ensure_rule_baseline(rule_result, llm_result, trace, compute_rule):
+    """Lazy rule baseline: skip in pure LLM mode when LLM already succeeded."""
+    if rule_result is not None:
+        return rule_result
+    if AGENT_MODE == "llm" and _llm_stage_ok(llm_result, trace):
+        return None
+    return compute_rule()
+
+
 def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> AnalystTeam:
     prog = get_progress()
     prog.update("analyst_team", detail="技术 · 基本面 · 新闻 · 情绪")
@@ -218,7 +231,12 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
         if stage not in llm_results:
             continue
         llm_report, trace = llm_results[stage]
-        if rule_report is None and AGENT_MODE == "llm" and (llm_report is None or trace.error):
+        if rule_report is None and AGENT_MODE == "llm" and _llm_stage_ok(llm_report, trace):
+            pipeline.record(stage, StageMeta(source="llm", llm=trace))
+            picked[stage] = llm_report
+            llm_picked += 1
+            continue
+        if rule_report is None:
             if rule_fallback is None:
                 rule_fallback = rule_analyst_team(ctx)
             rule_report = getattr(rule_fallback, stage)
@@ -256,9 +274,12 @@ def run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTe
 
     get_progress().update("bullish", detail="LLM 推理中…")
     llm_result, trace = run_llm_bullish(ctx, team)
-    if rule_result is None and (llm_result is None or trace.error):
-        rule_result = rule_bullish(ctx, team)
-    assert rule_result is not None
+    rule_result = _ensure_rule_baseline(
+        rule_result, llm_result, trace, lambda: rule_bullish(ctx, team)
+    )
+    if rule_result is None:
+        pipeline.record("bullish", StageMeta(source="llm", llm=trace))
+        return llm_result
     return _pick_evidence("bullish", rule_result, llm_result, trace, pipeline)
 
 
@@ -273,9 +294,12 @@ def run_bearish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTe
 
     get_progress().update("bearish", detail="LLM 推理中…")
     llm_result, trace = run_llm_bearish(ctx, team)
-    if rule_result is None and (llm_result is None or trace.error):
-        rule_result = rule_bearish(ctx, team)
-    assert rule_result is not None
+    rule_result = _ensure_rule_baseline(
+        rule_result, llm_result, trace, lambda: rule_bearish(ctx, team)
+    )
+    if rule_result is None:
+        pipeline.record("bearish", StageMeta(source="llm", llm=trace))
+        return llm_result
     return _pick_evidence("bearish", rule_result, llm_result, trace, pipeline)
 
 
@@ -315,13 +339,22 @@ def run_research_team(
         )
         bullish_llm, bull_trace = results.get("bullish", (None, None))
         bearish_llm, bear_trace = results.get("bearish", (None, None))
-        if rule_bull is None and (bullish_llm is None or (bull_trace and bull_trace.error)):
-            rule_bull = rule_bullish(ctx, team)
-        if rule_bear is None and (bearish_llm is None or (bear_trace and bear_trace.error)):
-            rule_bear = rule_bearish(ctx, team)
-        assert rule_bull is not None and rule_bear is not None
-        bullish = _pick_evidence("bullish", rule_bull, bullish_llm, bull_trace, pipeline)
-        bearish = _pick_evidence("bearish", rule_bear, bearish_llm, bear_trace, pipeline)
+        rule_bull = _ensure_rule_baseline(
+            rule_bull, bullish_llm, bull_trace, lambda: rule_bullish(ctx, team)
+        )
+        rule_bear = _ensure_rule_baseline(
+            rule_bear, bearish_llm, bear_trace, lambda: rule_bearish(ctx, team)
+        )
+        if rule_bull is None:
+            pipeline.record("bullish", StageMeta(source="llm", llm=bull_trace))
+            bullish = bullish_llm
+        else:
+            bullish = _pick_evidence("bullish", rule_bull, bullish_llm, bull_trace, pipeline)
+        if rule_bear is None:
+            pipeline.record("bearish", StageMeta(source="llm", llm=bear_trace))
+            bearish = bearish_llm
+        else:
+            bearish = _pick_evidence("bearish", rule_bear, bearish_llm, bear_trace, pipeline)
         return bullish, bearish
 
     raise RuntimeError("run_research_team called without parallel LLM enabled")

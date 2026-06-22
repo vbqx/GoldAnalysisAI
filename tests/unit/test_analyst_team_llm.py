@@ -201,6 +201,48 @@ def test_factory_analyst_team_parallel_faster(monkeypatch) -> None:
     assert elapsed < delay * 3
 
 
+def test_factory_analyst_team_llm_mode_without_rule_baseline(monkeypatch) -> None:
+    """Pure LLM mode skips rule baseline; successful parallel LLM must not assert."""
+    ctx = _sample_context()
+    monkeypatch.setattr(agent_factory, "AGENT_MODE", "llm")
+    monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", True)
+    monkeypatch.setattr(agent_factory, "LLM_PARALLEL_ENABLED", True)
+    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
+
+    def fake_llm(stage: str):
+        def _run(_ctx):
+            from src.core.types import LLMStageTrace
+
+            report = parse_analyst_report(
+                {
+                    "bias": "neutral",
+                    "confidence": 0.8,
+                    "summary": f"LLM {stage}",
+                    "items": [
+                        {"category": stage, "summary": f"{stage} item {i}", "strength": 0.7}
+                        for i in range(4)
+                    ],
+                },
+                agent=f"{stage}_analyst",
+            )
+            return report, LLMStageTrace(stage=stage, model="test-model", latency_ms=10)
+
+        return _run
+
+    with patch.object(agent_factory, "run_llm_technical_analyst", side_effect=fake_llm("technical")), patch.object(
+        agent_factory, "run_llm_fundamentals_analyst", side_effect=fake_llm("fundamentals")
+    ), patch.object(agent_factory, "run_llm_news_analyst", side_effect=fake_llm("news")), patch.object(
+        agent_factory, "run_llm_sentiment_analyst", side_effect=fake_llm("sentiment")
+    ):
+        meta = AgentPipelineMeta()
+        team = agent_factory.run_analyst_team(ctx, meta)
+
+    assert team.technical.summary == "LLM technical"
+    assert team.fundamentals.summary == "LLM fundamentals"
+    assert meta.stages["analyst_team"].source == "llm"
+    assert meta.stages["technical"].source == "llm"
+
+
 def test_factory_analyst_team_llm_disabled_uses_rule(monkeypatch) -> None:
     ctx = _sample_context()
     monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", False)
