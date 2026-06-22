@@ -48,7 +48,7 @@ flowchart LR
 1. 页面显示 **「正在生成报告…」** 及进度
 2. 步骤条按 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative`）  
    中文含义：数据拉取 → 技术指标 → ICT 结构 → 分析师团队 → 看多/看空 → 辩论 → 交易 → 风控 → 经理 → 报告 →（可选）LLM 文案
-3. 生成过程中可切换到 **LLM决策链** 页查看实时输入输出
+3. 生成过程中可切换到 **LLM决策链** 页，打开 Tab **「生成与 LLM I/O」** — 顶部 **「LLM 实时推理」** 会随 chunk 刷新（约 400ms）；机构报告页等待时同样可见
 4. 完成后渲染机构报告，主图为 **5 分钟 K 线**（SMC 结构/支撑阻力叠加；路径推演见底栏；技术指标见侧边栏「指标校验」）
 
 | 模式 | 典型耗时 |
@@ -138,10 +138,18 @@ flowchart LR
 
 ### 标签页 3 — 生成与 LLM 输入输出
 
-- 上方：`meta.generation_steps` — 各步耗时与状态
-- 下方：`meta.llm_io` — 规则阶段输入输出 + LLM 提示词与响应
+**生成中**（任意等待页 / LLM决策链页）：
 
-**调试建议**：生成完成后先看标签页 3 确认各步状态，再看标签页 1 理解决策链。
+- **生成步骤** — 各步状态实时刷新
+- **LLM 实时推理** — 当前进行中的 LLM 阶段：Prompt + 流式 JSON（后台 chunk 同步，UI 约 400ms 轮询）
+- **已完成 I/O** — 已结束阶段的历史记录
+
+**生成完成后**：
+
+- 上方：`meta.generation_steps` — 各步耗时与状态
+- 下方：`meta.llm_io` — 规则阶段输入输出 + LLM 提示词、原始 JSON 与 **整理摘要**
+
+**调试建议**：生成时先看 Tab 3 的「LLM 实时推理」确认各阶段在跑；完成后用 Tab 1 理解决策链。
 
 ---
 

@@ -242,11 +242,24 @@ print(report["agent_trace"]["debate"]["discussion_notes"])
 
 可在 Streamlit「LLM决策链」页查看：
 - **智能体决策** — Analyst Team 四列 + 辩论/风控/经理
-- **生成与 LLM I/O** — `analyst_team` 规则 I/O + LLM 阶段整理摘要
+- **生成与 LLM I/O** — 生成中见 **LLM 实时推理**；完成后见 `analyst_team` 规则 I/O + LLM 阶段整理摘要
 
 ---
 
-## 2026-06-21 Architecture Update: LLM Levels
+## 2026-06-23 更新摘要
+
+| 主题 | 说明 |
+|------|------|
+| **纯 LLM 模式** | `AGENT_MODE=llm` 且 LLM 阶段成功时，不再强制回退规则 baseline（修复并行 LLM 引入的 `assert rule_* is not None`） |
+| **实时可观测** | 生成等待页「生成与 LLM I/O」Tab 展示 chunk 级 **LLM 实时推理**（400ms 轮询） |
+| **止损失效** | 现价已越过止损/失效价时，信号标为 `invalid`；`build_strategy_plans` 与 Trader 跳过 invalid 方案 |
+| **配置加载** | `.env` 覆盖进程内已有环境变量，避免旧 Streamlit 进程残留错误密钥 |
+
+---
+
+## 2026-06-21 Architecture Update: LLM 点位提案
+
+> 中文命名：**LLM 点位提案**。该阶段让大模型提出候选入场区、止损和止盈目标，但不会直接生成最终交易信号；所有提案必须先经过确定性的 `Level Validator` 校验，校验通过后才会转换为现有 `TradingSignal`。
 
 The new architecture keeps the previous research stack intact:
 
@@ -257,7 +270,7 @@ Analyst Team -> Bullish/Bearish Researchers -> Debate
 A new execution-facing layer is added after Debate:
 
 ```text
-Rule candidate signals -> LLM Level Proposer -> Level Validator -> Trader
+Rule candidate signals -> LLM 点位提案 (LLM Level Proposer) -> Level Validator -> Trader
 ```
 
 `LLM Level Proposer` lets the model suggest concrete entry/stop/target levels from the existing evidence. `Level Validator` remains deterministic and converts only valid proposals into the existing `TradingSignal` type. This is the integration point between LLM-generated levels and the current Trader/Risk/UI framework.

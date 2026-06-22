@@ -30,7 +30,7 @@ streamlit run app.py
 | 短线策略 | `views/2_短线策略.py` | 短线策略图，**切换不重新生成** |
 | LLM决策链 | `views/3_LLM决策链.py` | 智能体决策、LLM 文案、生成与智能体 I/O |
 
-报告在 session 中缓存；后台线程生成，等待时可看实时步骤与 LLM I/O。仅点 **「重新配置 / 刷新报告」** 并再次确认配置后才重跑（规则模式约 30s；启用 LLM 全流程可能 5–6 分钟）。
+报告在 session 中缓存；后台线程生成，等待时可在 **「生成与 LLM I/O」** Tab 查看实时步骤与 **LLM 实时推理**（chunk 流式刷新）。仅点 **「重新配置 / 刷新报告」** 并再次确认配置后才重跑（规则模式约 30s；启用 LLM 全流程可能 5–6 分钟）。
 
 **手动验证 Analyst 输入密度**：生成完成后在「LLM决策链」页查看 `context_stats`、`news_topics`、`spot_cross_check`；报告 `meta.context_stats` 与 `external` 块含结构化计数。
 
