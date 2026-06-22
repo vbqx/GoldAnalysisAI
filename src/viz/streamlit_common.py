@@ -50,7 +50,7 @@ _PIPELINE_STAGE_WIDGETS: tuple[tuple[str, str, bool], ...] = (
     ("run_config_stage_bullish", "看多研究", False),
     ("run_config_stage_bearish", "看空研究", False),
     ("run_config_stage_debate", "多空辩论", False),
-    ("run_config_stage_levels", "LLM Levels", False),
+    ("run_config_stage_levels", "LLM 点位提案", False),
     ("run_config_stage_trader", "交易员", True),
     ("run_config_stage_risk", "风控团队", True),
     ("run_config_stage_manager", "经理决策", True),
@@ -278,6 +278,15 @@ def _invalidate_report_cache() -> None:
 
 
 
+def _set_all_agent_llm_widgets(select: bool) -> None:
+    """Toggle all advanced agent LLM stage widgets (Analyst Team + pipeline + sub-analysts)."""
+    st.session_state["run_config_stage_analysts"] = select
+    for key, _, _ in _PIPELINE_STAGE_WIDGETS:
+        st.session_state[key] = select
+    for key, _, _ in _ANALYST_LLM_WIDGETS:
+        st.session_state[key] = select
+
+
 def _analyst_checkbox_state() -> tuple[str, int]:
     """Return (llm_analyst_only, checked_count). llm_analyst_only is '__multi__' when invalid."""
     checked = [stage for key, stage, _ in _ANALYST_LLM_WIDGETS if st.session_state.get(key, True)]
@@ -375,6 +384,21 @@ def _render_run_config_panel() -> None:
     )
 
     if needs_llm and st.session_state.get("run_config_advanced"):
+        pick_col, clear_col, _ = st.columns([1, 1, 4])
+        with pick_col:
+            st.button(
+                "一键全选",
+                on_click=_set_all_agent_llm_widgets,
+                args=(True,),
+                key="run_config_select_all_llm",
+            )
+        with clear_col:
+            st.button(
+                "全部取消",
+                on_click=_set_all_agent_llm_widgets,
+                args=(False,),
+                key="run_config_clear_all_llm",
+            )
         st.markdown("**分析师团队**")
         st.checkbox("启用 Analyst Team LLM", key="run_config_stage_analysts")
         st.markdown("**研究 · 辩论 · 执行链**")
@@ -485,7 +509,7 @@ def _render_waiting_ui(counter: int, *, show_generation_ui: bool) -> None:
                 "约 2–3 分钟 · 下方可实时查看生成步骤与 LLM 输入/输出",
             )
 
-    @st.fragment(run_every=timedelta(seconds=1))
+    @st.fragment(run_every=timedelta(milliseconds=400))
     def _live_poll() -> None:
         render_live_generation_panel(_LIVE_GEN_STATE.get(counter, {}))
         if counter in _GEN_RESULTS or counter in _GEN_ERRORS:
@@ -560,7 +584,7 @@ def ensure_external_data() -> dict:
         exc = _GEN_ERRORS.pop(counter)
         _LIVE_GEN_STATE.pop(counter, None)
         log.exception("report generation failed during external page wait")
-        st.error(f"数据获取失败: {exc}")
+        st.error(f"报告生成失败: {exc or type(exc).__name__}")
         st.stop()
 
     if counter in _GEN_RESULTS:
@@ -618,7 +642,7 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
 
             st.markdown("**生成进度（失败前）**")
             render_progress_steps(steps, title="")
-        st.error(f"数据获取失败: {exc}")
+        st.error(f"报告生成失败: {exc or type(exc).__name__}")
         st.caption("可在 `.env` 调整 `TV_FETCH_RETRIES` / `TV_FETCH_ROUND_RETRIES`；确认代理可用后点「重新配置 / 刷新报告」重试。")
         st.stop()
 

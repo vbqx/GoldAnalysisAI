@@ -190,7 +190,7 @@ def render_agent_trace_panel(report: dict) -> None:
 
     llm = report.get("llm_analysis") or {}
     if llm.get("enabled") and not llm.get("error"):
-        st.markdown(f"**报告文案层** {_badge_md('llm')}")
+        st.markdown(f"**报告文案层** {_badge_md({'source': 'llm'})}")
 
     with st.expander("完整 agent_trace JSON", expanded=False):
         st.code(json.dumps(trace, ensure_ascii=False, indent=2), language="json")

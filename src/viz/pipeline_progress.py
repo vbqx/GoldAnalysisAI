@@ -76,6 +76,59 @@ def _render_llm_output_panel(*, stage: str, output: str, error: str | None = Non
     st.markdown(format_llm_narrative(stage, raw), unsafe_allow_html=True)
 
 
+def is_streaming_llm_record(rec: dict) -> bool:
+    """True while an LLM call is in flight (begin → end, including partial output)."""
+    if rec.get("kind") == "rule" or rec.get("model") == "规则引擎":
+        return False
+    if rec.get("error"):
+        return False
+    return rec.get("latency_ms") is None
+
+
+def partition_llm_records_for_live(records: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Split in-flight LLM records from completed ones for the live generation panel."""
+    filtered = _filter_llm_io_records(records)
+    active = [r for r in filtered if is_streaming_llm_record(r)]
+    completed = [r for r in filtered if not is_streaming_llm_record(r)]
+    return active, completed
+
+
+def render_live_llm_streams(active: list[dict]) -> None:
+    """Prominent streaming panel fed by background-thread chunk snapshots."""
+    if not active:
+        return
+    st.markdown('<p class="section-h">🤖 LLM 实时推理</p>', unsafe_allow_html=True)
+    for rec in active:
+        stage = rec.get("stage", "")
+        label = rec.get("label", stage)
+        model = rec.get("model", "")
+        output = rec.get("output") or ""
+        st.markdown(f"**🔄 {label}** · `{model}`")
+        with st.container(border=True):
+            msgs = rec.get("messages") or []
+            st.caption("输入（Prompt）")
+            _render_llm_io_text(
+                label="",
+                key=f"live_in_{stage}",
+                text=format_messages(msgs),
+                height=200,
+            )
+            char_note = f" · {len(output)} 字符" if output else ""
+            st.caption(f"输出（流式）{char_note}")
+            if output:
+                preview = format_llm_output(output)
+                if len(preview) > 12000:
+                    preview = "…\n" + preview[-12000:]
+                _render_llm_io_text(
+                    label="",
+                    key=f"live_out_{stage}",
+                    text=preview,
+                    height=280,
+                )
+            else:
+                st.markdown("_等待模型响应…_")
+
+
 def _filter_llm_io_records(records: list[dict]) -> list[dict]:
     has_llm_analyst = any(
         r.get("stage") in ("technical", "fundamentals", "news", "sentiment")
