@@ -10,6 +10,7 @@ from src.analysis.report_engine import (
     TradingSignal,
     _compute_risk_reward,
     _setup_status_and_score,
+    _stop_breached,
 )
 from src.core.types import LevelProposal, MarketContext
 from src.log import get_logger
@@ -56,6 +57,12 @@ def validate_llm_levels(
     for idx, proposal in enumerate(proposals):
         base = proposal.to_dict()
         error = _geometry_error(proposal)
+        if error is None and _stop_breached(
+            price=ctx.price,
+            direction=proposal.direction,
+            stop_loss=proposal.stop_loss,
+        ):
+            error = f"current price {ctx.price:.2f} has already breached stop_loss {proposal.stop_loss:.2f}"
         if error:
             log.info(
                 "llm level rejected idx=%d direction=%s entry=%.2f-%.2f sl=%.2f reason=%s",

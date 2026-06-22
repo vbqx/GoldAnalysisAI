@@ -8,7 +8,7 @@ from src.agents import factory as agent_factory
 from src.config import AGENT_MODE, LLM_ENABLED
 from src.analysis.ict_pa import analyze_timeframe
 from src.analysis.level_validator import validate_llm_levels
-from src.analysis.report_engine import build_report, compute_trading_signals, parse_risk_events_calendar
+from src.analysis.report_engine import build_report, build_strategy_plans, compute_trading_signals, parse_risk_events_calendar
 from src.core.parallel import run_parallel
 from src.core.progress import get_progress
 from src.core.types import AgentPipelineMeta, AgentTrace, StageMeta
@@ -258,6 +258,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         for sig in combined:
             sig["signal_role"] = "primary" if sig.get("theme") == pref_theme else "alternate"
         report["signals"] = combined
+        report["strategy_plans"] = build_strategy_plans(combined)
         log.debug("signals reordered by manager + sentiment theme: %s", decision.selected_signal_indices)
 
     elapsed = time.perf_counter() - t0

@@ -161,6 +161,13 @@ def _zone_relation(
     return "ahead", (price - entry_high) / price * 100
 
 
+def _stop_breached(*, price: float, direction: str, stop_loss: float) -> bool:
+    """True when the current price has already crossed the plan invalidation stop."""
+    if direction == "SELL":
+        return price >= stop_loss
+    return price <= stop_loss
+
+
 def _setup_status_and_score(
     *,
     name: str,
@@ -188,6 +195,7 @@ def _setup_status_and_score(
         stop_loss=stop_loss,
         take_profits=take_profits,
     )
+    stop_breached = _stop_breached(price=price, direction=direction, stop_loss=stop_loss)
 
     reasons: list[str] = []
     aligned_pct = sentiment.get("bearish" if theme == "short" else "bullish", 0.0)
@@ -231,7 +239,13 @@ def _setup_status_and_score(
 
     score = round(structure_score + location_score + rr_score + trigger_score, 1)
 
-    if rr <= 0:
+    if stop_breached:
+        status = "invalid"
+        trigger_confirmed = False
+        trigger_note = "现价已突破止损/失效价，等待重新生成计划"
+        reasons.append(f"现价 {price:.2f} 已越过止损 {stop_loss:.2f}")
+        score = min(score, 35)
+    elif rr <= 0:
         status = "invalid"
         score = min(score, 35)
     elif trigger_confirmed:
@@ -766,18 +780,26 @@ def build_resistance_support(
     return resist[:5], support[:5]
 
 
-def build_strategy_plans(signals: list[TradingSignal]) -> list[dict[str, Any]]:
+def _signal_value(signal: TradingSignal | dict[str, Any], key: str, default: Any = None) -> Any:
+    if isinstance(signal, dict):
+        return signal.get(key, default)
+    return getattr(signal, key, default)
+
+
+def build_strategy_plans(signals: list[TradingSignal | dict[str, Any]]) -> list[dict[str, Any]]:
     labels = ["方案 A（主策略）", "方案 B（备选）", "方案 C（逆势）"]
     plans = []
-    for i, sig in enumerate(signals[:3]):
-        tps = sig.take_profits
+    eligible = [s for s in signals if _signal_value(s, "status", "candidate") != "invalid"]
+    for i, sig in enumerate(eligible[:3]):
+        tps = _signal_value(sig, "take_profits", []) or []
+        name = _signal_value(sig, "name", "")
         plans.append({
-            "name": labels[i] if i < len(labels) else sig.name,
-            "logic": sig.note,
-            "entry": f"{sig.entry_low} ~ {sig.entry_high}",
-            "stop_loss": sig.stop_loss,
+            "name": labels[i] if i < len(labels) else name,
+            "logic": _signal_value(sig, "note", ""),
+            "entry": f"{_signal_value(sig, 'entry_low')} ~ {_signal_value(sig, 'entry_high')}",
+            "stop_loss": _signal_value(sig, "stop_loss"),
             "targets": " / ".join(str(t) for t in tps),
-            "theme": sig.theme,
+            "theme": _signal_value(sig, "theme"),
         })
     return plans
 

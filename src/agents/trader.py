@@ -25,8 +25,14 @@ def run_trader_agent(
         *debate.discussion_notes[-2:],
     ]
 
-    long_idx = [i for i, s in enumerate(signals) if s.theme == "long"]
-    short_idx = [i for i, s in enumerate(signals) if s.theme == "short"]
+    long_idx = [
+        i for i, s in enumerate(signals)
+        if s.theme == "long" and getattr(s, "status", "candidate") != "invalid"
+    ]
+    short_idx = [
+        i for i, s in enumerate(signals)
+        if s.theme == "short" and getattr(s, "status", "candidate") != "invalid"
+    ]
 
     # F-014: structure sentiment gates primary direction; debate only overrides on strong consensus.
     sentiment = sentiment_score(ctx.analyses)

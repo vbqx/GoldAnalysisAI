@@ -11,7 +11,7 @@ import pytest
 
 from src.agents.risk import run_risk_team
 from src.analysis.ict_pa import FairValueGap, TimeframeAnalysis, analyze_timeframe
-from src.analysis.report_engine import build_conclusion, generate_trading_signals, trend_projections
+from src.analysis.report_engine import TradingSignal, build_conclusion, build_strategy_plans, generate_trading_signals, trend_projections
 from src.core.types import TransactionProposal
 from src.indicators.technical import fibonacci_levels
 from src.indicators.verify import indicator_snapshot
@@ -301,7 +301,7 @@ def test_fin_03_fvg_below_price_snapshot_regression() -> None:
     entry_mid = (sell.entry_low + sell.entry_high) / 2
     assert sell.stop_loss > entry_mid > sell.take_profits[0]
     assert sell.risk_reward != "N/A"
-    assert sell.status == "candidate"
+    assert sell.status == "invalid"
     assert any("越过" in reason for reason in sell.score_reasons)
 
 
@@ -384,6 +384,78 @@ def test_signal_quality_fields_are_present() -> None:
     assert sig.score_grade in {"A", "B", "C", "D"}
     assert sig.score_total > 0
     assert sig.score_reasons
+
+
+@pytest.mark.financial
+def test_crossed_stop_signal_is_invalid_not_watch() -> None:
+    ts = pd.Timestamp("2026-06-01")
+    fvg = FairValueGap(high=4183.38, low=4181.63, direction="bearish", time=ts)
+    a5 = TimeframeAnalysis(
+        timeframe="5m",
+        trend="bearish",
+        bos="?",
+        choch="?",
+        fvgs=[fvg],
+        active_fvgs=[fvg],
+        swing_high=4215.0,
+        swing_low=4140.0,
+    )
+    a15 = TimeframeAnalysis("15m", "bearish", "?", "?", swing_high=4215.0, swing_low=4140.0)
+
+    signals = generate_trading_signals(
+        4187.77,
+        a5,
+        a15,
+        4215.0,
+        4140.0,
+        {"bearish": 70.0, "bullish": 20.0, "ranging": 10.0},
+    )
+
+    assert signals
+    assert signals[0].status == "invalid"
+    assert signals[0].stop_loss < 4187.77
+    assert "已越过止损" in "；".join(signals[0].score_reasons)
+
+
+@pytest.mark.financial
+def test_strategy_plans_skip_invalid_expired_signals() -> None:
+    expired = TradingSignal(
+        name="过期 FVG 做空",
+        direction="SELL",
+        direction_cn="卖出",
+        entry_low=4181.63,
+        entry_high=4183.38,
+        stop_loss=4184.26,
+        take_profits=[4169.96, 4140.12],
+        risk_reward="1:2.0",
+        sentiment_bias_pct="70%",
+        position_size="轻仓试探",
+        note="失效 FVG 回测方案 A",
+        theme="short",
+        status="invalid",
+    )
+    valid = TradingSignal(
+        name="有效反弹做空",
+        direction="SELL",
+        direction_cn="卖出",
+        entry_low=4187.0,
+        entry_high=4190.0,
+        stop_loss=4193.0,
+        take_profits=[4174.0, 4160.0],
+        risk_reward="1:2.0",
+        sentiment_bias_pct="70%",
+        position_size="轻仓试探",
+        note="当前有效方案",
+        theme="short",
+        status="candidate",
+    )
+
+    plans = build_strategy_plans([expired, valid])
+
+    assert len(plans) == 1
+    assert plans[0]["name"] == "方案 A（主策略）"
+    assert plans[0]["entry"] == "4187.0 ~ 4190.0"
+    assert "4181.63" not in plans[0]["entry"]
 
 
 @pytest.mark.financial

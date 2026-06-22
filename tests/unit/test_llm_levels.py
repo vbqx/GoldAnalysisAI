@@ -99,3 +99,25 @@ def test_validate_llm_levels_rejects_invalid_sell_geometry() -> None:
     assert signals == []
     assert audit[0]["accepted"] is False
     assert "stop_loss" in audit[0]["reason"]
+
+def test_validate_llm_levels_rejects_sell_after_stop_breached() -> None:
+    signals, audit = validate_llm_levels(
+        _ctx(price=4187.77),
+        [
+            LevelProposal(
+                direction="SELL",
+                entry_low=4181.63,
+                entry_high=4183.38,
+                stop_loss=4184.26,
+                take_profits=[4169.96, 4140.12],
+                setup_type="llm_fvg",
+                reason="expired bearish FVG retest",
+                confidence=0.74,
+            )
+        ],
+    )
+
+    assert signals == []
+    assert audit[0]["accepted"] is False
+    assert "breached stop_loss" in audit[0]["reason"]
+
