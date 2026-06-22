@@ -82,11 +82,31 @@ def validate_pipeline_coherence(
                 issues.append(
                     f"做空信号 {label}: SL {sig['stop_loss']} 低于入场 {entry_mid:.2f}"
                 )
+            if price >= sig["stop_loss"] and sig.get("status") != "invalid":
+                issues.append(
+                    f"做空信号 {label}: 当前价 {price:.2f} 已越过止损 {sig['stop_loss']} 但未标记 invalid"
+                )
         if sig["direction"] == "BUY":
             if sig["take_profits"] and sig["take_profits"][0] < entry_mid:
                 issues.append(
                     f"做多信号 {label}: TP1 {sig['take_profits'][0]} 低于入场 {entry_mid:.2f}"
                 )
+            if price <= sig["stop_loss"] and sig.get("status") != "invalid":
+                issues.append(
+                    f"做多信号 {label}: 当前价 {price:.2f} 已跌破止损 {sig['stop_loss']} 但未标记 invalid"
+                )
+
+    for plan in report.get("strategy_plans", []):
+        label = plan.get("name") or "strategy_plan"
+        stop = plan.get("stop_loss")
+        try:
+            stop_f = float(stop)
+        except (TypeError, ValueError):
+            continue
+        if plan.get("theme") == "short" and price >= stop_f:
+            issues.append(f"策略摘要 {label}: 当前价 {price:.2f} 已越过止损 {stop_f:.2f}")
+        if plan.get("theme") == "long" and price <= stop_f:
+            issues.append(f"策略摘要 {label}: 当前价 {price:.2f} 已跌破止损 {stop_f:.2f}")
 
     swing_high = report["chart"]["swing_high"]
     swing_low = report["chart"]["swing_low"]
