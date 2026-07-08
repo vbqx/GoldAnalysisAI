@@ -332,6 +332,68 @@ def _selected_run_config() -> RunConfig:
     ).normalized()
 
 
+def _render_run_mode_guide() -> None:
+    st.markdown(
+        """
+<div class="run-mode-guide">
+  <div class="run-mode-card fast">
+    <p class="name">规则引擎</p>
+    <p class="desc">最快路径，不调用 LLM；适合检查数据、指标和交易假设几何关系。</p>
+  </div>
+  <div class="run-mode-card recommended">
+    <p class="name">混合模式</p>
+    <p class="desc">推荐默认项；先跑规则基线，再用 LLM 增强研究、辩论和文案。</p>
+  </div>
+  <div class="run-mode-card deep">
+    <p class="name">LLM 智能体</p>
+    <p class="desc">完整智能体链路；适合深度复盘、审计决策过程和调试提示词。</p>
+  </div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+
+def _render_run_config_advanced_controls() -> None:
+    pick_col, clear_col, _ = st.columns([1, 1, 4])
+    with pick_col:
+        st.button(
+            "一键全选",
+            on_click=_set_all_agent_llm_widgets,
+            args=(True,),
+            key="run_config_select_all_llm",
+        )
+    with clear_col:
+        st.button(
+            "全部取消",
+            on_click=_set_all_agent_llm_widgets,
+            args=(False,),
+            key="run_config_clear_all_llm",
+        )
+    st.markdown("**分析师团队**")
+    st.checkbox("启用 Analyst Team LLM", key="run_config_stage_analysts")
+    st.markdown("**研究 · 辩论 · 执行链**")
+    stage_cols = st.columns(3)
+    for idx, (key, label, reserved) in enumerate(_PIPELINE_STAGE_WIDGETS):
+        with stage_cols[idx % 3]:
+            st.checkbox(
+                label,
+                key=key,
+                help=_RESERVED_STAGE_HELP if reserved else None,
+            )
+    st.markdown("**Analyst 子模块**（仅勾选的走 LLM，其余用规则补齐；四者全选 = 四位均 LLM；全不选 = 分析师团队均规则）")
+    col_a, col_b = st.columns(2)
+    with col_a:
+        for key, _stage, label in _ANALYST_LLM_WIDGETS[:2]:
+            st.checkbox(label, key=key)
+    with col_b:
+        for key, _stage, label in _ANALYST_LLM_WIDGETS[2:]:
+            st.checkbox(label, key=key)
+    _analyst_only, _ = _analyst_checkbox_state()
+    if _analyst_only == "__multi__":
+        st.warning("单 Analyst 调试请只勾选一个，或四个全部勾选。")
+
+
 def _render_run_config_panel() -> None:
     from src.llm.router import llm_configured
 
@@ -347,6 +409,7 @@ def _render_run_config_panel() -> None:
     render_page_hero(hero_title, hero_sub)
 
     st.markdown("#### 运行模式")
+    _render_run_mode_guide()
     mode_label = st.radio(
         "选择本次报告使用的智能体模式",
         list(_MODE_LABEL_TO_VALUE),
@@ -384,43 +447,8 @@ def _render_run_config_panel() -> None:
     )
 
     if needs_llm and st.session_state.get("run_config_advanced"):
-        pick_col, clear_col, _ = st.columns([1, 1, 4])
-        with pick_col:
-            st.button(
-                "一键全选",
-                on_click=_set_all_agent_llm_widgets,
-                args=(True,),
-                key="run_config_select_all_llm",
-            )
-        with clear_col:
-            st.button(
-                "全部取消",
-                on_click=_set_all_agent_llm_widgets,
-                args=(False,),
-                key="run_config_clear_all_llm",
-            )
-        st.markdown("**分析师团队**")
-        st.checkbox("启用 Analyst Team LLM", key="run_config_stage_analysts")
-        st.markdown("**研究 · 辩论 · 执行链**")
-        stage_cols = st.columns(3)
-        for idx, (key, label, reserved) in enumerate(_PIPELINE_STAGE_WIDGETS):
-            with stage_cols[idx % 3]:
-                st.checkbox(
-                    label,
-                    key=key,
-                    help=_RESERVED_STAGE_HELP if reserved else None,
-                )
-        st.markdown("**Analyst 子模块**（仅勾选的走 LLM，其余用规则补齐；四者全选 = 四位均 LLM；全不选 = 分析师团队均规则）")
-        col_a, col_b = st.columns(2)
-        with col_a:
-            for key, _stage, label in _ANALYST_LLM_WIDGETS[:2]:
-                st.checkbox(label, key=key)
-        with col_b:
-            for key, _stage, label in _ANALYST_LLM_WIDGETS[2:]:
-                st.checkbox(label, key=key)
-        _analyst_only, checked_count = _analyst_checkbox_state()
-        if _analyst_only == "__multi__":
-            st.warning("单 Analyst 调试请只勾选一个，或四个全部勾选。")
+        with st.expander("高级调试：阶段与 Analyst 控制", expanded=False):
+            _render_run_config_advanced_controls()
 
     config = _selected_run_config()
     st.caption(f"预填配置指纹: `{seed.fingerprint()}` · 本次配置指纹: `{config.fingerprint()}`")
@@ -450,6 +478,20 @@ def _clear_generation_state(counter: int) -> None:
     thread = _GEN_THREADS.pop(counter, None)
     if thread and thread.is_alive():
         log.info("refresh requested while generation running counter=%s", counter)
+
+
+def _format_generation_error(exc: BaseException) -> str:
+    raw = str(exc or type(exc).__name__).strip()
+    if not raw:
+        return type(exc).__name__
+    network_hint = "若在国内网络，可能需要代理/VPN 才能连接 TradingView WebSocket。"
+    raw = raw.replace(f"{network_hint}. {network_hint}", network_hint)
+    raw = raw.replace(f"{network_hint}。 {network_hint}", network_hint)
+    if "TradingView fetch failed" in raw:
+        if "returned empty data" in raw:
+            return f"数据拉取失败：TradingView 返回空数据。{network_hint}"
+        return f"数据拉取失败：{raw}"
+    return raw
 
 
 def _start_generation(counter: int, run_config: RunConfig) -> None:
@@ -584,7 +626,7 @@ def ensure_external_data() -> dict:
         exc = _GEN_ERRORS.pop(counter)
         _LIVE_GEN_STATE.pop(counter, None)
         log.exception("report generation failed during external page wait")
-        st.error(f"报告生成失败: {exc or type(exc).__name__}")
+        st.error(f"报告生成失败: {_format_generation_error(exc)}")
         st.stop()
 
     if counter in _GEN_RESULTS:
@@ -642,7 +684,7 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
 
             st.markdown("**生成进度（失败前）**")
             render_progress_steps(steps, title="")
-        st.error(f"报告生成失败: {exc or type(exc).__name__}")
+        st.error(f"报告生成失败: {_format_generation_error(exc)}")
         st.caption("可在 `.env` 调整 `TV_FETCH_RETRIES` / `TV_FETCH_ROUND_RETRIES`；确认代理可用后点「重新配置 / 刷新报告」重试。")
         st.stop()
 

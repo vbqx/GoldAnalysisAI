@@ -2,12 +2,18 @@
 
 from __future__ import annotations
 
+import html
 import json
 
 import streamlit as st
 
 from src.viz.llm_meta import format_latency_ms, stage_llm_caption
-from src.viz.source_labels import STAGE_LABELS, llm_was_invoked, stage_meta_label
+from src.viz.source_labels import (
+    STAGE_LABELS,
+    llm_was_invoked,
+    render_stage_meta_badge,
+    stage_meta_label,
+)
 
 
 def _badge_md(meta: dict) -> str:
@@ -23,6 +29,75 @@ def _stage_source_text(stage_meta: dict, stage: str) -> str:
     if meta.get("fallback_reason"):
         return f"{label}（{meta['fallback_reason']}）"
     return label
+
+
+def _short_text(value: object, limit: int = 72) -> str:
+    text = str(value or "—").strip()
+    if len(text) <= limit:
+        return text
+    return text[: limit - 1] + "…"
+
+
+def _stage_card(stage: str, meta: dict, main: str, sub: str = "") -> str:
+    cls = "llm" if llm_was_invoked(meta) else "rule"
+    label = STAGE_LABELS.get(stage, stage)
+    return (
+        f'<div class="agent-stage-card {cls}">'
+        f'<div class="stage-title"><b>{html.escape(label)}</b>{render_stage_meta_badge(meta, small=True)}</div>'
+        f'<p class="stage-main">{html.escape(_short_text(main, 64))}</p>'
+        f'<p class="stage-sub">{html.escape(_short_text(sub, 96))}</p>'
+        "</div>"
+    )
+
+
+def _render_stage_summary_grid(report: dict, trace: dict) -> str:
+    stage_meta = trace.get("stage_meta") or {}
+    analyst_team = trace.get("analyst_team") or {}
+    debate = trace.get("debate") or {}
+    decision = trace.get("decision") or {}
+    risk_reviews = trace.get("risk_reviews") or []
+    levels = trace.get("llm_levels") or []
+    validated = trace.get("validated_plans") or []
+    signals = report.get("signals") or []
+
+    analyst_biases = []
+    for key in ("technical", "fundamentals", "news", "sentiment"):
+        row = analyst_team.get(key) or {}
+        if row:
+            analyst_biases.append(f"{STAGE_LABELS.get(key, key)}={row.get('bias', '—')}")
+
+    accepted = sum(1 for row in validated if row.get("accepted"))
+    rejected = len(validated) - accepted
+    approved_risk = sum(1 for row in risk_reviews if row.get("approved"))
+    primary_signal = signals[0] if signals else {}
+
+    cards = [
+        _stage_card(
+            "analyst_team",
+            stage_meta.get("analyst_team") or {},
+            " / ".join(analyst_biases) or "暂无分析师摘要",
+            f"{len(analyst_team)} 个子模块",
+        ),
+        _stage_card(
+            "debate",
+            stage_meta.get("debate") or {},
+            f"共识 {debate.get('consensus_bias', '—')}",
+            f"强度 {float(debate.get('consensus_strength') or 0):.0%}",
+        ),
+        _stage_card(
+            "llm_levels",
+            stage_meta.get("llm_levels") or {},
+            f"提议 {len(levels)} 条 / 通过 {accepted} 条",
+            f"拒绝 {rejected} 条；主信号 {primary_signal.get('status', '—')}",
+        ),
+        _stage_card(
+            "manager",
+            stage_meta.get("manager") or {},
+            f"{decision.get('action', '—')} · {decision.get('primary_direction', '—')}",
+            f"置信 {float(decision.get('confidence') or 0):.0%}；风控通过 {approved_risk}/{len(risk_reviews)}",
+        ),
+    ]
+    return f'<div class="agent-stage-summary">{"".join(cards)}</div>'
 
 
 def _decision_flow_markdown(report: dict, trace: dict) -> str:
@@ -64,17 +139,39 @@ def _decision_flow_markdown(report: dict, trace: dict) -> str:
         if levels or validated
         else _stage_source_text(stage_meta, "llm_levels")
     )
+    debate_strength = float(debate.get("consensus_strength") or 0)
+    trader_source = _stage_source_text(stage_meta, "trader")
+    decision_confidence = float(decision.get("confidence") or 0)
 
     return "\n".join(
         [
-            f"- **数据**：{meta.get('data_source', '—')}，当前价 {metrics.get('current_price', '—')}，更新时间 {meta.get('updated_at', '—')}。",
-            f"- **结构**：多 {sentiment.get('bullish', '—')}% / 空 {sentiment.get('bearish', '—')}% / 震荡 {sentiment.get('ranging', '—')}%。",
+            (
+                f"- **数据**：{meta.get('data_source', '—')}，"
+                f"当前价 {metrics.get('current_price', '—')}，"
+                f"更新时间 {meta.get('updated_at', '—')}。"
+            ),
+            (
+                f"- **结构**：多 {sentiment.get('bullish', '—')}% / "
+                f"空 {sentiment.get('bearish', '—')}% / "
+                f"震荡 {sentiment.get('ranging', '—')}%。"
+            ),
             f"- **分析师团队**（{_stage_source_text(stage_meta, 'analyst_team')}）：{'; '.join(analyst_bits)}。",
             f"- **多空研究**：看多={_stage_source_text(stage_meta, 'bullish')}；看空={_stage_source_text(stage_meta, 'bearish')}。",
-            f"- **辩论**（{_stage_source_text(stage_meta, 'debate')}）：共识 {debate.get('consensus_bias', '—')}，强度 {float(debate.get('consensus_strength') or 0):.0%}。",
+            (
+                f"- **辩论**（{_stage_source_text(stage_meta, 'debate')}）："
+                f"共识 {debate.get('consensus_bias', '—')}，强度 {debate_strength:.0%}。"
+            ),
             f"- **点位**：{llm_level_line}。",
-            f"- **交易员**（{_stage_source_text(stage_meta, 'trader')}）：主方向 {proposal.get('primary_direction', '—')}，信号 {proposal.get('signal_indices', [])}。",
-            f"- **风控/经理**：经理动作 {decision.get('action', '—')}，方向 {decision.get('primary_direction', '—')}，置信 {float(decision.get('confidence') or 0):.0%}。",
+            (
+                f"- **交易员**（{trader_source}）："
+                f"主方向 {proposal.get('primary_direction', '—')}，"
+                f"信号 {proposal.get('signal_indices', [])}。"
+            ),
+            (
+                f"- **风控/经理**：经理动作 {decision.get('action', '—')}，"
+                f"方向 {decision.get('primary_direction', '—')}，"
+                f"置信 {decision_confidence:.0%}。"
+            ),
             f"- **结论**：{conclusion.get('market_sentiment', '—')}；{decision.get('summary', '')}",
             "",
             "**候选信号**",
@@ -110,6 +207,9 @@ def render_agent_trace_panel(report: dict) -> None:
                 f"辩论={debate_bias}，结构情绪主导={struct_bias}。"
                 "请以经理决策与风控结论为准，并核对信号主/备选标签。"
             )
+
+    st.markdown("**阶段摘要**")
+    st.markdown(_render_stage_summary_grid(report, trace), unsafe_allow_html=True)
 
     c1, c2, c3 = st.columns(3)
     mgr_meta = stage_meta.get("manager") or {}

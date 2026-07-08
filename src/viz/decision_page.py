@@ -96,7 +96,7 @@ def render_llm_decision_page(report: dict) -> None:
     st.markdown(render_agent_source_banner(report), unsafe_allow_html=True)
 
     tab_trace, tab_llm, tab_gen = st.tabs(
-        ["智能体决策", "LLM 文案", "生成与 LLM I/O"]
+        ["阶段摘要与决策", "LLM 文案", "生成与 I/O 审计"]
     )
 
     with tab_trace:

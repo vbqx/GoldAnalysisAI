@@ -8,9 +8,10 @@ from src.config import TV_EXCHANGE, TV_SYMBOL, WATERMARK_TEXT
 from src.viz.charts import build_sentiment_donut
 from src.viz.dashboard_components import (
     render_bottom_row,
+    render_decision_summary,
     render_footer,
-    render_header,
     render_key_levels,
+    render_primary_plan_focus,
     render_strategy_sections,
     render_tf_panel,
     render_trading_plans,
@@ -90,7 +91,7 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
             unsafe_allow_html=True,
         )
 
-    st.markdown(render_header(report), unsafe_allow_html=True)
+    st.markdown(render_decision_summary(report), unsafe_allow_html=True)
     st.markdown('<div class="report-top-row-anchor"></div>', unsafe_allow_html=True)
 
     top1, top2, top3, top4 = st.columns(4)
@@ -165,7 +166,8 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
         )
     with plan_col:
         st.markdown('<p class="section-h tight">交易计划</p>', unsafe_allow_html=True)
-        st.markdown(render_trading_plans(report["signals"]), unsafe_allow_html=True)
+        st.markdown(render_primary_plan_focus(report), unsafe_allow_html=True)
+        st.markdown(render_trading_plans(report["signals"], include_primary=False), unsafe_allow_html=True)
 
     st.markdown(render_bottom_row(report, conclusion), unsafe_allow_html=True)
     st.markdown(render_footer(report), unsafe_allow_html=True)
@@ -176,7 +178,10 @@ def render_strategy_map(report, data, analyses) -> None:
     st.markdown(f'<p class="report-title center">{meta["strategy_title"]}</p>', unsafe_allow_html=True)
     st.markdown(f'<p class="report-subtitle">{meta["strategy_subtitle"]}</p>', unsafe_allow_html=True)
     st.markdown(f'<p class="report-meta" style="text-align:right;">生成时间: {meta["updated_at"]}</p>', unsafe_allow_html=True)
+    st.markdown(render_decision_summary(report), unsafe_allow_html=True)
+    st.markdown(render_primary_plan_focus(report), unsafe_allow_html=True)
 
+    st.markdown('<div class="strategy-layout-anchor"></div>', unsafe_allow_html=True)
     chart_col, levels_col, strategy_col = st.columns([2.2, 0.65, 1.15])
     with chart_col:
         _embed_chart(data, analyses["15m"], report, analyses["1h"], "15m", variant="strategy", projections=False)

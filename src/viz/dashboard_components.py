@@ -243,6 +243,15 @@ iframe { border: none; display: block; }
 .tf-mini-block .tf-panel { margin-top: 2px; margin-bottom: 0; padding: 4px 6px; font-size: 0.66rem; }
 
 .plan-stack { display: flex; flex-direction: column; gap: 5px; }
+.plan-stack-note {
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 7px 9px;
+  color: #64748b;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  background: #f8fafc;
+}
 .plan-card { border: 1px solid #e2e8f0; border-radius: 5px; overflow: hidden; font-size: 0.68rem; }
 .plan-card .head { padding: 4px 6px; font-weight: 700; color: #fff; text-align: center; font-size: 0.72rem; }
 .plan-card .body { padding: 5px 7px; background: #fff; line-height: 1.45; }
@@ -250,6 +259,157 @@ iframe { border: none; display: block; }
 .plan-card.short .head { background: linear-gradient(135deg, #dc2626, #b91c1c); }
 .plan-card.short.alt .head { background: linear-gradient(135deg, #991b1b, #7f1d1d); }
 .plan-card.long .head { background: linear-gradient(135deg, #16a34a, #15803d); }
+.decision-summary {
+  display: grid;
+  grid-template-columns: 1.05fr 1.3fr 1.25fr 1.4fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.decision-cell {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 9px 11px;
+  min-width: 0;
+  box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+}
+.decision-cell .k { margin: 0 0 3px; color: #64748b; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; }
+.decision-cell .v { margin: 0; color: #0f172a; font-size: 0.95rem; font-weight: 800; line-height: 1.22; word-break: break-word; }
+.decision-cell .s { margin: 4px 0 0; color: #64748b; font-size: 0.7rem; line-height: 1.35; }
+.decision-cell.direction-short { border-left: 4px solid #dc2626; }
+.decision-cell.direction-long { border-left: 4px solid #16a34a; }
+.decision-cell.direction-neutral { border-left: 4px solid #64748b; }
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.35;
+  color: #fff;
+}
+.status-pill.active { background: #16a34a; }
+.status-pill.watch { background: #d97706; }
+.status-pill.candidate { background: #64748b; }
+.status-pill.invalid { background: #94a3b8; }
+.signal-mini-badge {
+  font-size: 10px;
+  margin-left: 6px;
+}
+.signal-mini-badge.alt { color: #64748b; }
+.signal-mini-badge.primary { color: #0ea5e9; }
+.signal-mini-badge.llm { color: #7c3aed; }
+.primary-plan-focus {
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #64748b;
+  border-radius: 7px;
+  background: #fff;
+  padding: 10px 12px;
+  margin: 0 0 10px;
+  box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+}
+.primary-plan-focus.short { border-left-color: #dc2626; }
+.primary-plan-focus.long { border-left-color: #16a34a; }
+.primary-plan-focus.invalid { opacity: 0.78; background: #f8fafc; }
+.primary-plan-focus .focus-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.primary-plan-focus .focus-title { margin: 0; color: #0f172a; font-size: 0.95rem; font-weight: 800; line-height: 1.25; }
+.primary-plan-focus .focus-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.primary-plan-focus .focus-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; padding: 6px 8px; min-width: 0; }
+.primary-plan-focus .focus-item .k { margin: 0 0 2px; color: #64748b; font-size: 0.62rem; font-weight: 700; }
+.primary-plan-focus .focus-item .v { margin: 0; color: #0f172a; font-size: 0.76rem; font-weight: 700; line-height: 1.28; word-break: break-word; }
+.primary-plan-focus .focus-note { color: #475569; font-size: 0.72rem; line-height: 1.45; margin: 8px 0 0; }
+.run-mode-guide {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.run-mode-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+.run-mode-card .name { margin: 0 0 4px; color: #0f172a; font-size: 0.88rem; font-weight: 800; }
+.run-mode-card .desc { margin: 0; color: #64748b; font-size: 0.74rem; line-height: 1.45; }
+.run-mode-card.recommended { border-left: 4px solid #0ea5e9; }
+.run-mode-card.fast { border-left: 4px solid #64748b; }
+.run-mode-card.deep { border-left: 4px solid #7c3aed; }
+.agent-stage-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 8px 0 14px;
+}
+.agent-stage-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 9px 11px;
+  min-width: 0;
+  box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+}
+.agent-stage-card.llm { border-left: 4px solid #7c3aed; }
+.agent-stage-card.rule { border-left: 4px solid #64748b; }
+.agent-stage-card .stage-title { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 5px; }
+.agent-stage-card .stage-title b { color: #0f172a; font-size: 0.78rem; line-height: 1.25; }
+.agent-stage-card .stage-main { color: #0f172a; font-size: 0.82rem; font-weight: 800; line-height: 1.3; margin: 0 0 4px; word-break: break-word; }
+.agent-stage-card .stage-sub { color: #64748b; font-size: 0.68rem; line-height: 1.4; margin: 0; word-break: break-word; }
+@media (max-width: 1100px) {
+  .decision-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .primary-plan-focus .focus-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .run-mode-guide { grid-template-columns: 1fr; }
+  .agent-stage-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .block-container { padding: 0.75rem 0.85rem 1.5rem; }
+  .page-hero { padding: 10px 12px; margin-bottom: 10px; border-radius: 7px; }
+  .page-hero h1 { font-size: 1.15rem; line-height: 1.25; }
+  .page-hero p { font-size: 0.78rem; }
+  .stTabs [data-baseweb="tab-list"] {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+  .stTabs [data-baseweb="tab"] {
+    height: 36px;
+    padding: 0 10px;
+    white-space: nowrap;
+    font-size: 0.82rem;
+  }
+  .header-metrics, .top-grid-4, .bottom-grid { grid-template-columns: 1fr; }
+  .decision-summary, .primary-plan-focus .focus-grid { grid-template-columns: 1fr; }
+  .agent-stage-summary { grid-template-columns: 1fr; }
+  .primary-plan-focus .focus-head { align-items: flex-start; flex-direction: column; }
+  .hbox.panel.top-cell {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+  .panel-box.compact {
+    max-height: none;
+  }
+  .report-top-row-anchor + div[data-testid="stHorizontalBlock"],
+  .tf-multi-row-anchor + div[data-testid="stHorizontalBlock"],
+  .tf-main-row-anchor + div[data-testid="stHorizontalBlock"],
+  .strategy-layout-anchor + div[data-testid="stHorizontalBlock"] {
+    flex-direction: column !important;
+    gap: 0.55rem !important;
+  }
+  .report-top-row-anchor + div[data-testid="stHorizontalBlock"] > div[data-testid="column"],
+  .tf-multi-row-anchor + div[data-testid="stHorizontalBlock"] > div[data-testid="column"],
+  .tf-main-row-anchor + div[data-testid="stHorizontalBlock"] > div[data-testid="column"],
+  .strategy-layout-anchor + div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+    width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+  .tf-main-row-anchor + div[data-testid="stHorizontalBlock"] .stIframe,
+  .strategy-layout-anchor + div[data-testid="stHorizontalBlock"] .stIframe {
+    max-width: 100%;
+  }
+}
 .tf-panel .bear { color: #dc2626; font-weight: 600; }
 .tf-panel .bull { color: #16a34a; font-weight: 600; }
 .star-list li::before { content: "★ "; color: #eab308; }
@@ -443,6 +603,160 @@ def render_header(report: dict[str, Any]) -> str:
     return "".join(metric_html) + conclusion_html
 
 
+def _fmt_price(value: Any) -> str:
+    try:
+        return f"{float(value):.2f}"
+    except (TypeError, ValueError):
+        return "—"
+
+
+def _primary_signal(signals: list[dict[str, Any]]) -> dict[str, Any] | None:
+    if not signals:
+        return None
+    for sig in signals:
+        if sig.get("signal_role") == "primary":
+            return sig
+    return signals[0]
+
+
+def _status_meta(status: str) -> tuple[str, str]:
+    status_map = {
+        "active": ("已触发", "active"),
+        "watch": ("等待触发", "watch"),
+        "candidate": ("候选区", "candidate"),
+        "invalid": ("已失效", "invalid"),
+    }
+    return status_map.get(status, status_map["candidate"])
+
+
+def _direction_class(signal: dict[str, Any] | None, conclusion: dict[str, Any]) -> str:
+    raw = str((signal or {}).get("theme") or conclusion.get("market_sentiment") or "").lower()
+    if raw in ("short", "bear", "bearish") or "空" in raw or "跌" in raw:
+        return "direction-short"
+    if raw in ("long", "bull", "bullish") or "多" in raw or "涨" in raw:
+        return "direction-long"
+    return "direction-neutral"
+
+
+def _signal_zone(sig: dict[str, Any]) -> str:
+    return f"{_fmt_price(sig.get('entry_low'))} - {_fmt_price(sig.get('entry_high'))}"
+
+
+def _signal_targets(sig: dict[str, Any]) -> str:
+    targets = sig.get("take_profits") or []
+    if not targets:
+        return "—"
+    return " / ".join(_fmt_price(x) for x in targets[:3])
+
+
+def _first_text(items: list[Any], fallback: str = "—") -> str:
+    for item in items:
+        text = str(item or "").strip()
+        if text:
+            return text
+    return fallback
+
+
+def render_decision_summary(report: dict[str, Any]) -> str:
+    """First-screen decision strip: price, bias, executable state, and main risk."""
+    metrics = report.get("metrics", {})
+    conclusion = report.get("conclusion", {})
+    signals = report.get("signals") or []
+    primary = _primary_signal(signals)
+    status = str((primary or {}).get("status") or "candidate")
+    status_label, status_cls = _status_meta(status)
+    direction_cls = _direction_class(primary, conclusion)
+    price = _fmt_price(metrics.get("current_price"))
+    change = (
+        f"{float(metrics.get('daily_change', 0)):+.2f} ({float(metrics.get('daily_change_pct', 0)):+.2f}%)"
+        if metrics
+        else "—"
+    )
+    direction = html.escape(
+        str((primary or {}).get("direction_cn") or conclusion.get("market_sentiment") or "—")
+    )
+    plan_name = html.escape(str((primary or {}).get("name") or "暂无主计划"))
+    trigger = html.escape(str((primary or {}).get("trigger_note") or "等待交易假设确认"))
+    risk_items = list(report.get("invalidation", []) or []) + list(
+        report.get("risk_control", []) or []
+    )
+    risk_text = html.escape(
+        _first_text(
+            risk_items,
+            "暂无明确失效条件",
+        )
+    )
+    debate_badge = render_source_badge(stage_source(report, "debate"), small=True)
+    manager_badge = render_source_badge(stage_source(report, "manager"), small=True)
+
+    return f"""
+<div class="decision-summary">
+  <div class="decision-cell">
+    <p class="k">XAUUSD</p>
+    <p class="v">{price}</p>
+    <p class="s">日内 {html.escape(change)}</p>
+  </div>
+  <div class="decision-cell {direction_cls}">
+    <p class="k">方向判断 {debate_badge}</p>
+    <p class="v">{direction}</p>
+    <p class="s">{html.escape(str(conclusion.get("direction_summary", "—")))}</p>
+  </div>
+  <div class="decision-cell">
+    <p class="k">主计划状态 {manager_badge}</p>
+    <p class="v">{plan_name} <span class="status-pill {status_cls}">{status_label}</span></p>
+    <p class="s">{trigger}</p>
+  </div>
+  <div class="decision-cell">
+    <p class="k">失效/风险</p>
+    <p class="v">{risk_text}</p>
+    <p class="s">先确认状态，再看入场区和止损。</p>
+  </div>
+</div>
+"""
+
+
+def render_primary_plan_focus(report: dict[str, Any]) -> str:
+    """Prominent executable-plan card for report and strategy pages."""
+    primary = _primary_signal(report.get("signals") or [])
+    if primary is None:
+        return """
+<div class="primary-plan-focus">
+  <div class="focus-head"><p class="focus-title">暂无主交易计划</p><span class="status-pill candidate">等待生成</span></div>
+  <p class="focus-note">当前报告没有可展示的候选信号，请先确认数据源和运行配置。</p>
+</div>
+"""
+
+    status = str(primary.get("status") or "candidate")
+    status_label, status_cls = _status_meta(status)
+    theme = "short" if primary.get("theme") == "short" else "long"
+    invalid_cls = " invalid" if status == "invalid" else ""
+    reasons = primary.get("score_reasons") or []
+    reason_text = "；".join(html.escape(str(x)) for x in reasons[:2]) or html.escape(
+        str(primary.get("note") or "")
+    )
+    title = html.escape(str(primary.get("name") or "主交易计划"))
+    direction = html.escape(str(primary.get("direction_cn") or primary.get("direction") or "—"))
+    trigger = html.escape(str(primary.get("trigger_note") or "等待触发确认"))
+    score = html.escape(str(primary.get("score_total") or "—"))
+    grade = html.escape(str(primary.get("score_grade") or "—"))
+
+    return f"""
+<div class="primary-plan-focus {theme}{invalid_cls}">
+  <div class="focus-head">
+    <p class="focus-title">{title}</p>
+    <span class="status-pill {status_cls}">{status_label}</span>
+  </div>
+  <div class="focus-grid">
+    <div class="focus-item"><p class="k">方向</p><p class="v">{direction}</p></div>
+    <div class="focus-item"><p class="k">入场区</p><p class="v">{_signal_zone(primary)}</p></div>
+    <div class="focus-item"><p class="k">止损</p><p class="v">{_fmt_price(primary.get("stop_loss"))}</p></div>
+    <div class="focus-item"><p class="k">目标</p><p class="v">{_signal_targets(primary)}</p></div>
+  </div>
+  <p class="focus-note"><b>触发/失效：</b>{trigger} · <b>质量：</b>{grade} / {score}{(" · " + reason_text) if reason_text else ""}</p>
+</div>
+"""
+
+
 def render_top_overview_row(report: dict[str, Any]) -> str:
     """Top row: overview | (donut slot) | liquidity | today — 4 columns, 3 HTML panels."""
     overview = report.get("market_overview", [])
@@ -588,7 +902,6 @@ def _render_plans_text(plans: list[dict]) -> str:
         return "<p>暂无计划</p>"
     blocks = []
     for p in plans:
-        theme = "bear" if p.get("theme") == "short" else "bull"
         blocks.append(
             f"<p><b>{p['name']}</b> — {p['logic']}<br>"
             f"入场 {p['entry']} | 止损 {p['stop_loss']} | 目标 {p['targets']}</p>"
@@ -614,7 +927,7 @@ def render_calendar(events: list[dict]) -> str:
     return f'<div class="panel-box"><h4>📅 宏观日历</h4>{rows}</div>'
 
 
-def render_trading_plans(signals: list[dict]) -> str:
+def render_trading_plans(signals: list[dict], *, include_primary: bool = True) -> str:
     if not signals:
         return "<p>暂无交易计划</p>"
     status_labels = {
@@ -624,12 +937,19 @@ def render_trading_plans(signals: list[dict]) -> str:
         "invalid": ("已失效", "#94a3b8"),
     }
     cards = []
-    for i, sig in enumerate(signals[:3]):
+    display_signals = (
+        signals
+        if include_primary
+        else [sig for sig in signals if sig.get("signal_role", "primary") != "primary"]
+    )
+    if not display_signals:
+        return '<div class="plan-stack-note">暂无备选计划；当前仅保留上方主交易计划。</div>'
+    for sig in display_signals[:3]:
         role = sig.get("signal_role", "primary")
         role_badge = (
-            '<span style="font-size:10px;color:#64748b;margin-left:6px">逆势备选</span>'
+            '<span class="signal-mini-badge alt">逆势备选</span>'
             if role == "alternate"
-            else '<span style="font-size:10px;color:#0ea5e9;margin-left:6px">主策略</span>'
+            else '<span class="signal-mini-badge primary">主策略</span>'
         )
         css_theme = "short" if sig.get("theme") == "short" else "long"
         alt = " alt" if role == "alternate" else ""
@@ -638,7 +958,7 @@ def render_trading_plans(signals: list[dict]) -> str:
         status = sig.get("status", "candidate")
         status_text, status_color = status_labels.get(status, status_labels["candidate"])
         source_badge = (
-            '<span style="font-size:10px;color:#7c3aed;margin-left:6px">LLM点位</span>'
+            '<span class="signal-mini-badge llm">LLM点位</span>'
             if str(sig.get("setup_type", "")).startswith("llm_")
             else ""
         )
@@ -647,15 +967,20 @@ def render_trading_plans(signals: list[dict]) -> str:
         trigger_note = html.escape(str(sig.get("trigger_note") or "等待触发确认"))
         reasons = sig.get("score_reasons") or []
         reason_text = "；".join(html.escape(str(x)) for x in reasons[:2])
+        weight = sig.get("sentiment_bias_pct", sig.get("win_rate", "—"))
+        status_badge = (
+            f'<span style="font-size:10px;color:{status_color};margin-left:6px">'
+            f"{status_text}</span>"
+        )
         cards.append(f"""
 <div class="plan-card {css_theme}{alt}">
-  <div class="head">{html.escape(str(sig['name']))}{role_badge}{source_badge}<span style="font-size:10px;color:{status_color};margin-left:6px">{status_text}</span></div>
+  <div class="head">{html.escape(str(sig['name']))}{role_badge}{source_badge}{status_badge}</div>
   <div class="body">
     <div><b>方向：</b>{sig.get('direction_cn', sig['direction'])}</div>
     <div><b>入场：</b>{sig['entry_low']} ~ {sig['entry_high']}</div>
     <div><b>止损：</b>{sig['stop_loss']}</div>
     {tp_lines}
-    <div><b>盈亏比：</b>{sig['risk_reward']} | <b>结构权重：</b>{sig.get('sentiment_bias_pct', sig.get('win_rate', '—'))} <span style="color:#94a3b8;font-size:11px">（非回测胜率）</span></div>
+    <div><b>盈亏比：</b>{sig['risk_reward']} | <b>结构权重：</b>{weight} <span style="color:#94a3b8;font-size:11px">（非回测胜率）</span></div>
     <div><b>信号质量：</b>{grade} / {score} · {trigger_note}</div>
     <div style="color:#64748b;font-size:11px;">{reason_text}</div>
   </div>
