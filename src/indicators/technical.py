@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import pandas as pd
 
+_NAN = float("nan")
+
 
 def add_emas(df: pd.DataFrame, periods: tuple[int, ...] = (20, 50, 610)) -> pd.DataFrame:
     out = df.copy()
@@ -15,7 +17,7 @@ def add_emas(df: pd.DataFrame, periods: tuple[int, ...] = (20, 50, 610)) -> pd.D
 def add_vwap(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     typical = (out["High"] + out["Low"] + out["Close"]) / 3
-    vol = out["Volume"].replace(0, pd.NA).fillna(1)
+    vol = out["Volume"].replace(0, _NAN).fillna(1)
     tp_vol = typical * vol
     # Reset VWAP each trading day (anchored VWAP)
     out["VWAP"] = tp_vol.groupby(out.index.date).cumsum() / vol.groupby(out.index.date).cumsum()
@@ -42,7 +44,7 @@ def add_rsi(df: pd.DataFrame, period: int = 14) -> pd.DataFrame:
     delta = out["Close"].diff()
     gain = delta.clip(lower=0).rolling(period, min_periods=period).mean()
     loss = (-delta.clip(upper=0)).rolling(period, min_periods=period).mean()
-    rs = gain / loss.replace(0, pd.NA)
+    rs = gain / loss.replace(0, _NAN)
     rsi = 100 - (100 / (1 + rs))
     rsi = rsi.mask((loss == 0) & (gain > 0), 100)
     rsi = rsi.mask((loss == 0) & (gain == 0), 50)
@@ -83,9 +85,9 @@ def add_adx(df: pd.DataFrame, period: int = 14) -> pd.DataFrame:
         axis=1,
     ).max(axis=1)
     tr_sum = tr.rolling(period, min_periods=period).sum()
-    plus_di = 100 * plus_dm.rolling(period, min_periods=period).sum() / tr_sum.replace(0, pd.NA)
-    minus_di = 100 * minus_dm.rolling(period, min_periods=period).sum() / tr_sum.replace(0, pd.NA)
-    dx = ((plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, pd.NA)) * 100
+    plus_di = 100 * plus_dm.rolling(period, min_periods=period).sum() / tr_sum.replace(0, _NAN)
+    minus_di = 100 * minus_dm.rolling(period, min_periods=period).sum() / tr_sum.replace(0, _NAN)
+    dx = ((plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, _NAN)) * 100
     out[f"ADX{period}"] = dx.rolling(period, min_periods=period).mean()
     return out
 
