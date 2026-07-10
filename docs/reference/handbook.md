@@ -412,9 +412,9 @@ GoldAnalysisAI/
 | Research | `run_bullish` / `run_bearish` / `run_research_team` | `bullish.py` / `bearish.py` | `llm/stages/bullish.py` 等；LLM 时可并行 |
 | Debate | `run_debate` | `debate.py`（F-013：结构情绪 tiebreaker） | `llm/stages/debate.py` |
 | Level Proposer | `run_level_proposer` | `compute_trading_signals(ctx)` 候选信号 | `llm/stages/levels.py`，输出后必须经 `level_validator.py` |
-| Trade | `run_trader` | `trader.py`（整合 `sentiment_score` 结构门控） | 预留开关，当前回退规则 |
-| Risk | `run_risk` | `risk.py` | 预留开关，当前回退规则 |
-| Manager | `run_manager` | `manager.py` | 预留开关，当前回退规则 |
+| Trade | `run_trader` | `trader.py`（整合 `sentiment_score` 结构门控） | `llm/stages/trader.py`，启用后选择方向与候选信号索引 |
+| Risk | `run_risk` | `risk.py` | `llm/stages/risk.py`，启用后三档风险复核 |
+| Manager | `run_manager` | `manager.py` | `llm/stages/manager.py`，启用后做最终授权 |
 
 `run_manager` 优先级：**conservative** → **neutral** → **aggressive**；全否决则 `action="wait"`。
 
@@ -548,7 +548,7 @@ Trader 只消费 orchestrator 传入的 `signals`；Manager 按 index 重排 `re
 完整设计见 **[llm-agents.md](../design/llm-agents.md)**。
 
 - **调度**：`agents/factory.py`，`AGENT_MODE=rule|llm|hybrid`
-- **分阶段开关**：`LLM_STAGE_ANALYSTS`、`LLM_STAGE_RESEARCH`、`LLM_STAGE_DEBATE`（`LLM_STAGE_ICT/TRADER/RISK/MANAGER` 已在 config 定义，factory 尚未接入）
+- **分阶段开关**：`LLM_STAGE_ANALYSTS`、`LLM_STAGE_RESEARCH`、`LLM_STAGE_DEBATE`、`LLM_STAGE_LEVELS`、`LLM_STAGE_TRADER`、`LLM_STAGE_RISK`、`LLM_STAGE_MANAGER`（`LLM_STAGE_ICT` 仍保留为事实层扩展位）
 - **单 Analyst 调试**：`LLM_ANALYST_ONLY=technical|fundamentals|news|sentiment` 时，仅该 Analyst 走 LLM，其余使用规则输出补齐
 - **传输重试**：`agents/llm/base.py` 的 `stream_llm_json()` — SSE 断流时整次重打，最多 3 次、退避 1s/2s；`llm/client.py` 将 `ChunkedEncodingError` 等包装为 `LLMClientError`
 - **规则兜底**：重试耗尽或 JSON 解析失败 → hybrid 回退 `agents/bullish.py` 等规则实现；流水线不崩溃

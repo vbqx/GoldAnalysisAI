@@ -59,23 +59,23 @@ steps:
 
   - id: trader
     label: 交易员提案
-    module: src/agents/trader.py
-    function: run_trader_agent
-    uses_llm: false
+    module: src/agents/factory.py
+    function: run_trader
+    uses_llm: optional
     progress: true
 
   - id: risk
     label: 风控审核
-    module: src/agents/risk.py
-    function: run_risk_team
-    uses_llm: false
+    module: src/agents/factory.py
+    function: run_risk
+    uses_llm: optional
     progress: true
 
   - id: manager
     label: 经理决策
-    module: src/agents/manager.py
+    module: src/agents/factory.py
     function: run_manager
-    uses_llm: false
+    uses_llm: optional
     progress: true
 
   - id: report

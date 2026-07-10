@@ -30,7 +30,7 @@
 | P1 | 真实 News / DXY / 社媒 API | 已完成 | `src/data/sources/` |
 | P1 | Bull/Bear 与 Analyst Team 并行 | 已完成 | `src/agents/` |
 | P1 | LLM 点位提议 + 规则 validator | 已完成 | [architecture.md §8.1](../design/architecture.md#81-llm-点位层) |
-| P2 | LLM 风控 / 经理 | 计划中 | `src/agents/llm/stages/` |
+| P2 | LLM 交易员 / 风控 / 经理 | 已完成基础接入 | `src/agents/llm/stages/` |
 | P3 | ICT Interpreter 完整标准化 | 计划中 | `src/analysis/ict_pa.py` |
 
 ---
@@ -144,14 +144,15 @@
 
 ---
 
-## LLM 风控阶段
+## LLM 交易执行链
 
-`LLM_STAGE_RISK` 仍为计划项。在专用 LLM 风控复核 prompt 与 validator 完成前，风险控制继续回退到规则层。
+`LLM_STAGE_TRADER`、`LLM_STAGE_RISK`、`LLM_STAGE_MANAGER` 已完成基础接入。三段均通过 `agents/factory.py` 保留规则 baseline；`hybrid` 模式下只有 LLM 输出通过结构化 schema 且置信度达到 `LLM_OVERRIDE_THRESHOLD` 才覆盖规则结果，否则回退规则层。
 
-下一步要求：
+后续增强要求：
 
-1. LLM 只能复核风险，不直接绕过规则 validator。
-2. 输出必须包含 reject / approve / reduce_size / wait 四类动作。
-3. 风控结论必须写入 `agent_trace` 和 `meta.llm_io`，供 UI 决策链展示。
-4. 与规则风控冲突时，默认采用更保守结论。
+1. LLM 只能复核风险，不直接绕过 `level_validator.py` 与信号几何约束。
+2. 风控输出必须保持三档 profile：`aggressive` / `neutral` / `conservative`。
+3. 交易员、风控、经理结论必须写入 `agent_trace.stage_meta` 和 `meta.llm_io`，供 UI 决策链审计。
+4. 与规则风控冲突时，默认采用更保守结论；后续可加入显式 conflict resolver。
+5. 实盘执行仍未启用；MT5 provider 已预留，下一步是只读行情校验，再进入模拟下单/风控熔断。
 

@@ -51,11 +51,11 @@ _PIPELINE_STAGE_WIDGETS: tuple[tuple[str, str, bool], ...] = (
     ("run_config_stage_bearish", "看空研究", False),
     ("run_config_stage_debate", "多空辩论", False),
     ("run_config_stage_levels", "LLM 点位提案", False),
-    ("run_config_stage_trader", "交易员", True),
-    ("run_config_stage_risk", "风控团队", True),
-    ("run_config_stage_manager", "经理决策", True),
+    ("run_config_stage_trader", "交易员", False),
+    ("run_config_stage_risk", "风控团队", False),
+    ("run_config_stage_manager", "经理决策", False),
 )
-_RESERVED_STAGE_HELP = "LLM 尚未接入，勾选会写入配置供后续启用"
+_RESERVED_STAGE_HELP = "高级 LLM 阶段开关会写入本次生成配置"
 
 _GEN_THREADS: dict[int, threading.Thread] = {}
 _GEN_RESULTS: dict[int, tuple[dict, dict, dict]] = {}

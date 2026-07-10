@@ -16,9 +16,9 @@
 | `bullish` | 看多研究 | `agents/bullish.py` + `factory.py` | 可选 |
 | `bearish` | 看空研究 | `agents/bearish.py` + `factory.py` | 可选 |
 | `debate` | 多空辩论 | `agents/debate.py` + `factory.py` | 可选 |
-| `trader` | 交易员 | `agents/trader.py` | 否 |
-| `risk` | 风控 | `agents/risk.py` | 否 |
-| `manager` | 经理 | `agents/manager.py` | 否 |
+| `trader` | 交易员 | `agents/factory.py` + `agents/trader.py` | 可选 |
+| `risk` | 风控 | `agents/factory.py` + `agents/risk.py` | 可选 |
+| `manager` | 经理 | `agents/factory.py` + `agents/manager.py` | 可选 |
 | `report` | 组装报告 | `analysis/report_engine.py` | 否 |
 | `llm_narrative` | LLM 文案 | `llm/analyst.py` | 可选 |
 
@@ -37,7 +37,7 @@
 | 改新闻分析师逻辑 | `agents/analysts/news.py` | `pytest tests/unit/test_analyst_input_density.py` |
 | 接入新外部数据源 | `data/sources/` + `fetch_pipeline.py` | `pytest tests/unit/test_external_sources.py` |
 | 金十 MCP 参数 | `config.py` + `jin10_feed.py` | `python tests/run.py --external` |
-| 新增 LLM 阶段 | `agents/llm/stages/` + `factory.py` | `pytest tests/unit/test_analyst_team_llm.py` |
+| 新增 LLM 阶段 | `agents/llm/stages/` + `factory.py` | `pytest tests/unit/test_analyst_team_llm.py tests/unit/test_llm_trade_stages.py` |
 | LLM 传输/重试 | `agents/llm/base.py` | `pytest tests/unit/test_llm_transport.py` |
 | 改 Streamlit 布局 | `viz/report_views.py` + `viz/dashboard_components.py` | 手工界面 / 用例 catalog `UIL-*` |
 | 改外部数据页 | `viz/external_data_view.py` + `views/4_外部数据.py` | `pytest tests/unit/test_external_data_view.py` |
@@ -57,6 +57,10 @@
 | `LLM_ANALYST_ONLY` | `technical` / `fundamentals` / `news` / `sentiment` | 仅调试单个 Analyst LLM |
 | `LLM_STAGE_RESEARCH` | `true` | 看多/看空 LLM |
 | `LLM_STAGE_DEBATE` | `true` | 辩论 LLM |
+| `LLM_STAGE_TRADER` | `true` | 交易员 LLM |
+| `LLM_STAGE_RISK` | `true` | 风控 LLM |
+| `LLM_STAGE_MANAGER` | `true` | 经理 LLM |
+| `MT5_ENABLED` | `false` | 可选 MT5 provider，默认不影响 TradingView |
 | `JIN10_API_TOKEN` | — | 金十 MCP |
 | `LOG_LEVEL` | `DEBUG` | 跟踪流水线 |
 

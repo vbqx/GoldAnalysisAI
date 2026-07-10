@@ -111,9 +111,26 @@ AGENT_MODE=hybrid
 LLM_STAGE_RESEARCH=true
 LLM_STAGE_DEBATE=true
 LLM_STAGE_ANALYSTS=true
+LLM_STAGE_LEVELS=true
+LLM_STAGE_TRADER=true
+LLM_STAGE_RISK=true
+LLM_STAGE_MANAGER=true
 # 调试单个分析师时可设：technical / fundamentals / news / sentiment
 LLM_ANALYST_ONLY=
 LLM_ENABLED=true
+```
+
+## MT5 bridge
+
+`src/data/mt5.py` 预留了可选 MetaTrader 5 provider 边界。默认关闭，不安装 `MetaTrader5` 包也不会影响现有 TradingView 路径：
+
+```env
+MT5_ENABLED=false
+MT5_SYMBOL=XAUUSD
+MT5_LOGIN=
+MT5_PASSWORD=
+MT5_SERVER=
+MT5_PATH=
 ```
 
 ## 测试

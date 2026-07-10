@@ -18,12 +18,12 @@
 | **Bullish Researcher** | `agents/factory.py` → rule / `llm/stages/bullish` | ✅ 整合 Analyst Team 输出 |
 | **Bearish Researcher** | `agents/factory.py` → rule / `llm/stages/bearish` | ✅ 整合 Analyst Team 输出 |
 | **Discussion** | `agents/factory.py` → rule / `llm/stages/debate` | ✅ 双轨（P0） |
-| **Trader Agent** | `agents/trader.py` | ✅ 生成交易提案 |
-| **Risk Team** (激进/中性/保守) | `agents/risk.py` | ✅ 三档风控过滤 |
-| **Manager** | `agents/manager.py` | ✅ 最终执行/观望决策 |
+| **Trader Agent** | `agents/factory.py` → rule / `llm/stages/trader.py` | ✅ 双轨，生成交易提案 |
+| **Risk Team** (激进/中性/保守) | `agents/factory.py` → rule / `llm/stages/risk.py` | ✅ 双轨，三档风控过滤 |
+| **Manager** | `agents/factory.py` → rule / `llm/stages/manager.py` | ✅ 双轨，最终执行/观望决策 |
 | **LLM 报告文案** | `llm/analyst.py` | ✅ 流水线末尾（`LLM_ENABLED`） |
 | **流式 LLM I/O** | `viz/pipeline_progress.py` | ✅ 生成时实时展示 |
-| **Execution** | 券商/MT5 API | 当前未接入 |
+| **Execution** | 券商/MT5 API | MT5 provider 已预留；实盘下单未接入 |
 | **Streamlit UI** | `app.py` + `views/*` + `viz/*` | ✅ 三页：机构 / 短线 / LLM 决策 |
 
 ---

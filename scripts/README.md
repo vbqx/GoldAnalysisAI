@@ -38,4 +38,12 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 python scripts/show_utf8.py docs/domain/financial-review.md --start 520 --count 40
 ```
 
+如果只需要临时用 PowerShell 读取文件，先显式设置输出编码：
+
+```powershell
+$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+Get-Content -Encoding UTF8 docs/reference/pipeline-steps.yaml
+```
+
 不要用未初始化编码环境下的 `Get-Content` 作为补丁上下文来源；它可能把 UTF-8 无 BOM 文件按系统 ANSI 解码，导致看到的文本与磁盘真实内容不一致。

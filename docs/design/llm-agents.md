@@ -99,9 +99,9 @@ LLM_STAGE_RESEARCH=true
 LLM_STAGE_DEBATE=true
 LLM_STAGE_ICT=false
 LLM_STAGE_LEVELS=true
-LLM_STAGE_TRADER=false
-LLM_STAGE_RISK=false
-LLM_STAGE_MANAGER=false
+LLM_STAGE_TRADER=true
+LLM_STAGE_RISK=true
+LLM_STAGE_MANAGER=true
 
 # 可选：仅调试单个 Analyst LLM；留空或 all 表示四位都跑
 LLM_ANALYST_ONLY=technical
@@ -176,9 +176,9 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | 看多/看空研究 | `bullish.py` / `bearish.py` | `llm/stages/bullish.py` / `bearish.py` | 可由 `LLM_STAGE_RESEARCH` 或分方向开关启用 |
 | 辩论 | `debate.py` | `llm/stages/debate.py` | 可由 `LLM_STAGE_DEBATE` 启用 |
 | 点位提议 | `compute_trading_signals(ctx)` | `llm/stages/levels.py` | `LLM_STAGE_LEVELS` 启用后只提议点位，仍需 validator |
-| 交易员 | `trader.py` | 未接入 | `LLM_STAGE_TRADER` 为预留开关，当前回退规则 |
-| 风控 | `risk.py` | 未接入 | `LLM_STAGE_RISK` 为预留开关，当前回退规则 |
-| 经理 | `manager.py` | 未接入 | `LLM_STAGE_MANAGER` 为预留开关，当前回退规则 |
+| 交易员 | `trader.py` | `llm/stages/trader.py` | `LLM_STAGE_TRADER` 启用后由 LLM 选择方向与候选信号索引，失败或置信不足回退规则 |
+| 风控 | `risk.py` | `llm/stages/risk.py` | `LLM_STAGE_RISK` 启用后三档风险复核，索引与仓位由 schema 过滤 |
+| 经理 | `manager.py` | `llm/stages/manager.py` | `LLM_STAGE_MANAGER` 启用后做最终执行/减仓/观望授权 |
 | 报告文案 | 规则结论 | `llm/analyst.py` | `LLM_ENABLED` 控制最终叙事层 |
 
 ---
@@ -235,7 +235,7 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | [README.md](../README.md) | 文档中心索引 |
 | [architecture.md](./architecture.md) | TradingAgents 对照与分层图 |
 | [analyst-context.md](./analyst-context.md) | Analyst 输入密度与 payload |
-| [roadmap.md](../planning/roadmap.md) | 后续 LLM 风控、经理和 ICT 标准化计划 |
+| [roadmap.md](../planning/roadmap.md) | 后续执行接口、MT5 接入和 ICT 标准化计划 |
 | [setup.md](../getting-started/setup.md) | 环境搭建与扩展指南 |
 
 ---
@@ -271,4 +271,4 @@ LLM 点位阶段只提出候选 BUY/SELL 区。确定性 validator 检查止损/
 - `report["agent_trace"]["llm_levels"]` and `report["agent_trace"]["validated_plans"]`.
 - `report["meta"]["stage_sources"]["llm_levels"]`.
 
-`LLM_STAGE_RISK` 的后续实现计划不在本文维护，见 [roadmap.md §LLM 风控阶段](../planning/roadmap.md#llm-风控阶段)。
+Trader / Risk / Manager 三段 LLM 已接入 `agents/factory.py` 双轨调度；后续实盘执行与 MT5 接入计划见 [roadmap.md](../planning/roadmap.md)。

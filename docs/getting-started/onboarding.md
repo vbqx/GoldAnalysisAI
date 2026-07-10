@@ -68,9 +68,9 @@
 | `bullish` | `agents/bullish.py` / `factory.py` | 看多证据与置信度 | 可选 |
 | `bearish` | `agents/bearish.py` / `factory.py` | 看空证据与置信度 | 可选 |
 | `debate` | `agents/debate.py` / `factory.py` | 多空共识 `consensus_bias` | 可选 |
-| `trader` | `report_engine.py` + `agents/trader.py` | 交易信号与提案 | 否 |
-| `risk` | `agents/risk.py` | 三档风控通过/降仓 | 否 |
-| `manager` | `agents/manager.py` | 执行 / 减仓 / 观望 | 否 |
+| `trader` | `factory.py` + `agents/trader.py` | 交易信号与提案 | 可选 |
+| `risk` | `factory.py` + `agents/risk.py` | 三档风控通过/降仓 | 可选 |
+| `manager` | `factory.py` + `agents/manager.py` | 执行 / 减仓 / 观望 | 可选 |
 | `report` | `analysis/report_engine.py` | 界面消费的 JSON | 否 |
 | `llm_narrative` | `llm/analyst.py` | `report["llm_analysis"]` | 可选 |
 
