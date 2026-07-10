@@ -1,0 +1,58 @@
+"""LLM risk review stage."""
+
+from __future__ import annotations
+
+import json
+
+from src.agents.llm.base import run_llm_stage
+from src.agents.llm.payload import risk_payload
+from src.agents.llm.schemas import parse_risk_reviews
+from src.core.types import LLMStageTrace, RiskReview, TransactionProposal
+from src.llm.router import get_strong_client
+
+SYSTEM = """You are a three-profile XAUUSD risk committee.
+Review the trader proposal as aggressive, neutral, and conservative profiles.
+Use only existing proposal signal indexes. Keep position_scale between 0 and 1.
+Return JSON:
+{
+  "confidence": 0.0-1.0,
+  "reviews": [
+    {"profile": "aggressive", "approved": true, "allowed_signal_indices": [0], "position_scale": 1.0, "notes": ["..."]},
+    {"profile": "neutral", "approved": true, "allowed_signal_indices": [0], "position_scale": 0.7, "notes": ["..."]},
+    {"profile": "conservative", "approved": false, "allowed_signal_indices": [], "position_scale": 0.0, "notes": ["..."]}
+  ]
+}"""
+
+
+def run_llm_risk(
+    proposal: TransactionProposal,
+    signal_count: int,
+) -> tuple[list[RiskReview] | None, LLMStageTrace]:
+    client = get_strong_client()
+    payload = risk_payload(proposal, signal_count)
+    confidence_holder = {"value": None}
+
+    def _parse(data: dict) -> list[RiskReview]:
+        try:
+            confidence_holder["value"] = max(0.0, min(1.0, float(data.get("confidence", 0.5))))
+        except (TypeError, ValueError):
+            confidence_holder["value"] = 0.5
+        return parse_risk_reviews(data, proposal=proposal, signal_count=signal_count)
+
+    messages = [
+        {"role": "system", "content": SYSTEM},
+        {
+            "role": "user",
+            "content": f"Review the proposal:\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
+        },
+    ]
+    result, trace = run_llm_stage(
+        stage="risk",
+        model=client.model,
+        client=client,
+        messages=messages,
+        parse=_parse,
+    )
+    if result:
+        trace.confidence = confidence_holder["value"]
+    return result, trace

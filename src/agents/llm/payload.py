@@ -12,7 +12,7 @@ from src.config import (
     ANALYST_TEAM_ITEMS_MAX,
     PAYLOAD_EVIDENCE_MAX,
 )
-from src.core.types import AgentEvidence, AnalystTeam, MarketContext, ResearchDebate
+from src.core.types import AgentEvidence, AnalystTeam, MarketContext, ResearchDebate, RiskReview, TransactionProposal
 from src.indicators.technical import ema_relation
 
 
@@ -224,6 +224,65 @@ def _signal_payload(signal: Any) -> dict[str, Any]:
         "score_grade": getattr(signal, "score_grade", ""),
         "score_total": getattr(signal, "score_total", 0),
         "note": getattr(signal, "note", ""),
+    }
+
+
+def signal_list_payload(signals: list[Any]) -> list[dict[str, Any]]:
+    return [
+        {"index": idx, **_signal_payload(signal)}
+        for idx, signal in enumerate(signals)
+    ]
+
+
+def trader_payload(
+    ctx: MarketContext,
+    debate: ResearchDebate,
+    signals: list[Any],
+) -> dict[str, Any]:
+    return {
+        "market": market_payload(ctx),
+        "debate": {
+            "consensus_bias": debate.consensus_bias,
+            "consensus_strength": debate.consensus_strength,
+            "discussion_notes": debate.discussion_notes[-6:],
+        },
+        "candidate_signals": signal_list_payload(signals),
+        "decision_constraints": {
+            "primary_direction": "Choose long, short, or wait.",
+            "signal_indices": "Use only indexes from candidate_signals and exclude invalid signals.",
+            "rationale": "Explain why selected signals fit the debate and current structure.",
+        },
+    }
+
+
+def risk_payload(
+    proposal: TransactionProposal,
+    signal_count: int,
+) -> dict[str, Any]:
+    return {
+        "proposal": proposal.to_dict(),
+        "signal_count": signal_count,
+        "profiles": ["aggressive", "neutral", "conservative"],
+        "review_constraints": {
+            "approved": "Reject neutral or weak proposals when risk is unclear.",
+            "allowed_signal_indices": "Use only proposal.signal_indices values below signal_count.",
+            "position_scale": "0.0 to 1.0; conservative should normally be smaller than neutral.",
+        },
+    }
+
+
+def manager_payload(
+    proposal: TransactionProposal,
+    reviews: list[RiskReview],
+) -> dict[str, Any]:
+    return {
+        "proposal": proposal.to_dict(),
+        "risk_reviews": [r.to_dict() for r in reviews],
+        "decision_constraints": {
+            "action": "execute, reduce, or wait.",
+            "selected_signal_indices": "Use only indexes approved by at least one risk profile.",
+            "confidence": "0.0 to 1.0; lower confidence when only aggressive risk approves.",
+        },
     }
 
 

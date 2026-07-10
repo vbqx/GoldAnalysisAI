@@ -31,6 +31,15 @@ TV_DXY_SYMBOL = os.getenv("TV_DXY_SYMBOL", "DXY")
 TV_US10Y_EXCHANGE = os.getenv("TV_US10Y_EXCHANGE", "TVC")
 TV_US10Y_SYMBOL = os.getenv("TV_US10Y_SYMBOL", "US10Y")
 
+# Optional MT5 market-data/execution bridge. Disabled by default; the MetaTrader5
+# Python package and a running terminal are only required when MT5_ENABLED=true.
+MT5_ENABLED = os.getenv("MT5_ENABLED", "false").lower() in ("1", "true", "yes")
+MT5_SYMBOL = os.getenv("MT5_SYMBOL", TV_SYMBOL)
+MT5_LOGIN = os.getenv("MT5_LOGIN", "")
+MT5_PASSWORD = os.getenv("MT5_PASSWORD", "")
+MT5_SERVER = os.getenv("MT5_SERVER", "")
+MT5_PATH = os.getenv("MT5_PATH", "")
+
 # Analyst Team input density (payload / evidence limits)
 ANALYST_NEWS_MAX = max(3, int(os.getenv("ANALYST_NEWS_MAX", "20")))
 ANALYST_CALENDAR_MAX = max(1, int(os.getenv("ANALYST_CALENDAR_MAX", "12")))

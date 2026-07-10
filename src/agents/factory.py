@@ -20,6 +20,9 @@ from src.agents.llm.stages.bearish import run_llm_bearish
 from src.agents.llm.stages.bullish import run_llm_bullish
 from src.agents.llm.stages.debate import run_llm_debate
 from src.agents.llm.stages.levels import run_llm_level_proposer
+from src.agents.llm.stages.manager import run_llm_manager
+from src.agents.llm.stages.risk import run_llm_risk
+from src.agents.llm.stages.trader import run_llm_trader
 from src.agents.manager import run_manager as rule_manager
 from src.agents.risk import run_risk_team as rule_risk
 from src.agents.trader import run_trader_agent as rule_trader
@@ -441,29 +444,69 @@ def run_trader(
     pipeline: AgentPipelineMeta,
     signals: list[TradingSignal],
 ):
+    rule_result = rule_trader(ctx, debate, signals)
     if not _use_llm_stage(LLM_STAGE_TRADER):
         get_progress().update("trader", detail="规则引擎")
         pipeline.record("trader", StageMeta(source="rule"))
-        return rule_trader(ctx, debate, signals)
+        return rule_result
 
-    get_progress().update("trader", detail="规则引擎（LLM 预留）")
-    pipeline.record("trader", StageMeta(source="rule", fallback_reason="LLM 交易员尚未实现"))
-    return rule_trader(ctx, debate, signals)
+    get_progress().update("trader", detail="LLM 交易员提案")
+    llm_result, trace = run_llm_trader(ctx, debate, signals)
+    if AGENT_MODE == "llm" and llm_result is not None and not trace.error:
+        pipeline.record("trader", StageMeta(source="llm", llm=trace))
+        return llm_result, signals
+    if (
+        llm_result is not None
+        and not trace.error
+        and (trace.confidence or 0.0) >= LLM_OVERRIDE_THRESHOLD
+    ):
+        pipeline.record("trader", StageMeta(source="hybrid", llm=trace))
+        return llm_result, signals
+    reason = trace.error or f"confidence {(trace.confidence or 0.0):.2f} < {LLM_OVERRIDE_THRESHOLD}"
+    pipeline.record("trader", StageMeta(source="hybrid", fallback_reason=f"采用规则输出：{reason}", llm=trace))
+    return rule_result
 
 
 def run_risk(proposal: TransactionProposal, signal_count: int, pipeline: AgentPipelineMeta) -> list[RiskReview]:
+    rule_result = rule_risk(proposal, signal_count)
     if not _use_llm_stage(LLM_STAGE_RISK):
         pipeline.record("risk", StageMeta(source="rule"))
-        return rule_risk(proposal, signal_count)
+        return rule_result
 
-    pipeline.record("risk", StageMeta(source="rule", fallback_reason="LLM 风控尚未实现"))
-    return rule_risk(proposal, signal_count)
+    llm_result, trace = run_llm_risk(proposal, signal_count)
+    if AGENT_MODE == "llm" and llm_result is not None and not trace.error:
+        pipeline.record("risk", StageMeta(source="llm", llm=trace))
+        return llm_result
+    if (
+        llm_result is not None
+        and not trace.error
+        and (trace.confidence or 0.0) >= LLM_OVERRIDE_THRESHOLD
+    ):
+        pipeline.record("risk", StageMeta(source="hybrid", llm=trace))
+        return llm_result
+    reason = trace.error or f"confidence {(trace.confidence or 0.0):.2f} < {LLM_OVERRIDE_THRESHOLD}"
+    pipeline.record("risk", StageMeta(source="hybrid", fallback_reason=f"采用规则输出：{reason}", llm=trace))
+    return rule_result
 
 
 def run_manager(proposal: TransactionProposal, reviews: list[RiskReview], pipeline: AgentPipelineMeta) -> ManagerDecision:
+    rule_result = rule_manager(proposal, reviews)
     if not _use_llm_stage(LLM_STAGE_MANAGER):
         pipeline.record("manager", StageMeta(source="rule"))
-        return rule_manager(proposal, reviews)
+        return rule_result
 
-    pipeline.record("manager", StageMeta(source="rule", fallback_reason="LLM 经理尚未实现"))
-    return rule_manager(proposal, reviews)
+    llm_result, trace = run_llm_manager(proposal, reviews)
+    if AGENT_MODE == "llm" and llm_result is not None and not trace.error:
+        pipeline.record("manager", StageMeta(source="llm", llm=trace))
+        return llm_result
+    if (
+        llm_result is not None
+        and not trace.error
+        and llm_result.confidence >= LLM_OVERRIDE_THRESHOLD
+    ):
+        pipeline.record("manager", StageMeta(source="hybrid", llm=trace))
+        return llm_result
+    confidence = llm_result.confidence if llm_result else 0.0
+    reason = trace.error or f"confidence {confidence:.2f} < {LLM_OVERRIDE_THRESHOLD}"
+    pipeline.record("manager", StageMeta(source="hybrid", fallback_reason=f"采用规则输出：{reason}", llm=trace))
+    return rule_result

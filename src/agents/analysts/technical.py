@@ -400,6 +400,30 @@ def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
     else:
         bias = "neutral"
 
+    d1 = ctx.analyses.get("1d")
+    if d1 and d1.trend == "bearish" and bias == "bullish":
+        bias = "neutral"
+        items.append(
+            EvidenceItem(
+                category="technical",
+                summary="1d 结构偏空，短周期偏多信号降级为中性技术结论",
+                strength=TF_WEIGHT.get("1d", 0.0),
+                timeframe="1d",
+                refs={"source": "major_timeframe_anchor", "trend": d1.trend},
+            )
+        )
+    elif d1 and d1.trend == "bullish" and bias == "bearish":
+        bias = "neutral"
+        items.append(
+            EvidenceItem(
+                category="technical",
+                summary="1d 结构偏多，短周期偏空信号降级为中性技术结论",
+                strength=TF_WEIGHT.get("1d", 0.0),
+                timeframe="1d",
+                refs={"source": "major_timeframe_anchor", "trend": d1.trend},
+            )
+        )
+
     summary = (
         f"技术：结构 {struct_bias} / EMA {ema_bias} / ICT区位 {ict_bias} / 指标 {indicator_bias} / 支撑阻力 {sr_bias} / 多周期投票 "
         f"多 {vote['bullish']:.0f}% 空 {vote['bearish']:.0f}%"

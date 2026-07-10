@@ -5,7 +5,18 @@ from __future__ import annotations
 from typing import Any
 
 from src.config import ANALYST_TEAM_ITEMS_MAX, LLM_MIN_ANALYST_ITEMS, PAYLOAD_EVIDENCE_MAX
-from src.core.types import AgentEvidence, AnalystReport, Bias, EvidenceItem, LevelProposal, ResearchDebate
+from src.core.types import (
+    AgentEvidence,
+    AnalystReport,
+    Bias,
+    EvidenceItem,
+    LevelProposal,
+    ManagerDecision,
+    ResearchDebate,
+    RiskProfile,
+    RiskReview,
+    TransactionProposal,
+)
 
 _DEFAULT_ITEM_SOURCE = {
     "technical": "tradingview_ict",
@@ -36,6 +47,30 @@ def _clamp_strength(v: Any) -> float:
     except (TypeError, ValueError):
         return 0.3
     return max(0.0, min(1.0, f))
+
+
+def _string_list(value: Any, *, fallback: list[str] | None = None, limit: int = 8) -> list[str]:
+    if isinstance(value, list):
+        out = [str(v).strip() for v in value if str(v).strip()]
+        return out[:limit]
+    text = str(value or "").strip()
+    if text:
+        return [text]
+    return fallback or []
+
+
+def _index_list(value: Any, *, allowed: set[int]) -> list[int]:
+    if not isinstance(value, list):
+        return []
+    out: list[int] = []
+    for raw in value:
+        try:
+            idx = int(raw)
+        except (TypeError, ValueError):
+            continue
+        if idx in allowed and idx not in out:
+            out.append(idx)
+    return out
 
 
 def _float_field(row: dict[str, Any], name: str) -> float:
@@ -204,3 +239,100 @@ def parse_level_proposals(data: dict[str, Any]) -> list[LevelProposal]:
         )
 
     return proposals
+
+
+def parse_transaction_proposal(
+    data: dict[str, Any],
+    *,
+    debate_bias: Bias,
+    signal_count: int,
+) -> TransactionProposal:
+    direction = str(data.get("primary_direction", "wait")).lower()
+    if direction not in ("long", "short", "wait"):
+        direction = "wait"
+
+    allowed = set(range(max(0, signal_count)))
+    indices = _index_list(data.get("signal_indices"), allowed=allowed)
+    if direction == "wait":
+        indices = []
+
+    rationale = _string_list(
+        data.get("rationale") or data.get("reasons"),
+        fallback=["LLM trader generated a transaction proposal."],
+    )
+    return TransactionProposal(
+        primary_direction=direction,  # type: ignore[arg-type]
+        signal_indices=indices,
+        rationale=rationale,
+        debate_bias=debate_bias,
+    )
+
+
+def parse_risk_reviews(
+    data: dict[str, Any],
+    *,
+    proposal: TransactionProposal,
+    signal_count: int,
+) -> list[RiskReview]:
+    raw_reviews = data.get("reviews") or data.get("risk_reviews") or []
+    if not isinstance(raw_reviews, list):
+        raise ValueError("risk stage returned non-list reviews")
+
+    allowed_profiles: tuple[RiskProfile, ...] = ("aggressive", "neutral", "conservative")
+    proposal_allowed = {idx for idx in proposal.signal_indices if 0 <= idx < signal_count}
+    by_profile: dict[str, RiskReview] = {}
+    for row in raw_reviews:
+        if not isinstance(row, dict):
+            continue
+        profile = str(row.get("profile", "")).lower()
+        if profile not in allowed_profiles:
+            continue
+        indices = _index_list(row.get("allowed_signal_indices"), allowed=proposal_allowed)
+        scale = _clamp_strength(row.get("position_scale", 0.0))
+        approved = bool(row.get("approved")) and bool(indices) and proposal.primary_direction != "wait"
+        by_profile[profile] = RiskReview(
+            profile=profile,  # type: ignore[arg-type]
+            approved=approved,
+            allowed_signal_indices=indices,
+            position_scale=scale if approved else 0.0,
+            notes=_string_list(row.get("notes"), fallback=[f"LLM {profile} risk review."]),
+        )
+
+    missing = [p for p in allowed_profiles if p not in by_profile]
+    if missing:
+        raise ValueError(f"risk stage missing profiles: {', '.join(missing)}")
+    return [by_profile[p] for p in allowed_profiles]
+
+
+def parse_manager_decision(
+    data: dict[str, Any],
+    *,
+    proposal: TransactionProposal,
+    reviews: list[RiskReview],
+) -> ManagerDecision:
+    action = str(data.get("action", "wait")).lower()
+    if action not in ("execute", "reduce", "wait"):
+        action = "wait"
+
+    approved = {
+        idx
+        for review in reviews
+        if review.approved
+        for idx in review.allowed_signal_indices
+    }
+    selected = _index_list(data.get("selected_signal_indices"), allowed=approved)
+    if action == "wait" or not selected:
+        action = "wait"
+        selected = []
+
+    summary = str(data.get("summary", "")).strip()
+    if not summary:
+        summary = "LLM manager generated the final trade authorization."
+
+    return ManagerDecision(
+        action=action,  # type: ignore[arg-type]
+        primary_direction=proposal.primary_direction,
+        selected_signal_indices=selected,
+        confidence=_clamp_strength(data.get("confidence", 0.0 if action == "wait" else 0.5)),
+        summary=summary,
+    )
