@@ -137,6 +137,18 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 
 编排层 `orchestrator.py`：研究阶段按 `research_uses_parallel_llm()` 分支；报告组装后按 sentiment 重排信号并写入 `signal_role`。门禁：`tests/tools/coherence_check.py`（rule 模式 `issues: []`）。
 
+### 3.6 PA / SMC 提示词主次
+
+字段释义与场景优先级集中在 `analysis/field_glossary.py`（`PA_SMC_PRIORITY`）。各 LLM 阶段注入对应 hint，**不得跨场景混用**：
+
+| 场景 | 主 | 辅 | 注入位置 |
+|------|----|----|----------|
+| 报告五块叙事 | PA（POC/VAH/VAL、量价 S/R） | SMC 仅 `allowed_levels` 引用 | `llm/prompts.py`、`narrative_combine.py` |
+| 交易计划 | PA 定区 | SMC 后台过滤 | `report_engine` → 文案 payload |
+| 技术 Analyst / 多空研究 | SMC 定结构 | PA 确认共振 | `agents/llm/stages/analysts/technical.py`、`bullish.py`、`bearish.py` |
+
+完整组合逻辑见 [smc-pa-narrative.md](./smc-pa-narrative.md)；检测与事实层见 [technical-analysis.md](./technical-analysis.md)。
+
 ---
 
 ## 4. 流式 I/O 与 UI
@@ -180,6 +192,12 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | 风控 | `risk.py` | `llm/stages/risk.py` | `LLM_STAGE_RISK` 启用后三档风险复核，索引与仓位由 schema 过滤 |
 | 经理 | `manager.py` | `llm/stages/manager.py` | `LLM_STAGE_MANAGER` 启用后做最终执行/减仓/观望授权 |
 | 报告文案 | 规则结论 | `llm/analyst.py` | `LLM_ENABLED` 控制最终叙事层 |
+
+### 5.1 五块机构化文案双轨
+
+`report.narrative_sections` 固定包含市场总览、流动性、4H、1H、15m。报告引擎先从确定性结构事实生成规则版；仅当 `AGENT_MODE=llm|hybrid` 且报告文案开关启用时，末端 LLM 才可逐块覆盖。
+
+LLM 输入使用 `narrative_facts`：公共行情、质量警告、流动性、周期结构和带稳定 ID 的允许价位，不包含原始 OHLCV。输出按块执行 schema、6 行上限、价位白名单、禁用“胜率”措辞及方向一致性校验；Hybrid 还要求块级置信度达到 `LLM_OVERRIDE_THRESHOLD`。任一块失败只回退该块，结果与原因写入 `meta.stage_sources.narrative_sections`。
 
 ---
 

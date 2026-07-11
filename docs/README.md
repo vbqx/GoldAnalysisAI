@@ -8,7 +8,7 @@
 |----------|------|
 | 项目现在是什么状态 | [overview/project.md](./overview/project.md) -> [overview/status.md](./overview/status.md) |
 | 怎么本机运行、配置、连接 MT5 | [operations/setup.md](./operations/setup.md) · 启动用 [AGENTS.md](../AGENTS.md) |
-| 整体架构是否清楚 | [architecture/architecture.md](./architecture/architecture.md) -> [architecture/review.md](./architecture/review.md) |
+| 整体架构是否清楚 | [architecture/architecture.md](./architecture/architecture.md) -> [architecture/technical-analysis.md](./architecture/technical-analysis.md) · [architecture/smc-pa-narrative.md](./architecture/smc-pa-narrative.md) · [architecture/review.md](./architecture/review.md) · [chart-layers.md](./architecture/chart-layers.md) |
 | LLM 多智能体怎么工作 | [architecture/llm-agents.md](./architecture/llm-agents.md) |
 | 回测和执行边界 | [architecture/backtesting.md](./architecture/backtesting.md) -> [architecture/review.md](./architecture/review.md) |
 | 日常怎么测 | [testing/strategy.md](./testing/strategy.md) |

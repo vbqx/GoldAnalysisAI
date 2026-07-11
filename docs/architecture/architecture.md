@@ -1,4 +1,4 @@
-﻿# GoldAnalysisAI 架构设计（TradingAgents 参考）
+# GoldAnalysisAI 架构设计（TradingAgents 参考）
 
 > **原则**：前端 Streamlit 不变；`run_analysis()` 仍返回 `(report, data, analyses)`。
 > 内部分层按 [TradingAgents](https://github.com/TauricResearch/TradingAgents) 多智能体流水线重构。
@@ -115,6 +115,11 @@
 - `AnalystTeam` — 四个报告容器，`to_dict()` 写入 `agent_trace.analyst_team`
 - `MarketContext.context_stats` — 写入技术输入和分角色输入密度，供报告 meta、LLM payload 与调试审计使用
 - `analysis/technical_context.py` — 共享技术上下文，供规则技术分析师、LLM 技术分析师 payload 与最终报告文案层复用
+- `analysis/luxalgo_smc.py` + `analysis/dgt_price_action.py` — Lux SMC 结构与 DGT 量价检测
+- `analysis/narrative_sections.py` + `analysis/narrative_combine.py` — 报告五块规则文案与 PA/SMC 合并
+- `analysis/field_glossary.py` — PA/SMC 字段释义与各场景提示词主次
+
+技术分析分层（检测 / 事实 / 文案 / 主图裁剪）见 [technical-analysis.md](./technical-analysis.md)；叙事组合见 [smc-pa-narrative.md](./smc-pa-narrative.md)。
 
 **研究员整合**（`bullish.py` / `bearish.py`）：
 

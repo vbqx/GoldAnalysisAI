@@ -46,49 +46,39 @@ Sentiment 规则：4H 权重最高，1H 次之，15m/5m 辅助。原报告 62% B
 - **EMA 关系** — 价格与各 EMA/VWAP 的上下方
 - **OB / FVG / Liquidity** — 见 2.4
 
-MVP: `ict_pa.analyze_timeframe()`
+MVP: `ict_pa.analyze_timeframe()` → `luxalgo_smc.analyze_luxalgo()`
 
 ### 2.3 主图（5min 执行结构）
 
 机构报告主图使用 **5 分钟** Lightweight Charts（`report_views.py` + `lightweight_chart.py`）：
 
 - K 线 + 成交量
-- SMC 叠加：Bearish/Bullish FVG、Order Block、需求/流动性区、BOS/CHoCH 标记
-- **不绘制** EMA/VWAP 曲线、MACD/RSI/ADX 副图、路径预测虚线（避免主图叠层混乱）
+- 5m 主图绘制近位 5 个 Internal OB；active FVG 仍按可见价格范围过滤；远位多周期结构见 `context_levels`
+- BOS/CHoCH 标记（5m + 15m 事件）
+- **不绘制** EMA/VWAP 曲线、MACD/RSI/ADX 副图、路径预测虚线
+
+分层说明见 `docs/architecture/chart-layers.md`
 - 路径推演见底栏 **未来走势推演**（`report["path_summary"]`，源自 `trend_projections()`）
 
 技术指标仍在 `enrich()` 管道计算，供 agent/LLM 使用，并在侧边栏 **指标校验** 表展示（含 RSI14、MACD、ADX14、ATR14 等）。
 
 短线策略页（`views/2_短线策略.py`）仍展示 15m + 5m 执行级图表。
 
-### 2.4 ICT/PA 核心算法（简化版）
+### 2.4 ICT/PA 核心算法（LuxAlgo SMC）
 
-#### Swing Points
-在左右各 N 根 K 线范围内的局部极值。原报告可能用 3~5 根。
+实现：`src/analysis/luxalgo_smc.py`（移植 LuxAlgo Smart Money Concepts Pine，默认参数）。
 
-`swing_high` / `swing_low` 取**每侧最近 2 个**摆动高/低点（`_recent_swing_range`），避免全窗口 `max/min` 被陈旧极端价位拉偏支撑阻力与 Fib 区间。
+| 模块 | 规则摘要 |
+|------|----------|
+| Swing structure | leg size=50，pivot 在 leg 翻转时记录 |
+| Internal structure | leg size=5，用于 internal OB |
+| BOS/CHoCH | close crossover/crossunder swing pivot |
+| FVG | `low>high[2]` + `close[1]>high[2]` + auto threshold；作废：bull `low<bottom` |
+| OB | 突破时 parsedHigh/Low 极值柱；ATR(200) 高波动过滤；High/Low 作废 |
+| EQH/EQL | size=3，阈值 0.1×ATR(200) |
+| swing_high/low | 最近 swing pivot（非 min/max 全历史） |
 
-#### BOS / CHoCH
-```
-若 close > 前一个 swing high:
-  - 原趋势为 bearish → CHoCH (bullish)
-  - 原趋势为 bullish → BOS (bullish)
-若 close < 前一个 swing low → 对称
-```
-
-#### Fair Value Gap (FVG)
-三根 K 线缺口：
-- 看跌 FVG: candle[i-2].Low > candle[i].High
-- 看涨 FVG: candle[i-2].High < candle[i].Low
-
-#### Order Block (OB)
-推动 K 线前最后一根反向 K 线：
-- 看跌 OB: 大阳 → 阴 → 大阴跌破
-- 看涨 OB: 大阴 → 阳 → 大阳突破
-
-#### Liquidity
-- Equal Highs/Lows: 两个 swing 价位在 ATR/价格缩放容差内接近
-- Stop Hunt: 最近 swing 极值外侧，偏移使用 ATR 缩放并保留最小点数下限
+`ict_pa.analyze_timeframe()` 为对外入口，内部调用 `analyze_luxalgo()`。
 
 #### Premium / Discount
 - 使用主 swing range 中点作为 equilibrium

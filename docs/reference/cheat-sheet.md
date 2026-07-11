@@ -1,4 +1,4 @@
-﻿# 开发者速查表
+# 开发者速查表
 
 一页纸回答：**我想改 X，该动哪个文件、跑什么测试**。
 流水线步骤权威列表见 [pipeline-steps.yaml](./pipeline-steps.yaml)（与代码在 CI 中同步校验）。
@@ -11,7 +11,7 @@
 |---------|--------|--------|--------|
 | `fetch` | 数据拉取 | `data/fetch_pipeline.py` | 否 |
 | `indicators` | 技术指标 | `indicators/technical.py` | 否 |
-| `ict` | ICT 结构 | `analysis/ict_pa.py` | 否 |
+| `ict` | ICT 结构 (LuxAlgo SMC) | `analysis/ict_pa.py`, `analysis/luxalgo_smc.py` | 否 |
 | `analyst_team` | 分析师团队 | `agents/analysts/*` + `factory.py` | 可选 |
 | `bullish` | 看多研究 | `agents/bullish.py` + `factory.py` | 可选 |
 | `bearish` | 看空研究 | `agents/bearish.py` + `factory.py` | 可选 |
@@ -30,9 +30,16 @@
 |-------|--------|------|
 | **启动 Streamlit 应用** | `python run_app.py` | 勿直接 `streamlit run app.py`；见 [AGENTS.md](../../AGENTS.md) |
 | 调整 EMA/VWAP/Fib | `indicators/technical.py` | `pytest tests/unit/test_indicators.py` |
-| 调整 Swing/BOS/OB/FVG | `analysis/ict_pa.py` | 查看 `analyses["5m"]` 或 DEBUG 日志 |
-| 改辩论/共识逻辑 | `agents/debate.py` | `pytest tests/unit/test_debate_coherence.py` |
+| 调整 Lux 检测 (BOS/OB/FVG) | `analysis/luxalgo_smc.py` | `pytest tests/unit/test_luxalgo_smc.py` |
+| 调整 DGT 量价 (POC/VA/S/R) | `analysis/dgt_price_action.py` | `pytest tests/unit/test_dgt_price_action.py` |
+| 调整 PA/SMC 提示词主次 | `analysis/field_glossary.py` | 对照 [smc-pa-narrative.md](../architecture/smc-pa-narrative.md) |
+| 调整周期事实快照 / LLM 结构字段 | `analysis/tf_snapshot.py`, `analysis/technical_context.py` | `pytest tests/unit/test_tf_snapshot.py tests/unit/test_technical_context_lux.py` |
+| 调整五块叙事合并逻辑 | `analysis/narrative_combine.py` | `pytest tests/unit/test_narrative_combine.py` |
+| 调整交易计划信号几何 | `analysis/plan_signals.py` | `pytest tests/unit/test_plan_signals.py` |
+| 调整报告五块文案 (总览/流动性/结构) | `analysis/narrative_sections.py` | `pytest tests/unit/test_narrative_sections.py` |
+| 调整报告流动性/周期汇总事实 | `analysis/report_facts.py` | `pytest tests/unit/test_report_facts.py` |
 | 改交易信号几何 | `analysis/report_engine.py` | `pytest tests/unit/test_financial_review.py` |
+| **主图 OB/FVG 可见范围** | `analysis/chart_zone_filters.py`, `viz/lightweight_chart.py` | `pytest tests/unit/test_chart_projections.py`；见 [chart-layers.md](../architecture/chart-layers.md) |
 | 规则模式一致性门禁 | `tests/tools/coherence_check.py` | `$env:AGENT_MODE="rule"; python tests/tools/coherence_check.py` |
 | 金融实跑快照 | `tests/tools/financial_review_run.py` | 输出 `tests/reports/financial_review_snapshot.json` |
 | 改新闻分析师逻辑 | `agents/analysts/news.py` | `pytest tests/unit/test_analyst_input_density.py` |
@@ -42,7 +49,7 @@
 | LLM 传输/重试 | `agents/llm/base.py` | `pytest tests/unit/test_llm_transport.py` |
 | 改 Streamlit 布局 | `viz/report_views.py` + `viz/dashboard_components.py` | 手工界面 / 用例 catalog `UIL-*` |
 | 改外部数据页 | `viz/external_data_view.py` + `views/4_外部数据.py` | `pytest tests/unit/test_external_data_view.py` |
-| 改运行前配置/缓存/刷新行为 | `viz/streamlit_common.py` + `core/run_config.py` | 用例 catalog `FN-*` / `pytest tests/unit/test_run_config.py` |
+| 改运行前配置/缓存/刷新行为 | `viz/streamlit_common.py` + `core/run_config.py` | 用例 catalog `FN-*` / `pytest tests/unit/test_run_config.py tests/unit/test_streamlit_ensure_report.py` |
 | 改进度条/I/O 展示 | `viz/pipeline_progress.py` | 手工生成报告 |
 | 改流水线顺序 | `core/orchestrator.py` + **`docs/reference/pipeline-steps.yaml`** | `pytest tests/regression/test_doc_pipeline_sync.py` |
 

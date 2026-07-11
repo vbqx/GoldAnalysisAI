@@ -17,6 +17,7 @@ python scripts/export_sample_report.py
 | `metrics` | 对象 | 顶栏现价、日涨跌 | 报告引擎 |
 | `sentiment` | 对象 | 饼图（结构权重，**非回测胜率**） | 报告引擎 |
 | `conclusion` | 对象 | 结论文案、必做事项 | 报告引擎 + 可选 LLM |
+| `narrative_sections` | 对象 | 市场总览、流动性、4H、1H、15m 五块机构化文案 | 规则报告引擎 + 可选 LLM 逐块覆盖 |
 | `timeframes` | 对象 | 各周期结构摘要 | 报告引擎 |
 | `signals` | 数组 | 交易计划卡片 | 报告引擎 |
 | `projections` | 数组 | 路径投影图 | 报告引擎 |
@@ -27,6 +28,32 @@ python scripts/export_sample_report.py
 | `calendar_events` | 数组 | 财经日历 | 金十实时或占位 |
 | `llm_levels` | 数组 | LLM 原始点位建议审计 | `LLM_STAGE_LEVELS` 开启时 |
 | `validated_plans` | 数组 | LLM 点位 validator 接受/拒绝记录 | `level_validator.py` |
+
+---
+
+## `narrative_sections` — 五块机构化文案
+
+五块共用同一契约，主报告直接渲染该字段；原有 `market_overview`、`liquidity`、`timeframes` 继续保存底层事实并兼容旧消费者。
+
+```json
+{
+  "market_overview": {
+    "summary": "现价2659附近，日内主方向偏空。",
+    "context": ["多周期结构存在分歧，等待关键区确认。"],
+    "levels": ["核心观察区：2668-2672。"],
+    "conditions": ["若反抽失败，则观察回落。"],
+    "invalidation": "有效站上上方结构后重新评估。",
+    "source": "rule",
+    "confidence": 1.0,
+    "fallback_reason": null
+  }
+}
+```
+
+- 固定键：`market_overview`、`liquidity`、`4h`、`1h`、`15m`。
+- 每块最多 6 行；`source` 为 `rule`、`llm` 或 `fallback`。
+- LLM 只能引用输入白名单中的价位。缺字段、虚构价位、方向冲突或 Hybrid 置信度不足时，仅回退对应块。
+- 逐块采用与回退原因记录在 `meta.stage_sources.narrative_sections`，完整提示词和原始 JSON 继续记录在 `meta.llm_io`。
 
 ---
 

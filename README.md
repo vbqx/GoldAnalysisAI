@@ -1,4 +1,4 @@
-﻿# GoldAnalysisAI — XAUUSD PA+ICT 分析报告
+# GoldAnalysisAI — XAUUSD PA+ICT 分析报告
 
 基于 Price Action + ICT + SMC 方法论，自动生成 XAUUSD 机构级分析仪表盘。内部流水线参考 [TradingAgents](https://github.com/TauricResearch/TradingAgents)：**Analyst Team**（技术/基本面/新闻/情绪）→ 多空研究 → 辩论 → 交易 → 风控 → 经理；支持规则引擎与 LLM 双轨。
 
@@ -176,7 +176,7 @@ $env:AGENT_MODE="rule"; $env:LLM_ENABLED="false"; python tests/tools/coherence_c
 
 测试分层、用例目录与维护说明见 [docs/testing/strategy.md](docs/testing/strategy.md)、[tests/README.md](tests/README.md)、[tests/cases/catalog.yaml](tests/cases/catalog.yaml)。
 
-**主图说明**：机构报告主图为 **5 分钟 K 线**（K 线 + 成交量 + SMC 结构/支撑阻力叠加）；路径推演在底栏卡片展示。EMA/MACD/RSI 等在流水线中计算并供 agent 使用，在侧边栏 **「指标校验」** 展示，不绘制在主图上。
+**主图说明**：机构报告主图为 **5 分钟 K 线**（K 线 + 成交量 + Lux SMC：近位 5 个 Internal OB + 可见范围 active FVG）。远位多周期结构（如 4H 需求区）进入决策参考（关键流动性、市场总览、`context_levels`），**不画在主图**。详见 [docs/architecture/chart-layers.md](docs/architecture/chart-layers.md)。
 
 ## 免责声明
 
