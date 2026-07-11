@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from src.config import TV_EXCHANGE, TV_SYMBOL
+from src.config import MT5_ENABLED, MT5_SYMBOL, TV_EXCHANGE, TV_SYMBOL
 from src.core.progress import get_progress
 from src.core.types import ExternalFactors
 from src.data.aggregator import merge_external
@@ -83,13 +83,16 @@ def fetch_external_bundle(*, parallel_http: bool = True) -> ExternalFactors:
 def fetch_all_data() -> DataFetchResult:
     """
     Pull everything up front:
-    1. TradingView multi-timeframe OHLCV
+    1. Market multi-timeframe OHLCV (TradingView by default, MT5 when enabled)
     2. News / calendar / DXY / TV social
     """
     prog = get_progress()
     t0 = time.perf_counter()
 
-    prog.start("fetch", "数据拉取", f"K线 · {TV_EXCHANGE}:{TV_SYMBOL}")
+    market_symbol = f"MT5:{MT5_SYMBOL}" if MT5_ENABLED else f"{TV_EXCHANGE}:{TV_SYMBOL}"
+    market_task = "mt5_bars" if MT5_ENABLED else "tradingview_bars"
+
+    prog.start("fetch", "数据拉取", f"K线 · {market_symbol}")
     try:
         raw = fetch_multi_timeframe()
     except RuntimeError as exc:
@@ -118,8 +121,9 @@ def fetch_all_data() -> DataFetchResult:
         "fetch",
         input_text=json.dumps(
             {
-                "symbol": f"{TV_EXCHANGE}:{TV_SYMBOL}",
-                "tasks": ["tradingview_bars", "jin10_mcp", "dxy", "tv_social"],
+                "symbol": market_symbol,
+                "market_symbol": market_symbol,
+                "tasks": [market_task, "jin10_mcp", "dxy", "tv_social"],
             },
             ensure_ascii=False,
             indent=2,

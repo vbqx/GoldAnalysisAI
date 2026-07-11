@@ -32,6 +32,9 @@ class MT5Provider(Protocol):
     def is_available(self) -> bool:
         ...
 
+    def account_info(self) -> dict[str, object]:
+        ...
+
     def fetch_rates(self, timeframe: str, n_bars: int) -> pd.DataFrame:
         ...
 
@@ -51,6 +54,9 @@ class DisabledMT5Provider:
 
     def is_available(self) -> bool:
         return False
+
+    def account_info(self) -> dict[str, object]:
+        raise MT5UnavailableError(self.reason)
 
     def fetch_rates(self, timeframe: str, n_bars: int) -> pd.DataFrame:
         raise MT5UnavailableError(self.reason)
@@ -88,8 +94,28 @@ class MetaTrader5Provider:
             return False
         return True
 
+    def account_info(self) -> dict[str, object]:
+        self._ensure_initialized()
+        info = self._mt5.account_info()
+        if info is None:
+            code, message = self._mt5.last_error()
+            raise MT5UnavailableError(f"MT5 account_info failed: {code} {message}")
+        data = info._asdict()
+        return {
+            "login": data.get("login"),
+            "server": data.get("server"),
+            "name": data.get("name"),
+            "currency": data.get("currency"),
+            "balance": data.get("balance"),
+            "equity": data.get("equity"),
+            "leverage": data.get("leverage"),
+            "trade_mode": data.get("trade_mode"),
+        }
+
     def fetch_rates(self, timeframe: str, n_bars: int) -> pd.DataFrame:
         self._ensure_initialized()
+        if n_bars <= 0:
+            raise ValueError("n_bars must be positive")
         tf_name = self._TIMEFRAMES.get(timeframe)
         if not tf_name:
             raise ValueError(f"Unsupported MT5 timeframe: {timeframe}")
@@ -139,6 +165,32 @@ class MetaTrader5Provider:
             self._mt5.shutdown()
             raise MT5UnavailableError(f"MT5 symbol_select failed: {code} {message}")
         self._initialized = True
+
+
+def _resample_ohlcv(df: pd.DataFrame, rule: str) -> pd.DataFrame:
+    ohlcv = df.resample(rule).agg(
+        {"Open": "first", "High": "max", "Low": "min", "Close": "last", "Volume": "sum"}
+    )
+    return ohlcv.dropna()
+
+
+def fetch_multi_timeframe(provider: MT5Provider | None = None) -> dict[str, pd.DataFrame]:
+    """Fetch the app's standard OHLCV bundle from MT5.
+
+    The pipeline needs 5m, 15m, 1h, 4h and 1d bars. MT5 supplies 5m and 1d
+    directly; the middle timeframes are locally aggregated to keep the data
+    contract identical to the TradingView path.
+    """
+    p = provider or get_mt5_provider()
+    df_5m = p.fetch_rates("5m", 5000)
+    df_1d = p.fetch_rates("1d", 365)
+    return {
+        "5m": df_5m,
+        "15m": _resample_ohlcv(df_5m, "15min"),
+        "1h": _resample_ohlcv(df_5m, "1h"),
+        "4h": _resample_ohlcv(df_5m, "4h"),
+        "1d": df_1d,
+    }
 
 
 def get_mt5_provider(config: MT5Config | None = None) -> MT5Provider:

@@ -1,4 +1,4 @@
-"""Market data fetcher — TradingView (via tvDatafeed)."""
+"""Market data fetcher — TradingView by default, optional MT5 when enabled."""
 
 from __future__ import annotations
 
@@ -7,7 +7,10 @@ from typing import Literal
 
 import pandas as pd
 
+from src.config import MT5_ENABLED, MT5_SYMBOL
 from src.data import tradingview
+from src.data.mt5 import fetch_multi_timeframe as fetch_mt5_multi_timeframe
+from src.data.mt5 import get_mt5_provider
 from src.log import get_logger
 
 log = get_logger(__name__)
@@ -21,10 +24,16 @@ def clear_cache() -> None:
 
 
 def get_active_source() -> str:
+    if MT5_ENABLED:
+        provider = get_mt5_provider()
+        return f"MT5 ({MT5_SYMBOL}, {provider.name})"
     return tradingview.source_label()
 
 
 def fetch_multi_timeframe() -> dict[Timeframe, pd.DataFrame]:
+    if MT5_ENABLED:
+        log.info("fetch_multi_timeframe via MT5 symbol=%s", MT5_SYMBOL)
+        return fetch_mt5_multi_timeframe()  # type: ignore[return-value]
     return tradingview.fetch_multi_timeframe()
 
 
