@@ -146,6 +146,11 @@ def is_advanced_run_config(config: RunConfig) -> bool:
     return cfg.fingerprint() != preset.fingerprint()
 
 
+def default_panel_run_config() -> RunConfig:
+    """Default prefill when the Streamlit config panel is shown (cold start / reconfigure)."""
+    return run_config_for_mode("rule")
+
+
 def run_config_from_env() -> RunConfig:
     """Build defaults from imported environment configuration."""
     from src import config as app_config

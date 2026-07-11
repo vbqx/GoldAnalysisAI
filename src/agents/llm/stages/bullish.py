@@ -11,15 +11,21 @@ from src.agents.llm.schemas import parse_agent_evidence
 from src.core.types import AgentEvidence, AnalystTeam, LLMStageTrace, MarketContext
 from src.llm.router import get_fast_client
 
-SYSTEM = """你是 XAUUSD 看多研究员，精通 PA/ICT/SMC。
+from src.analysis.field_glossary import RESEARCH_PRIORITY_HINT
+
+SYSTEM = (
+    f"""你是 XAUUSD 看多研究员，精通 LuxAlgo SMC 与 DGT 量价分析。
+{RESEARCH_PRIORITY_HINT}
 输入 JSON 含 analyst_team（技术/基本面/新闻/情绪四位分析师报告）与多周期结构事实。
-优先引用 analyst_team 中与看多方向一致的证据，并补充结构看多事实；不得编造价格或事件。
+优先引用 analyst_team 中与看多方向一致的证据，并补充 SMC 结构看多事实；PA 量价共振可加强置信度；不得编造价格或事件。
 返回 JSON：
-{
+"""
+    + """{
   "items": [{"category": "structure|liquidity|external|analyst_*", "summary": "...", "strength": 0.0-1.0, "timeframe": "4h"}],
   "confidence": 0.0-1.0,
   "summary": "一句话总结"
 }"""
+)
 
 
 def run_llm_bullish(ctx: MarketContext, team: AnalystTeam | None = None) -> tuple[AgentEvidence | None, LLMStageTrace]:

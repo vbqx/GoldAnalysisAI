@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import time
 
 from src.agents import factory as agent_factory
@@ -11,7 +12,7 @@ from src.analysis.level_validator import validate_llm_levels
 from src.analysis.report_engine import build_report, build_strategy_plans, compute_trading_signals, parse_risk_events_calendar
 from src.core.parallel import run_parallel
 from src.core.progress import get_progress
-from src.core.types import AgentPipelineMeta, AgentTrace, StageMeta
+from src.core.types import AgentPipelineMeta, AgentTrace, LLMAnalysis, StageMeta
 from src.data.aggregator import assemble_market_context
 from src.data.fetch_pipeline import fetch_all_data
 from src.data.tradingview import compute_price_drift_1d
@@ -123,7 +124,21 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     )
 
     prog.start("debate", "多空辩论")
-    debate = agent_factory.run_debate(bullish, bearish, analyses, pipeline_meta, analyst_team, ctx)
+    debate_signals = run_parallel(
+        [
+            (
+                "debate",
+                lambda: agent_factory.run_debate(
+                    bullish, bearish, analyses, pipeline_meta, analyst_team, ctx
+                ),
+            ),
+            ("signals", lambda: compute_trading_signals(ctx)),
+        ],
+        max_workers=2,
+        label="debate_prep",
+    )
+    debate = debate_signals["debate"]
+    signals = debate_signals["signals"]
     prog.done("debate", f"共识 {debate.consensus_bias} · {debate.consensus_strength:.0%}")
     log.info(
         "debate consensus=%s strength=%.2f",
@@ -132,7 +147,6 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     )
 
     prog.start("trader", "交易员提案")
-    signals = compute_trading_signals(ctx)
     llm_level_proposals = []
     level_validation = []
     if agent_factory.LLM_STAGE_LEVELS and AGENT_MODE != "rule":
@@ -183,6 +197,10 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     report["meta"]["data_source"] = ctx.source_label
     report["meta"]["agent_mode"] = AGENT_MODE
     report["meta"]["stage_sources"] = pipeline_meta.to_dict()
+    report["meta"]["stage_sources"]["narrative_sections"] = {
+        key: {"source": "rule", "accepted": True}
+        for key in ("market_overview", "liquidity", "4h", "1h", "15m")
+    }
     report["llm_levels"] = [p.to_dict() for p in llm_level_proposals]
     report["validated_plans"] = level_validation
     drift_1d = compute_price_drift_1d(raw["5m"], raw["1d"])
@@ -215,11 +233,25 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     if live_cal:
         report["calendar_events"] = live_cal
 
-    if LLM_ENABLED:
+    narrative_llm_enabled = LLM_ENABLED and AGENT_MODE in ("llm", "hybrid")
+    if narrative_llm_enabled:
         prog.start("llm_narrative", "LLM 报告文案", "深度分析生成中…")
-    llm_result = run_llm_analysis(ctx, debate, decision, report)
+    llm_result = (
+        run_llm_analysis(ctx, debate, decision, report)
+        if narrative_llm_enabled
+        else LLMAnalysis(enabled=False)
+    )
     apply_llm_to_report(report, llm_result)
-    if LLM_ENABLED:
+    if narrative_llm_enabled:
+        prog.stage_io(
+            "narrative_validation",
+            label="五块文案校验",
+            input_text=json.dumps(
+                {"mode": AGENT_MODE, "sections": list((llm_result.narrative_sections or {}).keys())},
+                ensure_ascii=False,
+            ),
+            output_text=json.dumps(llm_result.narrative_section_audit, ensure_ascii=False),
+        )
         if llm_result.error:
             prog.fail("llm_narrative", llm_result.error)
         else:

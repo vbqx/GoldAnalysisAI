@@ -21,6 +21,8 @@ from src.core.types import (
 _DEFAULT_ITEM_SOURCE = {
     "technical": "tradingview_ict",
     "structure": "tradingview_ict",
+    "price_action": "dgt_price_action",
+    "lux_panel": "lux_smc_panel",
     "fundamentals": "macro",
     "news": "jin10",
     "sentiment": "tradingview_social",

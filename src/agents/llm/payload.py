@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
+from src.analysis.narrative_combine import build_pa_llm_summary
 from src.analysis.technical_context import build_technical_context, fibonacci_context, timeframe_context
 from src.config import (
     ANALYST_ICT_EVENTS_MAX,
@@ -72,20 +73,27 @@ def technical_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
     ema_block = {}
     if last_5m is not None:
         ema_block = ema_relation(ctx.price, last_5m)
-    payload = build_technical_context(ctx, event_limit=ANALYST_ICT_EVENTS_MAX)
-    payload.update({
+    base = build_technical_context(ctx, event_limit=ANALYST_ICT_EVENTS_MAX)
+    pa = base.get("price_action") or {}
+    return {
         "symbol": "XAUUSD",
         "price": ctx.price,
+        "price_action": pa,
+        "price_action_summary": build_pa_llm_summary(pa, price=ctx.price),
+        "support_resistance": base.get("support_resistance"),
+        "lux_timeframe_panels": base.get("lux_timeframe_panels"),
+        "timeframes": base.get("timeframes"),
+        "structure_sentiment": ctx.derived.get("structure_sentiment") or base.get("structure_sentiment"),
         "metrics": ctx.metrics,
         "market_position": ctx.derived.get("market_position"),
         "jin10_kline_summary": ctx.derived.get("jin10_kline_summary"),
         "spot_cross_check": ctx.derived.get("spot_cross_check"),
         "ema_vwap_relation": ema_block,
-        "technical_input_stats": ctx.context_stats.get("technical_inputs", {}),
         "fibonacci": _fibonacci_block(ctx),
-        "structure_sentiment": ctx.derived.get("structure_sentiment"),
-    })
-    return payload
+        "indicators": base.get("indicators"),
+        "quality": base.get("quality"),
+        "technical_input_stats": ctx.context_stats.get("technical_inputs", {}),
+    }
 
 
 def fundamentals_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
@@ -300,7 +308,7 @@ def level_proposer_payload(
     }
     payload["rule_candidate_signals"] = [_signal_payload(s) for s in rule_signals[:5]]
     payload["level_constraints"] = {
-        "scope": "Use only levels supported by supplied price, ICT structures, FVG/OB zones, swings, liquidity, Fib and candidate signals.",
+        "scope": "Use only levels supported by supplied price, Lux SMC structures, FVG/OB zones, swing H/L, Strong/Weak H/L, liquidity, Fib and candidate signals.",
         "geometry": "SELL requires stop_loss above entry and TP below entry. BUY requires stop_loss below entry and TP above entry.",
         "execution": "Return candidate zones, not market orders. Include invalidation and trigger expectation in reason.",
         "risk": "Prefer TP1 risk/reward >= 1.0; avoid entries already far behind current price.",

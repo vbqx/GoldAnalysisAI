@@ -64,7 +64,8 @@ def _structure_items(analyses: dict[str, TimeframeAnalysis]) -> list[EvidenceIte
                     )
                 )
         for lz in a.liquidity:
-            if "High" in lz.label or "卖方" in lz.label or "Hunt Above" in lz.label:
+            if lz.kind != "swing_high":
+                continue
                 items.append(
                     EvidenceItem(
                         category="liquidity",

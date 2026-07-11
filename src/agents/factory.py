@@ -400,14 +400,31 @@ def run_debate(
     team: AnalystTeam,
     ctx: MarketContext,
 ) -> ResearchDebate:
-    rule_result = rule_debate(bullish, bearish, analyses, team, ctx)
     if not _use_llm_stage(LLM_STAGE_DEBATE):
         get_progress().update("debate", detail="规则引擎")
+        rule_result = rule_debate(bullish, bearish, analyses, team, ctx)
         pipeline.record("debate", StageMeta(source="rule"))
         return rule_result
 
     get_progress().update("debate", detail="LLM 辩论中…")
+    if _needs_rule_baseline() and LLM_PARALLEL_ENABLED:
+        results = run_parallel(
+            [
+                ("rule", lambda: rule_debate(bullish, bearish, analyses, team, ctx)),
+                ("llm", lambda: run_llm_debate(bullish, bearish, analyses, ctx=ctx, team=team)),
+            ],
+            max_workers=2,
+            label="debate",
+        )
+        rule_result = results["rule"]
+        llm_result, trace = results["llm"]
+        return _pick_debate(rule_result, llm_result, trace, pipeline)
+
     llm_result, trace = run_llm_debate(bullish, bearish, analyses, ctx=ctx, team=team)
+    if AGENT_MODE == "llm" and llm_result is not None and not trace.error:
+        pipeline.record("debate", StageMeta(source="llm", llm=trace))
+        return llm_result
+    rule_result = rule_debate(bullish, bearish, analyses, team, ctx)
     return _pick_debate(rule_result, llm_result, trace, pipeline)
 
 

@@ -117,7 +117,7 @@ def _ict_context_evidence(ctx: MarketContext) -> tuple[Bias, list[EvidenceItem]]
             )
 
         liquidity = sorted(
-            analysis.liquidity,
+            (z for z in analysis.liquidity if z.kind in ("swing_high", "swing_low")),
             key=lambda lz: abs(distance_pct(price, float(lz.price))),
         )
         for zone in liquidity[:2]:
@@ -334,6 +334,43 @@ def _level_price_text(level: dict) -> str:
     return f"{float(level.get('price') or 0):.1f}"
 
 
+def _pa_evidence(technical_ctx: dict) -> list[EvidenceItem]:
+    """DGT volume profile / S&R facts for analyst evidence."""
+    items: list[EvidenceItem] = []
+    pa = technical_ctx.get("price_action") or {}
+    block = pa.get("5m") or {}
+    if not block.get("volume_ok", True):
+        return items
+    vp = block.get("volume_profile") or {}
+    if vp.get("poc") is not None:
+        items.append(
+            EvidenceItem(
+                category="technical",
+                summary=(
+                    f"5m 量价 POC {float(vp['poc']):.1f}"
+                    f" · VA {float(vp.get('val') or 0):.1f}-{float(vp.get('vah') or 0):.1f}"
+                ),
+                strength=0.55,
+                timeframe="5m",
+                refs={"poc": vp.get("poc"), "vah": vp.get("vah"), "val": vp.get("val")},
+            )
+        )
+    for lvl in (block.get("sr_levels") or [])[-3:]:
+        price = lvl.get("price")
+        if price is None:
+            continue
+        items.append(
+            EvidenceItem(
+                category="technical",
+                summary=f"5m {lvl.get('label', '量价S/R')} @{float(price):.1f}",
+                strength=0.4,
+                timeframe="5m",
+                refs={"price": price, "kind": lvl.get("kind")},
+            )
+        )
+    return items
+
+
 def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
     technical_ctx = build_technical_context(ctx)
     market_items = MarketDataSource(ctx.enriched).fetch_evidence()
@@ -343,6 +380,7 @@ def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
     indicator_bias, indicator_items = _indicator_evidence(technical_ctx)
     sr_bias, sr_items = _support_resistance_evidence(technical_ctx)
     quality_items = _quality_evidence(technical_ctx)
+    pa_items = _pa_evidence(technical_ctx)
 
     ema_items: list[EvidenceItem] = []
     last_5m = ctx.enriched.get("5m")
@@ -380,6 +418,7 @@ def run_technical_analyst(ctx: MarketContext) -> AnalystReport:
         + fib_items
         + indicator_items
         + sr_items
+        + pa_items
         + quality_items
     )
 

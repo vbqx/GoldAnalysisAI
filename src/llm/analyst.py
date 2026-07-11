@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from typing import Any
+
+import src.config as app_config
+from src.analysis.narrative_sections import validate_and_merge_llm_sections
 
 from src.config import (
     LLM_API_KEY,
@@ -21,6 +25,23 @@ from src.llm.prompts import build_messages
 from src.log import get_logger
 
 log = get_logger(__name__)
+
+
+def _error_result(report: dict[str, Any], error: str) -> LLMAnalysis:
+    sections = deepcopy(report.get("narrative_sections") or {})
+    audit: dict[str, Any] = {}
+    for key, section in sections.items():
+        section["source"] = "fallback"
+        section["fallback_reason"] = error
+        audit[key] = {"source": "fallback", "accepted": False, "fallback_reason": error}
+    return LLMAnalysis(
+        enabled=True,
+        model=LLM_MODEL,
+        provider=LLM_BASE_URL,
+        error=error,
+        narrative_sections=sections,
+        narrative_section_audit=audit,
+    )
 
 
 def _disabled_result(reason: str = "LLM 未启用") -> LLMAnalysis:
@@ -97,6 +118,16 @@ def run_llm_analysis(
         )
         data = _parse_llm_json(raw)
         result = _parse_result(data, model=LLM_MODEL, provider=LLM_BASE_URL)
+        facts = context.get("narrative_facts") or {}
+        sections, section_audit = validate_and_merge_llm_sections(
+            data.get("narrative_sections"),
+            rule_sections=report.get("narrative_sections") or {},
+            facts=facts,
+            mode=app_config.AGENT_MODE,
+            threshold=app_config.LLM_OVERRIDE_THRESHOLD,
+        )
+        result.narrative_sections = sections
+        result.narrative_section_audit = section_audit
         log.info(
             "llm analysis done confidence=%.2f summary_len=%d",
             result.confidence,
@@ -105,15 +136,20 @@ def run_llm_analysis(
         return result
     except LLMClientError as exc:
         log.warning("llm analysis failed: %s", exc)
-        return LLMAnalysis(enabled=True, model=LLM_MODEL, provider=LLM_BASE_URL, error=str(exc))
+        return _error_result(report, str(exc))
     except Exception as exc:
         log.exception("llm analysis unexpected error")
-        return LLMAnalysis(enabled=True, model=LLM_MODEL, provider=LLM_BASE_URL, error=str(exc))
+        return _error_result(report, str(exc))
 
 
 def apply_llm_to_report(report: dict[str, Any], llm: LLMAnalysis) -> None:
     """Attach LLM output to report; optionally enhance rule-based conclusion."""
     report["llm_analysis"] = llm.to_dict()
+
+    if llm.narrative_sections:
+        report["narrative_sections"] = llm.narrative_sections
+        stage_sources = report.setdefault("meta", {}).setdefault("stage_sources", {})
+        stage_sources["narrative_sections"] = llm.narrative_section_audit
 
     if not llm.enabled or llm.error or not LLM_ENHANCE_CONCLUSION:
         return

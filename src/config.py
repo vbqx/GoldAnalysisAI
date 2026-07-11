@@ -174,3 +174,5 @@ LLM_STAGE_BEARISH = _stage_flag_or("LLM_STAGE_BEARISH", LLM_STAGE_RESEARCH)
 LLM_PARALLEL_ENABLED = os.getenv("LLM_PARALLEL_ENABLED", "true").lower() in ("1", "true", "yes")
 LLM_PARALLEL_MAX_WORKERS = max(1, int(os.getenv("LLM_PARALLEL_MAX_WORKERS", "4")))
 LLM_PARALLEL_RESEARCH = os.getenv("LLM_PARALLEL_RESEARCH", "true").lower() in ("1", "true", "yes")
+# Debate output is small JSON; STRONG is default but FAST cuts wall time when models differ.
+LLM_DEBATE_USE_FAST = os.getenv("LLM_DEBATE_USE_FAST", "false").lower() in ("1", "true", "yes")
