@@ -1,7 +1,7 @@
 # GoldAnalysisAI 测试用例设计
 
-> 版本：v1.1 · 2026-06-20  
-> 范围：UI 布局 → 指标显示 → 整体功能 → 性能  
+> 版本：v1.1 · 2026-06-20
+> 范围：UI 布局 → 指标显示 → 整体功能 → 性能
 > 用例明细见 [catalog.yaml](./catalog.yaml)
 
 ---
@@ -198,7 +198,7 @@ pytest tests/integration -m integration -q       # FN + PERF
 
 ## 8. 金融 Review 用例（FIN）
 
-> 详设：[financial-review-cases.md](./financial-review-cases.md) · 来源 [financial-review.md](../../docs/domain/financial-review.md)
+> 详设：[financial-review-cases.md](./financial-review-cases.md) · 来源 [financial-review.md](../../docs/archive/domain/financial-review.md)
 
 | 前缀 | 范围 | 说明 |
 |------|------|------|

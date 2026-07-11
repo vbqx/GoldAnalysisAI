@@ -1,7 +1,7 @@
 # 金融 Review 测试用例设计
 
-> 来源：[docs/domain/financial-review.md](../../docs/domain/financial-review.md) §6  
-> 登记：[catalog.yaml](./catalog.yaml)（`FIN-*` / `FIN-UI-*`）  
+> 来源：[docs/archive/domain/financial-review.md](../../docs/archive/domain/financial-review.md) §6
+> 登记：[catalog.yaml](./catalog.yaml)（`FIN-*` / `FIN-UI-*`）
 > 版本：v1.1 · 2026-06-20
 
 ---
@@ -53,8 +53,8 @@
 
 ### FIN-01 · 风控 approved（F-001）
 
-**模块：** `src/agents/risk.py`  
-**优先级：** P0  
+**模块：** `src/agents/risk.py`
+**优先级：** P0
 **前置：** 构造 `TransactionProposal`（有 signal_indices，`debate_bias` 可变）
 
 | 步骤 | 输入 | 期望 |
@@ -71,7 +71,7 @@
 
 ### FIN-02 · win_rate 语义（F-002）
 
-**模块：** `src/analysis/report_engine.py`  
+**模块：** `src/analysis/report_engine.py`
 **优先级：** P0
 
 | 验收 |
@@ -83,7 +83,7 @@
 
 ### FIN-03 · 信号几何与 risk_reward（F-003）
 
-**模块：** `report_engine.generate_trading_signals`  
+**模块：** `report_engine.generate_trading_signals`
 **优先级：** **P0** · Phase 1-A
 
 对每个 signal：
@@ -101,7 +101,7 @@
 
 ### FIN-04 · 入场/止损几何（F-004）
 
-**模块：** `report_engine` 扫低做多模板  
+**模块：** `report_engine` 扫低做多模板
 **优先级：** P1
 
 | 给定 | 期望 |
@@ -112,14 +112,14 @@
 
 ### FIN-05 · 现价与 5m 一致（F-005）
 
-**已覆盖：** `IND-01`（集成）  
+**已覆盖：** `IND-01`（集成）
 **补充：** 在 report `meta` 记录 `price_drift_1d`（独立 1d vs resample）— 见 FIN-INT-01
 
 ---
 
 ### FIN-06 · 结论无硬编码价位 / 情绪对齐（F-006）
 
-**模块：** `build_conclusion`  
+**模块：** `build_conclusion`
 **优先级：** P1
 
 | 验收 |
@@ -133,7 +133,7 @@
 
 ### FIN-07 · Fibonacci probability 静态（F-007）
 
-**模块：** `src/indicators/technical.py`  
+**模块：** `src/indicators/technical.py`
 **优先级：** P2
 
 | 验收 |
@@ -145,8 +145,8 @@
 
 ### FIN-08 · EMA610 高周期警告（F-008）
 
-**模块：** `indicator_snapshot` / 报告 JSON  
-**优先级：** P2  
+**模块：** `indicator_snapshot` / 报告 JSON
+**优先级：** P2
 **关联：** `IND-12`
 
 | 验收 |
@@ -157,7 +157,7 @@
 
 ### FIN-09 · VWAP Volume 缺失（F-009）
 
-**模块：** `technical.add_vwap`, `verify.indicator_snapshot`  
+**模块：** `technical.add_vwap`, `verify.indicator_snapshot`
 **优先级：** P2
 
 | 场景 | 期望 |
@@ -169,7 +169,7 @@
 
 ### FIN-10 · 占位外部因子（F-010）
 
-**模块：** `data/sources/news.py`, `report.external`  
+**模块：** `data/sources/news.py`, `report.external`
 **优先级：** P2
 
 | 验收 |
@@ -181,7 +181,7 @@
 
 ### FIN-11 · Agent 决策链边界（F-011）
 
-**模块：** `trader`, `debate`, `manager`  
+**模块：** `trader`, `debate`, `manager`
 **优先级：** P2
 
 | 场景 | 期望 |
@@ -199,7 +199,7 @@
 
 ### FIN-13 · 辩论与结构情绪同向（F-013）
 
-**模块：** `src/agents/debate.py`  
+**模块：** `src/agents/debate.py`
 **优先级：** **P0** · Phase 1-B
 
 | 给定（2026-06-20 快照） | 期望 |
@@ -215,7 +215,7 @@
 
 ### FIN-14 · 交易员尊重结构主导（F-014）
 
-**模块：** `src/agents/trader.py`  
+**模块：** `src/agents/trader.py`
 **优先级：** P1 · Phase 1-C
 
 | 给定 | 期望 |
@@ -246,12 +246,12 @@
 
 ### FIN-INT-03 · 规则模式一致性门禁（F-003, F-013, F-014）
 
-**工具：** `tests/tools/coherence_check.py`  
+**工具：** `tests/tools/coherence_check.py`
 **门禁：** 退出码 0，`issues` 为空
 
 ### FIN-INT-05 · 实跑快照回归
 
-**工具：** `tests/tools/financial_review_run.py`  
+**工具：** `tests/tools/financial_review_run.py`
 **验收：** `signals[*].geom_ok` 全 true；`debate.consensus_bias` 与 sentiment 主导同向
 
 ---

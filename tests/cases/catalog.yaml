@@ -652,7 +652,7 @@ cases:
 
     steps:
 
-      - 启动 streamlit run app.py
+      - 启动 python run_app.py（勿直接 streamlit run app.py）
 
       - 确认 layout 宽屏、侧边栏三页链接可见
 
@@ -1362,7 +1362,7 @@ cases:
 
     maps_to: [FN-30]
 
-  # ── 金融 Review（FIN）docs/domain/financial-review.md ────────────
+  # ── 金融 Review（FIN）docs/archive/domain/financial-review.md ────────────
   - id: FIN-01
     suite: unit
     layer: financial
@@ -1532,4 +1532,3 @@ cases:
     page: all
     priority: P1
     automated: false
-

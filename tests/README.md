@@ -1,6 +1,6 @@
 # GoldAnalysisAI 测试体系
 
-测试代码、用例目录与开发工具与业务代码 (`src/`) 分离，统一放在 `tests/` 下。
+测试代码、用例目录与开发工具与业务代码 (`src/`) 分离，统一放在 `tests/` 下。测试分层的权威说明见 [docs/testing/strategy.md](../docs/testing/strategy.md)。
 
 ## 目录结构
 
@@ -23,8 +23,8 @@ tests/
 │   ├── chart_compare.py      # 生成对比用 HTML
 │   ├── coherence_check.py    # 规则模式流水线一致性检查
 │   └── github/               # Issue 批量创建/关单
-└── reports/                  # 测试输出（gitignore）
-    └── coherence_check.json  # 一致性检查报告（由 coherence_check.py 生成）
+└── reports/                  # 测试输出边界：默认 gitignore，只保留人工挑选审计报告和 .gitkeep
+    └── .gitkeep
 ```
 
 ## 快速开始
@@ -33,16 +33,14 @@ tests/
 # 安装开发依赖（含 pytest）
 pip install -r requirements-dev.txt
 
-# 快速测试：单元 + 回归（默认，无网络，约 88 项）
-python tests/run.py
+# fast：单元 + 回归（无网络，日常门禁）
+python tests/run.py --fast
 
-# 金融 Review 单测（FIN-*）
+# scenario：按功能域专项
 python tests/run.py --financial
-
-# 外部 API 冒烟（DXY / 金十 MCP / TV 社媒，需网络）
 python tests/run.py --external
 
-# 完整测试：含流水线集成（需 TradingView + .env）
+# release：含流水线集成（需 TradingView + .env）
 python tests/run.py --full
 
 # 仅单元 / 仅回归 / 仅集成
@@ -73,21 +71,21 @@ streamlit run tests/dashboard.py --server.port 8502
 
 打开 http://localhost:8502 ，选择套件后点击「开始」。支持 **快速**、**金融 Review（FIN-*）**、**集成** 等套件；界面约 1 秒刷新。
 
-## Phase 门禁（金融 Review）
+## 三层测试
 
-| 阶段 | 必跑命令 | 通过标准 |
-|------|----------|----------|
-| **P0（日常/CI）** | `coherence_check.py`（rule 模式） | exit 0，`issues: []` |
-| **发版前** | `python tests/run.py --financial` + `coherence_check` | FIN-* 全绿 + 零 issue |
-| **完整回归** | `python tests/run.py --full` | 含集成；PERF ≤ 320s |
+| 层级 | 命令 | 用途 |
+|------|------|------|
+| fast | `python tests/run.py --fast` | 日常门禁：单元 + 回归，无网络 |
+| scenario | `python tests/run.py --financial` / `--external` / 指定 pytest | 本轮触及模块专项 |
+| release | `python tests/run.py --full` + UI 冒烟 + 外部 API | 发版前完整验收 |
 
-修复路径权威文档：[docs/domain/financial-review.md §7](../docs/domain/financial-review.md#7-修复路径规划2026-06-20)。
+金融 Review 的历史修复路径已归档：[docs/archive/domain/financial-review.md §7](../docs/archive/domain/financial-review.md#7-修复路径规划2026-06-20)。
 
 ## 用例维护
 
 1. 在 [`cases/test-plan.md`](cases/test-plan.md) 设计场景，在 [`cases/catalog.yaml`](cases/catalog.yaml) 登记用例（`UIL-*` / `IND-*` / `FN-*` / `FIN-*` / `PERF-*` / `UT-*` / `IT-*` / `RG-*`）
 2. 在对应子目录实现测试代码
-3. 本地 `python tests/run.py` 验证
+3. 本地 `python tests/run.py --fast` 验证
 4. 关 Issue 时在评论中引用用例 ID（如 `RG-03`）
 
 ## 开发工具
