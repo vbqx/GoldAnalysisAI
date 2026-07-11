@@ -16,7 +16,7 @@ from src.agents.llm.payload import (
     sentiment_analyst_payload,
     technical_analyst_payload,
 )
-from src.analysis.ict_pa import FairValueGap, LiquidityZone, OrderBlock, TimeframeAnalysis
+from src.analysis.ict_pa import FairValueGap, LiquidityZone, OrderBlock, StructureEvent, TimeframeAnalysis
 from src.agents.llm.schemas import parse_analyst_report
 from src.core.types import (
     AgentEvidence,
@@ -83,7 +83,8 @@ def _technical_ctx() -> MarketContext:
             order_blocks=[OrderBlock(high=106.0, low=104.0, direction="bearish", time=now)],
             fvgs=[FairValueGap(high=105.5, low=104.5, direction="bearish", time=now)],
             active_fvgs=[FairValueGap(high=105.5, low=104.5, direction="bearish", time=now)],
-            liquidity=[LiquidityZone(price=106.5, kind="stop_hunt_high", label="Stop Hunt Above Highs")],
+            events=[StructureEvent("BOS", "bearish", 102.0, now, scope="internal")],
+            liquidity=[LiquidityZone(price=106.5, kind="swing_high", label="摆动高点 / 上方流动性")],
             swing_high=110.0,
             swing_low=90.0,
             premium_discount="premium",
@@ -211,6 +212,12 @@ def test_technical_analyst_payload_uses_shared_context() -> None:
     assert payload["support_resistance"]["nearest_resistance"]
     assert payload["support_resistance"]["nearest_support"]
     assert payload["timeframes"][0]["timeframe"] == "1d"
+    assert set(payload["lux_timeframe_panels"]) == {"4h", "1h", "15m"}
+    assert payload["lux_timeframe_panels"]["4h"]["bos_list"]
+    assert "price_action" in payload
+    assert "price_action_summary" in payload
+    assert payload["price_action_summary"]["5m"]["poc"] is not None
+    assert "_hint" in payload["price_action_summary"]
 
 
 def test_narrative_context_includes_shared_technical_context() -> None:

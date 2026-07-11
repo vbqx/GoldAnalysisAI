@@ -6,11 +6,20 @@ from src.core.run_config import (
     RunConfig,
     apply_run_config,
     coerce_run_config,
+    default_panel_run_config,
     is_advanced_run_config,
     run_config_for_mode,
     run_config_from_env,
     run_config_widget_state,
 )
+
+
+def test_default_panel_run_config_is_rule_engine() -> None:
+    cfg = default_panel_run_config()
+    state = run_config_widget_state(cfg)
+    assert cfg.agent_mode == "rule"
+    assert state["run_config_mode_label"] == "规则引擎"
+    assert cfg.llm_enabled is False
 
 
 def test_rule_run_config_disables_llm_stages() -> None:

@@ -13,9 +13,7 @@ from src.agents.risk import run_risk_team
 from src.analysis.ict_pa import (
     FairValueGap,
     StructureEvent,
-    SwingPoint,
     TimeframeAnalysis,
-    _liquidity_from_swings,
     analyze_timeframe,
 )
 from src.analysis.report_engine import TradingSignal, build_conclusion, build_strategy_plans, generate_trading_signals, trend_projections
@@ -144,7 +142,7 @@ def test_sweep_long_requires_reclaim_and_structure_shift() -> None:
 
     assert long_sig.trigger_confirmed is True
     assert long_sig.status == "active"
-    assert any("confirmed" in reason for reason in long_sig.score_reasons)
+    assert any("扫低收回已确认" in reason or "PA sweep" in reason for reason in long_sig.score_reasons)
 
 
 @pytest.mark.financial
@@ -331,21 +329,25 @@ def test_analyze_timeframe_carries_atr_and_recent_prices() -> None:
     assert analysis.recent_low == pytest.approx(100.5)
 
 
+
 @pytest.mark.financial
-def test_liquidity_stop_hunt_offset_scales_with_atr() -> None:
-    ts = pd.Timestamp("2026-06-01")
-    swings = [
-        SwingPoint(1, 4200.0, "low", ts),
-        SwingPoint(2, 4210.0, "high", ts),
-        SwingPoint(3, 4201.0, "low", ts),
-        SwingPoint(4, 4212.0, "high", ts),
-    ]
-
-    zones = _liquidity_from_swings(swings, price=4210.0, atr=40.0, recent_low=4191.0)
-    stop_low = next(z for z in zones if z.kind == "stop_hunt_low")
-
-    assert stop_low.price == 4191.0
-    assert stop_low.swept is True
+def test_liquidity_uses_swing_high_low() -> None:
+    idx = pd.date_range("2026-06-01", periods=30, freq="5min")
+    df = pd.DataFrame(
+        {
+            "Open": [4200.0 + (i % 3) for i in range(30)],
+            "High": [4202.0 + (i % 3) for i in range(30)],
+            "Low": [4198.0 + (i % 3) for i in range(30)],
+            "Close": [4201.0 + (i % 3) for i in range(30)],
+            "Volume": [100] * 30,
+        },
+        index=idx,
+    )
+    analysis = analyze_timeframe(df, "5m")
+    kinds = {z.kind for z in analysis.liquidity}
+    assert kinds <= {"swing_high", "swing_low"}
+    for zone in analysis.liquidity:
+        assert "摆动" in zone.label
 
 
 @pytest.mark.financial
@@ -403,41 +405,72 @@ def test_fin_09_indicator_notes_surface_in_report_meta() -> None:
     from src.analysis.report_engine import build_report
 
     analyses = {
-        tf: TimeframeAnalysis(tf, "ranging", "—", "—", swing_high=4300.0, swing_low=4200.0)
+        tf: TimeframeAnalysis(
+            tf,
+            "ranging",
+            "—",
+            "—",
+            events=[StructureEvent("BOS", "bearish", 4240.0, idx[-2], scope="internal")],
+            swing_high=4300.0,
+            swing_low=4200.0,
+        )
         for tf in ("5m", "15m", "1h", "4h", "1d")
     }
     data = {tf: df for tf in ("5m", "15m", "1h", "4h", "1d")}
     report = build_report(data, analyses, signals=[])
     notes = report["meta"].get("indicator_notes", [])
     assert any("VWAP" in n or "Volume" in n for n in notes)
+    for tf in ("4h", "1h", "15m"):
+        panel = report["timeframes"][tf]
+        assert panel["trend"] == analyses[tf].trend
+        assert panel["bos_list"][0]["kind"] == "BOS"
+        assert "ema_relation" in panel
+        assert {"strong_high", "weak_high", "strong_low", "weak_low"} <= set(panel)
 
 
 @pytest.mark.financial
 def test_fin_03_fvg_below_price_snapshot_regression() -> None:
-    """FIN-03: FVG zone below price — TP1 must stay below entry (2026-06-20 snapshot)."""
+    """FIN-03: 规则 PA 做空几何仍须满足 SL > entry > TP1."""
     ts = pd.Timestamp("2026-06-01")
-    fvg = FairValueGap(high=4149.90, low=4149.76, direction="bearish", time=ts)
     a5 = TimeframeAnalysis(
         timeframe="5m",
         trend="bearish",
         bos="—",
         choch="—",
-        fvgs=[fvg],
-        active_fvgs=[fvg],
         swing_high=4595.33,
         swing_low=4023.87,
     )
     a15 = TimeframeAnalysis("15m", "bearish", "—", "—", swing_high=4595.33, swing_low=4023.87)
+    price_action = {
+        "5m": {
+            "volume_ok": True,
+            "sr_levels": [
+                {
+                    "price": 4162.0,
+                    "direction": "resistance",
+                    "kind": "consecutive_sr",
+                    "label": "量价阻力",
+                    "time": ts.isoformat(),
+                }
+            ],
+            "volume_profile": {"poc": 4150.0, "vah": 4162.0, "val": 4140.0},
+        }
+    }
     signals = generate_trading_signals(
-        4155.40, a5, a15, 4595.33, 4023.87, {"bearish": 45.0, "bullish": 25.0, "ranging": 30.0}
+        4155.40,
+        a5,
+        a15,
+        4595.33,
+        4023.87,
+        {"bearish": 45.0, "bullish": 25.0, "ranging": 30.0},
+        price_action=price_action,
     )
     sell = next((s for s in signals if s.name == "激进反抽做空"), None)
     assert sell is not None
     entry_mid = (sell.entry_low + sell.entry_high) / 2
     assert sell.stop_loss > entry_mid > sell.take_profits[0]
     assert sell.risk_reward != "N/A"
-    assert sell.status == "invalid"
-    assert any("越过" in reason for reason in sell.score_reasons)
+    assert sell.setup_type == "pa_resistance_short"
 
 
 @pytest.mark.financial
@@ -524,32 +557,46 @@ def test_signal_quality_fields_are_present() -> None:
 @pytest.mark.financial
 def test_crossed_stop_signal_is_invalid_not_watch() -> None:
     ts = pd.Timestamp("2026-06-01")
-    fvg = FairValueGap(high=4183.38, low=4181.63, direction="bearish", time=ts)
     a5 = TimeframeAnalysis(
         timeframe="5m",
         trend="bearish",
         bos="?",
         choch="?",
-        fvgs=[fvg],
-        active_fvgs=[fvg],
         swing_high=4215.0,
         swing_low=4140.0,
     )
     a15 = TimeframeAnalysis("15m", "bearish", "?", "?", swing_high=4215.0, swing_low=4140.0)
+    price_action = {
+        "5m": {
+            "volume_ok": True,
+            "sr_levels": [
+                {
+                    "price": 4200.0,
+                    "direction": "resistance",
+                    "kind": "consecutive_sr",
+                    "label": "量价阻力",
+                    "time": ts.isoformat(),
+                }
+            ],
+            "volume_profile": {"poc": 4188.0, "vah": 4200.0, "val": 4175.0},
+        }
+    }
 
     signals = generate_trading_signals(
-        4187.77,
+        4205.0,
         a5,
         a15,
         4215.0,
         4140.0,
         {"bearish": 70.0, "bullish": 20.0, "ranging": 10.0},
+        price_action=price_action,
     )
 
     assert signals
-    assert signals[0].status == "invalid"
-    assert signals[0].stop_loss < 4187.77
-    assert "已越过止损" in "；".join(signals[0].score_reasons)
+    sell = next(s for s in signals if s.direction == "SELL")
+    assert sell.status == "invalid"
+    assert sell.stop_loss <= 4205.0
+    assert "已越过止损" in "；".join(sell.score_reasons)
 
 
 @pytest.mark.financial
@@ -617,7 +664,7 @@ def test_trading_plan_ui_surfaces_status_and_score() -> None:
         ]
     )
     assert "候选区" in html
-    assert "信号质量" in html
+    assert "置信" in html
     assert "等待扫低流动性后收回" in html
 
 
@@ -644,4 +691,66 @@ def test_trading_plan_ui_marks_llm_levels() -> None:
         ]
     )
 
-    assert "LLM点位" in html
+    assert "LLM" in html
+
+
+def test_trading_plan_ui_renders_three_unified_cards() -> None:
+    signals = [
+        {
+            "name": "激进反抽做空",
+            "direction": "SELL",
+            "direction_cn": "卖出",
+            "entry_low": 4210.0,
+            "entry_high": 4215.0,
+            "stop_loss": 4220.0,
+            "take_profits": [4200.0, 4190.0, 4180.0],
+            "risk_reward": "1:2.0",
+            "sentiment_bias_pct": "62%",
+            "theme": "short",
+            "signal_role": "primary",
+            "status": "candidate",
+            "score_grade": "B",
+            "score_total": 68.0,
+            "trigger_note": "等待反抽失败",
+        },
+        {
+            "name": "保守反抽做空",
+            "direction": "SELL",
+            "direction_cn": "卖出",
+            "entry_low": 4220.0,
+            "entry_high": 4225.0,
+            "stop_loss": 4230.0,
+            "take_profits": [4210.0],
+            "risk_reward": "1:1.5",
+            "sentiment_bias_pct": "57%",
+            "theme": "short",
+            "signal_role": "alternate",
+            "status": "candidate",
+            "score_grade": "C",
+            "score_total": 55.0,
+            "trigger_note": "等待反抽失败",
+        },
+        {
+            "name": "右侧扫低做多",
+            "direction": "BUY",
+            "direction_cn": "买入",
+            "entry_low": 4195.0,
+            "entry_high": 4200.0,
+            "stop_loss": 4191.0,
+            "take_profits": [4215.0],
+            "risk_reward": "1:1.5",
+            "sentiment_bias_pct": "28%",
+            "theme": "long",
+            "signal_role": "alternate",
+            "status": "candidate",
+            "score_grade": "C",
+            "score_total": 52.0,
+            "trigger_note": "等待 sweep + reclaim",
+        },
+    ]
+    html = render_trading_plans(signals)
+    assert "方案 A（主策略）" in html
+    assert "方案 B（备选）" in html
+    assert "方案 C（逆势）" in html
+    assert html.count("plan-card") == 3
+    assert html.count("置信") == 3

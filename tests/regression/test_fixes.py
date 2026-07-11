@@ -60,10 +60,12 @@ def test_subpage_waiting_ui_has_hero_and_live_panel() -> None:
 
 @pytest.mark.regression
 def test_ensure_report_reruns_on_complete() -> None:
-    """RG-05: st.rerun after generation (#3)."""
+    """RG-05: fragment rerun on generation complete; no double-rerun blank (#3)."""
     common_src = (ROOT / "src" / "viz" / "streamlit_common.py").read_text(encoding="utf-8")
     assert "st.rerun()" in common_src
     assert "Fix #3" in common_src
+    assert "_store_report_bundle" in common_src
+    assert "            placeholder.empty()" not in common_src
 
 
 @pytest.mark.regression
@@ -78,7 +80,8 @@ def test_report_generation_requires_run_config_panel() -> None:
     assert "RUN_CONFIG_WIDGETS_SEEDED_KEY" in common_src
     assert "_seed_run_config_widgets_if_needed" in common_src
     assert "run_config_widget_state" in run_config_src
-    assert "coerce_run_config" in run_config_src
+    assert "default_panel_run_config" in common_src
+    assert "默认选择规则引擎" in common_src
     assert "apply_run_config" in run_config_src
 
 

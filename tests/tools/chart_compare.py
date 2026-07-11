@@ -20,7 +20,6 @@ def main() -> None:
         data["5m"],
         analysis=analyses["5m"],
         report=report,
-        macro_analysis=analyses["15m"],
         timeframe="5m",
         symbol="XAUUSD",
         exchange="OANDA",
