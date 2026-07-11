@@ -33,4 +33,4 @@ jobs:
       - name: Verify sample report JSON is valid
         run: |
           python scripts/export_sample_report.py
-          python -c "import json; json.load(open('docs/examples/sample-report.json'))"
+          python -c "import json; json.load(open('docs/reference/examples/sample-report.json', encoding='utf-8'))"
