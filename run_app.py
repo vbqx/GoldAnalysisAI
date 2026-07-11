@@ -131,6 +131,41 @@ def _pids_listening_on_port(port: int) -> list[int]:
     return pids
 
 
+def _command_line_for_pid(pid: int) -> str:
+    if sys.platform == "win32":
+        ps = (
+            "Get-CimInstance Win32_Process -Filter "
+            f"\"ProcessId={pid}\" | Select-Object -ExpandProperty CommandLine"
+        )
+        try:
+            return subprocess.check_output(
+                ["powershell", "-NoProfile", "-Command", ps],
+                text=True,
+                errors="replace",
+                stderr=subprocess.DEVNULL,
+                creationflags=CREATE_NO_WINDOW,
+            ).strip()
+        except Exception:
+            return ""
+
+    try:
+        return subprocess.check_output(
+            ["ps", "-p", str(pid), "-o", "args="],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return ""
+
+
+def _is_project_streamlit_pid(pid: int, root: Path) -> bool:
+    cmd = _command_line_for_pid(pid).lower()
+    if "streamlit" not in cmd:
+        return False
+    root_marker = str(root).lower()
+    return "app.py" in cmd or root_marker in cmd
+
+
 def _streamlit_pids(root: Path) -> list[int]:
     pids: list[int] = []
     my_pid = os.getpid()
@@ -149,6 +184,7 @@ def _streamlit_pids(root: Path) -> list[int]:
                 ["powershell", "-NoProfile", "-Command", ps],
                 text=True,
                 errors="replace",
+                stderr=subprocess.DEVNULL,
                 creationflags=CREATE_NO_WINDOW,
             )
         except Exception:
@@ -198,7 +234,11 @@ def _terminate_pid(pid: int) -> None:
 
 def stop_stale_streamlit(port: int) -> None:
     targets: list[int] = []
-    for pid in _streamlit_pids(ROOT) + _pids_listening_on_port(port):
+    streamlit_pids = _streamlit_pids(ROOT)
+    port_streamlit_pids = [
+        pid for pid in _pids_listening_on_port(port) if _is_project_streamlit_pid(pid, ROOT)
+    ]
+    for pid in streamlit_pids + port_streamlit_pids:
         if pid not in targets:
             targets.append(pid)
 
@@ -224,11 +264,12 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     os.chdir(ROOT)
+    args = parse_args()
+
     init_dev_env()
     load_dotenv(ROOT / ".env")
     ensure_streamlit_config()
 
-    args = parse_args()
     if args.port > 0:
         port = args.port
     else:

@@ -3,7 +3,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
-if [[ -x "$ROOT/.venv/bin/python" ]]; then
+if [[ -x "$ROOT/.venv/bin/python" ]] && "$ROOT/.venv/bin/python" -c "import sys" >/dev/null 2>&1; then
   exec "$ROOT/.venv/bin/python" run_app.py "$@"
 fi
-exec python3 run_app.py "$@"
+exec "${PYTHON:-python3}" run_app.py "$@"
