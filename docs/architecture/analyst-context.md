@@ -1,4 +1,4 @@
-# Analyst Team 输入密度
+﻿# Analyst Team 输入密度
 
 Analyst Team（技术 / 基本面 / 新闻 / 情绪）共享三层信息架构。文档索引见 [README.md](../README.md)。
 
@@ -125,4 +125,5 @@ fetch_all_data()
 
 ## 专项边界
 
-流动性质量专项不在本文重复维护。实现边界见 [architecture.md §8.2](./architecture.md#82-流动性质量层)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)，金融验收见 [financial-review.md](../domain/financial-review.md#2026-06-21-流动性可靠性验收口径)。
+流动性质量专项不在本文重复维护。实现边界见 [architecture.md §8.2](./architecture.md#82-流动性质量层)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)，金融验收见 [financial-review.md](../archive/domain/financial-review.md#2026-06-21-流动性可靠性验收口径)。
+

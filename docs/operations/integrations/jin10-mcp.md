@@ -1,6 +1,6 @@
 # 金十数据 MCP 接入
 
-流水线（`NewsDataSource` → `jin10_feed.py`）通过 **金十官方 MCP** 拉取快讯、资讯与财经日历。文档索引见 [README.md](../README.md)。
+流水线（`NewsDataSource` → `jin10_feed.py`）通过 **金十官方 MCP** 拉取快讯、资讯与财经日历。文档索引见 [README.md](../../README.md)。
 
 ## 1. 申请 Token
 

@@ -1,6 +1,6 @@
-# GoldAnalysisAI 路线图
+﻿# GoldAnalysisAI 路线图
 
-本文只维护“计划、优先级、验收标准”。稳定架构事实放在 [architecture.md](../design/architecture.md)，LLM 阶段细节放在 [llm-agents.md](../design/llm-agents.md)，金融风险发现与验收记录放在 [financial-review.md](../domain/financial-review.md)。
+本文只维护“计划、优先级、验收标准”。稳定架构事实放在 [architecture.md](../architecture/architecture.md)，LLM 阶段细节放在 [llm-agents.md](../architecture/llm-agents.md)，金融风险发现与验收记录放在 [financial-review.md](../archive/domain/financial-review.md)。
 
 ---
 
@@ -24,12 +24,12 @@
 | 优先级 | 任务 | 状态 | 参考 |
 |--------|------|------|------|
 | P0 | Analyst Team 规则版 + 接入流水线 | 已完成 | `src/agents/analysts/` |
-| P0 | LLM 研究 + 辩论 + 流式 I/O | 已完成 | [llm-agents.md](../design/llm-agents.md) |
+| P0 | LLM 研究 + 辩论 + 流式 I/O | 已完成 | [llm-agents.md](../architecture/llm-agents.md) |
 | P1 | 信号生成去重，Trader 与 report 共用候选信号 | 已完成 | `src/analysis/report_engine.py` |
 | P1 | Analyst Team LLM 双轨，每个分析师独立 prompt | 已完成 | `src/agents/llm/stages/analysts/` |
 | P1 | 真实 News / DXY / 社媒 API | 已完成 | `src/data/sources/` |
 | P1 | Bull/Bear 与 Analyst Team 并行 | 已完成 | `src/agents/` |
-| P1 | LLM 点位提议 + 规则 validator | 已完成 | [architecture.md §8.1](../design/architecture.md#81-llm-点位层) |
+| P1 | LLM 点位提议 + 规则 validator | 已完成 | [architecture.md §8.1](../architecture/architecture.md#81-llm-点位层) |
 | P2 | LLM 交易员 / 风控 / 经理 | 已完成基础接入 | `src/agents/llm/stages/` |
 | P3 | ICT Interpreter 完整标准化 | 计划中 | `src/analysis/ict_pa.py` |
 
@@ -107,40 +107,17 @@
 
 ## GUI 信息架构优化
 
-目标：把界面从“完整调试结果展示”升级为“先给交易判断，再给证据链审计”。用户进入页面后应先看到方向、状态、关键价位和失效条件；LLM I/O、agent trace、完整 JSON 保留为二级审计层。
+目标：继续把界面维持在“先给交易判断，再给证据链审计”的结构。GUI-1 至 GUI-5 已完成首轮落地；历史验收快照已归档到 [gui-acceptance-2026-07-08.md](../archive/gui-acceptance-2026-07-08.md)。
+
+后续只保留增量优化：
 
 | 阶段 | 内容 | 状态 |
 |------|------|------|
-| GUI-1 | 首屏决策摘要：当前价、方向、信号状态、主计划、失效条件、数据/LLM 状态 | 已完成 |
-| GUI-2 | 交易计划卡重构：突出 `active/watch/invalid`，把主计划与备选计划分层展示 | 已完成 |
-| GUI-3 | 生成配置简化：默认显示三种运行模式，高级 stage matrix 折叠到调试区 | 已完成 |
-| GUI-4 | LLM 决策链分层：默认阶段摘要，生成 I/O 与完整 JSON 作为审计层 | 已完成 |
-| GUI-5 | 响应式收敛：窄屏下核心摘要、价位、风险按固定顺序单列展示 | 已完成 |
+| GUI-6 | 将关键视觉验收沉淀为更稳定的截图/DOM 冒烟流程 | 计划中 |
+| GUI-7 | 补齐移动端核心路径的自动化检查 | 计划中 |
+| GUI-8 | 将手动验收项同步到 `tests/cases/catalog.yaml` | 计划中 |
 
-验收标准：
-
-1. 首页首屏无需滚动即可判断方向、计划状态和主失效条件。
-2. `invalid` 交易信号在主计划区显式降级，不再像可执行计划一样展示。
-3. 高级 LLM 调试选项不干扰默认生成路径。
-4. 外部数据缺失、LLM key 缺失、信号过期等异常状态有明确视觉层级。
-
-当前 GUI 专项 `GUI-1` 至 `GUI-5` 已完成首轮落地；后续只保留增量优化和视觉验收修正。
-
-### 2026-07-08 GUI 验收记录
-
-已执行：
-
-1. 网络恢复后重跑真实数据链路：Streamlit `localhost:8501` 可访问，成功生成 XAUUSD 报告，时间戳为 `2026-07-08 23:31 (UTC+8)`。
-2. 逐页桌面宽度 `1440x1200` 与移动宽度 `390x900` 检查：首页、外部数据、短线策略、LLM 决策链均非空白页，无 Streamlit 异常、无横向溢出、无关键组件越界。
-3. 首页检查：`decision-summary`、`primary-plan-focus`、备选计划卡正常渲染；主计划不再在焦点卡和下方列表重复展示。
-4. 外部数据页检查：`external-feed` 正常渲染，新闻、财经日历、DXY、社媒/TradingView 二次加工摘要在同一审计区内展示。
-5. 短线策略页检查：`decision-summary`、`primary-plan-focus`、`strategy-layout-anchor`、价位阶梯正常渲染；移动端按单列顺序收敛。
-6. LLM 决策链页检查：`agent-stage-summary` 正常渲染，阶段摘要优先展示，生成 I/O 与完整 JSON 保持在审计层。
-7. 代码级检查：`src/viz` 相关模块 `py_compile` 通过；样例 report 组件审计通过。
-
-残余说明：
-
-- 真实链路耗时受 TradingView、外部新闻源与 LLM 响应影响；本次第二轮完整回归耗时较长，但最终成功进入报告态并完成四页 GUI 验收。
+验收标准保持不变：首屏能判断方向、计划状态和主失效条件；异常状态有清晰视觉层级；高级 LLM 调试不干扰默认生成路径。
 
 ---
 
@@ -155,4 +132,3 @@
 3. 交易员、风控、经理结论必须写入 `agent_trace.stage_meta` 和 `meta.llm_io`，供 UI 决策链审计。
 4. 与规则风控冲突时，默认采用更保守结论；后续可加入显式 conflict resolver。
 5. 实盘执行仍未启用；MT5 账号连接接口已接入，下一步是模拟下单、订单回执审计和风控熔断。
-

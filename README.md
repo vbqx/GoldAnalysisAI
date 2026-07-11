@@ -1,4 +1,4 @@
-# GoldAnalysisAI — XAUUSD PA+ICT 分析报告
+﻿# GoldAnalysisAI — XAUUSD PA+ICT 分析报告
 
 基于 Price Action + ICT + SMC 方法论，自动生成 XAUUSD 机构级分析仪表盘。内部流水线参考 [TradingAgents](https://github.com/TauricResearch/TradingAgents)：**Analyst Team**（技术/基本面/新闻/情绪）→ 多空研究 → 辩论 → 交易 → 风控 → 经理；支持规则引擎与 LLM 双轨。
 
@@ -16,10 +16,15 @@ pip install -r requirements.txt
 copy .env.example .env          # Windows
 # cp .env.example .env
 
-streamlit run app.py
+# 启动（官方：跨平台 run_app.py；勿直接 streamlit run app.py）
+python run_app.py
+# Windows 快捷: .\run_app.bat
+# Linux/macOS:   ./run_app.sh
 ```
 
 浏览器打开 `http://localhost:8501`。启动后先在 **生成前配置** 面板选择规则 / LLM / 混合模式，点击「开始生成报告」后才拉取数据并生成报告。
+
+> **AI / 自动化**：见 [AGENTS.md](AGENTS.md)；统一用 `python run_app.py` 启动。
 
 ## 多页面导航
 
@@ -40,20 +45,24 @@ streamlit run app.py
 
 | 文档 | 说明 |
 |------|------|
-| **[docs/getting-started/onboarding.md](docs/getting-started/onboarding.md)** | **开发者上手指南（建议先读）** |
-| [docs/getting-started/setup.md](docs/getting-started/setup.md) | 环境搭建与运行 |
-| [docs/getting-started/walkthrough.md](docs/getting-started/walkthrough.md) | UI 操作动线与序列图 |
-| [docs/reference/cheat-sheet.md](docs/reference/cheat-sheet.md) | 改功能速查表 |
-| [docs/reference/handbook.md](docs/reference/handbook.md) | 开发参考手册（完整数据流） |
-| [docs/design/architecture.md](docs/design/architecture.md) | 架构设计（TradingAgents 对照） |
-| [docs/domain/financial-review.md](docs/domain/financial-review.md) | 金融逻辑评审 |
-| [tests/README.md](tests/README.md) | 测试体系与 CLI 命令 |
+| **[docs/overview/project.md](docs/overview/project.md)** | **项目定位与 owner 读法** |
+| [docs/overview/status.md](docs/overview/status.md) | 当前状态、剩余风险、建议顺序 |
+| [docs/overview/codex-autonomy.md](docs/overview/codex-autonomy.md) | 给 Codex 持续自动优化的目标模板 |
+| [docs/operations/setup.md](docs/operations/setup.md) | 本地 / VPS / MT5 / 环境变量运行手册 |
+| [docs/architecture/architecture.md](docs/architecture/architecture.md) | 系统架构与 TradingAgents 对照 |
+| [docs/architecture/review.md](docs/architecture/review.md) | 架构体检：保留、合并、延后边界 |
+| [docs/testing/strategy.md](docs/testing/strategy.md) | fast / scenario / release 测试策略 |
+| [docs/reference/handbook.md](docs/reference/handbook.md) | 开发参考手册（调用链速查） |
 
 ## 项目结构
 
 ```
 GoldAnalysisAI/
-├── app.py                      # 导航入口（st.navigation）
+├── AGENTS.md                   # AI/自动化：官方启动方式与常用命令
+├── run_app.py                  # 官方跨平台启动器（Windows/Linux/macOS）
+├── run_app.bat                 # Windows 快捷方式 → run_app.py
+├── run_app.sh                  # Linux/macOS 快捷方式 → run_app.py
+├── app.py                      # Streamlit 导航入口；用 run_app.py 启动
 ├── views/                      # 四页视图（由 app.py 导航注册）
 │   ├── 1_机构级分析报告.py
 │   ├── 4_外部数据.py
@@ -146,25 +155,26 @@ python scripts/check_mt5_connection.py
 ```bash
 pip install -r requirements-dev.txt
 
-# 快速：单元 + 回归（无网络，约 88 项，推荐 CI / 日常）
-python tests/run.py
+# fast：单元 + 回归（无网络，日常门禁）
+python tests/run.py --fast
 
 # 外部 API 冒烟（DXY / 金十 MCP / TV 社媒，需网络）
 python tests/run.py --external
 
-# 金融 Review：FIN-* 单测（发版前建议配合 coherence_check）
+# scenario：按功能域跑专项
 python tests/run.py --financial
+python tests/run.py --external
 
-# 完整：含流水线集成（需 .env + TradingView；规则模式约 1 分钟，hybrid+LLM 约 5–6 分钟）
+# release：完整集成（需 .env + TradingView；hybrid+LLM 可能 5–6 分钟）
 python tests/run.py --full
 
 # 规则模式一致性检查（P0 门禁；输出 tests/reports/coherence_check.json）
 $env:AGENT_MODE="rule"; $env:LLM_ENABLED="false"; python tests/tools/coherence_check.py
 ```
 
-**金融三阶段修复**（2026-06-20）：F-003/F-013/F-014（P0）+ UI/配置（P1）+ 数据质量/Agent 边界（P2）已落地；详见 [docs/domain/financial-review.md §7](docs/domain/financial-review.md#7-修复路径规划2026-06-20)。
+**金融三阶段修复**（2026-06-20）：F-003/F-013/F-014（P0）+ UI/配置（P1）+ 数据质量/Agent 边界（P2）已落地；详见 [docs/archive/domain/financial-review.md §7](docs/archive/domain/financial-review.md#7-修复路径规划2026-06-20)。
 
-用例目录与维护说明见 [tests/README.md](tests/README.md)、[tests/cases/catalog.yaml](tests/cases/catalog.yaml)。
+测试分层、用例目录与维护说明见 [docs/testing/strategy.md](docs/testing/strategy.md)、[tests/README.md](tests/README.md)、[tests/cases/catalog.yaml](tests/cases/catalog.yaml)。
 
 **主图说明**：机构报告主图为 **5 分钟 K 线**（K 线 + 成交量 + SMC 结构/支撑阻力叠加）；路径推演在底栏卡片展示。EMA/MACD/RSI 等在流水线中计算并供 agent 使用，在侧边栏 **「指标校验」** 展示，不绘制在主图上。
 
@@ -188,7 +198,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 读取含中文的源码或文档时，优先使用：
 
 ```powershell
-python scripts/show_utf8.py docs/domain/financial-review.md --start 520 --count 40
+python scripts/show_utf8.py docs/archive/domain/financial-review.md --start 520 --count 40
 ```
 
 不要用未初始化编码环境下的 `Get-Content` 作为补丁上下文来源；它可能把 UTF-8 无 BOM 文件按系统 ANSI 解码，导致看到的文本与磁盘真实内容不一致。

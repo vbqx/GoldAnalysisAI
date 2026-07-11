@@ -1,6 +1,6 @@
-# 开发者上手指南
+﻿# 开发者上手指南
 
-> 目标：在 **15 分钟内** 建立心智模型，弄清「点刷新后发生了什么」「该读哪些文件」「改功能该改哪里」。  
+> 目标：在 **15 分钟内** 建立心智模型，弄清「点刷新后发生了什么」「该读哪些文件」「改功能该改哪里」。
 > 项目能跑但难懂，通常是因为三层概念叠在一起：**金融方法论（ICT/PA）**、**多智能体流水线（TradingAgents）**、**大模型双轨调度（规则 / 纯 LLM / 混合）**。
 
 ---
@@ -186,7 +186,15 @@ LOG_LEVEL=DEBUG
 
 ### 完整大模型体验
 
-见根目录 [README.md](../../README.md) 或 [llm-agents.md](../design/llm-agents.md) 中的环境变量说明。
+见根目录 [README.md](../../README.md) 或 [llm-agents.md](../architecture/llm-agents.md) 中的环境变量说明。
+
+### 启动 Streamlit（官方方式）
+
+```bash
+python run_app.py
+```
+
+**不要**直接 `streamlit run app.py`。详见 [AGENTS.md](../../AGENTS.md)。
 
 ---
 
@@ -199,7 +207,7 @@ LOG_LEVEL=DEBUG
 | 开了 LLM 但没效果 | 检查 `LLM_API_KEY`、`AGENT_MODE`、`LLM_STAGE_*`；看 `stage_sources` |
 | 生成要 5 分钟 | 全流程多次 API 调用属正常；`AGENT_MODE=rule` 可降到约 30 秒 |
 | 文档与代码不一致 | 以 `orchestrator.py` 调用顺序为准 |
-| 胜率 62% 是回测吗？ | **不是**；见 [financial-review.md](../domain/financial-review.md) F-002 |
+| 胜率 62% 是回测吗？ | **不是**；见 [financial-review.md](../archive/domain/financial-review.md) F-002 |
 
 ---
 
@@ -244,7 +252,7 @@ financial-review.md（改信号/风控前必读）
 | 层级 | 文档 | 用途 |
 |------|------|------|
 | 教程层 | 本文 + [walkthrough.md](./walkthrough.md) | 心智模型 + 界面动线 |
-| 参考层 | [handbook.md](../reference/handbook.md) · [glossary.md](../reference/glossary.md) · [examples/report-schema.md](../examples/report-schema.md) | 函数链 · 术语 · JSON |
+| 参考层 | [handbook.md](../reference/handbook.md) · [glossary.md](../reference/glossary.md) · [examples/report-schema.md](../reference/examples/report-schema.md) | 函数链 · 术语 · JSON |
 | 速查层 | [cheat-sheet.md](../reference/cheat-sheet.md) · [pipeline-steps.yaml](../reference/pipeline-steps.yaml) | 改功能 · CI 步骤校验 |
 | 演示层 | [walkthrough.md](./walkthrough.md) 流程图 | 可另录演示视频 |
 

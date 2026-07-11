@@ -1,6 +1,6 @@
-# 术语表
+﻿# 术语表
 
-GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engineering.md](../domain/reverse-engineering.md)。
+GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engineering.md](../archive/domain/reverse-engineering.md)。
 
 ---
 
@@ -87,9 +87,9 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 
 | 文档 | 内容 |
 |------|------|
-| [onboarding.md](../getting-started/onboarding.md) | 15 分钟开发者入门 |
+| [onboarding.md](../operations/onboarding.md) | 15 分钟开发者入门 |
 | [cheat-sheet.md](./cheat-sheet.md) | 改功能速查 |
-| [examples/report-schema.md](../examples/report-schema.md) | 报告 JSON 字段说明 |
+| [examples/report-schema.md](./examples/report-schema.md) | 报告 JSON 字段说明 |
 
 ---
 

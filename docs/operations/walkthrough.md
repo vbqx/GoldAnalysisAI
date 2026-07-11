@@ -1,6 +1,6 @@
-# 界面操作动线
+﻿# 界面操作动线
 
-说明：**从打开应用到读懂决策链**的完整路径。  
+说明：**从打开应用到读懂决策链**的完整路径。
 建议与 [onboarding.md](./onboarding.md) 中的代码心智模型对照阅读。
 
 ---
@@ -8,8 +8,9 @@
 ## 1. 启动应用
 
 ```bash
-streamlit run app.py
-# 浏览器打开 http://localhost:8501
+python run_app.py
+# 或 Windows: .\run_app.bat  |  Linux/macOS: ./run_app.sh
+# 浏览器 http://localhost:8501
 ```
 
 ```mermaid
@@ -46,7 +47,7 @@ flowchart LR
 生成开始后：
 
 1. 页面显示 **「正在生成报告…」** 及进度
-2. 步骤条按 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative`）  
+2. 步骤条按 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative`）
    中文含义：数据拉取 → 技术指标 → ICT 结构 → 分析师团队 → 看多/看空 → 辩论 → 交易 → 风控 → 经理 → 报告 →（可选）LLM 文案
 3. 生成过程中可切换到 **LLM决策链** 页，打开 Tab **「生成与 LLM I/O」** — 顶部 **「LLM 实时推理」** 会随 chunk 刷新（约 400ms）；机构报告页等待时同样可见
 4. 完成后渲染机构报告，主图为 **5 分钟 K 线**（SMC 结构/支撑阻力叠加；路径推演见底栏；技术指标见侧边栏「指标校验」）
@@ -133,7 +134,7 @@ flowchart LR
 
 ### 标签页 2 — LLM 文案
 
-展示 `report["llm_analysis"]`（需 `LLM_ENABLED=true`）。  
+展示 `report["llm_analysis"]`（需 `LLM_ENABLED=true`）。
 这是流水线**末尾**的叙述层，与分析师团队**不是同一阶段**。
 
 ### 标签页 3 — 生成与 LLM 输入输出
@@ -198,7 +199,8 @@ sequenceDiagram
 
 ```bash
 # 规则模式（更快）
-AGENT_MODE=rule LLM_ENABLED=false streamlit run app.py
+# .env 中设 AGENT_MODE=rule、LLM_ENABLED=false 后执行：
+python run_app.py
 
 # 建议操作顺序：
 # 重新配置 / 刷新报告 → 观察步骤条 → 外部数据页 → LLM决策链三个标签页 → 切换短线策略页
@@ -213,7 +215,7 @@ AGENT_MODE=rule LLM_ENABLED=false streamlit run app.py
 | 文档 | 内容 |
 |------|------|
 | [onboarding.md](./onboarding.md) | 代码层心智模型 |
-| [examples/report-schema.md](../examples/report-schema.md) | 报告 JSON 字段 |
+| [examples/report-schema.md](../reference/examples/report-schema.md) | 报告 JSON 字段 |
 | [cheat-sheet.md](../reference/cheat-sheet.md) | 改界面/流水线速查 |
 | [pipeline-steps.yaml](../reference/pipeline-steps.yaml) | 步骤 ID 权威列表 |
 

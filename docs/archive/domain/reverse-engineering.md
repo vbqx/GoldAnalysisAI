@@ -154,7 +154,7 @@ MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；
 
 ## 5. 文档边界
 
-本文只做报告结构与算法反推，不维护后续迭代。当前路线图见 [roadmap.md](../planning/roadmap.md)。
+本文只做报告结构与算法反推，不维护后续迭代。当前路线图见 [roadmap.md](../../planning/roadmap.md)。
 
 ---
 
@@ -162,6 +162,6 @@ MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；
 
 | 文档 | 内容 |
 |------|------|
-| [README.md](../README.md) | 文档中心索引 |
-| [handbook.md](../reference/handbook.md) | 模块实现与数据流 |
+| [README.md](../../README.md) | 文档中心索引 |
+| [handbook.md](../../reference/handbook.md) | 模块实现与数据流 |
 | [financial-review.md](./financial-review.md) | 金融逻辑评审 |

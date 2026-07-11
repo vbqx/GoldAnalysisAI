@@ -1,7 +1,7 @@
-# GoldAnalysisAI 架构设计（TradingAgents 参考）
+﻿# GoldAnalysisAI 架构设计（TradingAgents 参考）
 
-> **原则**：前端 Streamlit 不变；`run_analysis()` 仍返回 `(report, data, analyses)`。  
-> 内部分层按 [TradingAgents](https://github.com/TauricResearch/TradingAgents) 多智能体流水线重构。  
+> **原则**：前端 Streamlit 不变；`run_analysis()` 仍返回 `(report, data, analyses)`。
+> 内部分层按 [TradingAgents](https://github.com/TauricResearch/TradingAgents) 多智能体流水线重构。
 > 文档索引见 [docs/README.md](../README.md)。
 
 ---
@@ -254,7 +254,7 @@ Swings + ATR -> Liquidity zones -> Sweep quality -> TradingSignal status/score
 
 这不会替换现有的 Analyst Team -> Bull/Bear -> Debate 架构。流动性层同时服务规则候选信号和 LLM 点位上下文，但不替代研究智能体。
 
-金融侧验收见 [financial-review.md](../domain/financial-review.md#2026-06-21-流动性可靠性验收口径)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)。
+金融侧验收见 [financial-review.md](../archive/domain/financial-review.md#2026-06-21-流动性可靠性验收口径)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)。
 
 ---
 
@@ -284,4 +284,3 @@ print(report["agent_trace"]["debate"]["discussion_notes"])
 | **配置加载** | `.env` 覆盖进程内已有环境变量，避免旧 Streamlit 进程残留错误密钥 |
 
 ---
-

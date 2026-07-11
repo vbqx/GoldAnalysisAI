@@ -1,6 +1,6 @@
-# 报告 JSON 结构说明
+﻿# 报告 JSON 结构说明
 
-`run_analysis()` 返回的 `report` 字典是 Streamlit 界面的**唯一数据契约**。  
+`run_analysis()` 返回的 `report` 字典是 Streamlit 界面的**唯一数据契约**。
 脱敏样例：[sample-report.json](./sample-report.json)（由 `scripts/export_sample_report.py` 生成，可重复导出）。
 
 ```bash
@@ -49,9 +49,9 @@ python scripts/export_sample_report.py
 |--------|------|
 | `agent_mode` | 当前模式：`rule` / `llm` / `hybrid` |
 | `stage_sources` | 每阶段实际用规则还是 LLM，及回退原因 |
-| `generation_steps` | 与 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 步骤 ID 对应 |
+| `generation_steps` | 与 [pipeline-steps.yaml](../pipeline-steps.yaml) 步骤 ID 对应 |
 | `llm_io` | 规则阶段输入输出 + LLM 消息与响应 |
-| `context_stats` | 分析师输入密度，见 [analyst-context.md](../design/analyst-context.md) |
+| `context_stats` | 分析师输入密度，见 [analyst-context.md](../../architecture/analyst-context.md) |
 
 ---
 
@@ -77,7 +77,7 @@ python scripts/export_sample_report.py
 { "bullish": 25.0, "bearish": 62.0, "ranging": 13.0 }
 ```
 
-来自 `ict_pa.sentiment_score()` 多周期趋势加权。界面若展示为「胜率」，须标注为**结构权重**。见 [financial-review.md](../domain/financial-review.md) F-002。
+来自 `ict_pa.sentiment_score()` 多周期趋势加权。界面若展示为「胜率」，须标注为**结构权重**。见 [financial-review.md](../../archive/domain/financial-review.md) F-002。
 
 ---
 
@@ -130,7 +130,7 @@ python scripts/export_sample_report.py
 }
 ```
 
-在「LLM决策链」页 **智能体决策** 标签页中可视化。  
+在「LLM决策链」页 **智能体决策** 标签页中可视化。
 `decision.action` 常见值：`execute`（执行）、`reduce`（减仓）、`wait`（观望）。
 
 `agent_trace.llm_levels` 与 `agent_trace.validated_plans` 是决策链页展示 LLM 点位建议和确定性校验结果的审计字段；顶层 `llm_levels` / `validated_plans` 保留同一批数据，便于导出和回放。
@@ -163,7 +163,7 @@ python scripts/export_sample_report.py
 import json
 from pathlib import Path
 
-sample = json.loads(Path("docs/examples/sample-report.json").read_text(encoding="utf-8"))
+sample = json.loads(Path("docs/reference/examples/sample-report.json").read_text(encoding="utf-8"))
 print(sample.keys())
 print(sample["agent_trace"]["analyst_team"].keys())
 ```
@@ -182,9 +182,9 @@ print(json.dumps(report["meta"]["generation_steps"], ensure_ascii=False, indent=
 
 | 文档 | 内容 |
 |------|------|
-| [onboarding.md](../getting-started/onboarding.md) | 三种返回值说明 |
-| [glossary.md](../reference/glossary.md) | win_rate、AgentTrace 等术语 |
-| [reverse-engineering.md](../domain/reverse-engineering.md) | 各界面区块的算法来源 |
+| [onboarding.md](../../operations/onboarding.md) | 三种返回值说明 |
+| [glossary.md](../glossary.md) | win_rate、AgentTrace 等术语 |
+| [reverse-engineering.md](../../archive/domain/reverse-engineering.md) | 各界面区块的算法来源 |
 
 ---
 

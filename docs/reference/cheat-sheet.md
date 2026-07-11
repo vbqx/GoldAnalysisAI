@@ -1,6 +1,6 @@
-# 开发者速查表
+﻿# 开发者速查表
 
-一页纸回答：**我想改 X，该动哪个文件、跑什么测试**。  
+一页纸回答：**我想改 X，该动哪个文件、跑什么测试**。
 流水线步骤权威列表见 [pipeline-steps.yaml](./pipeline-steps.yaml)（与代码在 CI 中同步校验）。
 
 ---
@@ -28,6 +28,7 @@
 
 | 我想… | 改这里 | 验证 |
 |-------|--------|------|
+| **启动 Streamlit 应用** | `python run_app.py` | 勿直接 `streamlit run app.py`；见 [AGENTS.md](../../AGENTS.md) |
 | 调整 EMA/VWAP/Fib | `indicators/technical.py` | `pytest tests/unit/test_indicators.py` |
 | 调整 Swing/BOS/OB/FVG | `analysis/ict_pa.py` | 查看 `analyses["5m"]` 或 DEBUG 日志 |
 | 改辩论/共识逻辑 | `agents/debate.py` | `pytest tests/unit/test_debate_coherence.py` |
@@ -106,10 +107,10 @@ report, data, analyses = run_analysis()
 
 | 文档 | 何时用 |
 |------|--------|
-| [onboarding.md](../getting-started/onboarding.md) | 首次读项目 |
+| [onboarding.md](../operations/onboarding.md) | 首次读项目 |
 | [glossary.md](./glossary.md) | 不懂术语 |
-| [examples/report-schema.md](../examples/report-schema.md) | 不懂 report JSON |
-| [walkthrough.md](../getting-started/walkthrough.md) | 界面操作动线 |
+| [examples/report-schema.md](./examples/report-schema.md) | 不懂 report JSON |
+| [walkthrough.md](../operations/walkthrough.md) | 界面操作动线 |
 
 ---
 

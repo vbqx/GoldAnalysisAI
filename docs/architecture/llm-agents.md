@@ -1,7 +1,7 @@
-# LLM 多智能体架构
+﻿# LLM 多智能体架构
 
-> **目标**：数据层保持确定性（TradingView + 指标 + 规则 ICT 事实），  
-> **Analyst Team**（技术/基本面/新闻/情绪）→ 多空研究 → 辩论 → 交易 → 风控 → 经理 各阶段可接入大模型。  
+> **目标**：数据层保持确定性（TradingView + 指标 + 规则 ICT 事实），
+> **Analyst Team**（技术/基本面/新闻/情绪）→ 多空研究 → 辩论 → 交易 → 风控 → 经理 各阶段可接入大模型。
 > **约束**：`run_analysis()` 仍返回 `(report, data, analyses)`；报告 JSON schema 不变。
 
 ---
@@ -236,7 +236,7 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | [architecture.md](./architecture.md) | TradingAgents 对照与分层图 |
 | [analyst-context.md](./analyst-context.md) | Analyst 输入密度与 payload |
 | [roadmap.md](../planning/roadmap.md) | 后续执行接口、MT5 接入和 ICT 标准化计划 |
-| [setup.md](../getting-started/setup.md) | 环境搭建与扩展指南 |
+| [setup.md](../operations/setup.md) | 环境搭建与扩展指南 |
 
 ---
 

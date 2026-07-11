@@ -41,7 +41,7 @@ copy .env.example .env          # Windows
 | `MT5_ACCOUNT` / `MT5_PASSWORD` / `MT5_SERVER` | 空 | MT5 模拟/实盘账户；只写入本机 `.env` |
 | `MT5_PATH` / `MT5_TIMEOUT_MS` | 空 / `10000` | 可选；指定 `terminal64.exe` 路径与 IPC 初始化超时 |
 | `JIN10_API_TOKEN` | 空 | 金十 MCP（[申请](https://mcp.jin10.com/app)） |
-| `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](../design/llm-agents.md) |
+| `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](../architecture/llm-agents.md) |
 | `LLM_*` | 见 `.env.example` | 硅基流动 / OpenAI 兼容 API |
 
 完整变量表见 [handbook.md §2.3](../reference/handbook.md#23-配置env)。
@@ -63,9 +63,26 @@ python scripts/check_mt5_connection.py
 
 ## 4. 运行
 
+**请用官方启动脚本**，不要直接 `streamlit run app.py`。脚本会：
+
+1. 加载项目根目录 `.env` 到进程环境变量
+2. 设置 UTF-8 开发终端变量
+3. 终止本仓库残留的 Streamlit / `app.py` 进程
+4. 启动 Streamlit（默认 `http://localhost:8501`）
+
 ```bash
-streamlit run app.py    # http://localhost:8501
+# 跨平台（推荐）
+python run_app.py
+
+# 快捷方式
+.\run_app.bat          # Windows
+./run_app.sh           # Linux / macOS
+
+# 自定义端口
+python run_app.py --port 8503
 ```
+
+AI 代理与自动化工具见根目录 **[AGENTS.md](../../AGENTS.md)**。
 
 **多页面**（`st.navigation` 左侧导航）：
 
