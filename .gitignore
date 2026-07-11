@@ -8,6 +8,11 @@ _chart_test.html
 logs/
 *.log
 .pytest_cache/
+indicator/
 
 tests/reports/*
 !tests/reports/.gitkeep
+
+# local swing_low demo (one-off debug, not part of product)
+scripts/show_swing_low_calc.py
+scripts/swing_low_output.txt

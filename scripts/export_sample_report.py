@@ -23,6 +23,7 @@ from src.agents.risk import run_risk_team
 from src.agents.trader import run_trader_agent
 from src.analysis.ict_pa import analyze_timeframe
 from src.analysis.report_engine import build_report, compute_trading_signals
+from src.analysis.narrative_sections import build_rule_narrative_sections
 from src.config import AGENT_MODE
 from src.core.types import (
     AgentPipelineMeta,
@@ -130,6 +131,10 @@ def main() -> int:
     report["meta"]["data_source"] = ctx.source_label
     report["meta"]["agent_mode"] = AGENT_MODE
     report["meta"]["stage_sources"] = pipeline_meta.to_dict()
+    report["meta"]["stage_sources"]["narrative_sections"] = {
+        key: {"source": "rule", "accepted": True}
+        for key in ("market_overview", "liquidity", "4h", "1h", "15m")
+    }
     report["meta"]["context_stats"] = ctx.context_stats
     report["meta"]["sample"] = True
     report["meta"]["disclaimer"] = "脱敏样例 JSON，仅供文档与测试参考，非 live 报告"
@@ -143,6 +148,7 @@ def main() -> int:
     }
     report["llm_levels"] = []
     report["validated_plans"] = []
+    report["narrative_sections"] = build_rule_narrative_sections(report)
 
     trace = AgentTrace(
         context={"price": ctx.price, "sample": True},

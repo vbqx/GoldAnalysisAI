@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 # Load .env before any src.config import (via downstream modules).
@@ -23,6 +24,28 @@ if _env.exists():
             continue
         key, val = line.split("=", 1)
         os.environ[key.strip()] = val.strip()
+
+
+def _ensure_streamlit_runtime() -> None:
+    """Block `python app.py` — Streamlit must host this file."""
+    try:
+        from streamlit.runtime.scriptrunner import get_script_run_ctx
+    except Exception:
+        get_script_run_ctx = None  # type: ignore[misc, assignment]
+    if get_script_run_ctx is not None and get_script_run_ctx() is not None:
+        return
+    print(
+        "\n错误：不能用 `python app.py` 直接启动 Streamlit 应用。\n"
+        "请使用官方启动器（会加载 .env 并清理残留进程）：\n"
+        "  python run_app.py\n"
+        "  Windows: .\\run_app.bat\n"
+        "  Linux/macOS: ./run_app.sh\n",
+        file=sys.stderr,
+    )
+    raise SystemExit(1)
+
+
+_ensure_streamlit_runtime()
 
 import streamlit as st
 

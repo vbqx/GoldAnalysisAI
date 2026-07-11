@@ -284,11 +284,18 @@ def main() -> int:
     print("Launcher: python run_app.py (do not use bare 'streamlit run app.py')")
     print()
 
-    cmd = [str(python), "-m", "streamlit", "run", "app.py", "--server.port", str(port)]
+    cmd = [str(python), "-m", "streamlit", "run", str(ROOT / "app.py"), "--server.port", str(port)]
     try:
-        return subprocess.call(cmd)
+        rc = subprocess.call(cmd)
     except KeyboardInterrupt:
         return 130
+    if rc != 0:
+        print(
+            f"\nStreamlit exited with code {rc}. "
+            "Do not run `python app.py` directly — use `python run_app.py`.\n",
+            file=sys.stderr,
+        )
+    return rc
 
 
 if __name__ == "__main__":
