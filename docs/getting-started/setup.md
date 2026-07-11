@@ -9,7 +9,7 @@
 - Python 3.10+
 - Git
 - 可访问 TradingView WebSocket（国内常需代理）
-- 可选：MetaTrader 5 Windows 终端 + `MetaTrader5` Python 包（仅 `MT5_ENABLED=true` 时需要）
+- 可选：MetaTrader 5 Windows 终端 + `MetaTrader5` Python 包（仅账号检查/下单执行接口需要）
 
 ---
 
@@ -37,18 +37,19 @@ copy .env.example .env          # Windows
 | `TV_SYMBOL` | `XAUUSD` | TradingView 品种 |
 | `TV_EXCHANGE` | `OANDA` | 交易所 |
 | `TV_USERNAME` / `TV_PASSWORD` | 空 | 可选；登录后历史 bar 更多 |
-| `MT5_ENABLED` | `false` | 可选；启用后主 K 线改走本机 MT5 终端 |
-| `MT5_LOGIN` / `MT5_PASSWORD` / `MT5_SERVER` | 空 | MT5 模拟/实盘账户；只写入本机 `.env` |
+| `MT5_ENABLED` | `false` | 可选；启用 MT5 账号/执行接口，不改变 K 线数据源 |
+| `MT5_ACCOUNT` / `MT5_PASSWORD` / `MT5_SERVER` | 空 | MT5 模拟/实盘账户；只写入本机 `.env` |
+| `MT5_PATH` / `MT5_TIMEOUT_MS` | 空 / `10000` | 可选；指定 `terminal64.exe` 路径与 IPC 初始化超时 |
 | `JIN10_API_TOKEN` | 空 | 金十 MCP（[申请](https://mcp.jin10.com/app)） |
 | `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](../design/llm-agents.md) |
 | `LLM_*` | 见 `.env.example` | 硅基流动 / OpenAI 兼容 API |
 
 完整变量表见 [handbook.md §2.3](../reference/handbook.md#23-配置env)。
 
-### MT5 只读行情自检
+### MT5 账号连接自检
 
 1. 在 Windows 上安装并打开 MetaTrader 5 终端。
-2. 将模拟账户写入 `.env`：`MT5_ENABLED=true`、`MT5_LOGIN`、`MT5_PASSWORD`、`MT5_SERVER`、`MT5_SYMBOL`。
+2. 将模拟账户写入 `.env`：`MT5_ENABLED=true`、`MT5_ACCOUNT`、`MT5_PASSWORD`、`MT5_SERVER`、`MT5_SYMBOL`。
 3. 安装可选依赖：`pip install MetaTrader5`。
 4. 运行：
 
@@ -56,7 +57,7 @@ copy .env.example .env          # Windows
 python scripts/check_mt5_connection.py
 ```
 
-自检脚本只打印非敏感账号摘要和最新 5m K 线，不打印密码，不发送订单。
+自检脚本只打印非敏感账号摘要，不读取 K 线，不打印密码，不发送订单。
 
 ---
 

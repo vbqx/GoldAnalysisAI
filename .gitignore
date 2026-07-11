@@ -1,5 +1,6 @@
 .venv/
 .env
+.codex-remote-attachments/
 __pycache__/
 *.pyc
 _chart_test.html

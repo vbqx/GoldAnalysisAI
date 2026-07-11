@@ -15,7 +15,7 @@ def _load_dotenv() -> None:
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, val = line.split("=", 1)
-        os.environ[key.strip()] = val.strip()
+        os.environ.setdefault(key.strip(), val.strip())
 
 
 _load_dotenv()
@@ -31,14 +31,15 @@ TV_DXY_SYMBOL = os.getenv("TV_DXY_SYMBOL", "DXY")
 TV_US10Y_EXCHANGE = os.getenv("TV_US10Y_EXCHANGE", "TVC")
 TV_US10Y_SYMBOL = os.getenv("TV_US10Y_SYMBOL", "US10Y")
 
-# Optional MT5 market-data/execution bridge. Disabled by default; the MetaTrader5
-# Python package and a running terminal are only required when MT5_ENABLED=true.
+# Optional MT5 execution bridge. Disabled by default; the MetaTrader5 Python
+# package and a running terminal are only required when MT5_ENABLED=true.
 MT5_ENABLED = os.getenv("MT5_ENABLED", "false").lower() in ("1", "true", "yes")
 MT5_SYMBOL = os.getenv("MT5_SYMBOL", TV_SYMBOL)
-MT5_LOGIN = os.getenv("MT5_LOGIN", "")
+MT5_ACCOUNT = os.getenv("MT5_ACCOUNT", "")
 MT5_PASSWORD = os.getenv("MT5_PASSWORD", "")
 MT5_SERVER = os.getenv("MT5_SERVER", "")
 MT5_PATH = os.getenv("MT5_PATH", "")
+MT5_TIMEOUT_MS = max(1000, int(os.getenv("MT5_TIMEOUT_MS", "10000")))
 
 # Analyst Team input density (payload / evidence limits)
 ANALYST_NEWS_MAX = max(3, int(os.getenv("ANALYST_NEWS_MAX", "20")))

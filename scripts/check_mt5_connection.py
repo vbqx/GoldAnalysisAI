@@ -1,8 +1,7 @@
 """Smoke-test the optional MT5 connection.
 
 The script reads MT5_* values from .env / environment variables, prints a
-non-sensitive account summary, and fetches a few recent bars. It never prints
-the password and never sends orders.
+non-sensitive account summary, and never prints the password or sends orders.
 """
 
 from __future__ import annotations
@@ -37,15 +36,6 @@ def main() -> int:
             "leverage": info.get("leverage"),
         }
         print(f"account={safe_info}")
-
-        bars = provider.fetch_rates("5m", 5)
-        latest = bars.iloc[-1]
-        print(
-            "latest_5m="
-            f"time={bars.index[-1].isoformat()} "
-            f"open={latest['Open']:.2f} high={latest['High']:.2f} "
-            f"low={latest['Low']:.2f} close={latest['Close']:.2f}"
-        )
     except (MT5UnavailableError, ValueError) as exc:
         print(f"MT5 check failed: {exc}")
         return 1

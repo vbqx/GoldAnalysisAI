@@ -233,10 +233,9 @@ def _resolve_confirmed_run_config() -> RunConfig | None:
 
 def render_sidebar_header() -> None:
     st.sidebar.markdown("**GoldAnalysisAI**")
-    from src.config import MT5_ENABLED, MT5_SYMBOL, TV_EXCHANGE, TV_SYMBOL
+    from src.config import TV_EXCHANGE, TV_SYMBOL
 
-    data_source = f"MT5 · {MT5_SYMBOL}" if MT5_ENABLED else f"TradingView · {TV_EXCHANGE}:{TV_SYMBOL}"
-    st.sidebar.caption(f"数据源: {data_source}")
+    st.sidebar.caption(f"数据源: TradingView · {TV_EXCHANGE}:{TV_SYMBOL}")
     # Fix #7 [Improvement] 侧边栏仅显示 STRONG 模型，与研究阶段 FAST 模型不一致
     from src.config import LLM_MODEL, LLM_MODEL_FAST, LLM_MODEL_STRONG, short_model_name
 
