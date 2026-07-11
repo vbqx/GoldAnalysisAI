@@ -4,15 +4,23 @@ on:
   push:
     paths:
       - 'docs/**'
+      - 'scripts/export_sample_report.py'
+      - 'src/core/types.py'
       - 'src/core/orchestrator.py'
       - 'src/data/fetch_pipeline.py'
       - 'tests/regression/test_doc_pipeline_sync.py'
+      - 'tests/regression/test_export_sample_report.py'
+      - '.github/workflows/docs.yml'
   pull_request:
     paths:
       - 'docs/**'
+      - 'scripts/export_sample_report.py'
+      - 'src/core/types.py'
       - 'src/core/orchestrator.py'
       - 'src/data/fetch_pipeline.py'
       - 'tests/regression/test_doc_pipeline_sync.py'
+      - 'tests/regression/test_export_sample_report.py'
+      - '.github/workflows/docs.yml'
 
 jobs:
   doc-sync:
@@ -28,7 +36,7 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Verify pipeline docs sync with code
-        run: pytest tests/regression/test_doc_pipeline_sync.py -v
+        run: pytest tests/regression/test_doc_pipeline_sync.py tests/regression/test_export_sample_report.py -v
 
       - name: Verify sample report JSON is valid
         run: |
