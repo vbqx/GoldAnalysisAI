@@ -252,13 +252,31 @@ iframe { border: none; display: block; }
   line-height: 1.45;
   background: #f8fafc;
 }
-.plan-card { border: 1px solid #e2e8f0; border-radius: 5px; overflow: hidden; font-size: 0.68rem; }
-.plan-card .head { padding: 4px 6px; font-weight: 700; color: #fff; text-align: center; font-size: 0.72rem; }
-.plan-card .body { padding: 5px 7px; background: #fff; line-height: 1.45; }
+.plan-card { border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; font-size: 0.68rem; background: #fff; }
+.plan-card.is-primary { border-color: #0ea5e9; box-shadow: 0 0 0 1px rgba(14,165,233,0.15); }
+.plan-card.invalid { opacity: 0.78; }
+.plan-card .head {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  padding: 5px 8px; font-weight: 700; color: #fff; font-size: 0.7rem; line-height: 1.25;
+}
+.plan-card .head-title { flex: 1; min-width: 0; text-align: left; }
+.plan-card .head-badges { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.plan-card .body { padding: 6px 8px; background: #fff; line-height: 1.45; }
 .plan-card .body b { color: #475569; font-weight: 600; }
+.plan-card .plan-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; margin-bottom: 5px;
+}
+.plan-card .plan-grid .k { color: #64748b; font-size: 0.62rem; font-weight: 700; }
+.plan-card .plan-grid .v { color: #0f172a; font-size: 0.72rem; font-weight: 700; word-break: break-word; }
+.plan-card .plan-meta { color: #64748b; font-size: 0.66rem; line-height: 1.4; }
+.plan-card .confidence-pill {
+  display: inline-flex; align-items: center; border-radius: 999px;
+  padding: 1px 7px; font-size: 0.62rem; font-weight: 800; color: #0f172a; background: rgba(255,255,255,0.92);
+}
 .plan-card.short .head { background: linear-gradient(135deg, #dc2626, #b91c1c); }
 .plan-card.short.alt .head { background: linear-gradient(135deg, #991b1b, #7f1d1d); }
 .plan-card.long .head { background: linear-gradient(135deg, #16a34a, #15803d); }
+.plan-card.long.alt .head { background: linear-gradient(135deg, #166534, #14532d); }
 .decision-summary {
   display: grid;
   grid-template-columns: 1.05fr 1.3fr 1.25fr 1.4fr;
@@ -412,6 +430,21 @@ iframe { border: none; display: block; }
 }
 .tf-panel .bear { color: #dc2626; font-weight: 600; }
 .tf-panel .bull { color: #16a34a; font-weight: 600; }
+.narrative-section { position: relative; padding-top: 2px; font-size: .72rem; line-height: 1.42; }
+.narrative-line { margin: 2px 0; color: #334155; }
+.narrative-line b { color: #0f172a; }
+.narrative-价位 b { color: #b45309; }
+.narrative-条件 b { color: #0369a1; }
+.narrative-失效 b { color: #b91c1c; }
+.narrative-source { float: right; margin-left: 6px; padding: 1px 5px; border-radius: 999px; font-size: .58rem; color: #64748b; background: #f1f5f9; }
+.narrative-source.llm { color: #166534; background: #dcfce7; }
+.narrative-source.fallback { color: #92400e; background: #fef3c7; }
+.tf-structure-text {
+  margin-top: 4px;
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: #475569;
+}
 .star-list li::before { content: "★ "; color: #eab308; }
 .cal-item { font-size: 0.72rem; padding: 4px 0; border-bottom: 1px dashed #e2e8f0; line-height: 1.45; }
 
@@ -603,6 +636,9 @@ def render_header(report: dict[str, Any]) -> str:
     return "".join(metric_html) + conclusion_html
 
 
+_PLAN_LABELS = ("方案 A（主策略）", "方案 B（备选）", "方案 C（逆势）")
+
+
 def _fmt_price(value: Any) -> str:
     try:
         return f"{float(value):.2f}"
@@ -715,46 +751,91 @@ def render_decision_summary(report: dict[str, Any]) -> str:
 """
 
 
-def render_primary_plan_focus(report: dict[str, Any]) -> str:
-    """Prominent executable-plan card for report and strategy pages."""
-    primary = _primary_signal(report.get("signals") or [])
-    if primary is None:
-        return """
-<div class="primary-plan-focus">
-  <div class="focus-head"><p class="focus-title">暂无主交易计划</p><span class="status-pill candidate">等待生成</span></div>
-  <p class="focus-note">当前报告没有可展示的候选信号，请先确认数据源和运行配置。</p>
-</div>
-"""
+def _display_plan_signals(signals: list[dict[str, Any]], *, limit: int = 3) -> list[dict[str, Any]]:
+    """Up to three plans for UI; invalid plans sink to the end but still show when needed."""
+    eligible = [sig for sig in signals if sig.get("status") != "invalid"]
+    rest = [sig for sig in signals if sig.get("status") == "invalid"]
+    return (eligible + rest)[:limit]
 
-    status = str(primary.get("status") or "candidate")
+
+def _confidence_text(sig: dict[str, Any]) -> str:
+    score = sig.get("score_total")
+    grade = sig.get("score_grade")
+    if score is None and not grade:
+        return "—"
+    score_txt = f"{float(score):.0f}分" if score is not None else "—"
+    grade_txt = str(grade) if grade else "—"
+    return f"{score_txt} · {grade_txt}级"
+
+
+def _render_plan_card(
+    sig: dict[str, Any],
+    *,
+    plan_label: str,
+    is_primary: bool = False,
+) -> str:
+    role = sig.get("signal_role", "primary")
+    css_theme = "short" if sig.get("theme") == "short" else "long"
+    alt = " alt" if role == "alternate" else ""
+    status = str(sig.get("status") or "candidate")
     status_label, status_cls = _status_meta(status)
-    theme = "short" if primary.get("theme") == "short" else "long"
     invalid_cls = " invalid" if status == "invalid" else ""
-    reasons = primary.get("score_reasons") or []
-    reason_text = "；".join(html.escape(str(x)) for x in reasons[:2]) or html.escape(
-        str(primary.get("note") or "")
+    primary_cls = " is-primary" if is_primary else ""
+    weight = html.escape(str(sig.get("sentiment_bias_pct", sig.get("win_rate", "—"))))
+    trigger_note = html.escape(str(sig.get("trigger_note") or "等待触发确认"))
+    reasons = sig.get("score_reasons") or []
+    reason_text = "；".join(html.escape(str(x)) for x in reasons[:2])
+    source_badge = (
+        '<span class="signal-mini-badge llm">LLM</span>'
+        if str(sig.get("setup_type", "")).startswith("llm_")
+        else ""
     )
-    title = html.escape(str(primary.get("name") or "主交易计划"))
-    direction = html.escape(str(primary.get("direction_cn") or primary.get("direction") or "—"))
-    trigger = html.escape(str(primary.get("trigger_note") or "等待触发确认"))
-    score = html.escape(str(primary.get("score_total") or "—"))
-    grade = html.escape(str(primary.get("score_grade") or "—"))
+    role_badge = (
+        '<span class="signal-mini-badge primary">主</span>'
+        if is_primary
+        else '<span class="signal-mini-badge alt">备</span>'
+    )
+    title = html.escape(str(sig.get("name") or plan_label))
+    plan_name = html.escape(plan_label)
+    direction = html.escape(str(sig.get("direction_cn") or sig.get("direction") or "—"))
+    confidence = html.escape(_confidence_text(sig))
+    note = html.escape(str(sig.get("note") or ""))
 
     return f"""
-<div class="primary-plan-focus {theme}{invalid_cls}">
-  <div class="focus-head">
-    <p class="focus-title">{title}</p>
-    <span class="status-pill {status_cls}">{status_label}</span>
+<div class="plan-card {css_theme}{alt}{invalid_cls}{primary_cls}">
+  <div class="head">
+    <div class="head-title">{plan_name} · {title}</div>
+    <div class="head-badges">
+      <span class="confidence-pill">置信 {confidence}</span>
+      {role_badge}{source_badge}
+      <span class="status-pill {status_cls}">{status_label}</span>
+    </div>
   </div>
-  <div class="focus-grid">
-    <div class="focus-item"><p class="k">方向</p><p class="v">{direction}</p></div>
-    <div class="focus-item"><p class="k">入场区</p><p class="v">{_signal_zone(primary)}</p></div>
-    <div class="focus-item"><p class="k">止损</p><p class="v">{_fmt_price(primary.get("stop_loss"))}</p></div>
-    <div class="focus-item"><p class="k">目标</p><p class="v">{_signal_targets(primary)}</p></div>
+  <div class="body">
+    <div class="plan-grid">
+      <div><div class="k">方向</div><div class="v">{direction}</div></div>
+      <div><div class="k">入场区</div><div class="v">{_signal_zone(sig)}</div></div>
+      <div><div class="k">止损</div><div class="v">{_fmt_price(sig.get('stop_loss'))}</div></div>
+      <div><div class="k">目标</div><div class="v">{_signal_targets(sig)}</div></div>
+    </div>
+    <div class="plan-meta"><b>盈亏比：</b>{html.escape(str(sig.get('risk_reward', '—')))} · <b>结构权重：</b>{weight}</div>
+    <div class="plan-meta"><b>触发：</b>{trigger_note}{(' · ' + note) if note else ''}</div>
+    {f'<div class="plan-meta">{reason_text}</div>' if reason_text else ''}
   </div>
-  <p class="focus-note"><b>触发/失效：</b>{trigger} · <b>质量：</b>{grade} / {score}{(" · " + reason_text) if reason_text else ""}</p>
-</div>
-"""
+</div>"""
+
+
+def render_primary_plan_focus(report: dict[str, Any]) -> str:
+    """Backward-compatible wrapper: first plan card only."""
+    signals = _display_plan_signals(report.get("signals") or [])
+    if not signals:
+        return '<div class="plan-stack"><p>暂无交易计划</p></div>'
+    primary_idx = next(
+        (i for i, sig in enumerate(signals) if sig.get("signal_role") == "primary"),
+        0,
+    )
+    label = _PLAN_LABELS[primary_idx] if primary_idx < len(_PLAN_LABELS) else _PLAN_LABELS[0]
+    return f'<div class="plan-stack">{_render_plan_card(signals[primary_idx], plan_label=label, is_primary=True)}</div>'
 
 
 def render_top_overview_row(report: dict[str, Any]) -> str:
@@ -823,11 +904,36 @@ def render_bottom_row(report: dict[str, Any], conclusion: dict[str, Any]) -> str
 """
 
 
-def _fmt_zone(items: list[dict], direction: str | None = None) -> str:
+def _fmt_zone(items: list[dict], direction: str | None = None, *, limit: int = 5) -> str:
     filtered = [i for i in items if not direction or i.get("direction") == direction]
     if not filtered:
         return "—"
-    return " / ".join(f"{i['low']:.0f}-{i['high']:.0f}" for i in filtered[:2])
+    return " / ".join(f"{i['low']:.0f}-{i['high']:.0f}" for i in filtered[:limit])
+
+
+def _fmt_event_list(items: list[dict]) -> str:
+    if not items:
+        return "—"
+    return " / ".join(i.get("label", f"@{i.get('price', 0):.0f}") for i in items)
+
+
+def _fmt_prices(prices: list[float]) -> str:
+    if not prices:
+        return "—"
+    return " / ".join(f"{p:.0f}" for p in prices)
+
+
+def _fmt_strong_weak(info: dict[str, Any]) -> str:
+    parts: list[str] = []
+    if info.get("strong_high") is not None:
+        parts.append(f"Strong H {info['strong_high']:.0f}")
+    if info.get("weak_high") is not None:
+        parts.append(f"Weak H {info['weak_high']:.0f}")
+    if info.get("strong_low") is not None:
+        parts.append(f"Strong L {info['strong_low']:.0f}")
+    if info.get("weak_low") is not None:
+        parts.append(f"Weak L {info['weak_low']:.0f}")
+    return " · ".join(parts) if parts else "—"
 
 
 def render_tf_panel(tf: str, info: dict[str, Any], *, compact: bool = False) -> str:
@@ -835,13 +941,28 @@ def render_tf_panel(tf: str, info: dict[str, Any], *, compact: bool = False) -> 
     trend_cn, trend_cls = TREND_CN.get(info["trend"], ("—", ""))
     pd_map = {"premium": "溢价", "discount": "折价", "equilibrium": "均衡", "unknown": "—"}
     pd_txt = pd_map.get(info.get("premium_discount", ""), "—")
-    ob_bear = _fmt_zone(info.get("order_blocks", []), "bearish")
-    fvg_bear = _fmt_zone(info.get("fvgs", []), "bearish")
+    swing_txt = "—"
+    if info.get("swing_low") is not None and info.get("swing_high") is not None:
+        swing_txt = f"H {info['swing_high']:.0f} · L {info['swing_low']:.0f}"
+
+    bos_line = _fmt_event_list(info.get("bos_list", []))
+    choch_line = _fmt_event_list(info.get("choch_list", []))
+    ob_line = _fmt_zone(info.get("order_blocks", []), limit=5)
+    fvg_line = _fmt_zone(info.get("fvgs", []), limit=5)
+    eqh_line = _fmt_prices(info.get("equal_highs", []))
+    eql_line = _fmt_prices(info.get("equal_lows", []))
+    hl_line = _fmt_strong_weak(info)
+
     if compact:
         return (
             f'<div class="tf-panel"><h4>{label} · <span class="{trend_cls}">{trend_cn}</span></h4>'
-            f"<div>BOS {info.get('bos', '无')} | CHoCH {info.get('choch', '无')} | {pd_txt}</div>"
-            f"<div>OB {ob_bear} | FVG {fvg_bear}</div></div>"
+            f"<div>区位 {pd_txt} · Swing {swing_txt}</div>"
+            f"<div>BOS {bos_line}</div>"
+            f"<div>CHoCH {choch_line}</div>"
+            f"<div>OB {ob_line}</div>"
+            f"<div>FVG {fvg_line}</div>"
+            f"<div>EQH {eqh_line} · EQL {eql_line}</div>"
+            f"<div>{hl_line}</div></div>"
         )
     ema = info.get("ema_relation", {})
     ema_txt = " / ".join(f"{k}{v}" for k, v in ema.items())
@@ -864,6 +985,36 @@ def render_tf_panel(tf: str, info: dict[str, Any], *, compact: bool = False) -> 
 """
 
 
+def render_narrative_section(section: dict[str, Any] | None) -> str:
+    """Render one compact institutional-copy block from the shared contract."""
+    section = section or {}
+    source = str(section.get("source") or "rule")
+    source_text = {"rule": "规则", "llm": "LLM", "fallback": "回退"}.get(source, "规则")
+    source_cls = "llm" if source == "llm" else ("fallback" if source == "fallback" else "rule")
+    rows: list[tuple[str, str]] = []
+    if summary := str(section.get("summary") or "").strip():
+        rows.append(("状态", summary))
+    for value in section.get("context") or []:
+        if text := str(value).strip():
+            rows.append(("结构", text))
+    for value in section.get("levels") or []:
+        if text := str(value).strip():
+            rows.append(("价位", text))
+    for value in section.get("conditions") or []:
+        if text := str(value).strip():
+            rows.append(("条件", text))
+    if invalidation := str(section.get("invalidation") or "").strip():
+        rows.append(("失效", invalidation))
+    body = "".join(
+        f'<div class="narrative-line narrative-{html.escape(kind)}"><b>{html.escape(kind)}：</b>{html.escape(text)}</div>'
+        for kind, text in rows[:6]
+    )
+    return (
+        f'<div class="narrative-section"><span class="narrative-source {source_cls}">{source_text}</span>'
+        f'{body or "<div class=\"narrative-line\">数据不足，等待确认。</div>"}</div>'
+    )
+
+
 def render_key_levels(levels: list[dict]) -> str:
     items = []
     for lv in levels:
@@ -882,12 +1033,11 @@ def render_key_levels(levels: list[dict]) -> str:
 
 def render_strategy_sections(report: dict[str, Any]) -> str:
     c = report["conclusion"]
-    plans = report.get("strategy_plans", [])
     sections = [
         ("1 主方向", f"<p>{c['direction_summary']}。{c['action']}</p>"),
         ("2 关键压力", "<ul class='bullet-list'>" + "".join(f"<li>{x}</li>" for x in report.get("resistance_levels", [])) + "</ul>"),
         ("3 关键支撑", "<ul class='bullet-list'>" + "".join(f"<li>{x}</li>" for x in report.get("support_levels", [])) + "</ul>"),
-        ("4 交易计划", _render_plans_text(plans)),
+        ("4 交易计划", render_trading_plans(report.get("signals") or [])),
         ("5 关键提醒", "<ul class='bullet-list'>" + "".join(f"<li>{x}</li>" for x in report.get("risk_control", [])) + "</ul>"),
     ]
     parts = []
@@ -896,17 +1046,6 @@ def render_strategy_sections(report: dict[str, Any]) -> str:
         parts.append(f'<div class="panel-box"><h4><span class="num-badge">{num}</span>{label}</h4>{body}</div>')
     return "".join(parts)
 
-
-def _render_plans_text(plans: list[dict]) -> str:
-    if not plans:
-        return "<p>暂无计划</p>"
-    blocks = []
-    for p in plans:
-        blocks.append(
-            f"<p><b>{p['name']}</b> — {p['logic']}<br>"
-            f"入场 {p['entry']} | 止损 {p['stop_loss']} | 目标 {p['targets']}</p>"
-        )
-    return "".join(blocks)
 
 
 def render_path_cards(paths: list[dict]) -> str:
@@ -928,63 +1067,16 @@ def render_calendar(events: list[dict]) -> str:
 
 
 def render_trading_plans(signals: list[dict], *, include_primary: bool = True) -> str:
-    if not signals:
-        return "<p>暂无交易计划</p>"
-    status_labels = {
-        "candidate": ("候选区", "#64748b"),
-        "watch": ("等待触发", "#f59e0b"),
-        "active": ("已触发", "#16a34a"),
-        "invalid": ("已失效", "#94a3b8"),
-    }
-    cards = []
-    display_signals = (
-        signals
-        if include_primary
-        else [sig for sig in signals if sig.get("signal_role", "primary") != "primary"]
-    )
+    """Unified A/B/C plan cards with confidence score (score_total / score_grade)."""
+    del include_primary  # kept for backward compatibility; all plans render in one stack
+    display_signals = _display_plan_signals(signals)
     if not display_signals:
-        return '<div class="plan-stack-note">暂无备选计划；当前仅保留上方主交易计划。</div>'
-    for sig in display_signals[:3]:
-        role = sig.get("signal_role", "primary")
-        role_badge = (
-            '<span class="signal-mini-badge alt">逆势备选</span>'
-            if role == "alternate"
-            else '<span class="signal-mini-badge primary">主策略</span>'
-        )
-        css_theme = "short" if sig.get("theme") == "short" else "long"
-        alt = " alt" if role == "alternate" else ""
-        tps = sig.get("take_profits", [])
-        tp_lines = "".join(f"<div><b>TP{n}：</b>{tps[n-1]}</div>" for n in range(1, min(4, len(tps) + 1)))
-        status = sig.get("status", "candidate")
-        status_text, status_color = status_labels.get(status, status_labels["candidate"])
-        source_badge = (
-            '<span class="signal-mini-badge llm">LLM点位</span>'
-            if str(sig.get("setup_type", "")).startswith("llm_")
-            else ""
-        )
-        grade = html.escape(str(sig.get("score_grade") or "—"))
-        score = html.escape(str(sig.get("score_total") or "—"))
-        trigger_note = html.escape(str(sig.get("trigger_note") or "等待触发确认"))
-        reasons = sig.get("score_reasons") or []
-        reason_text = "；".join(html.escape(str(x)) for x in reasons[:2])
-        weight = sig.get("sentiment_bias_pct", sig.get("win_rate", "—"))
-        status_badge = (
-            f'<span style="font-size:10px;color:{status_color};margin-left:6px">'
-            f"{status_text}</span>"
-        )
-        cards.append(f"""
-<div class="plan-card {css_theme}{alt}">
-  <div class="head">{html.escape(str(sig['name']))}{role_badge}{source_badge}{status_badge}</div>
-  <div class="body">
-    <div><b>方向：</b>{sig.get('direction_cn', sig['direction'])}</div>
-    <div><b>入场：</b>{sig['entry_low']} ~ {sig['entry_high']}</div>
-    <div><b>止损：</b>{sig['stop_loss']}</div>
-    {tp_lines}
-    <div><b>盈亏比：</b>{sig['risk_reward']} | <b>结构权重：</b>{weight} <span style="color:#94a3b8;font-size:11px">（非回测胜率）</span></div>
-    <div><b>信号质量：</b>{grade} / {score} · {trigger_note}</div>
-    <div style="color:#64748b;font-size:11px;">{reason_text}</div>
-  </div>
-</div>""")
+        return '<div class="plan-stack"><p>暂无交易计划</p></div>'
+    cards = []
+    for idx, sig in enumerate(display_signals):
+        label = _PLAN_LABELS[idx] if idx < len(_PLAN_LABELS) else f"方案 {idx + 1}"
+        is_primary = sig.get("signal_role") == "primary" or idx == 0
+        cards.append(_render_plan_card(sig, plan_label=label, is_primary=is_primary))
     return f'<div class="plan-stack">{"".join(cards)}</div>'
 
 

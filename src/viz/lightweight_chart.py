@@ -7,7 +7,15 @@ from typing import Any
 
 import pandas as pd
 
+from src.analysis.chart_sr_filters import _SR_CHART_TIMEFRAMES, visible_sr_price_lines
+from src.analysis.chart_zone_filters import (
+    MAX_FVG_ZONES,
+    MAX_OB_ZONES,
+    visible_active_fvgs,
+    visible_order_blocks,
+)
 from src.analysis.ict_pa import TimeframeAnalysis
+from src.analysis.price_action_facts import chart_sr_levels
 
 LINE_COLORS = {
     "EMA20": "#a855f7",
@@ -15,9 +23,11 @@ LINE_COLORS = {
     "EMA610": "#ef4444",
     "VWAP": "#3b82f6",
 }
-
-MAX_FVG_ZONES = 2
-MAX_OB_ZONES = 2
+# LuxAlgo SMC default colors (Pine: fairValueGaps / internal OB)
+LUX_FVG_BULL = {"fill": "rgba(0,255,104,0.30)", "border": "rgba(0,255,104,0.55)", "label": "#00a85c"}
+LUX_FVG_BEAR = {"fill": "rgba(255,0,8,0.30)", "border": "rgba(255,0,8,0.55)", "label": "#cc0006"}
+LUX_OB_BULL = {"fill": "rgba(49,121,245,0.22)", "border": "rgba(49,121,245,0.50)", "label": "#2563eb"}
+LUX_OB_BEAR = {"fill": "rgba(247,124,128,0.22)", "border": "rgba(247,124,128,0.50)", "label": "#e11d48"}
 
 _PROJECTION_STEP_GAP: dict[str, pd.Timedelta] = {
     "5m": pd.Timedelta(hours=3),
@@ -33,6 +43,14 @@ TF_LABELS = {
     "1h": "1H周期 (宏观结构)",
     "4h": "4H周期 (宏观结构)",
     "1d": "日线周期 (主结构)",
+}
+
+TF_SHORT = {
+    "5m": "5M",
+    "15m": "15M",
+    "1h": "1H",
+    "4h": "4H",
+    "1d": "1D",
 }
 
 CHART_VARIANTS: dict[str, dict[str, Any]] = {
@@ -94,111 +112,90 @@ CHART_VARIANTS: dict[str, dict[str, Any]] = {
 }
 
 
-def _zone_title(kind: str, direction: str, low: float, high: float, *, strong: bool = False) -> str:
+def _tf_short(timeframe: str) -> str:
+    return TF_SHORT.get(timeframe, timeframe.upper())
+
+
+def _zone_title(
+    kind: str,
+    direction: str,
+    low: float,
+    high: float,
+    *,
+    half: str | None = None,
+    source_tf: str | None = None,
+) -> str:
     lo, hi = int(round(low)), int(round(high))
-    if kind == "demand":
-        return f"需求/流动性区 {hi}-{lo}"
     if kind == "fvg":
-        prefix = "反抽卖区" if direction == "bearish" else "回调买区"
-        return f"{prefix} (FVG) {lo}-{hi}"
-    prefix = "强势反抽卖区" if direction == "bearish" and strong else (
-        "强势回调买区" if direction == "bullish" and strong else (
-            "反抽卖区" if direction == "bearish" else "回调买区"
-        )
-    )
-    return f"{prefix} (订单块) {lo}-{hi}"
+        tag = "看涨 FVG" if direction == "bullish" else "看跌 FVG"
+        base = f"{tag} {lo}-{hi}"
+    else:
+        tag = "看涨 OB" if direction == "bullish" else "看跌 OB"
+        base = f"{tag} {lo}-{hi}"
+    if half:
+        base = f"{base} ({half})"
+    if source_tf:
+        return f"[{_tf_short(source_tf)}] {base}"
+    return base
+
+
+def _align_ts(ts: pd.Timestamp, ref_index: pd.DatetimeIndex) -> pd.Timestamp:
+    t = pd.Timestamp(ts)
+    if ref_index.tz is not None:
+        if t.tzinfo is None:
+            return t.tz_localize(ref_index.tz)
+        return t.tz_convert(ref_index.tz)
+    if t.tzinfo is not None:
+        return t.tz_convert(None)
+    return t
 
 
 def _to_unix(ts: pd.Timestamp) -> int:
     return int(pd.Timestamp(ts).timestamp())
 
 
-def _ranges_overlap(a_low: float, a_high: float, b_low: float, b_high: float, *, gap: float = 4.0) -> bool:
-    return not (a_high + gap < b_low or b_high + gap < a_low)
+def _bar_delta(plot_df: pd.DataFrame) -> pd.Timedelta:
+    if len(plot_df) < 2:
+        return pd.Timedelta(hours=1)
+    return plot_df.index[-1] - plot_df.index[-2]
 
 
-def _merge_fvg_cluster(fvgs: list) -> tuple[float, float, pd.Timestamp, str]:
-    low = min(f.low for f in fvgs)
-    high = max(f.high for f in fvgs)
-    time = min(f.time for f in fvgs)
-    direction = fvgs[0].direction
-    return low, high, time, direction
+def _zone_future_end(plot_df: pd.DataFrame, start_time: pd.Timestamp) -> pd.Timestamp:
+    """Extend Lux zones/lines far to the right so panning does not clip them."""
+    delta = _bar_delta(plot_df)
+    extend_bars = max(len(plot_df) * 2, 240)
+    return _align_ts(start_time, plot_df.index) + delta * extend_bars
 
 
-def _pick_chart_fvgs(analysis: TimeframeAnalysis, price: float, *, max_zones: int = 1) -> list[tuple[float, float, pd.Timestamp, str]]:
-    """Nearest active bearish FVG above price; merge overlapping gaps."""
-    active = [f for f in analysis.active_fvgs if f.direction == "bearish"]
-    if not active:
-        return []
-
-    above = sorted([f for f in active if f.high >= price * 0.998], key=lambda f: f.low)
-    if not above:
-        active.sort(key=lambda f: abs((f.low + f.high) / 2 - price))
-        above = active[:1]
-
-    clusters: list[list] = []
-    for fvg in above:
-        placed = False
-        for cluster in clusters:
-            if _ranges_overlap(cluster[0].low, cluster[0].high, fvg.low, fvg.high):
-                cluster.append(fvg)
-                placed = True
-                break
-        if not placed:
-            clusters.append([fvg])
-
-    picked: list[tuple[float, float, pd.Timestamp, str]] = []
-    for cluster in sorted(clusters, key=lambda c: c[0].low):
-        picked.append(_merge_fvg_cluster(cluster))
-        if len(picked) >= max_zones:
-            break
-    return picked
-
-
-def _pick_chart_obs(
-    analysis: TimeframeAnalysis,
-    macro: TimeframeAnalysis | None,
-    price: float,
+def _zone_box_data(
+    plot_df: pd.DataFrame,
+    start_time: pd.Timestamp,
+    high: float,
     *,
-    max_zones: int = 2,
-) -> list[tuple[Any, bool]]:
-    """Pick bearish OBs: strong zone from macro TF, tactical zone from execution TF."""
-    exec_obs = [o for o in analysis.order_blocks if o.direction == "bearish"]
-    macro_obs = [o for o in (macro.order_blocks if macro else []) if o.direction == "bearish"]
-
-    result: list[tuple[Any, bool]] = []
-    seen: set[tuple[float, float]] = set()
-
-    def add(ob: Any, strong: bool) -> None:
-        key = (round(ob.low, 2), round(ob.high, 2))
-        if key in seen:
-            return
-        seen.add(key)
-        result.append((ob, strong))
-
-    if macro_obs:
-        strong = max(macro_obs, key=lambda o: (o.high - o.low, o.high))
-        add(strong, True)
-
-    near = sorted([o for o in exec_obs if o.high >= price * 0.995], key=lambda o: o.low)
-    if near:
-        add(near[0], not result)
-
-    if not result and exec_obs:
-        add(max(exec_obs, key=lambda o: (o.high - o.low, o.high)), True)
-
-    return result[:max_zones]
+    end_time: pd.Timestamp | None = None,
+) -> list[dict[str, float | int]]:
+    """Lux-style band top line from start_time through end_time (may extend past last candle)."""
+    t0 = _align_ts(start_time, plot_df.index)
+    t1 = _align_ts(end_time or _zone_future_end(plot_df, t0), plot_df.index)
+    if t0 > t1:
+        t0 = t1
+    val = round(high, 2)
+    t_start_unix = _to_unix(t0)
+    t_end_unix = _to_unix(t1)
+    if t_start_unix == t_end_unix:
+        return [{"time": t_start_unix, "value": val}]
+    return [
+        {"time": t_start_unix, "value": val},
+        {"time": t_end_unix, "value": val},
+    ]
 
 
-def _zone_area_data(plot_df: pd.DataFrame, start_time: pd.Timestamp, high: float) -> list[dict[str, float | int]]:
-    """Area series points: value=high from start_time to end of visible range."""
-    subset = plot_df[plot_df.index >= start_time]
-    if subset.empty:
-        subset = plot_df
-    return [{"time": _to_unix(idx), "value": round(high, 2)} for idx in subset.index]
+def _ob_display_end_time(plot_df: pd.DataFrame) -> pd.Timestamp:
+    """Lux draws each OB box to last_bar_time with extend.right."""
+    return _zone_future_end(plot_df, plot_df.index[-1])
 
 
-def _append_zone(
+def _append_zone_box(
     zones: list[dict[str, Any]],
     *,
     kind: str,
@@ -207,31 +204,91 @@ def _append_zone(
     high: float,
     start_time: pd.Timestamp,
     plot_df: pd.DataFrame,
-    strong: bool = False,
+    source_tf: str,
+    colors: dict[str, str],
+    title: str | None = None,
+    show_label: bool = True,
+    end_time: pd.Timestamp | None = None,
 ) -> None:
-    bear = direction == "bearish"
-    if kind == "demand":
-        fill, border, label_color = "rgba(34,197,94,0.28)", "rgba(34,197,94,0.70)", "#16a34a"
-    elif kind == "fvg":
-        fill = "rgba(244,63,94,0.32)" if bear else "rgba(34,197,94,0.32)"
-        border = "rgba(244,63,94,0.75)" if bear else "rgba(34,197,94,0.75)"
-        label_color = "#e11d48" if bear else "#16a34a"
-    else:
-        fill = "rgba(249,115,22,0.30)" if bear else "rgba(59,130,246,0.30)"
-        border = "rgba(249,115,22,0.80)" if bear else "rgba(59,130,246,0.80)"
-        label_color = "#ea580c" if bear else "#2563eb"
-
+    if high < low:
+        low, high = high, low
     zones.append(
         {
             "kind": kind,
-            "title": _zone_title(kind, direction, low, high, strong=strong),
+            "title": title if show_label else "",
             "low": round(low, 2),
             "high": round(high, 2),
-            "fill": fill,
-            "border": border,
-            "labelColor": label_color,
-            "data": _zone_area_data(plot_df, start_time, high),
+            "fill": colors["fill"],
+            "border": colors["border"],
+            "labelColor": colors["label"],
+            "data": _zone_box_data(plot_df, start_time, high, end_time=end_time),
         }
+    )
+
+
+def _append_lux_fvg(
+    zones: list[dict[str, Any]],
+    fvg,
+    plot_df: pd.DataFrame,
+    source_tf: str,
+) -> None:
+    """Lux FVG: two stacked boxes split at midpoint, extending right until mitigated."""
+    colors = LUX_FVG_BULL if fvg.direction == "bullish" else LUX_FVG_BEAR
+    lo, hi = float(fvg.low), float(fvg.high)
+    mid = (lo + hi) / 2
+    end_time = _zone_future_end(plot_df, fvg.time)
+    base_title = _zone_title("fvg", fvg.direction, lo, hi, source_tf=source_tf)
+    _append_zone_box(
+        zones,
+        kind="fvg",
+        direction=fvg.direction,
+        low=mid,
+        high=hi,
+        start_time=fvg.time,
+        plot_df=plot_df,
+        source_tf=source_tf,
+        colors=colors,
+        title=f"{base_title} (上)",
+        show_label=True,
+        end_time=end_time,
+    )
+    _append_zone_box(
+        zones,
+        kind="fvg",
+        direction=fvg.direction,
+        low=lo,
+        high=mid,
+        start_time=fvg.time,
+        plot_df=plot_df,
+        source_tf=source_tf,
+        colors=colors,
+        title=f"{base_title} (下)",
+        show_label=False,
+        end_time=end_time,
+    )
+
+
+def _append_lux_ob(
+    zones: list[dict[str, Any]],
+    ob,
+    plot_df: pd.DataFrame,
+    source_tf: str,
+    *,
+    end_time: pd.Timestamp,
+) -> None:
+    colors = LUX_OB_BULL if ob.direction == "bullish" else LUX_OB_BEAR
+    _append_zone_box(
+        zones,
+        kind="ob",
+        direction=ob.direction,
+        low=ob.low,
+        high=ob.high,
+        start_time=ob.time,
+        plot_df=plot_df,
+        source_tf=source_tf,
+        colors=colors,
+        title=_zone_title("ob", ob.direction, ob.low, ob.high, source_tf=source_tf),
+        end_time=end_time,
     )
 
 
@@ -241,103 +298,34 @@ def _serialize_overlays(
     plot_df: pd.DataFrame,
     *,
     timeframe: str = "1h",
-    macro_analysis: TimeframeAnalysis | None = None,
     include_projections: bool = True,
+    variant: str = "main",
 ) -> dict[str, Any]:
-    """Build zones (filled blocks), minimal reference lines, and structure markers."""
-    t_min = plot_df.index.min()
-    t_max = plot_df.index.max()
-    price = float(plot_df["Close"].iloc[-1])
+    """Build Lux-style zones for the chart's own timeframe only (no BOS/CHoCH overlays)."""
+    chart_tf = analysis.timeframe
+    if chart_tf != timeframe:
+        timeframe = chart_tf
 
     price_lines: list[dict[str, Any]] = []
     zones: list[dict[str, Any]] = []
-    markers: list[dict[str, Any]] = []
 
-    # EQ reference — macro timeframes only (5m execution chart matches reference layout)
-    if timeframe != "5m" and analysis.equilibrium is not None:
-        price_lines.append(
-            {
-                "price": round(analysis.equilibrium, 2),
-                "color": "#6366f1",
-                "title": "EQ 50%",
-                "style": 2,
-                "label": True,
-            }
-        )
+    for fvg in visible_active_fvgs(analysis, plot_df):
+        _append_lux_fvg(zones, fvg, plot_df, chart_tf)
 
-    swing_low = report["chart"].get("swing_low")
-    if swing_low:
-        sl = float(swing_low)
-        _append_zone(
-            zones,
-            kind="demand",
-            direction="bullish",
-            low=sl - 5,
-            high=sl,
-            start_time=t_min,
-            plot_df=plot_df,
-        )
+    visible_obs = visible_order_blocks(analysis, plot_df)
+    ob_end = _ob_display_end_time(plot_df)
+    for ob in visible_obs:
+        _append_lux_ob(zones, ob, plot_df, chart_tf, end_time=ob_end)
 
-    if analysis.trend != "bullish":
-        for low, high, start, direction in _pick_chart_fvgs(analysis, price, max_zones=1):
-            _append_zone(
-                zones,
-                kind="fvg",
-                direction=direction,
-                low=low,
-                high=high,
-                start_time=start,
-                plot_df=plot_df,
-            )
-        for ob, strong in _pick_chart_obs(analysis, macro_analysis, price, max_zones=MAX_OB_ZONES):
-            _append_zone(
-                zones,
-                kind="ob",
-                direction=ob.direction,
-                low=ob.low,
-                high=ob.high,
-                start_time=ob.time,
-                plot_df=plot_df,
-                strong=strong,
-            )
-    else:
-        bull_fvgs = [f for f in analysis.active_fvgs if f.direction == "bullish"]
-        if bull_fvgs:
-            fvg = min(bull_fvgs, key=lambda f: abs((f.low + f.high) / 2 - price))
-            _append_zone(
-                zones, kind="fvg", direction="bullish", low=fvg.low, high=fvg.high,
-                start_time=fvg.time, plot_df=plot_df,
-            )
-        bull_obs = [o for o in analysis.order_blocks if o.direction == "bullish"]
-        if bull_obs:
-            ob = max(bull_obs, key=lambda o: (o.high - o.low, o.high))
-            _append_zone(
-                zones, kind="ob", direction="bullish", low=ob.low, high=ob.high,
-                start_time=ob.time, plot_df=plot_df, strong=True,
-            )
-
-    # BOS / CHoCH markers — execution TF + macro TF events
-    event_sources = [analysis]
-    if macro_analysis is not None:
-        event_sources.append(macro_analysis)
-    seen_events: set[tuple[str, int]] = set()
-    for src in event_sources:
-        for ev in src.events[-3:]:
-            if ev.time < t_min or ev.time > t_max:
-                continue
-            key = (ev.kind, _to_unix(ev.time))
-            if key in seen_events:
-                continue
-            seen_events.add(key)
-            is_bull = ev.direction == "bullish"
-            markers.append(
-                {
-                    "time": _to_unix(ev.time),
-                    "position": "belowBar" if is_bull else "aboveBar",
-                    "color": "#22c55e" if is_bull else "#ef4444",
-                    "shape": "arrowUp" if is_bull else "arrowDown",
-                    "text": ev.kind,
-                }
+    if report and chart_tf in _SR_CHART_TIMEFRAMES:
+        levels = chart_sr_levels(report, chart_tf)
+        if levels:
+            price_lines.extend(
+                visible_sr_price_lines(
+                    levels,
+                    plot_df,
+                    current_price=float(plot_df["Close"].iloc[-1]),
+                )
             )
 
     projections = (
@@ -348,7 +336,6 @@ def _serialize_overlays(
     return {
         "priceLines": price_lines,
         "zones": zones,
-        "markers": markers,
         "projections": projections,
     }
 
@@ -387,7 +374,6 @@ def build_lightweight_chart_html(
     analysis: TimeframeAnalysis | None = None,
     report: dict[str, Any] | None = None,
     *,
-    macro_analysis: TimeframeAnalysis | None = None,
     timeframe: str = "1h",
     symbol: str = "XAUUSD",
     symbol_name: str = "黄金/美元",
@@ -462,11 +448,11 @@ def build_lightweight_chart_html(
 
     overlays = (
         _serialize_overlays(
-            analysis, report, plot_df, timeframe=timeframe, macro_analysis=macro_analysis,
-            include_projections=show_projections,
+            analysis, report, plot_df, timeframe=timeframe,
+            include_projections=show_projections, variant=variant,
         )
         if analysis is not None and report is not None and show_overlays
-        else {"priceLines": [], "zones": [], "markers": [], "projections": []}
+        else {"priceLines": [], "zones": [], "projections": []}
     )
 
     last_bar = candles[-1] if candles else {"open": 0, "high": 0, "low": 0, "close": 0}
@@ -493,6 +479,11 @@ def build_lightweight_chart_html(
       <span style="margin-left:8px;color:#eab308;">EMA50(黄)</span>
       <span style="margin-left:8px;color:#3b82f6;">VWAP(蓝)</span>
       <span style="margin-left:8px;color:#ef4444;">EMA610(红)</span>
+    </div>"""
+        elif show_zone_labels and variant == "main":
+            price_legend = """
+    <div style="font-size:11px;color:#64748b;margin-top:1px;">
+      5m 主图仅绘制 FVG/OB 色块；BOS/CHoCH/EQH/EQL/H/L 见多周期条带下方文字
     </div>"""
         legend_html = f"""{price_legend}
     <div style="font-size:11px;color:#94a3b8;margin-top:1px;">{smc_note}</div>"""
@@ -526,6 +517,7 @@ def build_lightweight_chart_html(
     body_parts = [header_html] if overlay_header else []
     body_parts.extend([
         f'<div id="zone-labels" style="position:absolute;left:0;top:0;bottom:0;right:{scale_min_width}px;pointer-events:none;z-index:15;overflow:hidden;"></div>',
+        f'<div id="sr-hover-tip" style="position:absolute;pointer-events:none;z-index:25;display:none;"></div>',
         wm_html,
         f'<div id="tv-chart-container" style="width:100%;height:{height}px;touch-action:none;"></div>',
     ])
@@ -569,12 +561,24 @@ def build_lightweight_chart_html(
     white-space:nowrap;
     box-shadow:0 1px 2px rgba(15,23,42,0.06);
   }}
+  .sr-hover-tip {{
+    padding:2px 7px 2px 5px;
+    font-size:{"10px" if variant == "strip" else "11px"};
+    font-weight:600;
+    color:#334155;
+    background:rgba(255,255,255,0.96);
+    border-left:3px solid var(--sr-color, #64748b);
+    white-space:nowrap;
+    box-shadow:0 1px 3px rgba(15,23,42,0.12);
+    transform:translateY(-50%);
+  }}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 (function() {{
   const container = document.getElementById('tv-chart-container');
   const labelsEl = document.getElementById('zone-labels');
+  const srTipEl = document.getElementById('sr-hover-tip');
   const ohlcEl = document.getElementById('tv-ohlc-line');
   const candleMap = {candle_map_json};
   const candleTimes = {candle_times_json};
@@ -591,6 +595,7 @@ def build_lightweight_chart_html(
   const stripAspect = {strip_aspect if strip_aspect else 3.75};
   const stripMinH = {strip_min_h};
   const stripMaxH = {strip_max_h};
+  const srHoverPx = {8 if variant == "strip" else 12};
   let bodyHeight = {height};
 
   const chart = LightweightCharts.createChart(container, {{
@@ -652,6 +657,7 @@ def build_lightweight_chart_html(
     const placed = [];
     const sorted = [...overlays.zones].sort((a, b) => (a.high + a.low) / 2 - (b.high + b.low) / 2);
     for (const zone of sorted) {{
+      if (!zone.title) continue;
       const mid = (zone.low + zone.high) / 2;
       let y = candleSeries.priceToCoordinate(mid);
       if (y == null || y < 24 || y > bodyHeight - 16) continue;
@@ -720,19 +726,6 @@ def build_lightweight_chart_html(
   }}
 
   if (showOverlays) {{
-    for (const pl of overlays.priceLines) {{
-      candleSeries.createPriceLine({{
-        price: pl.price, color: pl.color, lineWidth: 1,
-        lineStyle: pl.style || 0,
-        axisLabelVisible: !!pl.label,
-        title: pl.title || '',
-      }});
-    }}
-
-    if (overlays.markers.length) {{
-      candleSeries.setMarkers(overlays.markers);
-    }}
-
     for (const proj of overlays.projections || []) {{
       const s = chart.addLineSeries({{
         color: proj.color,
@@ -745,6 +738,58 @@ def build_lightweight_chart_html(
       }});
       s.setData(proj.data);
     }}
+  }}
+
+  const srLines = overlays.priceLines || [];
+  for (const pl of srLines) {{
+    candleSeries.createPriceLine({{
+      price: pl.price, color: pl.color, lineWidth: 1,
+      lineStyle: pl.style || 0,
+      axisLabelVisible: true,
+      title: pl.title || String(pl.price),
+    }});
+  }}
+
+  function hideSrTip() {{
+    if (srTipEl) srTipEl.style.display = 'none';
+  }}
+
+  function updateSrHover(param) {{
+    if (!srTipEl || !srLines.length || !param.point) {{
+      hideSrTip();
+      return;
+    }}
+    let best = null;
+    let bestDist = srHoverPx + 1;
+    for (const pl of srLines) {{
+      const y = candleSeries.priceToCoordinate(pl.price);
+      if (y == null) continue;
+      const px = Math.abs(param.point.y - y);
+      if (px <= srHoverPx && px < bestDist) {{
+        bestDist = px;
+        best = pl;
+      }}
+    }}
+    if (!best) {{
+      hideSrTip();
+      return;
+    }}
+    const lineY = candleSeries.priceToCoordinate(best.price);
+    if (lineY == null) {{
+      hideSrTip();
+      return;
+    }}
+    const chartBody = container.parentElement;
+    const bodyRect = chartBody ? chartBody.getBoundingClientRect() : container.getBoundingClientRect();
+    const chartRect = container.getBoundingClientRect();
+    const tipTop = (chartRect.top - bodyRect.top) + lineY;
+    const tipLeft = (chartRect.left - bodyRect.left) + Math.min(Math.max(param.point.x + 10, 4), container.clientWidth - 120);
+    srTipEl.style.display = 'block';
+    srTipEl.style.top = `${{tipTop}}px`;
+    srTipEl.style.left = `${{tipLeft}}px`;
+    srTipEl.style.setProperty('--sr-color', best.color || '#64748b');
+    const hint = best.hint || '';
+    srTipEl.textContent = hint ? `${{best.title}} · ${{hint}}` : String(best.title || best.price);
   }}
 
   chart.timeScale().fitContent();
@@ -760,11 +805,15 @@ def build_lightweight_chart_html(
     chart.subscribeCrosshairMove(param => {{
       if (!param.time || !param.point) {{
         ohlcEl.innerHTML = defaultOhlcHtml;
+        hideSrTip();
         return;
       }}
       const c = candleMap[param.time];
       if (c) ohlcEl.innerHTML = formatOhlc(c, param.time);
+      updateSrHover(param);
     }});
+  }} else {{
+    chart.subscribeCrosshairMove(param => updateSrHover(param));
   }}
 
   new ResizeObserver(() => layoutChart()).observe(container);
@@ -780,6 +829,7 @@ def build_lightweight_chart_html(
     }}
     chart.applyOptions({{ width: w, height: h }});
     positionZoneLabels(candleSeries);
+    hideSrTip();
     if (useStripAspect) {{
       const total = h + 1;
       try {{

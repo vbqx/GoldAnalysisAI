@@ -11,7 +11,7 @@ from src.viz.dashboard_components import (
     render_decision_summary,
     render_footer,
     render_key_levels,
-    render_primary_plan_focus,
+    render_narrative_section,
     render_strategy_sections,
     render_tf_panel,
     render_trading_plans,
@@ -26,7 +26,6 @@ def _embed_chart(
     data,
     analysis,
     report,
-    macro,
     tf,
     *,
     variant: str = "main",
@@ -50,7 +49,6 @@ def _embed_chart(
             data[tf],
             analysis=analysis,
             report=report,
-            macro_analysis=macro,
             timeframe=tf,
             symbol=TV_SYMBOL,
             symbol_name="黄金/美元",
@@ -76,6 +74,7 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
     """One-page dashboard layout (reference: 4 top panels + 3-col body + 4 bottom panels)."""
     meta = report["meta"]
     conclusion = report["conclusion"]
+    narratives = report.get("narrative_sections") or {}
 
     if not hide_title:
         st.markdown(f'<p class="report-title">{meta["title"]}</p>', unsafe_allow_html=True)
@@ -96,15 +95,25 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
 
     top1, top2, top3, top4 = st.columns(4)
     with top1:
-        overview = report.get("market_overview", [])
-        ov_html = "".join(f"<li>{x}</li>" for x in overview[:5])
-        _top_text_panel("📊 市场总览", f'<ul class="bullet-list">{ov_html or "<li>—</li>"}</ul>')
+        if narratives.get("market_overview"):
+            overview_html = render_narrative_section(narratives["market_overview"])
+        else:
+            overview = report.get("market_overview", [])
+            ov_html = "".join(f"<li>{x}</li>" for x in overview[:5])
+            overview_html = f'<ul class="bullet-list">{ov_html or "<li>—</li>"}</ul>'
+        _top_text_panel("📊 市场总览", overview_html)
     with top2:
-        liq = report.get("liquidity", [])[:5]
-        liq_html = "".join(
-            f"<li>[{item['timeframe']}] <b>{item['price']:.0f}</b> {item['label'][:16]}</li>" for item in liq
-        )
-        _top_text_panel("💧 关键流动性", f'<ul class="bullet-list">{liq_html or "<li>—</li>"}</ul>')
+        if narratives.get("liquidity"):
+            liquidity_html = render_narrative_section(narratives["liquidity"])
+        else:
+            liq = report.get("liquidity", [])[:6]
+            liq_html = "".join(
+                f"<li>{'参考·' if item.get('role') == 'context' else ''}"
+                f"[{item['timeframe']}] <b>{item['price']:.0f}</b> {item['label'][:22]}</li>"
+                for item in liq
+            )
+            liquidity_html = f'<ul class="bullet-list">{liq_html or "<li>—</li>"}</ul>'
+        _top_text_panel("💧 关键流动性", liquidity_html)
     with top3:
         _top_text_panel(
             "⚡ 结论要点",
@@ -136,7 +145,6 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
                     data,
                     analyses[tf],
                     report,
-                    analyses.get("1h"),
                     tf,
                     variant="strip",
                     projections=False,
@@ -144,7 +152,9 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
                     iframe_height=chart_iframe_height("strip"),
                 )
                 st.markdown(
-                    render_tf_panel(tf, report["timeframes"][tf], compact=True),
+                    render_narrative_section(narratives[tf])
+                    if narratives.get(tf)
+                    else render_tf_panel(tf, report["timeframes"][tf], compact=True),
                     unsafe_allow_html=True,
                 )
 
@@ -156,7 +166,6 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
             data,
             analyses["5m"],
             report,
-            analyses["15m"],
             "5m",
             variant="main",
             watermark=WATERMARK_TEXT,
@@ -166,8 +175,7 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
         )
     with plan_col:
         st.markdown('<p class="section-h tight">交易计划</p>', unsafe_allow_html=True)
-        st.markdown(render_primary_plan_focus(report), unsafe_allow_html=True)
-        st.markdown(render_trading_plans(report["signals"], include_primary=False), unsafe_allow_html=True)
+        st.markdown(render_trading_plans(report["signals"]), unsafe_allow_html=True)
 
     st.markdown(render_bottom_row(report, conclusion), unsafe_allow_html=True)
     st.markdown(render_footer(report), unsafe_allow_html=True)
@@ -179,13 +187,12 @@ def render_strategy_map(report, data, analyses) -> None:
     st.markdown(f'<p class="report-subtitle">{meta["strategy_subtitle"]}</p>', unsafe_allow_html=True)
     st.markdown(f'<p class="report-meta" style="text-align:right;">生成时间: {meta["updated_at"]}</p>', unsafe_allow_html=True)
     st.markdown(render_decision_summary(report), unsafe_allow_html=True)
-    st.markdown(render_primary_plan_focus(report), unsafe_allow_html=True)
 
     st.markdown('<div class="strategy-layout-anchor"></div>', unsafe_allow_html=True)
     chart_col, levels_col, strategy_col = st.columns([2.2, 0.65, 1.15])
     with chart_col:
-        _embed_chart(data, analyses["15m"], report, analyses["1h"], "15m", variant="strategy", projections=False)
-        _embed_chart(data, analyses["5m"], report, analyses["15m"], "5m", variant="strategy", projections=False)
+        _embed_chart(data, analyses["15m"], report, "15m", variant="strategy", projections=False)
+        _embed_chart(data, analyses["5m"], report, "5m", variant="strategy", projections=False)
     with levels_col:
         st.markdown('<p class="section-h">关键价位</p>', unsafe_allow_html=True)
         st.markdown(render_key_levels(report.get("key_levels", [])), unsafe_allow_html=True)

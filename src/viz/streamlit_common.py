@@ -14,8 +14,8 @@ from src.core.run_config import (
     RunConfig,
     apply_run_config,
     coerce_run_config,
+    default_panel_run_config,
     run_config_for_mode,
-    run_config_from_env,
     run_config_widget_state,
 )
 from src.indicators.verify import indicator_snapshot, indicator_table_rows
@@ -185,6 +185,7 @@ def _on_request_reconfigure() -> None:
     st.session_state[FORCE_REFRESH_KEY] = True
     st.session_state[RUN_CONFIG_READY_KEY] = False
     st.session_state[RUN_CONFIG_REFRESH_UI_KEY] = True
+    st.session_state.pop(RUN_CONFIG_KEY, None)
     st.session_state.pop(RUN_CONFIG_WIDGETS_SEEDED_KEY, None)
 
 
@@ -198,18 +199,8 @@ def render_sidebar_refresh_button() -> None:
 
 
 def _saved_run_config_for_panel() -> RunConfig:
-    """Prefill source: confirmed session config → cached report meta → .env defaults."""
-    cfg = coerce_run_config(st.session_state.get(RUN_CONFIG_KEY))
-    if cfg is not None:
-        return cfg
-    bundle = st.session_state.get(REPORT_SESSION_KEY)
-    if bundle:
-        report = bundle[0] if isinstance(bundle, tuple) else None
-        if isinstance(report, dict):
-            cfg = coerce_run_config(report.get("meta", {}).get("run_config"))
-            if cfg is not None:
-                return cfg
-    return run_config_from_env()
+    """Prefill for the config panel; always default to rule engine on each new visit."""
+    return default_panel_run_config()
 
 
 def _apply_widget_state_from_run_config(config: RunConfig) -> None:
@@ -404,9 +395,9 @@ def _render_run_config_panel() -> None:
     _seed_run_config_widgets_if_needed(seed, force=is_refresh)
     hero_title = "重新生成配置" if is_refresh else "生成前配置"
     hero_sub = (
-        "已载入上次配置，可调整后点击「开始生成报告」"
+        "默认选择规则引擎，可调整后点击「开始生成报告」"
         if is_refresh
-        else "选择规则或 LLM 后再开始拉取数据，避免启动即更新报告"
+        else "默认选择规则引擎模式，可调整后点击「开始生成报告」"
     )
     render_page_hero(hero_title, hero_sub)
 
@@ -557,7 +548,8 @@ def _render_waiting_ui(counter: int, *, show_generation_ui: bool) -> None:
     def _live_poll() -> None:
         render_live_generation_panel(_LIVE_GEN_STATE.get(counter, {}))
         if counter in _GEN_RESULTS or counter in _GEN_ERRORS:
-            placeholder.empty()
+            # Do not placeholder.empty() here — it clears the page before rerun and
+            # leaves a blank screen if the next pass fails to render immediately.
             st.rerun()
 
     _live_poll()
@@ -603,6 +595,7 @@ def ensure_external_data() -> dict:
     if st.session_state.pop(FORCE_REFRESH_KEY, False):
         _invalidate_report_cache()
         st.session_state[RUN_CONFIG_READY_KEY] = False
+        st.session_state.pop(RUN_CONFIG_KEY, None)
         st.session_state.pop(RUN_CONFIG_WIDGETS_SEEDED_KEY, None)
 
     if not st.session_state.get(RUN_CONFIG_READY_KEY):
@@ -658,6 +651,7 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
     if st.session_state.pop(FORCE_REFRESH_KEY, False):
         _invalidate_report_cache()
         st.session_state[RUN_CONFIG_READY_KEY] = False
+        st.session_state.pop(RUN_CONFIG_KEY, None)
         st.session_state.pop(RUN_CONFIG_WIDGETS_SEEDED_KEY, None)
 
     if not st.session_state.get(RUN_CONFIG_READY_KEY):
@@ -696,7 +690,15 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
         _render_waiting_ui(counter, show_generation_ui=show_generation_ui)
         st.stop()
 
-    bundle = _GEN_RESULTS.pop(counter)
+    return _store_report_bundle(counter, _GEN_RESULTS.pop(counter), run_config_fingerprint)
+
+
+def _store_report_bundle(
+    counter: int,
+    bundle: tuple[dict, dict, dict],
+    run_config_fingerprint: str,
+) -> tuple[dict, dict, dict]:
+    """Persist a finished pipeline bundle and clear in-flight generation state."""
     _LIVE_GEN_STATE.pop(counter, None)
     _GEN_THREADS.pop(counter, None)
 
@@ -704,7 +706,7 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
     st.session_state[f"{REPORT_SESSION_KEY}_counter"] = counter
     st.session_state[REPORT_CONFIG_FINGERPRINT_KEY] = run_config_fingerprint
 
-    # Fix #3 [Bug] 子页面残留「报告尚未生成」提示
-    # 原因：show_generation_ui=False 时未 rerun，waiting fragment 与 st.info 残留在子页面。
-    # 生成完成后统一 rerun 一次，下次从 session 缓存返回，页面不再显示等待 UI。
-    st.rerun()
+    # Fix #3 [Bug] 全量 LLM 完成后页面空白
+    # 原因：fragment 先 empty() 再 rerun，ensure_report 缓存后又 st.rerun()，中间两次 rerun
+    # 都未渲染正文，用户看到白屏。改为同一次 rerun 内写入 session 并直接 return。
+    return bundle
