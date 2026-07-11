@@ -1,5 +1,6 @@
 .venv/
 .env
+.streamlit/credentials.toml
 .codex-remote-attachments/
 __pycache__/
 *.pyc

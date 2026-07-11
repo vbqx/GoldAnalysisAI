@@ -1,4 +1,13 @@
-"""GoldAnalysisAI — Streamlit 入口（纯导航，不显示为侧边栏页面）。"""
+"""GoldAnalysisAI — Streamlit 入口（纯导航，不显示为侧边栏页面）。
+
+启动方式（官方，跨平台）：
+    python run_app.py
+    # Windows 也可: .\\run_app.bat
+    # Linux/macOS 也可: ./run_app.sh
+
+请勿直接运行 ``streamlit run app.py``。
+详见 AGENTS.md、README.md。
+"""
 
 from __future__ import annotations
 
