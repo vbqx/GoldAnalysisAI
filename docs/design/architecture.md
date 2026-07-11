@@ -10,7 +10,7 @@
 
 | TradingAgents 模块 | GoldAnalysisAI 对应 | 当前状态 |
 |-----------------|---------------------|----------|
-| **Market** (Yahoo 等) | `data/sources/market.py` → TradingView OANDA:XAUUSD | ✅ 已接入 |
+| **Market** (Yahoo 等) | `data/fetcher.py` → TradingView 或 MT5 | ✅ TradingView 默认；MT5 只读行情可选 |
 | **Technical Analyst** | `agents/analysts/technical.py` | ✅ 规则版（EMA + ICT 结构） |
 | **Fundamentals Analyst** | `agents/analysts/fundamentals.py` | ✅ 规则版（DXY + US10Y via TradingView） |
 | **News Analyst** | `agents/analysts/news.py` | ✅ 规则版（金十 MCP 快讯 + 资讯 + 日历；结构化 HeadlineItem / CalendarEvent） |
@@ -23,7 +23,7 @@
 | **Manager** | `agents/factory.py` → rule / `llm/stages/manager.py` | ✅ 双轨，最终执行/观望决策 |
 | **LLM 报告文案** | `llm/analyst.py` | ✅ 流水线末尾（`LLM_ENABLED`） |
 | **流式 LLM I/O** | `viz/pipeline_progress.py` | ✅ 生成时实时展示 |
-| **Execution** | 券商/MT5 API | MT5 provider 已预留；实盘下单未接入 |
+| **Execution** | 券商/MT5 API | MT5 只读行情已接入；实盘下单未接入 |
 | **Streamlit UI** | `app.py` + `views/*` + `viz/*` | ✅ 三页：机构 / 短线 / LLM 决策 |
 
 ---

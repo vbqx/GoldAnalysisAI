@@ -7,6 +7,7 @@
 | `export_sample_report.py` | 生成 `docs/examples/sample-report.json`（无网络） |
 | `dev-env.ps1` | Windows 开发终端初始化：UTF-8 控制台、Python UTF-8 输出、OpenBLAS 单线程 |
 | `show_utf8.py` | 按 UTF-8 显式读取并带行号输出文本文件，适合中文文档/源码补丁上下文 |
+| `check_mt5_connection.py` | 读取本机 `.env` 的 MT5 配置，做只读连接与 5m K 线自检 |
 
 | 旧脚本 | 新位置 |
 |--------|--------|

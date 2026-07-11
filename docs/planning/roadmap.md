@@ -154,5 +154,5 @@
 2. 风控输出必须保持三档 profile：`aggressive` / `neutral` / `conservative`。
 3. 交易员、风控、经理结论必须写入 `agent_trace.stage_meta` 和 `meta.llm_io`，供 UI 决策链审计。
 4. 与规则风控冲突时，默认采用更保守结论；后续可加入显式 conflict resolver。
-5. 实盘执行仍未启用；MT5 provider 已预留，下一步是只读行情校验，再进入模拟下单/风控熔断。
+5. 实盘执行仍未启用；MT5 只读行情接口已接入，下一步是模拟下单、订单回执审计和风控熔断。
 

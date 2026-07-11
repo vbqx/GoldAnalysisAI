@@ -122,7 +122,7 @@ LLM_ENABLED=true
 
 ## MT5 bridge
 
-`src/data/mt5.py` 预留了可选 MetaTrader 5 provider 边界。默认关闭，不安装 `MetaTrader5` 包也不会影响现有 TradingView 路径：
+`src/data/mt5.py` 提供可选 MetaTrader 5 只读行情 provider。默认关闭，不安装 `MetaTrader5` 包也不会影响现有 TradingView 路径。启用后，主 K 线来源切换为 MT5，新闻 / DXY / 社媒仍沿用现有外部数据源：
 
 ```env
 MT5_ENABLED=false
@@ -132,6 +132,14 @@ MT5_PASSWORD=
 MT5_SERVER=
 MT5_PATH=
 ```
+
+密码只写入本机 `.env`，不要提交。首次连接前需要本机已安装并登录 MetaTrader 5 终端，然后运行：
+
+```bash
+python scripts/check_mt5_connection.py
+```
+
+当前 MT5 接口只读取账号信息与 K 线，不发送订单；实盘/模拟下单仍未接入。
 
 ## 测试
 
