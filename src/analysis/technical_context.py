@@ -1,7 +1,7 @@
 """Shared technical facts for rule analysts, LLM payloads, and narrative.
 
 This module is a context builder, not a signal engine: it normalizes OHLCV,
-ICT/PA/SMC facts, indicators, quality metadata, and support/resistance levels
+ICT/PA/Lux SMC facts, indicators, quality metadata, and support/resistance levels
 so downstream stages can create their own EvidenceItem rows or narratives.
 """
 
@@ -11,7 +11,10 @@ from typing import Any
 
 import pandas as pd
 
-from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
+from src.analysis.ict_pa import TimeframeAnalysis, _latest_structure_labels, sentiment_score
+from src.analysis.display_labels import liquidity_label
+from src.analysis.price_action_facts import build_price_action_summaries
+from src.analysis.tf_snapshot import SNAPSHOT_LIMIT, build_tf_snapshot
 from src.core.types import MarketContext
 from src.indicators.technical import ema_relation, fibonacci_levels, indicator_values
 
@@ -137,17 +140,19 @@ def support_resistance_context(ctx: MarketContext, *, limit: int = 12) -> dict[s
         if not analysis:
             continue
         for zone in analysis.liquidity[:3]:
-            kind = "support" if "low" in zone.kind or "buy" in zone.label.lower() else "resistance"
+            if zone.kind not in ("swing_high", "swing_low"):
+                continue
+            kind = "support" if zone.kind == "swing_low" else "resistance"
             zone_strength = max(float(getattr(zone, "strength", 0.5)), 0.35)
             add_level(
                 price=zone.price,
                 kind=kind,
-                label=zone.label,
+                label=liquidity_label(zone),
                 source=f"liquidity:{zone.kind}",
                 timeframe=tf,
                 strength=weight * 0.85 * zone_strength,
             )
-        for ob in analysis.order_blocks[-2:]:
+        for ob in analysis.order_blocks[:3]:
             add_zone(
                 low=ob.low,
                 high=ob.high,
@@ -201,6 +206,42 @@ def indicator_snapshot(ctx: MarketContext) -> dict[str, Any]:
     return by_timeframe
 
 
+def structure_narrative(analysis: TimeframeAnalysis, *, max_events: int = 2) -> str:
+    """Human-readable structure summary aligned with Lux internal/swing labels."""
+    trend_map = {"bullish": "看涨", "bearish": "看跌", "ranging": "震荡"}
+    pd_map = {"premium": "溢价区", "discount": "折价区", "equilibrium": "均衡", "unknown": "—"}
+    trend = trend_map.get(analysis.trend, analysis.trend)
+    pd_txt = pd_map.get(analysis.premium_discount, "—")
+
+    internal = [e for e in analysis.events if e.scope == "internal"]
+    swing = [e for e in analysis.events if e.scope == "swing"]
+    ibos, ichoch = _latest_structure_labels(analysis.events, scope="internal")
+    sbos, schoch = _latest_structure_labels(analysis.events, scope="swing")
+
+    parts = [
+        f"摆动趋势 {trend}",
+        f"内结构 BOS {ibos if ibos != '无' else '未见'} · CHoCH {ichoch if ichoch != '无' else '未见'}",
+    ]
+    if (sbos, schoch) != (ibos, ichoch) and (sbos != "无" or schoch != "无"):
+        parts.append(
+            f"摆结构 BOS {sbos if sbos != '无' else '未见'} · CHoCH {schoch if schoch != '无' else '未见'}"
+        )
+    parts.append(f"区位 {pd_txt}")
+    if analysis.swing_low is not None and analysis.swing_high is not None:
+        parts.append(f"Swing {analysis.swing_low:.0f}–{analysis.swing_high:.0f}")
+
+    recent = list(internal[-max_events:] or swing[-max_events:])
+    if recent:
+        ev_txt = "；".join(
+            f"{e.kind} {'内结构' if e.scope == 'internal' else '摆动'}"
+            f"{'看涨' if e.direction == 'bullish' else '看跌'} @{e.price:.0f}"
+            for e in reversed(recent)
+        )
+        parts.append(f"近期结构 {ev_txt}")
+
+    return " · ".join(parts)
+
+
 def timeframe_context(
     tf: str,
     analysis: TimeframeAnalysis,
@@ -211,6 +252,7 @@ def timeframe_context(
     fvg_limit: int = 5,
     liquidity_limit: int = 6,
 ) -> dict[str, Any]:
+    lux = build_tf_snapshot(analysis)
     return {
         "timeframe": tf,
         "trend": analysis.trend,
@@ -221,24 +263,32 @@ def timeframe_context(
         "volume_signal": analysis.volume_signal,
         "swing_high": analysis.swing_high,
         "swing_low": analysis.swing_low,
+        "structure_narrative": structure_narrative(analysis),
         "events": _rank_ict_events(analysis, limit=event_limit),
+        "bos_list": lux["bos_list"],
+        "choch_list": lux["choch_list"],
         "order_blocks": [
             {"direction": ob.direction, "low": ob.low, "high": ob.high}
-            for ob in analysis.order_blocks[-ob_limit:]
+            for ob in analysis.order_blocks[:ob_limit]
         ],
         "active_fvgs": [
             {"direction": f.direction, "low": f.low, "high": f.high}
             for f in analysis.active_fvgs[:fvg_limit]
         ],
+        "strong_high": lux["strong_high"],
+        "weak_high": lux["weak_high"],
+        "strong_low": lux["strong_low"],
+        "weak_low": lux["weak_low"],
         "liquidity": [
             {
                 "price": lz.price,
                 "kind": lz.kind,
-                "label": lz.label,
+                "label": liquidity_label(lz),
                 "strength": lz.strength,
                 "swept": lz.swept,
             }
             for lz in analysis.liquidity[:liquidity_limit]
+            if lz.kind in ("swing_high", "swing_low")
         ],
         "distance_to_swing_high_pct": round(distance_pct(price, analysis.swing_high), 3)
         if analysis.swing_high
@@ -300,6 +350,11 @@ def technical_quality(ctx: MarketContext, indicators: dict[str, Any] | None = No
 
 def build_technical_context(ctx: MarketContext, *, event_limit: int = 8) -> dict[str, Any]:
     indicators = indicator_snapshot(ctx)
+    lux_panels = {
+        tf: build_tf_snapshot(ctx.analyses[tf])
+        for tf in ("4h", "1h", "15m")
+        if tf in ctx.analyses
+    }
     return {
         "symbol": "XAUUSD",
         "price": ctx.price,
@@ -313,6 +368,8 @@ def build_technical_context(ctx: MarketContext, *, event_limit: int = 8) -> dict
         "indicators": indicators,
         "fibonacci": fibonacci_context(ctx),
         "support_resistance": support_resistance_context(ctx),
+        "lux_timeframe_panels": lux_panels,
+        "price_action": build_price_action_summaries(ctx.enriched),
         "timeframes": [
             timeframe_context(tf, ctx.analyses[tf], price=ctx.price, event_limit=event_limit)
             for tf in TF_ORDER
@@ -343,6 +400,7 @@ def _rank_ict_events(analysis: TimeframeAnalysis, *, limit: int) -> list[dict[st
             "kind": e.kind,
             "direction": e.direction,
             "price": e.price,
+            "scope": e.scope,
             "time": str(e.time),
         }
         for e in sorted_events[:limit]

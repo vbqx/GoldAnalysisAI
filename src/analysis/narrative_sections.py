@@ -1,0 +1,343 @@
+"""Institutional narrative sections shared by rule and LLM report paths."""
+
+from __future__ import annotations
+
+import re
+from copy import deepcopy
+from typing import Any
+
+from src.analysis.narrative_combine import (
+    COMBINATION_RULES,
+    build_pa_llm_summary,
+    entry_resonance_text,
+    liquidity_pa_side_text,
+    nearest_pa_sr,
+    pa_block,
+    pa_trend_label,
+    tf_pa_condition,
+    tf_pa_context_line,
+    tf_pa_invalidation,
+    tf_pa_structure_levels,
+    value_zone_position,
+)
+
+SECTION_KEYS = ("market_overview", "liquidity", "4h", "1h", "15m")
+SECTION_FIELDS = ("summary", "context", "levels", "conditions", "invalidation")
+MAX_VISIBLE_LINES = 6
+
+_NUMBER_RE = re.compile(r"(?<![A-Za-z])\d+(?:\.\d+)?")
+
+
+def _fmt(value: Any) -> str:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return "—"
+    return f"{number:.0f}" if number.is_integer() else f"{number:.2f}".rstrip("0").rstrip(".")
+
+
+def _section(
+    summary: str,
+    *,
+    context: list[str] | None = None,
+    levels: list[str] | None = None,
+    conditions: list[str] | None = None,
+    invalidation: str = "",
+) -> dict[str, Any]:
+    section = {
+        "summary": summary.strip(),
+        "context": [x for x in (context or []) if x][:1],
+        "levels": [x for x in (levels or []) if x][:2],
+        "conditions": [x for x in (conditions or []) if x][:1],
+        "invalidation": invalidation.strip(),
+        "source": "rule",
+        "confidence": 1.0,
+        "fallback_reason": None,
+    }
+    return section
+
+
+def build_rule_narrative_sections(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Build deterministic, screenshot-density copy from report facts."""
+    metrics = report.get("metrics") or {}
+    price = metrics.get("current_price")
+    daily_low, daily_high = metrics.get("daily_low"), metrics.get("daily_high")
+    conclusion = report.get("conclusion") or {}
+    signals = [s for s in (report.get("signals") or []) if s.get("status") != "invalid"]
+    primary = signals[0] if signals else {}
+
+    trends = [pa_trend_label(price, (pa_block(report, tf).get("volume_profile") or {})) for tf in ("4h", "1h", "15m")]
+    dominant = max(set(trends), key=trends.count) if trends else "待确认"
+    aligned = len(set(trends)) == 1
+    overview_context = (
+        f"4H、1H、15m 量价价值区一致，当前以{dominant}路径为主。"
+        if aligned
+        else "多周期量价价值区分歧，当前以关键量价位确认后的路径为准。"
+    )
+    overview_levels = []
+    pa5 = pa_block(report, "5m")
+    vp5 = pa5.get("volume_profile") or {}
+    if daily_low is not None and daily_high is not None:
+        day_part = f"日内已走 {_fmt(daily_low)}-{_fmt(daily_high)}"
+        if vp5.get("poc") is not None:
+            overview_levels.append(
+                f"{day_part}；量价 POC {_fmt(vp5['poc'])}，VA {_fmt(vp5.get('val'))}-{_fmt(vp5.get('vah'))}。"
+            )
+        else:
+            overview_levels.append(f"{day_part}。")
+    elif vp5.get("poc") is not None:
+        overview_levels.append(
+            f"量价 POC {_fmt(vp5['poc'])}，价值区 {_fmt(vp5.get('val'))}-{_fmt(vp5.get('vah'))}。"
+        )
+    if primary.get("entry_low") is not None and primary.get("entry_high") is not None:
+        resonance = entry_resonance_text(primary, pa5)
+        overview_levels.append(
+            f"PA 入场区 {_fmt(primary['entry_low'])}-{_fmt(primary['entry_high'])}{resonance}。"
+        )
+    va_pos = value_zone_position(price, vp5)
+    overview_summary = f"现价{_fmt(price)}附近，日内主方向为{dominant}"
+    if va_pos:
+        overview_summary += f"，{va_pos}"
+    overview_summary += "。"
+    condition = str(conclusion.get("action") or "等待价格到达关键区域后再确认，不在区间中部追单。")
+    invalidation = str(conclusion.get("direction_summary") or "关键结构被反向突破后，当前判断失效并重新评估。")
+    sections = {
+        "market_overview": _section(
+            overview_summary,
+            context=[overview_context], levels=overview_levels,
+            conditions=[condition], invalidation=invalidation,
+        )
+    }
+
+    pa5_sr = pa5.get("sr_levels") or []
+    liq_levels = []
+    pa_res_above = nearest_pa_sr(pa5_sr, price, "resistance", limit=3)
+    pa_res_below = nearest_pa_sr(pa5_sr, price, "support", limit=3)
+    above_line = liquidity_pa_side_text("上方", pa_res_above)
+    below_line = liquidity_pa_side_text("下方", pa_res_below)
+    if above_line:
+        liq_levels.append(above_line)
+    if below_line:
+        liq_levels.append(below_line)
+    nearest_above = pa_res_above[0].split("(")[0] if pa_res_above else "上方最近量价位"
+    nearest_below = pa_res_below[0].split("(")[0] if pa_res_below else "下方最近量价位"
+    sections["liquidity"] = _section(
+        "量价支撑阻力为主：先扫过关键线再收回，再谈反转。",
+        context=["5m 连续量价/放量衰竭/高波动线反映成交密集区；POC/VAH/VAL 定价值区。"],
+        levels=liq_levels,
+        conditions=[f"扫过{nearest_above}后跌回可观察空头；扫过{nearest_below}后收回可观察多头。"],
+        invalidation="价格持续站在被突破量价位外侧时，反转假设失效。",
+    )
+
+    roles = {
+        "4h": "大级别背景",
+        "1h": "当前结构阶段",
+        "15m": "执行前结构",
+    }
+    for tf in ("4h", "1h", "15m"):
+        pa_tf = pa_block(report, tf)
+        vp_tf = pa_tf.get("volume_profile") or {}
+        trend = pa_trend_label(price, vp_tf)
+        pa_line = tf_pa_context_line(tf, vp_tf, price)
+        spike_n = int(pa_tf.get("volume_spike_count") or 0)
+        hv_n = int(pa_tf.get("high_volatility_count") or 0)
+        structure = pa_line or "量价 Profile 待确认"
+        if spike_n or hv_n:
+            extras = []
+            if spike_n:
+                extras.append(f"放量衰竭 {spike_n} 处")
+            if hv_n:
+                extras.append(f"高波动 {hv_n} 处")
+            structure += " · " + "，".join(extras)
+        structure += "。"
+        levels = tf_pa_structure_levels(pa_tf, price, tf=tf)
+        condition = tf_pa_condition(tf, trend=trend, vp=vp_tf)
+        invalidation = tf_pa_invalidation(trend, vp_tf)
+        sections[tf] = _section(
+            f"{roles[tf]}：{trend}。",
+            context=[structure], levels=levels, conditions=[condition], invalidation=invalidation,
+        )
+    return sections
+
+
+def section_to_bullets(section: dict[str, Any]) -> list[str]:
+    """Flatten one narrative section into legacy bullet lines."""
+    rows: list[str] = []
+    if section.get("summary"):
+        rows.append(str(section["summary"]))
+    rows.extend(str(x) for x in section.get("context") or [])
+    rows.extend(str(x) for x in section.get("levels") or [])
+    rows.extend(str(x) for x in section.get("conditions") or [])
+    if section.get("invalidation"):
+        rows.append(str(section["invalidation"]))
+    return [row for row in rows if row.strip()]
+
+
+def overview_bullets_from_sections(sections: dict[str, dict[str, Any]]) -> list[str]:
+    """Legacy `market_overview` list derived from canonical narrative_sections."""
+    return section_to_bullets(sections.get("market_overview") or {})[:6]
+
+
+def build_narrative_facts(report: dict[str, Any], technical_context: dict[str, Any]) -> dict[str, Any]:
+    """Compact, auditable facts sent to the final narrative LLM."""
+    allowed_levels: list[dict[str, Any]] = []
+
+    def add(level_id: str, value: Any, source: str, *, timeframe: str | None = None, kind: str = "level") -> None:
+        if value is None:
+            return
+        try:
+            number = round(float(value), 2)
+        except (TypeError, ValueError):
+            return
+        allowed_levels.append({"id": level_id, "price": number, "source": source, "timeframe": timeframe, "kind": kind})
+
+    metrics = report.get("metrics") or {}
+    for key in ("current_price", "daily_low", "daily_high", "prev_close"):
+        add(f"metrics.{key}", metrics.get(key), f"metrics.{key}")
+    for idx, row in enumerate(report.get("liquidity") or []):
+        add(f"liquidity.{idx}", row.get("price"), str(row.get("label") or "liquidity"), timeframe=row.get("timeframe"), kind=str(row.get("kind") or "liquidity"))
+    for tf, info in (report.get("timeframes") or {}).items():
+        add(f"{tf}.swing_high", info.get("swing_high"), "swing_high", timeframe=tf)
+        add(f"{tf}.swing_low", info.get("swing_low"), "swing_low", timeframe=tf)
+        for group in ("order_blocks", "fvgs"):
+            for idx, row in enumerate(info.get(group) or []):
+                add(f"{tf}.{group}.{idx}.low", row.get("low"), group, timeframe=tf, kind="zone_low")
+                add(f"{tf}.{group}.{idx}.high", row.get("high"), group, timeframe=tf, kind="zone_high")
+    for idx, signal in enumerate(report.get("signals") or []):
+        for key in ("entry_low", "entry_high", "stop_loss"):
+            add(f"signal.{idx}.{key}", signal.get(key), key, kind="validated_signal")
+        for target_idx, target in enumerate(signal.get("take_profits") or []):
+            add(f"signal.{idx}.tp.{target_idx}", target, "take_profit", kind="validated_signal")
+    for tf, block in (report.get("price_action") or {}).items():
+        vp = (block or {}).get("volume_profile") or {}
+        for key in ("poc", "vah", "val"):
+            add(f"price_action.{tf}.{key}", vp.get(key), key, timeframe=tf, kind="volume_profile")
+        for idx, lvl in enumerate((block or {}).get("sr_levels") or []):
+            add(f"price_action.{tf}.sr.{idx}", lvl.get("price"), str(lvl.get("label") or "sr"), timeframe=tf, kind="sr")
+
+    quality = (technical_context.get("quality") or {}) if isinstance(technical_context, dict) else {}
+    price_action = report.get("price_action") or technical_context.get("price_action") or {}
+    return {
+        "common": {
+            "metrics": metrics,
+            "sentiment": report.get("sentiment") or {},
+            "conclusion": report.get("conclusion") or {},
+            "primary_signal": (report.get("signals") or [None])[0],
+            "quality": quality or {"status": "unavailable", "warnings": ["technical quality unavailable"]},
+        },
+        "liquidity": report.get("liquidity") or [],
+        "timeframes": {tf: (report.get("timeframes") or {}).get(tf, {}) for tf in ("4h", "1h", "15m")},
+        "price_action": price_action,
+        "price_action_summary": build_pa_llm_summary(price_action, price=metrics.get("current_price")),
+        "combination_rules": COMBINATION_RULES,
+        "allowed_levels": allowed_levels,
+        "role_constraints": {
+            "market_overview": COMBINATION_RULES["market_overview"],
+            "liquidity": COMBINATION_RULES["liquidity"],
+            "4h": COMBINATION_RULES["4h"],
+            "1h": COMBINATION_RULES["1h"],
+            "15m": COMBINATION_RULES["15m"],
+        },
+    }
+
+
+def validate_and_merge_llm_sections(
+    raw_sections: Any,
+    *,
+    rule_sections: dict[str, dict[str, Any]],
+    facts: dict[str, Any],
+    mode: str,
+    threshold: float,
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    """Validate each LLM block independently and fall back only that block."""
+    output: dict[str, dict[str, Any]] = {}
+    audit: dict[str, Any] = {}
+    allowed = {round(float(x["price"]), 2) for x in facts.get("allowed_levels", [])}
+    expected_bias = _expected_bias(facts)
+    supplied = raw_sections if isinstance(raw_sections, dict) else {}
+
+    for key in SECTION_KEYS:
+        candidate = supplied.get(key)
+        reason = _validate_section(candidate, allowed=allowed, expected_bias=expected_bias)
+        confidence = _confidence(candidate)
+        if reason is None and mode == "hybrid" and confidence < threshold:
+            reason = f"confidence {confidence:.2f} < {threshold:.2f}"
+        if reason is None:
+            accepted = _normalize_llm_section(candidate)
+            output[key] = accepted
+            audit[key] = {"source": "llm", "accepted": True, "confidence": confidence}
+        else:
+            fallback = deepcopy(rule_sections.get(key) or _section(
+                "数据不足，等待确认。",
+                conditions=["仅在结构与关键价位确认后再执行。"],
+                invalidation="缺少可验证事实时，不建立方向性判断。",
+            ))
+            fallback["source"] = "fallback"
+            fallback["fallback_reason"] = reason
+            output[key] = fallback
+            audit[key] = {"source": "fallback", "accepted": False, "fallback_reason": reason, "confidence": confidence}
+    return output, audit
+
+
+def _confidence(value: Any) -> float:
+    try:
+        return max(0.0, min(1.0, float((value or {}).get("confidence", 0.0))))
+    except (TypeError, ValueError, AttributeError):
+        return 0.0
+
+
+def _normalize_llm_section(value: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "summary": str(value["summary"]).strip(),
+        "context": [str(x).strip() for x in value.get("context", []) if str(x).strip()][:1],
+        "levels": [str(x).strip() for x in value.get("levels", []) if str(x).strip()][:2],
+        "conditions": [str(x).strip() for x in value.get("conditions", []) if str(x).strip()][:1],
+        "invalidation": str(value["invalidation"]).strip(),
+        "source": "llm",
+        "confidence": _confidence(value),
+        "fallback_reason": None,
+    }
+
+
+def _validate_section(value: Any, *, allowed: set[float], expected_bias: str) -> str | None:
+    if not isinstance(value, dict):
+        return "missing or invalid section"
+    if str(value.get("source", "llm")) not in ("llm", ""):
+        return "unknown source"
+    if not str(value.get("summary", "")).strip() or not str(value.get("invalidation", "")).strip():
+        return "summary and invalidation are required"
+    for key in ("context", "levels", "conditions"):
+        rows = value.get(key, [])
+        if not isinstance(rows, list) or any(not isinstance(x, str) for x in rows):
+            return f"{key} must be a string list"
+    visible = 1 + len(value.get("context", [])) + len(value.get("levels", [])) + len(value.get("conditions", [])) + 1
+    if visible > MAX_VISIBLE_LINES:
+        return f"visible lines {visible} > {MAX_VISIBLE_LINES}"
+    text = " ".join(
+        [str(value.get("summary", "")), *value.get("context", []), *value.get("levels", []), *value.get("conditions", []), str(value.get("invalidation", ""))]
+    )
+    if "胜率" in text:
+        return "unsupported win-rate wording"
+    for token in _NUMBER_RE.findall(text):
+        number = float(token)
+        if number < 100:  # timeframe labels, percentages, ratios
+            continue
+        if not any(abs(number - candidate) <= 0.011 for candidate in allowed):
+            return f"unapproved price {token}"
+    if expected_bias == "bearish" and any(word in text for word in ("主方向偏多", "以做多为主", "优先做多")):
+        return "direction conflicts with manager/rule conclusion"
+    if expected_bias == "bullish" and any(word in text for word in ("主方向偏空", "以做空为主", "优先做空")):
+        return "direction conflicts with manager/rule conclusion"
+    return None
+
+
+def _expected_bias(facts: dict[str, Any]) -> str:
+    common = facts.get("common") or {}
+    signal = common.get("primary_signal") or {}
+    direction = str(signal.get("direction") or signal.get("theme") or "").lower()
+    if direction in ("short", "bearish"):
+        return "bearish"
+    if direction in ("long", "bullish"):
+        return "bullish"
+    sentiment = common.get("sentiment") or {}
+    return "bearish" if float(sentiment.get("bearish", 0)) > float(sentiment.get("bullish", 0)) else "bullish"

@@ -9,10 +9,27 @@ from typing import Any
 import pandas as pd
 
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
+from src.analysis.proximity import (
+    EXEC_ATR_MULT,
+    SWING_ATR_MULT,
+    level_near_price,
+    zone_near_price,
+)
 from src.core.types import MarketContext
 from src.config import RISK_REWARD_DISPLAY_CAP, SIGNAL_SL_BELOW_SWING, SIGNAL_SWEEP_OFFSET
+from src.analysis.narrative_sections import build_rule_narrative_sections, overview_bullets_from_sections
+from src.analysis.plan_signals import (
+    build_pa_long_sweep,
+    build_pa_short_aggressive,
+    build_pa_short_conservative,
+    build_rule_pa_block,
+    pa_usable,
+    smc_filter_adjustment,
+)
+from src.analysis.price_action_facts import build_price_action_summaries
+from src.analysis.report_facts import build_liquidity_entries, build_tf_summaries
 from src.data.fetcher import daily_metrics, utc8_now
-from src.indicators.technical import ema_relation, fibonacci_levels
+from src.indicators.technical import fibonacci_levels
 from src.indicators.verify import indicator_snapshot
 from src.log import get_logger
 
@@ -46,47 +63,6 @@ class TradingSignal:
     score_total: float = 0.0
     score_grade: str = "C"
     score_reasons: list[str] = field(default_factory=list)
-
-
-@dataclass
-class _SweepQuality:
-    confirmed: bool
-    score_bonus: float
-    reasons: list[str]
-
-
-def _nearest_zone(price: float, zones: list, direction: str) -> tuple[float, float] | None:
-    candidates = []
-    for z in zones:
-        if direction == "bearish" and z.direction == "bearish" and z.low >= price * 0.998:
-            candidates.append((z.low, z.high))
-        if direction == "bullish" and z.direction == "bullish" and z.high <= price * 1.002:
-            candidates.append((z.low, z.high))
-    if not candidates:
-        return None
-    if direction == "bearish":
-        candidates.sort(key=lambda x: x[0])
-        return candidates[0]
-    candidates.sort(key=lambda x: x[1], reverse=True)
-    return candidates[0]
-
-
-def _sell_fvg_targets(
-    entry_low: float,
-    entry_high: float,
-    swing_low: float,
-) -> tuple[float, float, float, float] | None:
-    """SELL FVG: SL above entry, TP1 below entry_mid. Returns None if geometry invalid."""
-    entry_mid = (entry_low + entry_high) / 2
-    zone_width = max(entry_high - entry_low, 0.01)
-    min_sl_dist = max(zone_width * 0.25, 0.5)
-    sl = max(entry_high + zone_width * 0.5, entry_mid + min_sl_dist)
-    tp1 = entry_mid - max(zone_width * 1.5, entry_mid * 0.003)
-    tp2 = swing_low + (entry_mid - swing_low) * 0.3
-    tp3 = swing_low
-    if sl <= entry_mid or tp1 >= entry_mid:
-        return None
-    return round(sl, 2), round(tp1, 2), round(tp2, 2), round(tp3, 2)
 
 
 def _compute_risk_reward(
@@ -234,7 +210,7 @@ def _setup_status_and_score(
     if trigger_confirmed:
         trigger_note = "触发确认已满足"
         reasons.append("已有触发确认")
-    elif "liquidity_sweep" in setup_type:
+    elif "liquidity_sweep" in setup_type or "pa_val_sweep" in setup_type:
         trigger_note = "等待扫低流动性后收回 + 5m 结构转强"
         reasons.append("尚未确认 sweep + reclaim")
     elif direction == "SELL":
@@ -268,50 +244,6 @@ def _setup_status_and_score(
     return status, trigger_confirmed, trigger_note, score, _grade(score), reasons
 
 
-def _has_bullish_structure_shift(*analyses: TimeframeAnalysis) -> bool:
-    return any(
-        event.direction == "bullish" and event.kind in ("BOS", "CHoCH")
-        for analysis in analyses
-        for event in analysis.events
-    )
-
-
-def _sweep_reclaim_confirmed(
-    *,
-    price: float,
-    swing_low: float,
-    analysis_5m: TimeframeAnalysis,
-    analysis_15m: TimeframeAnalysis,
-) -> _SweepQuality:
-    """Confirm sweep long only after liquidity is taken and reclaimed."""
-    recent_low = analysis_5m.recent_low
-    close = analysis_5m.last_close if analysis_5m.last_close is not None else price
-    atr = analysis_5m.atr or analysis_15m.atr or SIGNAL_SWEEP_OFFSET
-    sweep_buffer = max(atr * 0.10, 0.5)
-    reclaim_buffer = max(atr * 0.05, 0.2)
-    sweep_depth = max(swing_low - recent_low, 0.0) if recent_low is not None else 0.0
-    reclaim_depth = close - swing_low
-    swept = recent_low is not None and sweep_depth >= sweep_buffer
-    reclaimed = reclaim_depth >= reclaim_buffer
-    shifted = _has_bullish_structure_shift(analysis_5m, analysis_15m)
-    reasons: list[str] = [
-        f"sweep depth {sweep_depth:.2f} vs buffer {sweep_buffer:.2f}",
-        f"reclaim {reclaim_depth:.2f} vs required {reclaim_buffer:.2f}",
-    ]
-    if shifted:
-        reasons.append("bullish BOS/CHoCH confirmed")
-    else:
-        reasons.append("missing bullish BOS/CHoCH")
-    score_bonus = 0.0
-    if swept:
-        score_bonus += 3.0
-    if reclaimed:
-        score_bonus += 4.0
-    if shifted:
-        score_bonus += 3.0
-    return _SweepQuality(swept and reclaimed and shifted, score_bonus, reasons)
-
-
 def compute_trading_signals(ctx: MarketContext) -> list[TradingSignal]:
     """Single entry point for pipeline signal generation (trader + report share this)."""
     analyses = ctx.analyses
@@ -323,6 +255,7 @@ def compute_trading_signals(ctx: MarketContext) -> list[TradingSignal]:
     swing_low = (
         primary.swing_low if primary and primary.swing_low else ctx.metrics["daily_low"]
     )
+    price_action = build_price_action_summaries(ctx.enriched)
     return generate_trading_signals(
         ctx.price,
         analyses["5m"],
@@ -330,7 +263,53 @@ def compute_trading_signals(ctx: MarketContext) -> list[TradingSignal]:
         swing_high,
         swing_low,
         sentiment,
+        price_action=price_action,
+        metrics=ctx.metrics,
     )
+
+
+def _apply_smc_filter_score(
+    *,
+    direction: str,
+    entry_low: float,
+    entry_high: float,
+    analysis_5m: TimeframeAnalysis,
+    analysis_15m: TimeframeAnalysis,
+    score: float,
+    reasons: list[str],
+) -> tuple[float, str, list[str]]:
+    filt = smc_filter_adjustment(
+        direction=direction,
+        entry_low=entry_low,
+        entry_high=entry_high,
+        analysis_5m=analysis_5m,
+        analysis_15m=analysis_15m,
+    )
+    score = max(0.0, min(100.0, round(score + filt.bonus, 1)))
+    reasons.extend(filt.reasons)
+    return score, _grade(score), reasons
+
+
+def _finalize_pa_plan_meta(
+    *,
+    rule_fallback: bool,
+    setup_type: str,
+    zone_label: str,
+    score: float,
+    grade: str,
+    reasons: list[str],
+    short_note: str | None = None,
+) -> tuple[str, str, float, str, list[str]]:
+    if rule_fallback:
+        setup_type = f"rule_{setup_type}"
+        note = short_note or f"规则 PA：{zone_label}（DGT 不足，价位锚点回退；SMC 仅过滤）"
+        score = max(0.0, round(score - 8.0, 1))
+        reasons = [*reasons, "DGT 量价不足，规则 PA 回退 (-8)"]
+        grade = _grade(score)
+        return setup_type, note, score, grade, reasons
+    if short_note:
+        return setup_type, short_note, score, grade, reasons
+    return setup_type, f"PA 主：{zone_label}（SMC 仅过滤）", score, grade, reasons
 
 
 def generate_trading_signals(
@@ -340,112 +319,124 @@ def generate_trading_signals(
     swing_high: float,
     swing_low: float,
     sentiment: dict[str, float],
+    *,
+    price_action: dict[str, Any] | None = None,
+    metrics: dict[str, Any] | None = None,
+) -> list[TradingSignal]:
+    if pa_usable(price_action):
+        pa_signals = _generate_pa_signals(
+            price,
+            analysis_5m,
+            analysis_15m,
+            swing_high,
+            swing_low,
+            sentiment,
+            price_action=price_action or {},
+        )
+        if pa_signals:
+            return pa_signals
+
+    rule_pa = {
+        "5m": build_rule_pa_block(
+            price=price,
+            swing_high=swing_high,
+            swing_low=swing_low,
+            analysis_5m=analysis_5m,
+            price_action=price_action,
+            metrics=metrics,
+        )
+    }
+    return _generate_pa_signals(
+        price,
+        analysis_5m,
+        analysis_15m,
+        swing_high,
+        swing_low,
+        sentiment,
+        price_action=rule_pa,
+        rule_fallback=True,
+    )
+
+
+def _generate_pa_signals(
+    price: float,
+    analysis_5m: TimeframeAnalysis,
+    analysis_15m: TimeframeAnalysis,
+    swing_high: float,
+    swing_low: float,
+    sentiment: dict[str, float],
+    *,
+    price_action: dict[str, Any],
+    rule_fallback: bool = False,
 ) -> list[TradingSignal]:
     signals: list[TradingSignal] = []
     bear_pct = int(sentiment.get("bearish", 62))
     bull_pct = int(sentiment.get("bullish", 28))
+    pa5 = price_action.get("5m") or {}
+    atr = analysis_5m.atr or analysis_15m.atr or 5.0
 
-    bear_fvgs = analysis_5m.fvgs + analysis_15m.fvgs
-    bear_obs = [ob for ob in analysis_5m.order_blocks + analysis_15m.order_blocks if ob.direction == "bearish"]
-    bull_obs = [ob for ob in analysis_5m.order_blocks + analysis_15m.order_blocks if ob.direction == "bullish"]
-
-    fvg_zone = _nearest_zone(price, bear_fvgs, "bearish")
-    if fvg_zone:
-        entry_low, entry_high = fvg_zone[0], fvg_zone[1]
-        targets = _sell_fvg_targets(entry_low, entry_high, swing_low)
-        if targets:
-            sl, tp1, tp2, tp3 = targets
-            el, eh = round(entry_low, 2), round(entry_high, 2)
-            tps = [tp1, tp2, tp3]
-            rr = _compute_risk_reward(
+    agg = build_pa_short_aggressive(
+        price=price,
+        pa_block=pa5,
+        swing_low=swing_low,
+        atr=atr,
+    )
+    if agg:
+        zone, sl, tps = agg
+        el, eh = zone.entry_low, zone.entry_high
+        rr = _compute_risk_reward(
+            direction="SELL",
+            entry_low=el,
+            entry_high=eh,
+            stop_loss=sl,
+            take_profits=tps,
+        )
+        if rr != "N/A":
+            status, trigger_ok, trigger_note, score, grade, reasons = _setup_status_and_score(
+                name="激进反抽做空",
                 direction="SELL",
+                theme="short",
+                setup_type="pa_resistance_short",
+                price=price,
                 entry_low=el,
                 entry_high=eh,
                 stop_loss=sl,
                 take_profits=tps,
+                sentiment=sentiment,
             )
-            if rr != "N/A":
-                status, trigger_ok, trigger_note, score, grade, reasons = _setup_status_and_score(
+            score, grade, reasons = _apply_smc_filter_score(
+                direction="SELL",
+                entry_low=el,
+                entry_high=eh,
+                analysis_5m=analysis_5m,
+                analysis_15m=analysis_15m,
+                score=score,
+                reasons=reasons,
+            )
+            setup_type, note, score, grade, reasons = _finalize_pa_plan_meta(
+                rule_fallback=rule_fallback,
+                setup_type="pa_resistance_short",
+                zone_label=zone.label,
+                score=score,
+                grade=grade,
+                reasons=reasons,
+                short_note=f"规则 PA：反弹至{zone.label}做空（SMC 仅过滤）" if rule_fallback else f"PA 主：反弹至{zone.label}做空（SMC 仅过滤）",
+            )
+            signals.append(
+                TradingSignal(
                     name="激进反抽做空",
                     direction="SELL",
-                    theme="short",
-                    setup_type="fvg_retest_short",
-                    price=price,
+                    direction_cn="卖出",
                     entry_low=el,
                     entry_high=eh,
                     stop_loss=sl,
                     take_profits=tps,
-                    sentiment=sentiment,
-                )
-                signals.append(
-                    TradingSignal(
-                        name="激进反抽做空",
-                        direction="SELL",
-                        direction_cn="卖出",
-                        entry_low=el,
-                        entry_high=eh,
-                        stop_loss=sl,
-                        take_profits=tps,
-                        risk_reward=rr,
-                        sentiment_bias_pct=f"{bear_pct}%",
-                        position_size="30% 试探仓",
-                        note="反弹至 FVG / 流动性回补后做空",
-                        theme="short",
-                        setup_type="fvg_retest_short",
-                        status=status,
-                        trigger_confirmed=trigger_ok,
-                        trigger_note=trigger_note,
-                        score_total=score,
-                        score_grade=grade,
-                        score_reasons=reasons,
-                    )
-                )
-
-    if bear_obs:
-        ob = sorted(bear_obs, key=lambda o: o.low)[-1]
-        entry_low, entry_high = round(ob.low, 2), round(ob.high, 2)
-        mid = (entry_low + entry_high) / 2
-        zone_width = max(entry_high - entry_low, 0.01)
-        sl = round(entry_high + zone_width, 2)
-        tp1 = round(mid - zone_width * 2, 2)
-        tp2 = round(swing_low + (mid - swing_low) * 0.5, 2)
-        tp3 = round(swing_low, 2)
-        tps = [tp1, tp2, tp3]
-        rr = _compute_risk_reward(
-            direction="SELL",
-            entry_low=entry_low,
-            entry_high=entry_high,
-            stop_loss=sl,
-            take_profits=tps,
-        )
-        if sl > mid > tp1 and rr != "N/A":
-            status, trigger_ok, trigger_note, score, grade, reasons = _setup_status_and_score(
-                name="保守反抽做空",
-                direction="SELL",
-                theme="short",
-                setup_type="ob_retest_short",
-                price=price,
-                entry_low=entry_low,
-                entry_high=entry_high,
-                stop_loss=sl,
-                take_profits=tps,
-                sentiment=sentiment,
-            )
-            signals.append(
-                TradingSignal(
-                    name="保守反抽做空",
-                    direction="SELL",
-                    direction_cn="卖出",
-                    entry_low=entry_low,
-                    entry_high=entry_high,
-                    stop_loss=sl,
-                    take_profits=tps,
                     risk_reward=rr,
-                    sentiment_bias_pct=f"{max(bear_pct - 5, 45)}%",
-                    position_size="20% 标准仓",
-                    note="更高时间框架 Order Block 反弹做空",
+                    sentiment_bias_pct=f"{bear_pct}%",
+                    position_size="30% 试探仓",
+                    note=note,
                     theme="short",
-                    setup_type="ob_retest_short",
+                    setup_type=setup_type,
                     status=status,
                     trigger_confirmed=trigger_ok,
                     trigger_note=trigger_note,
@@ -455,63 +446,145 @@ def generate_trading_signals(
                 )
             )
 
-    if bull_obs or swing_low:
-        sweep_quality = _sweep_reclaim_confirmed(
-            price=price,
-            swing_low=swing_low,
-            analysis_5m=analysis_5m,
-            analysis_15m=analysis_15m,
+    cons = build_pa_short_conservative(
+        price=price,
+        pa_block=pa5,
+        swing_low=swing_low,
+        atr=atr,
+    )
+    if cons:
+        zone, sl, tps = cons
+        el, eh = zone.entry_low, zone.entry_high
+        rr = _compute_risk_reward(
+            direction="SELL",
+            entry_low=el,
+            entry_high=eh,
+            stop_loss=sl,
+            take_profits=tps,
         )
-        atr = analysis_5m.atr or analysis_15m.atr or 0.0
-        sweep_entry_offset = max(atr * 0.35, SIGNAL_SWEEP_OFFSET)
-        stop_buffer = max(atr * 0.65, SIGNAL_SL_BELOW_SWING)
-        sweep_low = swing_low - sweep_entry_offset
-        tp1 = price
-        tp2 = swing_low + (swing_high - swing_low) * 0.382
-        tp3 = swing_low + (swing_high - swing_low) * 0.5
-        entry_low_r = round(sweep_low, 2)
-        entry_high_r = round(swing_low, 2)
-        sl_r = round(swing_low - stop_buffer, 2)
-        tps = [round(tp1, 2), round(tp2, 2), round(tp3, 2)]
+        if rr != "N/A":
+            status, trigger_ok, trigger_note, score, grade, reasons = _setup_status_and_score(
+                name="保守反抽做空",
+                direction="SELL",
+                theme="short",
+                setup_type="pa_vah_short",
+                price=price,
+                entry_low=el,
+                entry_high=eh,
+                stop_loss=sl,
+                take_profits=tps,
+                sentiment=sentiment,
+            )
+            score, grade, reasons = _apply_smc_filter_score(
+                direction="SELL",
+                entry_low=el,
+                entry_high=eh,
+                analysis_5m=analysis_5m,
+                analysis_15m=analysis_15m,
+                score=score,
+                reasons=reasons,
+            )
+            setup_type, note, score, grade, reasons = _finalize_pa_plan_meta(
+                rule_fallback=rule_fallback,
+                setup_type="pa_vah_short",
+                zone_label=zone.label,
+                score=score,
+                grade=grade,
+                reasons=reasons,
+                short_note=f"规则 PA：{zone.label}做空（SMC 仅过滤）" if rule_fallback else f"PA 主：{zone.label}做空（SMC OB/CHoCH 仅过滤）",
+            )
+            signals.append(
+                TradingSignal(
+                    name="保守反抽做空",
+                    direction="SELL",
+                    direction_cn="卖出",
+                    entry_low=el,
+                    entry_high=eh,
+                    stop_loss=sl,
+                    take_profits=tps,
+                    risk_reward=rr,
+                    sentiment_bias_pct=f"{max(bear_pct - 5, 45)}%",
+                    position_size="20% 标准仓",
+                    note=note,
+                    theme="short",
+                    setup_type=setup_type,
+                    status=status,
+                    trigger_confirmed=trigger_ok,
+                    trigger_note=trigger_note,
+                    score_total=score,
+                    score_grade=grade,
+                    score_reasons=reasons,
+                )
+            )
+
+    long_setup = build_pa_long_sweep(
+        price=price,
+        pa_block=pa5,
+        swing_high=swing_high,
+        swing_low=swing_low,
+        analysis_5m=analysis_5m,
+        analysis_15m=analysis_15m,
+    )
+    if long_setup:
+        zone, sl, tps, sweep_confirmed, sweep_reasons = long_setup
+        el, eh = zone.entry_low, zone.entry_high
         rr = _compute_risk_reward(
             direction="BUY",
-            entry_low=entry_low_r,
-            entry_high=entry_high_r,
-            stop_loss=sl_r,
+            entry_low=el,
+            entry_high=eh,
+            stop_loss=sl,
             take_profits=tps,
         )
         status, trigger_ok, trigger_note, score, grade, reasons = _setup_status_and_score(
             name="右侧扫低做多",
             direction="BUY",
             theme="long",
-            setup_type="liquidity_sweep_long",
+            setup_type="pa_val_sweep_long",
             price=price,
-            entry_low=entry_low_r,
-            entry_high=entry_high_r,
-            stop_loss=sl_r,
+            entry_low=el,
+            entry_high=eh,
+            stop_loss=sl,
             take_profits=tps,
             sentiment=sentiment,
-            trigger_confirmed=sweep_quality.confirmed,
+            trigger_confirmed=sweep_confirmed,
         )
-        if sweep_quality.score_bonus:
-            score = min(100.0, round(score + sweep_quality.score_bonus, 1))
+        reasons.extend(sweep_reasons)
+        score, grade, reasons = _apply_smc_filter_score(
+            direction="BUY",
+            entry_low=el,
+            entry_high=eh,
+            analysis_5m=analysis_5m,
+            analysis_15m=analysis_15m,
+            score=score,
+            reasons=reasons,
+        )
+        if sweep_confirmed:
+            score = min(100.0, round(score + 5.0, 1))
             grade = _grade(score)
-        reasons.extend(sweep_quality.reasons)
+            reasons.append("PA 扫低收回已确认 (+5)")
+        setup_type, note, score, grade, reasons = _finalize_pa_plan_meta(
+            rule_fallback=rule_fallback,
+            setup_type="pa_val_sweep_long",
+            zone_label=zone.label,
+            score=score,
+            grade=grade,
+            reasons=reasons,
+        )
         signals.append(
             TradingSignal(
                 name="右侧扫低做多",
                 direction="BUY",
                 direction_cn="买入",
-                entry_low=entry_low_r,
-                entry_high=entry_high_r,
-                stop_loss=sl_r,
+                entry_low=el,
+                entry_high=eh,
+                stop_loss=sl,
                 take_profits=tps,
                 risk_reward=rr,
                 sentiment_bias_pct=f"{bull_pct}%",
                 position_size="15% 逆势轻仓",
-                note="流动性扫低后短多，严格止损",
+                note=note,
                 theme="long",
-                setup_type="liquidity_sweep_long",
+                setup_type=setup_type,
                 status=status,
                 trigger_confirmed=trigger_ok,
                 trigger_note=trigger_note,
@@ -777,6 +850,41 @@ def build_calendar_events() -> list[dict[str, str]]:
     ]
 
 
+def _build_context_levels(
+    price: float,
+    swing_high: float,
+    swing_low: float,
+    swing_tf: str,
+    swing_atr: float | None,
+) -> list[dict[str, Any]]:
+    """Structure levels kept for decision reference but too far for the 5m execution chart."""
+    levels: list[dict[str, Any]] = []
+    tf_label = swing_tf.upper()
+    if not level_near_price(swing_low, price, swing_atr, atr_mult=SWING_ATR_MULT):
+        levels.append(
+            {
+                "timeframe": swing_tf,
+                "price_low": round(swing_low - 5, 2),
+                "price_high": round(swing_low, 2),
+                "price": round(swing_low, 2),
+                "label": f"远位需求/摆动低点 ({tf_label})",
+                "kind": "support",
+                "role": "context",
+            }
+        )
+    if not level_near_price(swing_high, price, swing_atr, atr_mult=SWING_ATR_MULT):
+        levels.append(
+            {
+                "timeframe": swing_tf,
+                "price": round(swing_high, 2),
+                "label": f"远位供应/摆动高点 ({tf_label})",
+                "kind": "resistance",
+                "role": "context",
+            }
+        )
+    return levels
+
+
 def build_key_levels(
     price: float,
     metrics: dict,
@@ -784,6 +892,9 @@ def build_key_levels(
     swing_low: float,
     fib: list[dict],
     signals: list[TradingSignal],
+    *,
+    swing_tf: str = "4h",
+    swing_atr: float | None = None,
 ) -> list[dict[str, Any]]:
     levels: list[dict[str, Any]] = []
     daily_open = metrics.get("prev_close", price)
@@ -801,24 +912,22 @@ def build_key_levels(
         })
     mid = (swing_high + swing_low) / 2
     levels.append({"price_low": mid - 2, "price_high": mid + 2, "label": "当前分界", "kind": "neutral"})
-    levels.append({"price_low": swing_low, "price_high": swing_low + 12, "label": "下方支撑", "kind": "support"})
+    support_label = (
+        "下方支撑"
+        if zone_near_price(price, swing_low, swing_low + 12, swing_atr, atr_mult=SWING_ATR_MULT)
+        else f"远位支撑 ({swing_tf.upper()})"
+    )
+    support_role = "execution" if support_label == "下方支撑" else "context"
+    levels.append({
+        "price_low": swing_low,
+        "price_high": swing_low + 12,
+        "label": support_label,
+        "kind": "support",
+        "role": support_role,
+        "timeframe": swing_tf,
+    })
 
     return sorted(levels, key=lambda x: -(x.get("price") or x.get("price_high", 0)))
-
-
-def build_market_overview(
-    analyses: dict[str, TimeframeAnalysis],
-    metrics: dict,
-    conclusion: dict,
-) -> list[str]:
-    items = []
-    for tf, label in (("4h", "4H"), ("1h", "1H"), ("15m", "15m")):
-        a = analyses[tf]
-        trend = {"bearish": "偏空", "bullish": "偏多", "ranging": "震荡"}.get(a.trend, "—")
-        items.append(f"{label} 结构：{trend} | BOS {a.bos} | CHoCH {a.choch}")
-    items.append(f"现价 {metrics['current_price']:.2f}，日幅 {metrics['daily_low']:.0f}-{metrics['daily_high']:.0f}")
-    items.append(conclusion["direction_summary"])
-    return items[:5]
 
 
 def build_resistance_support(
@@ -837,11 +946,14 @@ def build_resistance_support(
             resist.append(line)
         elif lv.get("kind") == "support":
             support.append(line)
-    for item in liquidity[:3]:
-        if "Low" in item["label"] or "Buy" in item["label"]:
-            support.append(f"{item['price']:.0f}：{item['label']}")
+    _support_kinds = {"swing_low", "strong_low", "weak_low"}
+    for item in liquidity[:5]:
+        kind = item.get("kind", "")
+        line = f"{item['price']:.0f}：{item['label']}"
+        if kind in _support_kinds:
+            support.append(line)
         else:
-            resist.append(f"{item['price']:.0f}：{item['label']}")
+            resist.append(line)
     return resist[:5], support[:5]
 
 
@@ -849,6 +961,18 @@ def _signal_value(signal: TradingSignal | dict[str, Any], key: str, default: Any
     if isinstance(signal, dict):
         return signal.get(key, default)
     return getattr(signal, key, default)
+
+
+def _assign_signal_roles(signals: list[TradingSignal], sentiment: dict[str, float]) -> None:
+    """Mark one primary plan by dominant sentiment theme; rest are alternates."""
+    pref_theme = "short" if sentiment.get("bearish", 0) >= sentiment.get("bullish", 0) else "long"
+    primary_set = False
+    for sig in signals:
+        if not primary_set and sig.theme == pref_theme and sig.status != "invalid":
+            sig.signal_role = "primary"
+            primary_set = True
+        else:
+            sig.signal_role = "alternate"
 
 
 def build_strategy_plans(signals: list[TradingSignal | dict[str, Any]]) -> list[dict[str, Any]]:
@@ -898,44 +1022,37 @@ def build_report(
 
     sentiment = sentiment_score(analyses)
     primary = analyses.get("4h") or analyses.get("1h")
+    primary_tf = "4h" if analyses.get("4h") else "1h"
     swing_high = primary.swing_high if primary and primary.swing_high else metrics["daily_high"]
     swing_low = primary.swing_low if primary and primary.swing_low else metrics["daily_low"]
+    swing_atr = primary.atr if primary else None
 
     fib = fibonacci_levels(swing_high, swing_low)
+    price_action = build_price_action_summaries(data)
     if signals is None:
         signals = generate_trading_signals(
-            price, analyses["5m"], analyses["15m"], swing_high, swing_low, sentiment,
+            price,
+            analyses["5m"],
+            analyses["15m"],
+            swing_high,
+            swing_low,
+            sentiment,
+            price_action=price_action,
+            metrics=metrics,
         )
+    _assign_signal_roles(signals, sentiment)
     conclusion = build_conclusion(sentiment, primary.trend if primary else "ranging", signals)
 
-    # EMA relations for each TF
-    tf_summary = {}
-    for tf in ("1h", "4h", "15m"):
-        df = data[tf]
-        last = df.iloc[-1]
-        tf_summary[tf] = {
-            "trend": analyses[tf].trend,
-            "bos": analyses[tf].bos,
-            "choch": analyses[tf].choch,
-            "premium_discount": analyses[tf].premium_discount,
-            "equilibrium": analyses[tf].equilibrium,
-            "volume_signal": analyses[tf].volume_signal,
-            "active_fvg_count": len(analyses[tf].active_fvgs),
-            "ema_relation": ema_relation(price, last),
-            "order_blocks": [
-                {"low": ob.low, "high": ob.high, "direction": ob.direction}
-                for ob in analyses[tf].order_blocks[-2:]
-            ],
-            "fvgs": [
-                {"low": fvg.low, "high": fvg.high, "direction": fvg.direction}
-                for fvg in analyses[tf].active_fvgs[-3:] or analyses[tf].fvgs[-2:]
-            ],
-        }
+    tf_summary = build_tf_summaries(data, analyses, price=price)
 
-    liquidity = []
-    for tf in ("1h", "15m", "5m"):
-        for lz in analyses[tf].liquidity:
-            liquidity.append({"timeframe": tf, "price": lz.price, "label": lz.label})
+    liquidity = build_liquidity_entries(
+        analyses,
+        price=price,
+        swing_tf=primary_tf,
+        swing_atr=swing_atr,
+    )
+
+    context_levels = _build_context_levels(price, swing_high, swing_low, primary_tf, swing_atr)
 
     risk_zone = "—"
     short_sigs = [s for s in signals if s.theme == "short"]
@@ -945,7 +1062,10 @@ def build_report(
 
     projections = trend_projections(price, swing_high, swing_low, sentiment)
     path_summary = build_path_summary(projections)
-    key_levels = build_key_levels(price, metrics, swing_high, swing_low, fib, signals)
+    key_levels = build_key_levels(
+        price, metrics, swing_high, swing_low, fib, signals,
+        swing_tf=primary_tf, swing_atr=swing_atr,
+    )
     resist, support = build_resistance_support(key_levels, liquidity)
 
     log.info(
@@ -968,21 +1088,20 @@ def build_report(
     if indicator_notes:
         meta_warnings.extend(indicator_notes)
 
-    return {
+    report = {
         "meta": {
             "symbol": "XAUUSD",
-            "title": "XAUUSD 黄金/美元 机构级交易分析报告 (PA + ICT + SMC)",
+            "title": "XAUUSD 黄金/美元 机构级交易分析报告 (LuxAlgo SMC)",
             "strategy_title": "XAUUSD 黄金 短线交易策略图",
-            "strategy_subtitle": "PA + ICT + SMC | 5min / 15min 简版执行策略",
+            "strategy_subtitle": "LuxAlgo SMC | 5min / 15min 简版执行策略",
             "updated_at": utc8_now().strftime("%Y-%m-%d %H:%M (UTC+8)"),
-            "methodology": "Price Action + ICT + SMC",
+            "methodology": "LuxAlgo Smart Money Concepts",
             "indicator_notes": indicator_notes,
             "warnings": meta_warnings,
         },
         "metrics": metrics,
         "sentiment": sentiment,
         "conclusion": conclusion,
-        "market_overview": build_market_overview(analyses, metrics, conclusion),
         "key_levels": key_levels,
         "resistance_levels": resist,
         "support_levels": support,
@@ -1003,14 +1122,30 @@ def build_report(
             "重要数据/讲话前后缩小仓位或观望",
         ],
         "timeframes": tf_summary,
-        "liquidity": liquidity[:8],
+        "price_action": price_action,
+        "liquidity": liquidity[:10],
+        "context_levels": context_levels,
         "fibonacci": fib,
         "signals": [asdict(s) for s in signals],
         "projections": projections,
         "invalidation": invalidation_rules(analyses["15m"], swing_high, signals),
         "chart": {
-            "timeframe": "1d",
+            "timeframe": primary_tf,
+            "swing_tf": primary_tf,
             "swing_high": swing_high,
             "swing_low": swing_low,
+            "swing_atr": swing_atr,
+            "exec_atr": analyses["5m"].atr,
+            "macro_atr": analyses["15m"].atr,
+            "swing_low_near": zone_near_price(
+                price, swing_low - 5, swing_low, swing_atr, atr_mult=SWING_ATR_MULT,
+            ),
+            "swing_high_near": level_near_price(
+                swing_high, price, swing_atr, atr_mult=SWING_ATR_MULT,
+            ),
+            "overlay_policy": "nearest_lux_internal_ob_visible_fvg",
         },
     }
+    report["narrative_sections"] = build_rule_narrative_sections(report)
+    report["market_overview"] = overview_bullets_from_sections(report["narrative_sections"])
+    return report
