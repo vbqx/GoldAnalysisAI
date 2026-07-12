@@ -124,3 +124,23 @@ def test_execute_aligns_conclusion_with_primary_plan() -> None:
     assert report["conclusion"]["direction_summary"] != header
     assert report["meta"]["final_decision"]["execution_authorized"] is True
     assert report["meta"]["final_decision"]["primary_plan"]["zone"] == "4130-4132"
+
+
+def test_observation_mode_blocks_execution_despite_execute_decision() -> None:
+    report = _minimal_report([{"name": "short A", "theme": "short", "status": "candidate", "position_size": "30%"}])
+    report["meta"]["observation_mode"] = True
+    decision = ManagerDecision(
+        action="execute",
+        primary_direction="short",
+        selected_signal_indices=[0],
+        confidence=0.8,
+        summary="LLM wanted execute",
+        position_scale=0.7,
+    )
+    reviews = [RiskReview("neutral", True, [0], 0.7, [])]
+
+    apply_manager_authorization(report, decision, reviews)
+
+    assert report["meta"]["execution_authorized"] is False
+    assert report["signals"][0]["signal_role"] == "rejected"
+    assert report["strategy_plans"] == []

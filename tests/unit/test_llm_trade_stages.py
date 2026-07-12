@@ -113,6 +113,72 @@ def test_factory_trader_hybrid_accepts_high_confidence_llm(monkeypatch) -> None:
     assert meta.stages["trader"].source == "hybrid"
 
 
+def test_factory_trader_runs_llm_in_observation_mode(monkeypatch) -> None:
+    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
+
+    llm_proposal = TransactionProposal(
+        primary_direction="short",
+        signal_indices=[0],
+        rationale=["LLM short"],
+        debate_bias="bearish",
+    )
+
+    with bind_run_config(agent_mode="llm", llm_enabled=True, llm_stage_trader=True), patch.object(
+        agent_factory,
+        "rule_trader",
+        return_value=(TransactionProposal("short", [0], ["rule"], "bearish"), ["s0"]),
+    ), patch.object(
+        agent_factory,
+        "run_llm_trader",
+        return_value=(llm_proposal, LLMStageTrace(stage="trader", model="test", confidence=0.9)),
+    ):
+        meta = AgentPipelineMeta()
+        proposal, signals = agent_factory.run_trader(
+            None,
+            None,
+            meta,
+            ["s0"],
+            observation_mode=True,
+        )  # type: ignore[arg-type]
+
+    assert proposal is llm_proposal
+    assert meta.stages["trader"].source == "llm"
+    assert signals == ["s0"]
+
+
+def test_factory_risk_runs_llm_then_gates_observation_mode(monkeypatch) -> None:
+    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
+
+    proposal = TransactionProposal("short", [0], ["test"], "bearish")
+    llm_reviews = [
+        RiskReview("aggressive", True, [0], 1.0, ["LLM ok"]),
+        RiskReview("neutral", True, [0], 0.7, ["LLM ok"]),
+        RiskReview("conservative", True, [0], 0.4, ["LLM ok"]),
+    ]
+
+    with bind_run_config(agent_mode="llm", llm_enabled=True, llm_stage_risk=True), patch.object(
+        agent_factory,
+        "rule_risk",
+        return_value=[RiskReview("aggressive", False, [], 0.0, ["rule blocked"])],
+    ), patch.object(
+        agent_factory,
+        "run_llm_risk",
+        return_value=(llm_reviews, LLMStageTrace(stage="risk", model="test", confidence=0.9)),
+    ):
+        meta = AgentPipelineMeta()
+        reviews = agent_factory.run_risk(
+            proposal,
+            [{"direction": "SELL", "theme": "short", "entry_low": 4130.0, "entry_high": 4132.0, "stop_loss": 4140.0, "take_profits": [4120.0]}],
+            meta,
+            current_price=4120.0,
+            data_as_of={"executable": False, "data_age_hours": 40},
+            observation_mode=True,
+        )
+
+    assert meta.stages["risk"].source == "llm"
+    assert all(not review.approved for review in reviews)
+
+
 def test_factory_manager_llm_mode_accepts_llm(monkeypatch) -> None:
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
 
@@ -180,3 +246,14 @@ def test_factory_level_proposer_falls_back_when_llm_empty(monkeypatch) -> None:
 
     assert result == []
     assert meta.stages["llm_levels"].source == "rule"
+
+
+def test_orchestrator_levels_not_skipped_in_observation_mode() -> None:
+    """LLM level proposer must run in observation mode (same as trader/risk)."""
+    from tests._bootstrap import ROOT
+
+    src = (ROOT / "src" / "core" / "orchestrator.py").read_text(encoding="utf-8")
+    start = src.index("llm_level_proposals = []")
+    block = src[start : start + 700]
+    assert "not observation_mode" not in block
+    assert "run_level_proposer" in block

@@ -168,20 +168,21 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
 
     llm_level_proposals = []
     level_validation = []
-    if (
-        not observation_mode
-        and get_run_config().llm_stage_levels
-        and agent_mode() != "rule"
-    ):
-        prog.update("trader", detail="LLM level proposal")
-        llm_level_proposals = agent_factory.run_level_proposer(ctx, analyst_team, debate, pipeline_meta, signals)
-        llm_signals, level_validation = validate_llm_levels(ctx, llm_level_proposals)
-        signals = llm_signals + signals
-    else:
-        reason = "non-executable snapshot" if observation_mode else "LLM_STAGE_LEVELS disabled"
+    if get_run_config().llm_stage_levels and agent_mode() != "rule":
+        levels_detail = "LLM 点位建议"
+        if observation_mode:
+            levels_detail += " · 观察模式（不授权执行）"
+        prog.update("trader", detail=levels_detail)
+        llm_level_proposals = agent_factory.run_level_proposer(
+            ctx, analyst_team, debate, pipeline_meta, signals
+        )
+        if llm_level_proposals:
+            llm_signals, level_validation = validate_llm_levels(ctx, llm_level_proposals)
+            signals = llm_signals + signals
+    elif agent_mode() != "rule":
         pipeline_meta.record(
             "llm_levels",
-            StageMeta(source="rule", fallback_reason=reason),
+            StageMeta(source="rule", fallback_reason="LLM_STAGE_LEVELS disabled"),
         )
     proposal, signals = agent_factory.run_trader(
         ctx,

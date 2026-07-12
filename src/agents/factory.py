@@ -456,18 +456,15 @@ def run_trader(
     observation_mode: bool = False,
 ):
     rule_result = rule_trader(ctx, debate, signals)
-    if observation_mode:
-        pipeline.record(
-            "trader",
-            StageMeta(source="rule", fallback_reason="non-executable snapshot"),
-        )
-        return rule_result
     if not _use_llm_stage(get_run_config().llm_stage_trader):
         get_progress().update("trader", detail="规则引擎")
         pipeline.record("trader", StageMeta(source="rule"))
         return rule_result
 
-    get_progress().update("trader", detail="LLM 交易员提案")
+    detail = "LLM 交易员提案"
+    if observation_mode:
+        detail += " · 观察模式（不授权执行）"
+    get_progress().update("trader", detail=detail)
     llm_result, trace = run_llm_trader(ctx, debate, signals, team=team)
     if get_run_config().agent_mode == "llm" and llm_result is not None and not trace.error:
         pipeline.record("trader", StageMeta(source="llm", llm=trace))
@@ -511,13 +508,15 @@ def run_risk(
         data_as_of=data_as_of,
         observation_mode=observation_mode,
     )
-    if observation_mode:
-        pipeline.record("risk", StageMeta(source="rule", fallback_reason="non-executable snapshot"))
-        return rule_result
     if not _use_llm_stage(get_run_config().llm_stage_risk):
+        get_progress().update("risk", detail="规则引擎")
         pipeline.record("risk", StageMeta(source="rule"))
         return rule_result
 
+    detail = "LLM 风控审核"
+    if observation_mode:
+        detail += " · 观察模式（不授权执行）"
+    get_progress().update("risk", detail=detail)
     llm_result, trace = run_llm_risk(
         proposal,
         len(signals),
@@ -543,8 +542,11 @@ def run_risk(
 def run_manager(proposal: TransactionProposal, reviews: list[RiskReview], pipeline: AgentPipelineMeta) -> ManagerDecision:
     rule_result = rule_manager(proposal, reviews)
     if not _use_llm_stage(get_run_config().llm_stage_manager):
+        get_progress().update("manager", detail="规则引擎")
         pipeline.record("manager", StageMeta(source="rule"))
         return rule_result
+
+    get_progress().update("manager", detail="LLM 经理决策")
 
     llm_result, trace = run_llm_manager(proposal, reviews)
     if get_run_config().agent_mode == "llm" and llm_result is not None and not trace.error:
