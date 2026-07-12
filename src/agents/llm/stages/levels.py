@@ -23,6 +23,7 @@ SYSTEM = f"""你是 XAUUSD 机构级价位提案员。
 {{
   "setups": [
     {{
+      "path_id": "A|B|C",
       "direction": "BUY|SELL",
       "entry_low": 0.0,
       "entry_high": 0.0,
@@ -39,9 +40,13 @@ SYSTEM = f"""你是 XAUUSD 机构级价位提案员。
 }}
 
 硬性约束：
-- SELL：stop_loss 高于入场区；首个 take_profit 低于入场区。
-- BUY：stop_loss 低于入场区；首个 take_profit 高于入场区。
-- 优先 1~3 个 setup；价位不清晰时返回空 setups 数组。
+- 必须返回恰好 3 个 setup，path_id 分别为 A、B、C（不可重复）。
+- A：与 debate 共识一致的主策略路径（顺势、优先执行级）。
+- B：备选/条件触发路径（可同向不同入场区，或等待结构确认后再执行）。
+- C：逆势/对冲/失败备用路径（与 A 相反方向，或主路径失效后的 Plan B）。
+- SELL：stop_loss 高于入场区；首个 take_profit 低于入场区；入场区应在现价上方或包含现价（等待反抽），不得整段落在现价下方。
+- BUY：stop_loss 低于入场区；首个 take_profit 高于入场区；入场区应在现价下方或包含现价（等待回踩），不得整段落在现价上方。
+- 三个路径的 entry/stop/target 必须互不重复；价位不清晰时返回空 setups 数组。
 """
 
 

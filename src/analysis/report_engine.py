@@ -1094,6 +1094,110 @@ def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> N
     ]
 
 
+_MANAGER_ACTION_CN = {
+    "execute": "执行",
+    "reduce": "缩仓执行",
+    "wait": "观望",
+}
+
+
+def _authorized_primary_signal(report: dict[str, Any]) -> dict[str, Any] | None:
+    return next(
+        (s for s in report.get("signals") or [] if s.get("signal_role") == "primary"),
+        None,
+    )
+
+
+def _format_entry_zone(signal: dict[str, Any]) -> str:
+    low, high = signal.get("entry_low"), signal.get("entry_high")
+    if low is None or high is None:
+        return ""
+    return f"{float(low):.0f}-{float(high):.0f}"
+
+
+def build_final_decision_meta(report: dict[str, Any]) -> dict[str, Any]:
+    """Reader-facing verdict block stored on report.meta.final_decision."""
+    meta = report.get("meta") or {}
+    decision = meta.get("manager_decision") or {}
+    action = str(decision.get("action") or "wait").lower()
+    authorized = bool(meta.get("execution_authorized"))
+    summary = str(decision.get("summary") or "").strip()
+    primary = _authorized_primary_signal(report) if authorized else None
+
+    final: dict[str, Any] = {
+        "action": action,
+        "verdict_cn": _MANAGER_ACTION_CN.get(action, action),
+        "execution_authorized": authorized,
+        "summary": summary,
+        "observation_mode": bool(meta.get("observation_mode")),
+    }
+    if primary:
+        final["primary_plan"] = {
+            "name": primary.get("name"),
+            "direction_cn": primary.get("direction_cn"),
+            "zone": _format_entry_zone(primary),
+            "position_size": primary.get("position_size"),
+            "signal_id": primary.get("signal_id"),
+        }
+    return final
+
+
+def align_conclusion_with_manager_decision(report: dict[str, Any]) -> None:
+    """Rewrite conclusion so prose matches manager authorization (wait vs execute)."""
+    meta = report.setdefault("meta", {})
+    conclusion = report.setdefault("conclusion", {})
+    decision = meta.get("manager_decision") or {}
+    action = str(decision.get("action") or "wait").lower()
+    authorized = bool(meta.get("execution_authorized"))
+    summary = str(decision.get("summary") or "").strip()
+    verdict_cn = _MANAGER_ACTION_CN.get(action, action)
+
+    meta["final_decision"] = build_final_decision_meta(report)
+
+    if authorized:
+        primary = _authorized_primary_signal(report)
+        if not primary:
+            return
+        direction_cn = str(primary.get("direction_cn") or verdict_cn)
+        zone = _format_entry_zone(primary)
+        pos = str(primary.get("position_size") or "").strip()
+        thesis = f"今日决策：{verdict_cn} · {direction_cn}"
+        if zone:
+            thesis += f" · 主方案入场 {zone}"
+        if pos:
+            thesis += f"（{pos}）"
+        if summary:
+            thesis += f"。{summary[:160]}"
+        plan_line = str(primary.get("trigger_note") or "按主方案触发条件与止损执行。")
+        conclusion["decision_thesis"] = thesis
+        conclusion["direction_summary"] = plan_line
+        conclusion["action"] = plan_line
+        conclusion["header_conclusion"] = f"{thesis}。{plan_line}"
+        return
+
+    if "structure_direction_summary" not in conclusion:
+        conclusion["structure_direction_summary"] = str(conclusion.get("direction_summary") or "")
+    if "structure_action" not in conclusion:
+        conclusion["structure_action"] = str(conclusion.get("action") or "")
+
+    wait_head = f"今日决策：{verdict_cn}"
+    if meta.get("observation_mode"):
+        wait_head = f"快照观察 · {wait_head}"
+    wait_body = "暂不执行交易计划；以下为结构背景与候选假设，仅供参考。"
+    if summary:
+        wait_body = f"{summary[:160]}。{wait_body}"
+
+    decision_line = f"{wait_head}。{wait_body}"
+    struct_note = str(conclusion.get("structure_direction_summary") or "").strip()
+
+    conclusion["decision_thesis"] = wait_head
+    conclusion["header_conclusion"] = decision_line
+    conclusion["action"] = wait_body
+    conclusion["direction_summary"] = (
+        f"结构背景：{struct_note}" if struct_note else ""
+    )
+
+
 def build_path_summary(projections: list[dict]) -> list[dict[str, Any]]:
     labels = ["路径 A", "路径 B", "路径 C"]
     out = []
@@ -1191,11 +1295,11 @@ def build_report(
     report = {
         "meta": {
             "symbol": "XAUUSD",
-            "title": "XAUUSD 黄金/美元 机构级交易分析报告 (LuxAlgo SMC)",
+            "title": "XAUUSD 黄金/美元 机构级交易分析报告 (SMC+PA)",
             "strategy_title": "XAUUSD 黄金 短线交易策略图",
-            "strategy_subtitle": "LuxAlgo SMC | 5min / 15min 简版执行策略",
+            "strategy_subtitle": "SMC+PA | 5min / 15min 简版执行策略",
             "updated_at": utc8_now().strftime("%Y-%m-%d %H:%M (UTC+8)"),
-            "methodology": "LuxAlgo Smart Money Concepts",
+            "methodology": "SMC + PA",
             "indicator_notes": indicator_notes,
             "warnings": meta_warnings,
         },

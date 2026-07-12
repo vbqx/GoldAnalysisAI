@@ -18,11 +18,57 @@ from src.log import get_logger
 log = get_logger(__name__)
 
 
+def _location_error(ctx: MarketContext, proposal: LevelProposal) -> str | None:
+    price = float(ctx.price)
+    if proposal.direction == "SELL" and proposal.entry_high < price:
+        return (
+            f"SELL entry zone {proposal.entry_low:.2f}-{proposal.entry_high:.2f} "
+            f"is below current price {price:.2f}"
+        )
+    if proposal.direction == "BUY" and proposal.entry_low > price:
+        return (
+            f"BUY entry zone {proposal.entry_low:.2f}-{proposal.entry_high:.2f} "
+            f"is above current price {price:.2f}"
+        )
+    return None
+
+
+def _llm_signal_name(proposal: LevelProposal) -> str:
+    direction_cn = "做空" if proposal.direction == "SELL" else "做多"
+    path = str(proposal.path_id or "").upper()
+    if path in ("A", "B", "C"):
+        return f"LLM路径{path}·{direction_cn}"
+    return f"LLM建议{direction_cn}"
+
+
+def _tp_ladder_error(proposal: LevelProposal) -> str | None:
+    tps = proposal.take_profits
+    if len(tps) < 2:
+        return None
+    entry_mid = (proposal.entry_low + proposal.entry_high) / 2
+    if proposal.direction == "SELL":
+        if any(tp >= entry_mid for tp in tps):
+            return "SELL take_profits must stay below entry_mid"
+        for left, right in zip(tps, tps[1:]):
+            if left <= right:
+                return "SELL take_profits must descend nearest-to-farthest"
+    else:
+        if any(tp <= entry_mid for tp in tps):
+            return "BUY take_profits must stay above entry_mid"
+        for left, right in zip(tps, tps[1:]):
+            if left >= right:
+                return "BUY take_profits must ascend nearest-to-farthest"
+    return None
+
+
 def _geometry_error(proposal: LevelProposal) -> str | None:
     entry_mid = (proposal.entry_low + proposal.entry_high) / 2
     tp1 = proposal.take_profits[0] if proposal.take_profits else None
     if tp1 is None:
         return "missing TP1"
+    ladder_error = _tp_ladder_error(proposal)
+    if ladder_error:
+        return ladder_error
     if proposal.direction == "SELL":
         if proposal.stop_loss <= proposal.entry_high:
             return "SELL stop_loss must be above entry_high"
@@ -63,6 +109,8 @@ def validate_llm_levels(
             stop_loss=proposal.stop_loss,
         ):
             error = f"current price {ctx.price:.2f} has already breached stop_loss {proposal.stop_loss:.2f}"
+        if error is None:
+            error = _location_error(ctx, proposal)
         if error:
             log.info(
                 "llm level rejected idx=%d direction=%s entry=%.2f-%.2f sl=%.2f reason=%s",
@@ -86,8 +134,9 @@ def validate_llm_levels(
         if proposal.invalidation:
             note = f"{note} 失效条件：{proposal.invalidation}"
 
+        signal_name = _llm_signal_name(proposal)
         status, trigger_confirmed, trigger_note, score, grade, reasons = _setup_status_and_score(
-            name=f"LLM {direction_cn}点位",
+            name=signal_name,
             direction=direction,
             theme=theme,
             setup_type=setup_type,
@@ -102,7 +151,7 @@ def validate_llm_levels(
         reasons.append(f"LLM confidence {proposal.confidence:.0%}")
 
         signal = TradingSignal(
-            name=f"LLM建议{direction_cn}",
+            name=signal_name,
             direction=direction,
             direction_cn=direction_cn,
             entry_low=proposal.entry_low,

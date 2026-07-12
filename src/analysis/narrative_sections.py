@@ -22,6 +22,8 @@ from src.analysis.narrative_combine import (
 )
 
 SECTION_KEYS = ("market_overview", "liquidity", "4h", "1h", "15m")
+OVERVIEW_VOLUME_FALLBACK_TFS = ("15m", "5m")
+LIQUIDITY_PA_FALLBACK_TFS = ("15m", "1h")
 SECTION_FIELDS = ("summary", "context", "levels", "conditions", "invalidation")
 MAX_VISIBLE_LINES = 6
 _SECTION_LIST_CAPS = {"context": 1, "levels": 2, "conditions": 1}
@@ -58,6 +60,35 @@ def _section(
     return section
 
 
+def _intraday_pa_block(report: dict[str, Any]) -> dict[str, Any]:
+    """Session-day PA block when available."""
+    return (report.get("price_action") or {}).get("session") or {}
+
+
+def _overview_volume_context(report: dict[str, Any]) -> tuple[dict[str, Any], str]:
+    """Prefer session-day POC/VA; fall back to 15m then 5m."""
+    session = _intraday_pa_block(report)
+    if (session.get("volume_profile") or {}).get("poc") is not None:
+        return session, "当日"
+    for tf in OVERVIEW_VOLUME_FALLBACK_TFS:
+        block = pa_block(report, tf)
+        if (block.get("volume_profile") or {}).get("poc") is not None:
+            return block, tf
+    return pa_block(report, "15m"), "15m"
+
+
+def _liquidity_pa_context(report: dict[str, Any]) -> tuple[dict[str, Any], str]:
+    """Intraday liquidity narrative uses session S/R; 5m reserved for entry plans only."""
+    session = _intraday_pa_block(report)
+    if session.get("sr_levels") or (session.get("volume_profile") or {}).get("poc") is not None:
+        return session, "日内"
+    for tf in LIQUIDITY_PA_FALLBACK_TFS:
+        block = pa_block(report, tf)
+        if block.get("sr_levels") or (block.get("volume_profile") or {}).get("poc") is not None:
+            return block, tf
+    return pa_block(report, "15m"), "15m"
+
+
 def build_rule_narrative_sections(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     """Build deterministic, screenshot-density copy from report facts."""
     metrics = report.get("metrics") or {}
@@ -76,26 +107,28 @@ def build_rule_narrative_sections(report: dict[str, Any]) -> dict[str, dict[str,
         else "多周期量价价值区分歧，当前以关键量价位确认后的路径为准。"
     )
     overview_levels = []
-    pa5 = pa_block(report, "5m")
-    vp5 = pa5.get("volume_profile") or {}
+    pa_overview, volume_label = _overview_volume_context(report)
+    vp_overview = pa_overview.get("volume_profile") or {}
     if daily_low is not None and daily_high is not None:
         day_part = f"日内已走 {_fmt(daily_low)}-{_fmt(daily_high)}"
-        if vp5.get("poc") is not None:
+        if vp_overview.get("poc") is not None:
             overview_levels.append(
-                f"{day_part}；量价 POC {_fmt(vp5['poc'])}，VA {_fmt(vp5.get('val'))}-{_fmt(vp5.get('vah'))}。"
+                f"{day_part}；{volume_label} POC {_fmt(vp_overview['poc'])}，"
+                f"VA {_fmt(vp_overview.get('val'))}-{_fmt(vp_overview.get('vah'))}。"
             )
         else:
             overview_levels.append(f"{day_part}。")
-    elif vp5.get("poc") is not None:
+    elif vp_overview.get("poc") is not None:
         overview_levels.append(
-            f"量价 POC {_fmt(vp5['poc'])}，价值区 {_fmt(vp5.get('val'))}-{_fmt(vp5.get('vah'))}。"
+            f"{volume_label} POC {_fmt(vp_overview['poc'])}，"
+            f"价值区 {_fmt(vp_overview.get('val'))}-{_fmt(vp_overview.get('vah'))}。"
         )
     if primary.get("entry_low") is not None and primary.get("entry_high") is not None:
-        resonance = entry_resonance_text(primary, pa5)
+        resonance = entry_resonance_text(primary, pa_overview)
         overview_levels.append(
             f"PA 入场区 {_fmt(primary['entry_low'])}-{_fmt(primary['entry_high'])}{resonance}。"
         )
-    va_pos = value_zone_position(price, vp5)
+    va_pos = value_zone_position(price, vp_overview)
     overview_summary = f"现价{_fmt(price)}附近，日内主方向为{dominant}"
     if va_pos:
         overview_summary += f"，{va_pos}"
@@ -110,21 +143,27 @@ def build_rule_narrative_sections(report: dict[str, Any]) -> dict[str, dict[str,
         )
     }
 
-    pa5_sr = pa5.get("sr_levels") or []
+    pa_liq, liq_label = _liquidity_pa_context(report)
+    pa_liq_sr = pa_liq.get("sr_levels") or []
+    vp_liq = pa_liq.get("volume_profile") or {}
     liq_levels = []
-    pa_res_above = nearest_pa_sr(pa5_sr, price, "resistance", limit=3)
-    pa_res_below = nearest_pa_sr(pa5_sr, price, "support", limit=3)
+    pa_res_above = nearest_pa_sr(pa_liq_sr, price, "resistance", limit=3)
+    pa_res_below = nearest_pa_sr(pa_liq_sr, price, "support", limit=3)
     above_line = liquidity_pa_side_text("上方", pa_res_above)
     below_line = liquidity_pa_side_text("下方", pa_res_below)
     if above_line:
         liq_levels.append(above_line)
     if below_line:
         liq_levels.append(below_line)
+    if not liq_levels and vp_liq.get("poc") is not None:
+        liq_levels.append(
+            f"{liq_label} POC {_fmt(vp_liq['poc'])}，VA {_fmt(vp_liq.get('val'))}-{_fmt(vp_liq.get('vah'))}。"
+        )
     nearest_above = pa_res_above[0].split("(")[0] if pa_res_above else "上方最近量价位"
     nearest_below = pa_res_below[0].split("(")[0] if pa_res_below else "下方最近量价位"
     sections["liquidity"] = _section(
         "量价支撑阻力为主：先扫过关键线再收回，再谈反转。",
-        context=["5m 连续量价/放量衰竭/高波动线反映成交密集区；POC/VAH/VAL 定价值区。"],
+        context=[f"{liq_label}连续量价/放量衰竭/高波动线反映成交密集区；POC/VAH/VAL 定价值区。"],
         levels=liq_levels,
         conditions=[f"扫过{nearest_above}后跌回可观察空头；扫过{nearest_below}后收回可观察多头。"],
         invalidation="价格持续站在被突破量价位外侧时，反转假设失效。",
@@ -179,7 +218,12 @@ def overview_bullets_from_sections(sections: dict[str, dict[str, Any]]) -> list[
     return section_to_bullets(sections.get("market_overview") or {})[:6]
 
 
-def build_narrative_facts(report: dict[str, Any], technical_context: dict[str, Any]) -> dict[str, Any]:
+def build_narrative_facts(
+    report: dict[str, Any],
+    technical_context: dict[str, Any],
+    *,
+    compact_for_llm: bool = False,
+) -> dict[str, Any]:
     """Compact, auditable facts sent to the final narrative LLM."""
     context_levels: list[dict[str, Any]] = []
     authorized_execution_levels: list[dict[str, Any]] = []
@@ -262,7 +306,7 @@ def build_narrative_facts(report: dict[str, Any], technical_context: dict[str, A
     if primary is None:
         eligible = [s for s in (report.get("signals") or []) if s.get("signal_role") != "rejected"]
         primary = eligible[0] if eligible else {}
-    return {
+    facts: dict[str, Any] = {
         "common": {
             "metrics": metrics,
             "sentiment": report.get("sentiment") or {},
@@ -275,7 +319,6 @@ def build_narrative_facts(report: dict[str, Any], technical_context: dict[str, A
         },
         "liquidity": report.get("liquidity") or [],
         "timeframes": {tf: (report.get("timeframes") or {}).get(tf, {}) for tf in ("4h", "1h", "15m")},
-        "price_action": price_action,
         "price_action_summary": build_pa_llm_summary(price_action, price=metrics.get("current_price")),
         "combination_rules": COMBINATION_RULES,
         "context_levels": context_levels,
@@ -290,6 +333,9 @@ def build_narrative_facts(report: dict[str, Any], technical_context: dict[str, A
             "15m": COMBINATION_RULES["15m"],
         },
     }
+    if not compact_for_llm:
+        facts["price_action"] = price_action
+    return facts
 
 
 def validate_and_merge_llm_sections(
@@ -423,8 +469,8 @@ def _expected_bias(facts: dict[str, Any]) -> str:
 
 
 def _price_tolerance(reference: float) -> float:
-    """Loose match for rounded LLM prices (e.g. 2650 vs 2650.5 on XAUUSD)."""
-    return max(0.5, abs(reference) * 0.0002)
+    """Loose match for rounded LLM prices (e.g. 4021 vs 4021.82 on XAUUSD)."""
+    return max(1.0, abs(reference) * 0.0002)
 
 
 def _unapproved_prices(text: str, allowed: set[float]) -> str | None:
@@ -449,7 +495,32 @@ _EXECUTABLE_ON_WAIT = (
     "市价开仓",
     "马上入场",
     "马上开仓",
+    "可追空",
+    "可追多",
+    "可考虑做空",
+    "可考虑做多",
+    "优先做空",
+    "优先做多",
+    "追空至",
+    "追多至",
+    "追空",
+    "追多",
 )
+
+_EXECUTABLE_ON_WAIT_PATTERNS = (
+    r"等待.{0,16}(做空|做多|追空|追多)",
+    r"反弹.{0,12}(做空|追空)",
+    r"回踩.{0,12}(做多|追多)",
+    r"跌破.{0,24}(追空|做空)",
+    r"突破.{0,24}(追多|做多)",
+    r"可.{0,4}(做空|做多|追空|追多)",
+)
+
+
+def _executable_wording_on_wait(text: str) -> bool:
+    if any(phrase in text for phrase in _EXECUTABLE_ON_WAIT):
+        return True
+    return any(re.search(pattern, text) for pattern in _EXECUTABLE_ON_WAIT_PATTERNS)
 
 
 def _direction_conflict(text: str, expected_bias: str) -> str | None:
@@ -525,10 +596,11 @@ def validate_llm_top_level_fields(
             if conflict:
                 reasons[key] = conflict
                 continue
-        if key == "action_plan" and manager_wait and any(
-            phrase in text for phrase in _EXECUTABLE_ON_WAIT
-        ):
+        if key == "action_plan" and manager_wait and _executable_wording_on_wait(text):
             reasons[key] = "executable wording while manager action is wait"
+            continue
+        if key == "action_plan" and not execution_ok and _executable_wording_on_wait(text):
+            reasons[key] = "executable wording without manager authorization"
 
     return reasons
 

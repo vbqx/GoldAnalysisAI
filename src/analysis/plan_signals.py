@@ -144,10 +144,11 @@ def _nearest_pa_sr(
         if lvl.get("direction") == direction and lvl.get("price") is not None
     ]
     if direction == "resistance":
-        parsed = [lvl for lvl in parsed if float(lvl["price"]) >= float(price) * 0.998]
+        # Short zones must sit at/above market — never pick support-turned-resistance below price.
+        parsed = [lvl for lvl in parsed if float(lvl["price"]) >= float(price)]
         parsed.sort(key=lambda x: float(x["price"]))
     else:
-        parsed = [lvl for lvl in parsed if float(lvl["price"]) <= float(price) * 1.002]
+        parsed = [lvl for lvl in parsed if float(lvl["price"]) <= float(price)]
         parsed.sort(key=lambda x: -float(x["price"]))
     return parsed[0] if parsed else None
 
@@ -352,6 +353,8 @@ def build_pa_short_aggressive(
     if sr is None:
         return None
     zone = _resistance_zone(sr, atr)
+    if zone.entry_high < float(price):
+        return None
     vp = pa_block.get("volume_profile") or {}
     targets = _sell_targets(
         zone.entry_low,

@@ -15,8 +15,8 @@ from src.analysis.field_glossary import PA_SUMMARY_HINT
 RESONANCE_TOLERANCE = 8.0  # XAUUSD points
 
 COMBINATION_RULES: dict[str, str] = {
-    "market_overview": "多周期 PA 价值区投票定主方向；5m POC/VA 定执行区；PA 交易计划入场区单独标注。",
-    "liquidity": "仅 PA 5m 量价 S/R（连续/放量/高波动）与 VAH/VAL；上方阻力、下方支撑分侧叙述。",
+    "market_overview": "多周期 PA 价值区投票定主方向；当日(session) POC/VA 定日内成交控制区；PA 交易计划入场区单独标注。",
+    "liquidity": "仅 PA 日内(session) 量价 S/R 与 VAH/VAL；上方阻力、下方支撑分侧叙述；5m 仅用于入场计划。",
     "4h": "仅 PA：该周期 POC/VA 与现价区位；放量/高波动线作大级别阻力支撑。",
     "1h": "仅 PA：POC/VA 与近端量价阻力支撑；不写 BOS/CHoCH/OB。",
     "15m": "仅 PA：执行周期 POC/VA、近端 S/R；触发条件基于量价收回/拒绝。",
