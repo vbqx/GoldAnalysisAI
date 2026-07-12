@@ -30,6 +30,7 @@ _last_error: str | None = None
 
 
 from src.data.proxy_env import apply_system_proxy, read_system_proxy
+from src.data.url_redact import redact_url
 
 
 def _read_system_proxy() -> str | None:
@@ -40,7 +41,7 @@ def _setup_proxy() -> None:
     """Configure proxy for WebSocket connections from system settings."""
     proxy = apply_system_proxy()
     if proxy:
-        log.info("using proxy %s", proxy)
+        log.info("using proxy %s", redact_url(proxy))
 
 
 # Apply proxy at module import time (before tvDatafeed/websocket-client is loaded)

@@ -234,11 +234,10 @@ def _terminate_pid(pid: int) -> None:
 
 def stop_stale_streamlit(port: int) -> None:
     targets: list[int] = []
-    streamlit_pids = _streamlit_pids(ROOT)
     port_streamlit_pids = [
         pid for pid in _pids_listening_on_port(port) if _is_project_streamlit_pid(pid, ROOT)
     ]
-    for pid in streamlit_pids + port_streamlit_pids:
+    for pid in port_streamlit_pids:
         if pid not in targets:
             targets.append(pid)
 
@@ -247,7 +246,7 @@ def stop_stale_streamlit(port: int) -> None:
         return
 
     for pid in targets:
-        print(f"Stopping stale Streamlit (PID {pid})...")
+        print(f"Stopping stale Streamlit on port {port} (PID {pid})...")
         _terminate_pid(pid)
 
 
