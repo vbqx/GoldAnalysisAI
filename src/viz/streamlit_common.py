@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import threading
+import uuid
 from datetime import timedelta
 from pathlib import Path
 
@@ -18,21 +19,27 @@ from src.core.run_config import (
     run_config_for_mode,
     run_config_widget_state,
 )
+from src.core.run_context import reset_run_config, set_run_config
 from src.indicators.verify import indicator_snapshot, indicator_table_rows
 from src.log import get_logger
 from src.pipeline import run_analysis
 from src.viz.dashboard_components import DASHBOARD_CSS
+from src.viz.generation_state import access_job, create_job, drop_job, get_job, purge_expired, update_live
 
 log = get_logger(__name__)
 
 REPORT_SESSION_KEY = "report_bundle"
 FORCE_REFRESH_KEY = "force_refresh_report"
-REFRESH_COUNTER_KEY = "report_refresh_counter"
 RUN_CONFIG_KEY = "report_run_config"
 RUN_CONFIG_READY_KEY = "report_run_config_ready"
 REPORT_CONFIG_FINGERPRINT_KEY = f"{REPORT_SESSION_KEY}_run_config_fingerprint"
 RUN_CONFIG_REFRESH_UI_KEY = "run_config_refresh_ui"
 RUN_CONFIG_WIDGETS_SEEDED_KEY = "run_config_widgets_seeded"
+SESSION_ID_KEY = "_ga_session_uuid"
+GENERATION_ID_KEY = "_ga_generation_uuid"
+REPORT_GENERATION_ID_KEY = f"{REPORT_SESSION_KEY}_generation_id"
+
+_GEN_LOCK = threading.Lock()
 
 _MODE_LABEL_TO_VALUE = {
     "规则引擎": "rule",
@@ -57,31 +64,42 @@ _PIPELINE_STAGE_WIDGETS: tuple[tuple[str, str, bool], ...] = (
 )
 _RESERVED_STAGE_HELP = "高级 LLM 阶段开关会写入本次生成配置"
 
-_GEN_THREADS: dict[int, threading.Thread] = {}
-_GEN_RESULTS: dict[int, tuple[dict, dict, dict]] = {}
-_GEN_ERRORS: dict[int, BaseException] = {}
-_LIVE_GEN_STATE: dict[int, dict] = {}
-_GEN_LOCK = threading.Lock()
+
+def _session_id() -> str:
+    if SESSION_ID_KEY not in st.session_state:
+        st.session_state[SESSION_ID_KEY] = str(uuid.uuid4())
+    return str(st.session_state[SESSION_ID_KEY])
+
+
+def _generation_id() -> str:
+    if GENERATION_ID_KEY not in st.session_state:
+        st.session_state[GENERATION_ID_KEY] = str(uuid.uuid4())
+    return str(st.session_state[GENERATION_ID_KEY])
+
+
+def _job_key() -> str:
+    return f"{_session_id()}:{_generation_id()}"
 
 
 class _ModuleSyncProgressReporter(ProgressReporter):
     """Sync pipeline progress to module state for live UI polling (thread-safe enough)."""
 
-    def __init__(self, counter: int) -> None:
+    def __init__(self, job_key: str) -> None:
         super().__init__()
-        self._counter = counter
+        self._job_key = job_key
         self._sync()
 
     def _sync(self) -> None:
         with self._lock:
-            prev = _LIVE_GEN_STATE.get(self._counter, {})
+            job = access_job(self._job_key)
+            prev = (job.live if job else {}) or {}
             external = self.external_snapshot or prev.get("external")
             snapshot = {
                 "steps": self.snapshot(),
                 "llm_io": self.llm_io_snapshot(),
                 "external": external,
             }
-        _LIVE_GEN_STATE[self._counter] = snapshot
+        update_live(self._job_key, snapshot)
 
     def _on_change(self) -> None:
         self._sync()
@@ -255,19 +273,19 @@ def render_sidebar_footer(data: dict | None = None) -> None:
             ]))
 
 
-def _next_refresh_counter() -> int:
-    if REFRESH_COUNTER_KEY not in st.session_state:
-        st.session_state[REFRESH_COUNTER_KEY] = 0
-    return int(st.session_state[REFRESH_COUNTER_KEY])
+def _rotate_generation_id() -> str:
+    new_id = str(uuid.uuid4())
+    st.session_state[GENERATION_ID_KEY] = new_id
+    return new_id
 
 
 def _invalidate_report_cache() -> None:
-    old = _next_refresh_counter()
-    st.session_state[REFRESH_COUNTER_KEY] = old + 1
+    old_key = _job_key()
+    drop_job(old_key, session_id=_session_id())
+    _rotate_generation_id()
     st.session_state.pop(REPORT_SESSION_KEY, None)
-    st.session_state.pop(f"{REPORT_SESSION_KEY}_counter", None)
+    st.session_state.pop(REPORT_GENERATION_ID_KEY, None)
     st.session_state.pop(REPORT_CONFIG_FINGERPRINT_KEY, None)
-    _clear_generation_state(old)
 
 
 
@@ -464,13 +482,8 @@ def _render_run_config_panel() -> None:
     st.stop()
 
 
-def _clear_generation_state(counter: int) -> None:
-    _GEN_RESULTS.pop(counter, None)
-    _GEN_ERRORS.pop(counter, None)
-    _LIVE_GEN_STATE.pop(counter, None)
-    thread = _GEN_THREADS.pop(counter, None)
-    if thread and thread.is_alive():
-        log.info("refresh requested while generation running counter=%s", counter)
+def _clear_generation_state(job_key: str) -> None:
+    drop_job(job_key, session_id=_session_id())
 
 
 def _format_generation_error(exc: BaseException) -> str:
@@ -487,44 +500,51 @@ def _format_generation_error(exc: BaseException) -> str:
     return raw
 
 
-def _start_generation(counter: int, run_config: RunConfig) -> None:
+def _start_generation(job_key: str, run_config: RunConfig) -> None:
+    session_id = _session_id()
     with _GEN_LOCK:
-        if counter in _GEN_RESULTS or counter in _GEN_ERRORS:
+        job = get_job(job_key, session_id=session_id)
+        if job is None:
+            job = create_job(session_id, job_key.split(":", 1)[1])
+        if job.result is not None or job.error is not None:
             return
-        thread = _GEN_THREADS.get(counter)
-        if thread and thread.is_alive():
+        if job.thread and job.thread.is_alive():
             return
 
         def worker() -> None:
             from src.data.fetcher import clear_cache
 
-            reporter = _ModuleSyncProgressReporter(counter)
-            token = set_progress(reporter)
+            reporter = _ModuleSyncProgressReporter(job_key)
+            cfg_token = set_run_config(run_config.normalized())
+            prog_token = set_progress(reporter)
+            active = access_job(job_key)
             try:
-                apply_run_config(run_config)
                 clear_cache()
                 bundle = run_analysis()
                 bundle[0].setdefault("meta", {})["run_config"] = run_config.to_dict()
                 bundle[0]["meta"]["run_config_fingerprint"] = run_config.fingerprint()
-                _GEN_RESULTS[counter] = bundle
+                if active is not None:
+                    active.result = bundle
                 log.info(
-                    "report ready price=%.2f counter=%s config=%s",
+                    "report ready price=%.2f job=%s config=%s",
                     bundle[0]["metrics"]["current_price"],
-                    counter,
+                    job_key,
                     run_config.to_dict(),
                 )
             except BaseException as exc:
-                log.exception("report generation failed counter=%s", counter)
-                _GEN_ERRORS[counter] = exc
+                log.exception("report generation failed job=%s", job_key)
+                if active is not None:
+                    active.error = exc
             finally:
-                reset_progress(token)
+                reset_progress(prog_token)
+                reset_run_config(cfg_token)
 
-        thread = threading.Thread(target=worker, daemon=True, name=f"report-gen-{counter}")
-        _GEN_THREADS[counter] = thread
+        thread = threading.Thread(target=worker, daemon=True, name=f"report-gen-{job_key[:8]}")
+        job.thread = thread
         thread.start()
 
 
-def _render_waiting_ui(counter: int, *, show_generation_ui: bool) -> None:
+def _render_waiting_ui(job_key: str, *, show_generation_ui: bool) -> None:
     from src.viz.decision_page import render_live_generation_panel
 
     # Fix #3 [Bug] 子页面残留「报告尚未生成」提示
@@ -546,10 +566,10 @@ def _render_waiting_ui(counter: int, *, show_generation_ui: bool) -> None:
 
     @st.fragment(run_every=timedelta(milliseconds=400))
     def _live_poll() -> None:
-        render_live_generation_panel(_LIVE_GEN_STATE.get(counter, {}))
-        if counter in _GEN_RESULTS or counter in _GEN_ERRORS:
-            # Do not placeholder.empty() here — it clears the page before rerun and
-            # leaves a blank screen if the next pass fails to render immediately.
+        job = get_job(job_key, session_id=_session_id())
+        live = job.live if job else {}
+        render_live_generation_panel(live)
+        if job and (job.result is not None or job.error is not None):
             st.rerun()
 
     _live_poll()
@@ -562,7 +582,7 @@ def _fetch_step_status(steps: list[dict] | None) -> str | None:
     return None
 
 
-def _render_external_waiting(counter: int) -> None:
+def _render_external_waiting(job_key: str) -> None:
     render_page_hero(
         "正在拉取外部数据…",
         "K 线 · 金十快讯/资讯/日历 · DXY · TV 社媒 — 完成后本页自动刷新",
@@ -570,10 +590,11 @@ def _render_external_waiting(counter: int) -> None:
 
     @st.fragment(run_every=timedelta(seconds=1))
     def _poll() -> None:
-        live = _LIVE_GEN_STATE.get(counter, {})
+        job = get_job(job_key, session_id=_session_id())
+        live = job.live if job else {}
         if live.get("external"):
             st.rerun()
-        if counter in _GEN_RESULTS or counter in _GEN_ERRORS:
+        if job and (job.result is not None or job.error is not None):
             st.rerun()
         steps = live.get("steps") or []
         fetch_status = _fetch_step_status(steps)
@@ -592,6 +613,7 @@ def ensure_external_data() -> dict:
     Return external-data payload. Waits only until fetch completes (not full report).
     Uses cached report external when the full bundle is already in session.
     """
+    purge_expired()
     if st.session_state.pop(FORCE_REFRESH_KEY, False):
         _invalidate_report_cache()
         st.session_state[RUN_CONFIG_READY_KEY] = False
@@ -606,38 +628,36 @@ def ensure_external_data() -> dict:
         st.session_state[RUN_CONFIG_READY_KEY] = False
         _render_run_config_panel()
     run_config_fingerprint = run_config.fingerprint()
-    counter = _next_refresh_counter()
+    job_key = _job_key()
 
     if REPORT_SESSION_KEY in st.session_state:
-        cached_counter = st.session_state.get(f"{REPORT_SESSION_KEY}_counter")
+        cached_gen = st.session_state.get(REPORT_GENERATION_ID_KEY)
         cached_config = st.session_state.get(REPORT_CONFIG_FINGERPRINT_KEY)
-        if cached_counter == counter and cached_config == run_config_fingerprint:
+        if cached_gen == _generation_id() and cached_config == run_config_fingerprint:
             from src.viz.external_data_view import external_payload_from_report
 
             report, data, _ = st.session_state[REPORT_SESSION_KEY]
             return external_payload_from_report(report, data)
 
-    if counter in _GEN_ERRORS:
-        exc = _GEN_ERRORS.pop(counter)
-        _LIVE_GEN_STATE.pop(counter, None)
+    job = get_job(job_key, session_id=_session_id())
+    if job and job.error is not None:
+        exc = job.error
+        job.error = None
         log.exception("report generation failed during external page wait")
         st.error(f"报告生成失败: {_format_generation_error(exc)}")
         st.stop()
 
-    if counter in _GEN_RESULTS:
-        bundle = _GEN_RESULTS.get(counter)
-        if bundle:
-            from src.viz.external_data_view import external_payload_from_report
+    if job and job.result is not None:
+        from src.viz.external_data_view import external_payload_from_report
 
-            return external_payload_from_report(bundle[0], bundle[1])
+        return external_payload_from_report(job.result[0], job.result[1])
 
-    live = _LIVE_GEN_STATE.get(counter, {})
-    if live.get("external"):
-        return live["external"]
+    if job and job.live.get("external"):
+        return job.live["external"]
 
-    _start_generation(counter, run_config)
+    _start_generation(job_key, run_config)
 
-    _render_external_waiting(counter)
+    _render_external_waiting(job_key)
     st.stop()
 
 
@@ -648,6 +668,7 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
     Generation runs in a background thread so widget clicks do not restart the pipeline.
     While waiting, live decision-chain tabs are shown on the current page.
     """
+    purge_expired()
     if st.session_state.pop(FORCE_REFRESH_KEY, False):
         _invalidate_report_cache()
         st.session_state[RUN_CONFIG_READY_KEY] = False
@@ -662,18 +683,19 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
         st.session_state[RUN_CONFIG_READY_KEY] = False
         _render_run_config_panel()
     run_config_fingerprint = run_config.fingerprint()
-    counter = _next_refresh_counter()
+    job_key = _job_key()
 
     if REPORT_SESSION_KEY in st.session_state:
-        cached_counter = st.session_state.get(f"{REPORT_SESSION_KEY}_counter")
+        cached_gen = st.session_state.get(REPORT_GENERATION_ID_KEY)
         cached_config = st.session_state.get(REPORT_CONFIG_FINGERPRINT_KEY)
-        if cached_counter == counter and cached_config == run_config_fingerprint:
+        if cached_gen == _generation_id() and cached_config == run_config_fingerprint:
             return st.session_state[REPORT_SESSION_KEY]
 
-    if counter in _GEN_ERRORS:
-        exc = _GEN_ERRORS.pop(counter)
-        live = _LIVE_GEN_STATE.pop(counter, {})
-        steps = live.get("steps") or []
+    job = get_job(job_key, session_id=_session_id())
+    if job and job.error is not None:
+        exc = job.error
+        steps = job.live.get("steps") or []
+        job.error = None
         log.exception("report generation failed")
         if steps:
             from src.viz.pipeline_progress import render_progress_steps
@@ -684,29 +706,28 @@ def ensure_report(*, show_generation_ui: bool = True) -> tuple[dict, dict, dict]
         st.caption("可在 `.env` 调整 `TV_FETCH_RETRIES` / `TV_FETCH_ROUND_RETRIES`；确认代理可用后点「重新配置 / 刷新报告」重试。")
         st.stop()
 
-    _start_generation(counter, run_config)
+    _start_generation(job_key, run_config)
+    job = get_job(job_key, session_id=_session_id())
 
-    if counter not in _GEN_RESULTS:
-        _render_waiting_ui(counter, show_generation_ui=show_generation_ui)
+    if not job or job.result is None:
+        _render_waiting_ui(job_key, show_generation_ui=show_generation_ui)
         st.stop()
 
-    return _store_report_bundle(counter, _GEN_RESULTS.pop(counter), run_config_fingerprint)
+    bundle = job.result
+    job.result = None
+    return _store_report_bundle(job_key, bundle, run_config_fingerprint)
 
 
 def _store_report_bundle(
-    counter: int,
+    job_key: str,
     bundle: tuple[dict, dict, dict],
     run_config_fingerprint: str,
 ) -> tuple[dict, dict, dict]:
     """Persist a finished pipeline bundle and clear in-flight generation state."""
-    _LIVE_GEN_STATE.pop(counter, None)
-    _GEN_THREADS.pop(counter, None)
+    drop_job(job_key, session_id=_session_id())
 
     st.session_state[REPORT_SESSION_KEY] = bundle
-    st.session_state[f"{REPORT_SESSION_KEY}_counter"] = counter
+    st.session_state[REPORT_GENERATION_ID_KEY] = _generation_id()
     st.session_state[REPORT_CONFIG_FINGERPRINT_KEY] = run_config_fingerprint
 
-    # Fix #3 [Bug] 全量 LLM 完成后页面空白
-    # 原因：fragment 先 empty() 再 rerun，ensure_report 缓存后又 st.rerun()，中间两次 rerun
-    # 都未渲染正文，用户看到白屏。改为同一次 rerun 内写入 session 并直接 return。
     return bundle
