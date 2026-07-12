@@ -36,6 +36,9 @@ from src.indicators.technical import enrich
 
 OUT = ROOT / "docs" / "reference" / "examples" / "sample-report.json"
 
+# Fictional report time aligned with the synthetic sample context (not wall clock).
+SAMPLE_REPORT_UPDATED_AT = "2026-06-16 08:39 (UTC+8)"
+
 
 def _sanitize(obj):
     if isinstance(obj, float):
@@ -139,6 +142,7 @@ def main() -> int:
     }
     report["meta"]["context_stats"] = ctx.context_stats
     report["meta"]["sample"] = True
+    report["meta"]["updated_at"] = SAMPLE_REPORT_UPDATED_AT
     report["meta"]["disclaimer"] = "脱敏样例 JSON，仅供文档与测试参考，非 live 报告"
 
     report["external"] = {

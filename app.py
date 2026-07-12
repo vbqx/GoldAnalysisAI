@@ -51,7 +51,7 @@ import streamlit as st
 
 from src.log import setup_logging
 from src.viz.dashboard_components import DASHBOARD_CSS
-from src.viz.streamlit_common import bootstrap_env, render_sidebar_header
+from src.viz.streamlit_common import bootstrap_env, render_runtime_dependency_banner, render_sidebar_header
 
 bootstrap_env()
 setup_logging()
@@ -62,6 +62,7 @@ st.set_page_config(
     layout="wide",
 )
 st.markdown(DASHBOARD_CSS, unsafe_allow_html=True)
+render_runtime_dependency_banner()
 render_sidebar_header()
 
 pg = st.navigation(

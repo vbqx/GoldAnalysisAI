@@ -277,6 +277,21 @@ def main() -> int:
     stop_stale_streamlit(port)
 
     python = resolve_python()
+    if subprocess.run(
+        [str(python), "-c", "import tvDatafeed"],
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        creationflags=CREATE_NO_WINDOW,
+    ).returncode != 0:
+        print(
+            f"\n警告：当前 Python ({python}) 未安装 tvDatafeed。\n"
+            "请执行：python -m pip install -r requirements.txt\n"
+            "然后重新运行 python run_app.py\n",
+            file=sys.stderr,
+        )
+        return 1
+
     url = f"http://localhost:{port}"
     print()
     print(f"Starting GoldAnalysisAI at {url}")
