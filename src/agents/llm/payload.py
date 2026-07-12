@@ -106,7 +106,8 @@ def fundamentals_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
         "macro_quotes": [m.to_dict() for m in ext.macro_quotes],
         "calendar_high_impact": ctx.derived.get("calendar_high_impact_count", 0),
         "event_countdown": ctx.derived.get("event_countdown", {}),
-        "risk_events": ext.risk_events,
+        "upcoming_calendar": ctx.derived.get("upcoming_calendar", []),
+        "risk_events": ext.risk_events if ext.risk_events and ext.risk_events != "—" else "—",
     }
 
 
@@ -116,10 +117,12 @@ def news_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
     flash = ext_dict.get("flash_headlines") or []
     articles = ext_dict.get("article_headlines") or []
     calendar = ext_dict.get("calendar") or []
+    upcoming = ctx.derived.get("upcoming_calendar", [])
+    risk_summary = ext.risk_events if ext.risk_events and ext.risk_events != "—" else "—"
     return {
         "symbol": "XAUUSD",
         "price": ctx.price,
-        "risk_events": ext.risk_events,
+        "risk_events": risk_summary,
         "channels": {
             "flash": {
                 "count": len(flash),
@@ -132,17 +135,18 @@ def news_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
                 "items": articles,
             },
             "calendar": {
-                "count": len(calendar),
+                "count": len(upcoming),
                 "high_impact": ctx.derived.get("calendar_high_impact_count", 0),
                 "hint": "日历：高 importance 事件应单独成条 evidence，标注时间与预期波动",
-                "items": calendar,
-                "upcoming": ctx.derived.get("upcoming_calendar", []),
+                "items": upcoming,
+                "upcoming": upcoming,
             },
         },
         "news_topics": ctx.derived.get("news_topics", []),
         "flash_headlines": flash,
         "article_headlines": articles,
-        "calendar": calendar,
+        "calendar": upcoming,
+        "upcoming_calendar": upcoming,
         "news_headlines": ext_dict.get("news_headlines") or [],
         "headline_count": len(ext.headline_items),
         "sources": ext.sources,

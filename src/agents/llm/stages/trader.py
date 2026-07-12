@@ -57,6 +57,7 @@ def run_llm_trader(
         client=client,
         messages=messages,
         parse=_parse,
+        temperature=0.0,
     )
     if result:
         trace.confidence = confidence_holder["value"]

@@ -7,6 +7,7 @@ import re
 import time
 from typing import Any, Callable, TypeVar
 
+from src.config import LLM_STAGE_WARN_MS
 from src.core.progress import get_progress
 from src.core.types import LLMStageTrace
 from src.llm.client import LLMClient, LLMClientError
@@ -141,6 +142,13 @@ def run_llm_stage(
             result = parse(data)
             elapsed = int((time.perf_counter() - t0) * 1000)
             trace = LLMStageTrace(stage=stage, model=model, latency_ms=elapsed)
+            if elapsed >= LLM_STAGE_WARN_MS:
+                log.warning(
+                    "llm stage %s over budget: %dms (warn threshold %dms)",
+                    stage,
+                    elapsed,
+                    LLM_STAGE_WARN_MS,
+                )
             if attempt:
                 log.info("llm stage %s ok %dms (retry %d)", stage, elapsed, attempt)
             else:

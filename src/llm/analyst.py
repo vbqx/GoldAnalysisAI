@@ -7,7 +7,7 @@ from copy import deepcopy
 from typing import Any
 
 import src.config as app_config
-from src.analysis.narrative_sections import validate_and_merge_llm_sections
+from src.analysis.narrative_sections import validate_and_merge_llm_sections, validate_llm_top_level
 
 from src.config import (
     LLM_API_KEY,
@@ -114,7 +114,7 @@ def run_llm_analysis(
             client,
             messages,
             stage="llm_narrative",
-            temperature=0.3,
+            temperature=0.0,
         )
         data = _parse_llm_json(raw)
         result = _parse_result(data, model=LLM_MODEL, provider=LLM_BASE_URL)
@@ -128,6 +128,16 @@ def run_llm_analysis(
         )
         result.narrative_sections = sections
         result.narrative_section_audit = section_audit
+        top_reason = validate_llm_top_level(data, facts=facts)
+        result.top_level_audit = {
+            "accepted": top_reason is None,
+            "fallback_reason": top_reason,
+        }
+        if top_reason:
+            result.market_summary = ""
+            result.trade_thesis = ""
+            result.action_plan = ""
+            log.warning("llm top-level narrative rejected: %s", top_reason)
         log.info(
             "llm analysis done confidence=%.2f summary_len=%d",
             result.confidence,
@@ -151,7 +161,17 @@ def apply_llm_to_report(report: dict[str, Any], llm: LLMAnalysis) -> None:
         stage_sources = report.setdefault("meta", {}).setdefault("stage_sources", {})
         stage_sources["narrative_sections"] = llm.narrative_section_audit
 
+    top_audit = getattr(llm, "top_level_audit", None) or {}
+    stage_sources = report.setdefault("meta", {}).setdefault("stage_sources", {})
+    stage_sources["narrative_top_level"] = top_audit
+
     if not llm.enabled or llm.error or not LLM_ENHANCE_CONCLUSION:
+        return
+
+    if top_audit and not top_audit.get("accepted", True):
+        return
+
+    if report.get("meta", {}).get("observation_mode"):
         return
 
     conclusion = report.setdefault("conclusion", {})

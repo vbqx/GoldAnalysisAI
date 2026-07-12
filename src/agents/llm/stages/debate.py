@@ -46,6 +46,7 @@ def run_llm_debate(
         client=client,
         messages=messages,
         parse=lambda d: parse_research_debate(d, bullish=bullish, bearish=bearish),
+        temperature=0.0,
     )
     if result:
         trace.confidence = result.consensus_strength

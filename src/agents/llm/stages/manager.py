@@ -42,6 +42,7 @@ def run_llm_manager(
         client=client,
         messages=messages,
         parse=lambda d: parse_manager_decision(d, proposal=proposal, reviews=reviews),
+        temperature=0.0,
     )
     if result:
         trace.confidence = result.confidence

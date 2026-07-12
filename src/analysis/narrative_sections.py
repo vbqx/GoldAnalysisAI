@@ -63,8 +63,8 @@ def build_rule_narrative_sections(report: dict[str, Any]) -> dict[str, dict[str,
     price = metrics.get("current_price")
     daily_low, daily_high = metrics.get("daily_low"), metrics.get("daily_high")
     conclusion = report.get("conclusion") or {}
-    signals = [s for s in (report.get("signals") or []) if s.get("status") != "invalid"]
-    primary = signals[0] if signals else {}
+    signals = [s for s in (report.get("signals") or []) if s.get("status") != "invalid" and s.get("signal_role") != "rejected"]
+    primary = next((s for s in signals if s.get("signal_role") == "primary"), signals[0] if signals else {})
 
     trends = [pa_trend_label(price, (pa_block(report, tf).get("volume_profile") or {})) for tf in ("4h", "1h", "15m")]
     dominant = max(set(trends), key=trends.count) if trends else "待确认"
@@ -180,49 +180,96 @@ def overview_bullets_from_sections(sections: dict[str, dict[str, Any]]) -> list[
 
 def build_narrative_facts(report: dict[str, Any], technical_context: dict[str, Any]) -> dict[str, Any]:
     """Compact, auditable facts sent to the final narrative LLM."""
-    allowed_levels: list[dict[str, Any]] = []
+    context_levels: list[dict[str, Any]] = []
+    authorized_execution_levels: list[dict[str, Any]] = []
 
-    def add(level_id: str, value: Any, source: str, *, timeframe: str | None = None, kind: str = "level") -> None:
+    def add_context(level_id: str, value: Any, source: str, *, timeframe: str | None = None, kind: str = "level") -> None:
         if value is None:
             return
         try:
             number = round(float(value), 2)
         except (TypeError, ValueError):
             return
-        allowed_levels.append({"id": level_id, "price": number, "source": source, "timeframe": timeframe, "kind": kind})
+        context_levels.append(
+            {"id": level_id, "price": number, "source": source, "timeframe": timeframe, "kind": kind}
+        )
+
+    def add_execution(level_id: str, value: Any, source: str, *, signal_id: str, kind: str = "execution") -> None:
+        if value is None:
+            return
+        try:
+            number = round(float(value), 2)
+        except (TypeError, ValueError):
+            return
+        authorized_execution_levels.append(
+            {
+                "id": level_id,
+                "price": number,
+                "source": source,
+                "signal_id": signal_id,
+                "kind": kind,
+            }
+        )
 
     metrics = report.get("metrics") or {}
     for key in ("current_price", "daily_low", "daily_high", "prev_close"):
-        add(f"metrics.{key}", metrics.get(key), f"metrics.{key}")
+        add_context(f"metrics.{key}", metrics.get(key), f"metrics.{key}")
     for idx, row in enumerate(report.get("liquidity") or []):
-        add(f"liquidity.{idx}", row.get("price"), str(row.get("label") or "liquidity"), timeframe=row.get("timeframe"), kind=str(row.get("kind") or "liquidity"))
+        add_context(
+            f"liquidity.{idx}",
+            row.get("price"),
+            str(row.get("label") or "liquidity"),
+            timeframe=row.get("timeframe"),
+            kind=str(row.get("kind") or "liquidity"),
+        )
     for tf, info in (report.get("timeframes") or {}).items():
-        add(f"{tf}.swing_high", info.get("swing_high"), "swing_high", timeframe=tf)
-        add(f"{tf}.swing_low", info.get("swing_low"), "swing_low", timeframe=tf)
+        add_context(f"{tf}.swing_high", info.get("swing_high"), "swing_high", timeframe=tf)
+        add_context(f"{tf}.swing_low", info.get("swing_low"), "swing_low", timeframe=tf)
         for group in ("order_blocks", "fvgs"):
             for idx, row in enumerate(info.get(group) or []):
-                add(f"{tf}.{group}.{idx}.low", row.get("low"), group, timeframe=tf, kind="zone_low")
-                add(f"{tf}.{group}.{idx}.high", row.get("high"), group, timeframe=tf, kind="zone_high")
-    for idx, signal in enumerate(report.get("signals") or []):
+                add_context(f"{tf}.{group}.{idx}.low", row.get("low"), group, timeframe=tf, kind="zone_low")
+                add_context(f"{tf}.{group}.{idx}.high", row.get("high"), group, timeframe=tf, kind="zone_high")
+    authorized_signals = [
+        s
+        for s in (report.get("signals") or [])
+        if s.get("signal_role") in ("primary", "alternate")
+    ]
+    for signal in authorized_signals:
+        sid = str(signal.get("signal_id") or "unknown")
         for key in ("entry_low", "entry_high", "stop_loss"):
-            add(f"signal.{idx}.{key}", signal.get(key), key, kind="validated_signal")
+            add_execution(f"{sid}.{key}", signal.get(key), key, signal_id=sid, kind="validated_signal")
         for target_idx, target in enumerate(signal.get("take_profits") or []):
-            add(f"signal.{idx}.tp.{target_idx}", target, "take_profit", kind="validated_signal")
+            add_execution(f"{sid}.tp.{target_idx}", target, "take_profit", signal_id=sid, kind="validated_signal")
     for tf, block in (report.get("price_action") or {}).items():
         vp = (block or {}).get("volume_profile") or {}
         for key in ("poc", "vah", "val"):
-            add(f"price_action.{tf}.{key}", vp.get(key), key, timeframe=tf, kind="volume_profile")
+            add_context(f"price_action.{tf}.{key}", vp.get(key), key, timeframe=tf, kind="volume_profile")
         for idx, lvl in enumerate((block or {}).get("sr_levels") or []):
-            add(f"price_action.{tf}.sr.{idx}", lvl.get("price"), str(lvl.get("label") or "sr"), timeframe=tf, kind="sr")
+            add_context(
+                f"price_action.{tf}.sr.{idx}",
+                lvl.get("price"),
+                str(lvl.get("label") or "sr"),
+                timeframe=tf,
+                kind="sr",
+            )
 
     quality = (technical_context.get("quality") or {}) if isinstance(technical_context, dict) else {}
     price_action = report.get("price_action") or technical_context.get("price_action") or {}
+    primary = next((s for s in authorized_signals if s.get("signal_role") == "primary"), None)
+    if primary is None and authorized_signals:
+        primary = authorized_signals[0]
+    if primary is None:
+        eligible = [s for s in (report.get("signals") or []) if s.get("signal_role") != "rejected"]
+        primary = eligible[0] if eligible else {}
     return {
         "common": {
             "metrics": metrics,
             "sentiment": report.get("sentiment") or {},
             "conclusion": report.get("conclusion") or {},
-            "primary_signal": (report.get("signals") or [None])[0],
+            "primary_signal": primary or {},
+            "manager_decision": report.get("meta", {}).get("manager_decision")
+            or (report.get("agent_trace") or {}).get("decision")
+            or {},
             "quality": quality or {"status": "unavailable", "warnings": ["technical quality unavailable"]},
         },
         "liquidity": report.get("liquidity") or [],
@@ -230,7 +277,10 @@ def build_narrative_facts(report: dict[str, Any], technical_context: dict[str, A
         "price_action": price_action,
         "price_action_summary": build_pa_llm_summary(price_action, price=metrics.get("current_price")),
         "combination_rules": COMBINATION_RULES,
-        "allowed_levels": allowed_levels,
+        "context_levels": context_levels,
+        "authorized_execution_levels": authorized_execution_levels,
+        "allowed_levels": context_levels,
+        "authorized_signals": authorized_signals,
         "role_constraints": {
             "market_overview": COMBINATION_RULES["market_overview"],
             "liquidity": COMBINATION_RULES["liquidity"],
@@ -252,7 +302,10 @@ def validate_and_merge_llm_sections(
     """Validate each LLM block independently and fall back only that block."""
     output: dict[str, dict[str, Any]] = {}
     audit: dict[str, Any] = {}
-    allowed = {round(float(x["price"]), 2) for x in facts.get("allowed_levels", [])}
+    allowed = {
+        round(float(x["price"]), 2)
+        for x in facts.get("context_levels", facts.get("allowed_levels", []))
+    }
     expected_bias = _expected_bias(facts)
     supplied = raw_sections if isinstance(raw_sections, dict) else {}
 
@@ -335,9 +388,74 @@ def _expected_bias(facts: dict[str, Any]) -> str:
     common = facts.get("common") or {}
     signal = common.get("primary_signal") or {}
     direction = str(signal.get("direction") or signal.get("theme") or "").lower()
-    if direction in ("short", "bearish"):
+    if direction in ("short", "bearish", "sell"):
         return "bearish"
-    if direction in ("long", "bullish"):
+    if direction in ("long", "bullish", "buy"):
+        return "bullish"
+    decision = common.get("manager_decision") or {}
+    mgr_dir = str(decision.get("primary_direction") or "").lower()
+    if mgr_dir in ("short", "bearish"):
+        return "bearish"
+    if mgr_dir in ("long", "bullish"):
         return "bullish"
     sentiment = common.get("sentiment") or {}
     return "bearish" if float(sentiment.get("bearish", 0)) > float(sentiment.get("bullish", 0)) else "bullish"
+
+
+def _unapproved_prices(text: str, allowed: set[float]) -> str | None:
+    for token in _NUMBER_RE.findall(text):
+        number = float(token)
+        if number < 100:
+            continue
+        if not any(abs(number - candidate) <= 0.011 for candidate in allowed):
+            return f"unapproved price {token}"
+    return None
+
+
+def validate_llm_top_level(
+    llm: dict[str, Any],
+    *,
+    facts: dict[str, Any],
+) -> str | None:
+    """Validate market_summary / trade_thesis / action_plan against authorized facts."""
+    context_allowed = {
+        round(float(x["price"]), 2)
+        for x in facts.get("context_levels", facts.get("allowed_levels", []))
+    }
+    execution_allowed = {
+        round(float(x["price"]), 2) for x in facts.get("authorized_execution_levels", [])
+    }
+    expected_bias = _expected_bias(facts)
+    market_summary = str(llm.get("market_summary") or "")
+    trade_thesis = str(llm.get("trade_thesis") or "")
+    action_plan = str(llm.get("action_plan") or "")
+    chunks = [market_summary, trade_thesis, action_plan]
+    text = " ".join(chunks).strip()
+    if not text:
+        return "empty top-level narrative"
+    visible_lines = sum(1 for part in chunks if part.strip()) + text.count("\n")
+    if visible_lines > MAX_VISIBLE_LINES:
+        return f"top-level visible lines {visible_lines} > {MAX_VISIBLE_LINES}"
+    if "胜率" in text:
+        return "unsupported win-rate wording"
+    for field_text, allowed in (
+        (market_summary, context_allowed),
+        (trade_thesis, context_allowed),
+        (action_plan, execution_allowed),
+    ):
+        if not field_text.strip():
+            continue
+        violation = _unapproved_prices(field_text, allowed)
+        if violation:
+            prefix = "action_plan" if field_text is action_plan else "narrative"
+            return f"{prefix}: {violation}"
+    if expected_bias == "bearish" and any(word in text for word in ("主方向偏多", "以做多为主", "优先做多", "分批做多")):
+        return "direction conflicts with authorized bearish plan"
+    if expected_bias == "bullish" and any(word in text for word in ("主方向偏空", "以做空为主", "优先做空", "分批做空")):
+        return "direction conflicts with authorized bullish plan"
+    decision = (facts.get("common") or {}).get("manager_decision") or {}
+    if str(decision.get("action") or "") == "wait" and any(
+        word in text for word in ("执行", "入场", "开仓", "立即")
+    ):
+        return "executable wording while manager action is wait"
+    return None
