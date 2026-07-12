@@ -9,7 +9,7 @@ from src.agents.analysts import run_analyst_team as rule_analyst_team
 from src.agents.bearish import run_bearish_researcher as rule_bearish
 from src.agents.bullish import run_bullish_researcher as rule_bullish
 from src.agents.debate import run_debate as rule_debate
-from src.agents.llm.payload import market_payload
+from src.agents.llm.payload import analyst_team_input_payload
 from src.agents.llm.stages.analysts import (
     run_llm_fundamentals_analyst,
     run_llm_news_analyst,
@@ -170,7 +170,7 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
     t0 = time.perf_counter()
     use_llm = _use_llm_stage(get_run_config().llm_stage_analysts)
     rule_team = rule_analyst_team(ctx) if (not use_llm or _needs_rule_baseline()) else None
-    input_payload = market_payload(ctx)
+    input_payload = analyst_team_input_payload(ctx)
 
     if not use_llm:
         assert rule_team is not None
@@ -451,6 +451,7 @@ def run_trader(
     debate: ResearchDebate,
     pipeline: AgentPipelineMeta,
     signals: list[TradingSignal],
+    team: AnalystTeam | None = None,
 ):
     rule_result = rule_trader(ctx, debate, signals)
     if not _use_llm_stage(get_run_config().llm_stage_trader):
@@ -459,7 +460,7 @@ def run_trader(
         return rule_result
 
     get_progress().update("trader", detail="LLM 交易员提案")
-    llm_result, trace = run_llm_trader(ctx, debate, signals)
+    llm_result, trace = run_llm_trader(ctx, debate, signals, team=team)
     if get_run_config().agent_mode == "llm" and llm_result is not None and not trace.error:
         pipeline.record("trader", StageMeta(source="llm", llm=trace))
         return llm_result, signals

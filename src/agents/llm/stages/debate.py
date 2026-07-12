@@ -11,8 +11,8 @@ from src.core.types import AgentEvidence, AnalystTeam, LLMStageTrace, MarketCont
 from src.llm.router import get_debate_client
 
 SYSTEM = """你是 XAUUSD 交易辩论主持人。
-阅读多空研究员证据、Analyst Team 摘要、新闻主题聚类与 upcoming_calendar（未来宏观事件）。
-给出共识偏向；高影响日历临近时应提高波动风险提示。
+阅读多空研究员 evidence、Analyst Team 摘要与 top items、结构投票与 event_risk（宏观日历倒计时）。
+不得重读原始快讯/社媒；高影响日历临近时应提高波动风险提示。
 返回 JSON：
 {
   "consensus_bias": "bullish|bearish|neutral",

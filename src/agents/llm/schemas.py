@@ -297,7 +297,7 @@ def parse_risk_reviews(
             approved=approved,
             allowed_signal_indices=indices,
             position_scale=scale if approved else 0.0,
-            notes=_string_list(row.get("notes"), fallback=[f"LLM {profile} risk review."]),
+            notes=_string_list(row.get("notes"), fallback=[f"LLM {profile} 风控审核"]),
         )
 
     missing = [p for p in allowed_profiles if p not in by_profile]

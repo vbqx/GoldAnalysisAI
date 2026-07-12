@@ -21,8 +21,13 @@ from src.core.parallel import run_parallel
 from src.core.progress import get_progress
 from src.core.run_context import agent_mode, get_run_config, llm_narrative_enabled
 from src.core.types import AgentPipelineMeta, AgentTrace, LLMAnalysis, StageMeta
+from src.core.orchestrator_hooks import (
+    begin_pipeline_run,
+    fetch_market_data,
+    finalize_pipeline_archive,
+    publish_external_snapshot,
+)
 from src.data.aggregator import assemble_market_context
-from src.data.fetch_pipeline import fetch_all_data
 from src.data.tradingview import compute_price_drift_1d
 from src.indicators.technical import enrich
 from src.llm.analyst import apply_llm_to_report, run_llm_analysis
@@ -43,17 +48,14 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     6. Manager         — final decision
     7. Report builder  — same JSON schema for existing Streamlit UI
     """
-    t0 = time.perf_counter()
-    log.info("pipeline start")
+    run_id, t0 = begin_pipeline_run()
     prog = get_progress()
 
     try:
-        fetched = fetch_all_data()
+        fetched = fetch_market_data()
     except RuntimeError:
         raise
-    from src.viz.external_data_view import external_snapshot_from_fetch
-
-    prog.set_external_snapshot(external_snapshot_from_fetch(fetched))
+    publish_external_snapshot(fetched, prog)
     raw = fetched.raw
     log.debug(
         "raw bars: %s",
@@ -167,7 +169,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
             "llm_levels",
             StageMeta(source="rule", fallback_reason="LLM_STAGE_LEVELS disabled"),
         )
-    proposal, signals = agent_factory.run_trader(ctx, debate, pipeline_meta, signals)
+    proposal, signals = agent_factory.run_trader(ctx, debate, pipeline_meta, signals, analyst_team)
     prog.done("trader", f"{proposal.primary_direction} · {len(proposal.signal_indices)} 信号")
     log.info(
         "trader proposal direction=%s signals=%d selected_idx=%s",
@@ -255,6 +257,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     report["meta"]["data_as_of"] = as_of
     report["meta"]["run_config_fingerprint"] = get_run_config().fingerprint()
     report["meta"]["observation_mode"] = observation_mode
+    report["meta"]["run_archive_id"] = run_id
     if as_of.get("warnings"):
         report["meta"].setdefault("warnings", []).extend(as_of["warnings"])
     if report["meta"]["observation_mode"]:
@@ -333,8 +336,17 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
 
     elapsed = time.perf_counter() - t0
     log.info(
-        "pipeline done price=%.2f elapsed=%.2fs",
+        "pipeline done price=%.2f elapsed=%.2fs run_id=%s",
         report["metrics"]["current_price"],
         elapsed,
+        run_id,
+    )
+    finalize_pipeline_archive(
+        run_id,
+        fetched=fetched,
+        report=report,
+        enriched=enriched,
+        analyses=analyses,
+        elapsed_s=elapsed,
     )
     return report, enriched, analyses

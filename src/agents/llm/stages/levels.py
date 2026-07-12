@@ -18,7 +18,7 @@ SYSTEM = f"""你是 XAUUSD 机构级价位提案员。
 {LEVELS_PRIORITY_HINT}
 {PA_SMC_PRIORITY}
 
-仅使用输入中的市场事实、分析师摘要、辩论共识与 rule_signals 候选；不得编造宏观事件或未给出的订单流。
+仅使用输入中的 structure_context、analyst_team、debate 共识与 rule_signals 候选；不得编造宏观事件或未给出的订单流。
 返回 JSON：
 {{
   "setups": [

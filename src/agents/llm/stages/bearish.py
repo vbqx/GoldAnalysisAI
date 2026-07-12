@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 
 from src.agents.llm.base import run_llm_stage
-from src.agents.llm.payload import market_payload
+from src.agents.llm.payload import research_payload
 from src.agents.llm.schemas import parse_agent_evidence
 from src.core.types import AgentEvidence, AnalystTeam, LLMStageTrace, MarketContext
 from src.llm.router import get_fast_client
@@ -13,11 +13,10 @@ from src.llm.router import get_fast_client
 from src.analysis.field_glossary import PA_SMC_PRIORITY, RESEARCH_PRIORITY_HINT
 
 SYSTEM = (
-    f"""你是 XAUUSD 看空研究员，精通 LuxAlgo SMC 与 DGT 量价分析。
+    f"""你是 XAUUSD 看空研究员，精通 PA（量价结构）与 LuxAlgo SMC 分析。
 {RESEARCH_PRIORITY_HINT}
 {PA_SMC_PRIORITY}
-输入 JSON 含 analyst_team（技术/基本面/新闻/情绪四位分析师报告）与多周期结构事实。
-优先引用 analyst_team 中与看空方向一致的证据，并补充 SMC 结构看空事实；PA 量价共振可加强置信度；不得编造价格或事件。
+输入 JSON 以 analyst_team 为主（四位分析师结论与证据）；structure_vote / event_risk 仅作交叉校验，不得绕过 analyst 重读原始新闻或重造结构结论。
 返回 JSON：
 """
     + """{
@@ -30,7 +29,7 @@ SYSTEM = (
 
 def run_llm_bearish(ctx: MarketContext, team: AnalystTeam | None = None) -> tuple[AgentEvidence | None, LLMStageTrace]:
     client = get_fast_client()
-    payload = market_payload(ctx, team)
+    payload = research_payload(ctx, team, "bearish")
     messages = [
         {"role": "system", "content": SYSTEM},
         {

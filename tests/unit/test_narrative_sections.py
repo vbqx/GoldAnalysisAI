@@ -133,6 +133,25 @@ def test_unapproved_price_and_direction_conflict_fall_back() -> None:
     assert "direction conflicts" in audit["15m"]["fallback_reason"]
 
 
+def test_llm_section_accepts_overlong_lists_after_display_caps() -> None:
+    """LLM often returns extra list items; merge truncates instead of falling back."""
+    report = _report()
+    rules = build_rule_narrative_sections(report)
+    facts = build_narrative_facts(report, {"quality": {"score": 1.0}})
+    candidate = _candidate()
+    candidate["1h"]["context"] = ["背景一", "背景二", "背景三"]
+    candidate["1h"]["levels"] = ["4130", "4140", "4150", "4160"]
+    candidate["1h"]["conditions"] = ["条件一", "条件二", "条件三"]
+    merged, audit = validate_and_merge_llm_sections(
+        candidate, rule_sections=rules, facts=facts, mode="llm", threshold=0.65,
+    )
+    assert merged["1h"]["source"] == "llm"
+    assert audit["1h"]["accepted"] is True
+    assert merged["1h"]["context"] == ["背景一"]
+    assert merged["1h"]["levels"] == ["4130", "4140"]
+    assert merged["1h"]["conditions"] == ["条件一"]
+
+
 def test_missing_overlong_or_win_rate_sections_fall_back_independently() -> None:
     report = _report()
     rules = build_rule_narrative_sections(report)
@@ -146,7 +165,8 @@ def test_missing_overlong_or_win_rate_sections_fall_back_independently() -> None
     )
     assert merged["market_overview"]["source"] == "llm"
     assert merged["4h"]["source"] == "fallback"
-    assert merged["1h"]["source"] == "fallback"
+    assert merged["1h"]["source"] == "llm"
+    assert merged["1h"]["context"] == ["a"]
     assert merged["15m"]["source"] == "fallback"
 
 

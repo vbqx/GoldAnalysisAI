@@ -9,12 +9,12 @@ from src.agents.llm.payload import trader_payload
 from src.agents.llm.schemas import parse_transaction_proposal
 from src.analysis.field_glossary import TRADER_PRIORITY_HINT
 from src.analysis.report_engine import TradingSignal
-from src.core.types import LLMStageTrace, MarketContext, ResearchDebate, TransactionProposal
+from src.core.types import AnalystTeam, LLMStageTrace, MarketContext, ResearchDebate, TransactionProposal
 from src.llm.router import get_strong_client
 
 SYSTEM = f"""你是 XAUUSD 交易员智能体。
 {TRADER_PRIORITY_HINT}
-根据辩论共识从已有 rule_signals 中选择主方向与少量候选 signal_index。
+根据 debate 共识与 analyst_team_summaries 从 candidate_signals 中选择主方向与少量 signal_index；不得重读原始市场数据或重新发明价位。
 返回 JSON：
 {{
   "primary_direction": "long|short|wait",
@@ -28,9 +28,10 @@ def run_llm_trader(
     ctx: MarketContext,
     debate: ResearchDebate,
     signals: list[TradingSignal],
+    team: AnalystTeam | None = None,
 ) -> tuple[TransactionProposal | None, LLMStageTrace]:
     client = get_strong_client()
-    payload = trader_payload(ctx, debate, signals)
+    payload = trader_payload(ctx, debate, signals, team=team)
     confidence_holder = {"value": None}
 
     def _parse(data: dict) -> TransactionProposal:

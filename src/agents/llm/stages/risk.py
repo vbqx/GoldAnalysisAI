@@ -13,7 +13,7 @@ from src.llm.router import get_strong_client
 
 SYSTEM = f"""你是 XAUUSD 三档风控委员会（激进 / 中性 / 保守）。
 {RISK_MANAGER_HINT}
-分别审核交易员提案；position_scale 取值 0~1；只能使用提案中已有的 signal_index。
+分别审核交易员提案；position_scale 取值 0~1；只能使用提案中已有的 signal_index；notes 必须用简体中文。
 返回 JSON：
 {{
   "confidence": 0.0-1.0,

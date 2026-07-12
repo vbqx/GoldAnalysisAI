@@ -24,6 +24,7 @@ from src.analysis.narrative_combine import (
 SECTION_KEYS = ("market_overview", "liquidity", "4h", "1h", "15m")
 SECTION_FIELDS = ("summary", "context", "levels", "conditions", "invalidation")
 MAX_VISIBLE_LINES = 6
+_SECTION_LIST_CAPS = {"context": 1, "levels": 2, "conditions": 1}
 
 _NUMBER_RE = re.compile(r"(?<![A-Za-z])\d+(?:\.\d+)?")
 
@@ -339,12 +340,31 @@ def _confidence(value: Any) -> float:
         return 0.0
 
 
+def _capped_section_lists(value: dict[str, Any]) -> dict[str, list[str]]:
+    capped: dict[str, list[str]] = {}
+    for key, limit in _SECTION_LIST_CAPS.items():
+        rows = value.get(key, [])
+        if not isinstance(rows, list):
+            rows = []
+        capped[key] = [str(x).strip() for x in rows if str(x).strip()][:limit]
+    return capped
+
+
+def _section_visible_lines(value: dict[str, Any]) -> int:
+    """Count UI rows after the same list caps applied during merge."""
+    capped = _capped_section_lists(value)
+    summary = 1 if str(value.get("summary", "")).strip() else 0
+    invalidation = 1 if str(value.get("invalidation", "")).strip() else 0
+    return summary + len(capped["context"]) + len(capped["levels"]) + len(capped["conditions"]) + invalidation
+
+
 def _normalize_llm_section(value: dict[str, Any]) -> dict[str, Any]:
+    capped = _capped_section_lists(value)
     return {
         "summary": str(value["summary"]).strip(),
-        "context": [str(x).strip() for x in value.get("context", []) if str(x).strip()][:1],
-        "levels": [str(x).strip() for x in value.get("levels", []) if str(x).strip()][:2],
-        "conditions": [str(x).strip() for x in value.get("conditions", []) if str(x).strip()][:1],
+        "context": capped["context"],
+        "levels": capped["levels"],
+        "conditions": capped["conditions"],
         "invalidation": str(value["invalidation"]).strip(),
         "source": "llm",
         "confidence": _confidence(value),
@@ -363,7 +383,7 @@ def _validate_section(value: Any, *, allowed: set[float], expected_bias: str) ->
         rows = value.get(key, [])
         if not isinstance(rows, list) or any(not isinstance(x, str) for x in rows):
             return f"{key} must be a string list"
-    visible = 1 + len(value.get("context", [])) + len(value.get("levels", [])) + len(value.get("conditions", [])) + 1
+    visible = _section_visible_lines(value)
     if visible > MAX_VISIBLE_LINES:
         return f"visible lines {visible} > {MAX_VISIBLE_LINES}"
     text = " ".join(
@@ -375,7 +395,7 @@ def _validate_section(value: Any, *, allowed: set[float], expected_bias: str) ->
         number = float(token)
         if number < 100:  # timeframe labels, percentages, ratios
             continue
-        if not any(abs(number - candidate) <= 0.011 for candidate in allowed):
+        if not any(abs(number - candidate) <= _price_tolerance(candidate) for candidate in allowed):
             return f"unapproved price {token}"
     if expected_bias == "bearish" and any(word in text for word in ("主方向偏多", "以做多为主", "优先做多")):
         return "direction conflicts with manager/rule conclusion"
@@ -402,14 +422,115 @@ def _expected_bias(facts: dict[str, Any]) -> str:
     return "bearish" if float(sentiment.get("bearish", 0)) > float(sentiment.get("bullish", 0)) else "bullish"
 
 
+def _price_tolerance(reference: float) -> float:
+    """Loose match for rounded LLM prices (e.g. 2650 vs 2650.5 on XAUUSD)."""
+    return max(0.5, abs(reference) * 0.0002)
+
+
 def _unapproved_prices(text: str, allowed: set[float]) -> str | None:
+    if not allowed:
+        return None
     for token in _NUMBER_RE.findall(text):
         number = float(token)
         if number < 100:
             continue
-        if not any(abs(number - candidate) <= 0.011 for candidate in allowed):
+        if not any(abs(number - candidate) <= _price_tolerance(candidate) for candidate in allowed):
             return f"unapproved price {token}"
     return None
+
+
+_EXECUTABLE_ON_WAIT = (
+    "立即执行",
+    "立即入场",
+    "立即开仓",
+    "现在入场",
+    "现在开仓",
+    "市价入场",
+    "市价开仓",
+    "马上入场",
+    "马上开仓",
+)
+
+
+def _direction_conflict(text: str, expected_bias: str) -> str | None:
+    if expected_bias == "bearish" and any(
+        word in text for word in ("主方向偏多", "以做多为主", "优先做多", "分批做多")
+    ):
+        return "direction conflicts with authorized bearish plan"
+    if expected_bias == "bullish" and any(
+        word in text for word in ("主方向偏空", "以做空为主", "优先做空", "分批做空")
+    ):
+        return "direction conflicts with authorized bullish plan"
+    return None
+
+
+def _execution_authorized(facts: dict[str, Any]) -> bool:
+    execution_allowed = facts.get("authorized_execution_levels") or []
+    if not execution_allowed:
+        return False
+    decision = (facts.get("common") or {}).get("manager_decision") or {}
+    return str(decision.get("action") or "") not in ("wait", "")
+
+
+def validate_llm_top_level_fields(
+    llm: dict[str, Any],
+    *,
+    facts: dict[str, Any],
+) -> dict[str, str | None]:
+    """Per-field validation; value is rejection reason or None when accepted."""
+    context_allowed = {
+        round(float(x["price"]), 2)
+        for x in facts.get("context_levels", facts.get("allowed_levels", []))
+    }
+    execution_allowed = {
+        round(float(x["price"]), 2) for x in facts.get("authorized_execution_levels", [])
+    }
+    execution_ok = _execution_authorized(facts)
+    action_plan_allowed = execution_allowed if execution_ok else context_allowed
+    expected_bias = _expected_bias(facts)
+    decision = (facts.get("common") or {}).get("manager_decision") or {}
+    manager_wait = str(decision.get("action") or "") == "wait"
+
+    fields = {
+        "market_summary": str(llm.get("market_summary") or ""),
+        "trade_thesis": str(llm.get("trade_thesis") or ""),
+        "action_plan": str(llm.get("action_plan") or ""),
+    }
+    reasons: dict[str, str | None] = {key: None for key in fields}
+
+    if not any(value.strip() for value in fields.values()):
+        return {key: "empty top-level narrative" for key in fields}
+
+    visible_lines = sum(1 for value in fields.values() if value.strip()) + sum(
+        value.count("\n") for value in fields.values()
+    )
+    if visible_lines > MAX_VISIBLE_LINES:
+        msg = f"top-level visible lines {visible_lines} > {MAX_VISIBLE_LINES}"
+        return {key: msg for key in fields}
+
+    for key, text in fields.items():
+        if not text.strip():
+            continue
+        if "胜率" in text:
+            reasons[key] = "unsupported win-rate wording"
+            continue
+        allowed = action_plan_allowed if key == "action_plan" else context_allowed
+        violation = _unapproved_prices(text, allowed)
+        if violation:
+            prefix = "action_plan" if key == "action_plan" else "narrative"
+            reasons[key] = f"{prefix}: {violation}"
+            continue
+        if key in ("trade_thesis", "action_plan"):
+            conflict = _direction_conflict(text, expected_bias)
+            if conflict:
+                reasons[key] = conflict
+                continue
+        if key == "action_plan" and manager_wait and any(
+            phrase in text for phrase in _EXECUTABLE_ON_WAIT
+        ):
+            reasons[key] = "executable wording while manager action is wait"
+
+    return reasons
 
 
 def validate_llm_top_level(
@@ -418,44 +539,8 @@ def validate_llm_top_level(
     facts: dict[str, Any],
 ) -> str | None:
     """Validate market_summary / trade_thesis / action_plan against authorized facts."""
-    context_allowed = {
-        round(float(x["price"]), 2)
-        for x in facts.get("context_levels", facts.get("allowed_levels", []))
-    }
-    execution_allowed = {
-        round(float(x["price"]), 2) for x in facts.get("authorized_execution_levels", [])
-    }
-    expected_bias = _expected_bias(facts)
-    market_summary = str(llm.get("market_summary") or "")
-    trade_thesis = str(llm.get("trade_thesis") or "")
-    action_plan = str(llm.get("action_plan") or "")
-    chunks = [market_summary, trade_thesis, action_plan]
-    text = " ".join(chunks).strip()
-    if not text:
-        return "empty top-level narrative"
-    visible_lines = sum(1 for part in chunks if part.strip()) + text.count("\n")
-    if visible_lines > MAX_VISIBLE_LINES:
-        return f"top-level visible lines {visible_lines} > {MAX_VISIBLE_LINES}"
-    if "胜率" in text:
-        return "unsupported win-rate wording"
-    for field_text, allowed in (
-        (market_summary, context_allowed),
-        (trade_thesis, context_allowed),
-        (action_plan, execution_allowed),
-    ):
-        if not field_text.strip():
-            continue
-        violation = _unapproved_prices(field_text, allowed)
-        if violation:
-            prefix = "action_plan" if field_text is action_plan else "narrative"
-            return f"{prefix}: {violation}"
-    if expected_bias == "bearish" and any(word in text for word in ("主方向偏多", "以做多为主", "优先做多", "分批做多")):
-        return "direction conflicts with authorized bearish plan"
-    if expected_bias == "bullish" and any(word in text for word in ("主方向偏空", "以做空为主", "优先做空", "分批做空")):
-        return "direction conflicts with authorized bullish plan"
-    decision = (facts.get("common") or {}).get("manager_decision") or {}
-    if str(decision.get("action") or "") == "wait" and any(
-        word in text for word in ("执行", "入场", "开仓", "立即")
-    ):
-        return "executable wording while manager action is wait"
+    field_reasons = validate_llm_top_level_fields(llm, facts=facts)
+    for reason in field_reasons.values():
+        if reason:
+            return reason
     return None

@@ -8,12 +8,14 @@ from __future__ import annotations
 
 from typing import Any
 
+from src.analysis.narrative_facts import (
+    NARRATIVE_ICT_PER_TF,
+    build_narrative_facts_for_llm,
+)
 from src.analysis.technical_context import build_technical_context, timeframe_context
-from src.analysis.narrative_sections import build_narrative_facts
 from src.config import ANALYST_CALENDAR_MAX, ANALYST_ICT_EVENTS_MAX
 from src.core.types import ManagerDecision, MarketContext, ResearchDebate
 
-NARRATIVE_ICT_PER_TF = max(3, ANALYST_ICT_EVENTS_MAX // 2)
 NARRATIVE_ICT_TOTAL = ANALYST_ICT_EVENTS_MAX * 3
 NARRATIVE_TIMEFRAMES = ("4h", "1h", "15m")
 
@@ -120,5 +122,10 @@ def build_llm_context(
         "observation_mode": report.get("meta", {}).get("observation_mode"),
         "data_as_of": report.get("meta", {}).get("data_as_of"),
     }
-    payload["narrative_facts"] = build_narrative_facts(report, technical_context)
+    payload["narrative_facts"] = build_narrative_facts_for_llm(
+        report,
+        ctx=ctx,
+        technical_context=technical_context,
+        event_limit=NARRATIVE_ICT_PER_TF,
+    )
     return payload
