@@ -63,15 +63,15 @@
   "conclusion": {
     "market_sentiment": "弱势偏空 ↓",
     "direction_summary": "主方向偏空，当前处于逆势反弹阶段",
-    "action": "不追多，优先等待 2646-2651 反弹至阻力区做空",
-    "header_conclusion": "主方向偏空，当前处于逆势反弹阶段。不追多，优先等待 2646-2651 反弹至阻力区做空",
+    "action": "不追多，优先等待 2656-2658 反弹至阻力区做空",
+    "header_conclusion": "主方向偏空，当前处于逆势反弹阶段。不追多，优先等待 2656-2658 反弹至阻力区做空",
     "must_do": [
       "★ 主策略：反弹至 FVG/OB 阻力区分批做空",
       "★ 次策略：扫低流动性后短多（逆势轻仓）",
       "★ 风控：按授权档位控制仓位，止损必执行"
     ],
     "starred": [
-      "暂不建议追空",
+      "最佳做空区：2656-2658",
       "最佳做多区：2646-2651",
       "失效条件见下方「失效条件」模块"
     ]
@@ -97,6 +97,12 @@
       "kind": "neutral"
     },
     {
+      "price_low": 2656.02,
+      "price_high": 2658.42,
+      "label": "反抽压力",
+      "kind": "resistance"
+    },
+    {
       "price_low": 2652.76,
       "price_high": 2656.76,
       "label": "当前分界",
@@ -106,17 +112,11 @@
       "price": 2654.76,
       "label": "前段中枢 / 均衡",
       "kind": "neutral"
-    },
-    {
-      "price_low": 2645.96,
-      "price_high": 2650.96,
-      "label": "反抽压力",
-      "kind": "resistance"
     }
   ],
   "resistance_levels": [
     "2661：上方强压",
-    "2646-2651：反抽压力"
+    "2656-2658：反抽压力"
   ],
   "support_levels": [
     "2649-2661：下方支撑",
@@ -128,10 +128,18 @@
   "strategy_plans": [
     {
       "name": "方案 A（主策略）",
+      "logic": "PA 主：VAH 拒绝区做空（SMC OB/CHoCH 仅过滤）",
+      "entry": "2656.02 ~ 2658.42",
+      "stop_loss": 2661.3,
+      "targets": "2651.88 / 2651.02 / 2650.96",
+      "theme": "short"
+    },
+    {
+      "name": "方案 B（备选）",
       "logic": "PA 主：VAL 扫低收回（SMC 仅过滤）",
       "entry": "2645.96 ~ 2650.96",
       "stop_loss": 2641.96,
-      "targets": "2659.52 / 2651.02 / 2657.52",
+      "targets": "2651.02 / 2657.52 / 2657.6",
       "theme": "long"
     }
   ],
@@ -200,7 +208,7 @@
     }
   },
   "risk_control": [
-    "最大风险区：— 上方不做空",
+    "最大风险区：2658-2676 上方不做空",
     "止损必执行，不扛单、不补仓",
     "分批止盈：TP1 减仓50%，TP2 减仓30%"
   ],
@@ -519,6 +527,40 @@
   ],
   "signals": [
     {
+      "name": "保守反抽做空",
+      "direction": "SELL",
+      "direction_cn": "卖出",
+      "entry_low": 2656.02,
+      "entry_high": 2658.42,
+      "stop_loss": 2661.3,
+      "take_profits": [
+        2651.88,
+        2651.02,
+        2650.96
+      ],
+      "risk_reward": "1:1.3",
+      "sentiment_bias_pct": "95%",
+      "position_size": "20% 标准仓",
+      "note": "PA 主：VAH 拒绝区做空（SMC OB/CHoCH 仅过滤）",
+      "theme": "short",
+      "signal_role": "primary",
+      "setup_type": "pa_vah_short",
+      "status": "candidate",
+      "trigger_confirmed": false,
+      "trigger_note": "等待反抽失败 + 5m 收盘重新走弱",
+      "score_total": 52.0,
+      "score_grade": "C",
+      "score_reasons": [
+        "结构方向支持 100%",
+        "候选区已被现价越过，等待重新确认",
+        "几何盈亏比约 1:1.3",
+        "尚未确认反抽失败",
+        "SMC 无明确结构确认，仅作参考 (-3)",
+        "SMC 结构区未对齐 PA 价位 (-4)"
+      ],
+      "signal_id": "sig-679d0dd4bd55"
+    },
+    {
       "name": "右侧扫低做多",
       "direction": "BUY",
       "direction_cn": "买入",
@@ -526,11 +568,11 @@
       "entry_high": 2650.96,
       "stop_loss": 2641.96,
       "take_profits": [
-        2659.52,
         2651.02,
-        2657.52
+        2657.52,
+        2657.6
       ],
-      "risk_reward": "1:1.7",
+      "risk_reward": "1:0.4",
       "sentiment_bias_pct": "0%",
       "position_size": "15% 逆势轻仓",
       "note": "PA 主：VAL 扫低收回（SMC 仅过滤）",
@@ -540,19 +582,19 @@
       "status": "candidate",
       "trigger_confirmed": false,
       "trigger_note": "等待扫低流动性后收回 + 5m 结构转强",
-      "score_total": 39.0,
+      "score_total": 23.0,
       "score_grade": "D",
       "score_reasons": [
         "逆主结构，结构支持仅 0%",
         "候选区距现价 0.32%",
-        "几何盈亏比约 1:1.7",
+        "几何盈亏比约 1:0.4",
         "尚未确认 sweep + reclaim",
         "尚未扫过 VAL",
         "收盘收回 VAL 上方",
         "SMC 无明确结构确认，仅作参考 (-3)",
         "SMC 结构区未对齐 PA 价位 (-4)"
       ],
-      "signal_id": "sig-25ff3c6d9f9c"
+      "signal_id": "sig-50f2872febbd"
     }
   ],
   "projections": [
@@ -611,7 +653,7 @@
     }
   ],
   "invalidation": [
-    "15min 收盘价站稳 2660.52 上方 → 空头 thesis 失效",
+    "15min 收盘价站稳 2661.3 上方 → 空头 thesis 失效",
     "出现 Higher High + Higher Low 结构 → 趋势转多",
     "价格有效填补所有 bearish FVG 并延续上行 → 降低做空优先级"
   ],
@@ -635,10 +677,10 @@
       ],
       "levels": [
         "日内已走 2644.52-2671.52；当日 POC 2658.53，VA 2658.52-2659.88。",
-        "PA 入场区 2645.96-2650.96。"
+        "PA 入场区 2656.02-2658.42（贴近VAH/VAL/POC共振）。"
       ],
       "conditions": [
-        "不追多，优先等待 2646-2651 反弹至阻力区做空"
+        "不追多，优先等待 2656-2658 反弹至阻力区做空"
       ],
       "invalidation": "主方向偏空，当前处于逆势反弹阶段",
       "source": "rule",
@@ -715,8 +757,8 @@
     "现价2659.52附近，日内主方向为偏多，现价在量价价值区内。",
     "4H、1H、15m 量价价值区一致，当前以偏多路径为主。",
     "日内已走 2658.52-2660.52；当日 POC 2658.53，VA 2658.52-2659.88。",
-    "PA 入场区 2645.96-2650.96。",
-    "不追多，优先等待 2646-2651 反弹至阻力区做空",
+    "PA 入场区 2656.02-2658.42（贴近VAH/VAL/POC共振）。",
+    "不追多，优先等待 2656-2658 反弹至阻力区做空",
     "主方向偏空，当前处于逆势反弹阶段"
   ],
   "llm_levels": [],
@@ -1789,15 +1831,16 @@
     "llm_levels": [],
     "validated_plans": [],
     "proposal": {
-      "primary_direction": "long",
+      "primary_direction": "short",
       "signal_indices": [
-        0
+        0,
+        1
       ],
       "rationale": [
         "研究员共识：bearish（强度 100%）",
         "多周期技术投票：多 0% / 空 100% / 震荡 0%",
         "讨论结论：看空证据占优，关注反抽卖区",
-        "交易员：无做空区，保留扫低做多备选"
+        "交易员：结构偏空，优先做空方案（做多仅作逆势备选）"
       ],
       "debate_bias": "bearish"
     },
@@ -1806,7 +1849,8 @@
         "profile": "aggressive",
         "approved": true,
         "allowed_signal_indices": [
-          0
+          0,
+          1
         ],
         "position_scale": 1.0,
         "notes": [
@@ -1817,7 +1861,8 @@
         "profile": "neutral",
         "approved": true,
         "allowed_signal_indices": [
-          0
+          0,
+          1
         ],
         "position_scale": 0.7,
         "notes": [
@@ -1838,7 +1883,7 @@
     ],
     "decision": {
       "action": "reduce",
-      "primary_direction": "long",
+      "primary_direction": "short",
       "selected_signal_indices": [
         0
       ],

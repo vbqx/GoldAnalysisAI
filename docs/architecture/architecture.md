@@ -341,7 +341,7 @@ print(report["agent_trace"]["debate"]["discussion_notes"])
 | 主题 | 说明 |
 |------|------|
 | **纯 LLM 模式** | `AGENT_MODE=llm` 且 LLM 阶段成功时，不再强制回退规则 baseline（修复并行 LLM 引入的 `assert rule_* is not None`） |
-| **实时可观测** | 生成等待页「生成与 LLM I/O」Tab 展示 chunk 级 **LLM 实时推理**（400ms 轮询） |
+| **实时可观测** | 等待页轻量进度（1s 轮询 + LLM 字符计数）；完整 I/O 见生成后「LLM 决策链」 |
 | **止损失效** | 现价已越过止损/失效价时，信号标为 `invalid`；`build_strategy_plans` 与 Trader 跳过 invalid 方案 |
 | **配置加载** | `.env` 覆盖进程内已有环境变量，避免旧 Streamlit 进程残留错误密钥 |
 

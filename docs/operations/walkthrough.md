@@ -49,7 +49,7 @@ flowchart LR
 1. 页面显示 **「正在生成报告…」** 及进度
 2. 步骤条按 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative` → `archive`）
    中文含义：数据拉取 → 技术指标 → ICT 结构 → 分析师团队 → 看多/看空 → 辩论 → 交易 → 风控 → 经理 → 报告 →（可选）LLM 文案 → **运行归档**
-3. 生成过程中可切换到 **LLM决策链** 页，打开 Tab **「生成与 LLM I/O」** — 顶部 **「LLM 实时推理」** 会随 chunk 刷新（约 400ms）；机构报告页等待时同样可见
+3. 等待期间主内容区显示 **当前进度** 与 **LLM 状态**（阶段名 + 已输出字符数）；完整 Prompt / JSON 在生成完成后于 **LLM决策链 → 生成与 I/O 审计** 查看
 4. 完成后渲染机构报告，主图为 **5 分钟 K 线**（叠加近位 5 个 Internal OB 与可见范围 active FVG；远位多周期结构在关键流动性/市场总览；路径推演见底栏）
 
 主图与多周期决策分层见 **[chart-layers.md](../architecture/chart-layers.md)**。

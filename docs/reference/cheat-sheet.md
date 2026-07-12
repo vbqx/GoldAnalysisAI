@@ -68,6 +68,8 @@
 | 改运行前配置/回放 UI | `viz/run_config_panel.py` + `core/run_config.py` | `pytest tests/unit/test_run_config.py tests/unit/test_streamlit_ensure_report.py` |
 | **评审发现项 / FIN-* 状态** | [reviews/findings-status.md](../reviews/findings-status.md) | 改信号/风控前必读 |
 | 改后台生成/回放加载 | `viz/generation_worker.py`, `viz/replay_loader.py` | 同上 + `pytest tests/unit/test_archive_optimizations.py` |
+| **等待页轻量进度（防白屏）** | `viz/streamlit_common.py`, `viz/generation_worker.py` (`compact_llm_io_for_live`) | `pytest tests/unit/test_live_progress_ui.py` |
+| **观察模式仍跑 LLM（点位/交易/风控）** | `core/orchestrator.py`, `agents/factory.py` | `pytest tests/unit/test_llm_trade_stages.py` |
 | 改 session 缓存/ensure_report | `viz/streamlit_common.py`, `viz/session_keys.py` | 同上 |
 | 改进度条/I/O 展示 | `viz/pipeline_progress.py` | 手工生成报告 |
 | 改流水线顺序 | `core/orchestrator.py` + **`docs/reference/pipeline-steps.yaml`** | `pytest tests/regression/test_doc_pipeline_sync.py` |
