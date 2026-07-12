@@ -5,7 +5,10 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
 import yaml
+
+pytestmark = pytest.mark.regression
 
 ROOT = Path(__file__).resolve().parents[2]
 PIPELINE_YAML = ROOT / "docs" / "reference" / "pipeline-steps.yaml"

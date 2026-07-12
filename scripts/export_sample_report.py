@@ -13,7 +13,6 @@ sys.path.insert(0, str(ROOT))
 
 import pandas as pd
 
-from src.agents import factory as agent_factory
 from src.agents.analysts import run_analyst_team
 from src.agents.bearish import run_bearish_researcher
 from src.agents.bullish import run_bullish_researcher
@@ -127,6 +126,9 @@ def main() -> int:
     decision = run_manager(proposal, risk_reviews)
 
     report = build_report(ctx.enriched, ctx.analyses, signals=signals)
+    price = report.get("metrics", {}).get("current_price")
+    if price is None or (isinstance(price, float) and math.isnan(price)):
+        raise RuntimeError(f"sample report export produced invalid price: {price!r}")
     report["metrics"] = {**report.get("metrics", {}), **ctx.metrics}
     report["meta"]["data_source"] = ctx.source_label
     report["meta"]["agent_mode"] = AGENT_MODE

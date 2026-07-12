@@ -9,6 +9,7 @@ on:
       - 'src/core/orchestrator.py'
       - 'src/data/fetch_pipeline.py'
       - 'tests/regression/test_doc_pipeline_sync.py'
+      - 'tests/regression/test_docs_structure.py'
       - 'tests/regression/test_export_sample_report.py'
       - '.github/workflows/docs.yml'
   pull_request:
@@ -19,6 +20,7 @@ on:
       - 'src/core/orchestrator.py'
       - 'src/data/fetch_pipeline.py'
       - 'tests/regression/test_doc_pipeline_sync.py'
+      - 'tests/regression/test_docs_structure.py'
       - 'tests/regression/test_export_sample_report.py'
       - '.github/workflows/docs.yml'
 
@@ -35,10 +37,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
 
-      - name: Verify pipeline docs sync with code
-        run: pytest tests/regression/test_doc_pipeline_sync.py tests/regression/test_export_sample_report.py -v
-
-      - name: Verify sample report JSON is valid
-        run: |
-          python scripts/export_sample_report.py
-          python -c "import json; json.load(open('docs/reference/examples/sample-report.json', encoding='utf-8'))"
+      - name: Verify docs sync, structure, and sample report export
+        run: >-
+          pytest
+          tests/regression/test_doc_pipeline_sync.py
+          tests/regression/test_docs_structure.py
+          tests/regression/test_export_sample_report.py
+          -v
