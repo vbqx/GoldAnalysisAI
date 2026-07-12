@@ -5,9 +5,9 @@ from __future__ import annotations
 import html
 from typing import Any
 
-from src.analysis.display_labels import infer_trade_theme
 from src.analysis.report_engine import parse_risk_events_calendar
 from src.config import GITHUB_REPO, PROJECT_NAME
+from src.viz.display_labels import NARRATIVE_SOURCE_CN, execution_banner, infer_trade_theme, label_action
 from src.viz.source_labels import render_source_badge, stage_source
 
 _SOURCE_LABELS = {
@@ -253,6 +253,13 @@ iframe { border: none; display: block; }
   line-height: 1.45;
   background: #f8fafc;
 }
+.plan-stack-note.warn {
+  border-color: #fcd34d;
+  background: #fffbeb;
+  color: #92400e;
+}
+.plan-card.unauthorized { opacity: 0.92; }
+.plan-card.unauthorized .head { filter: saturate(0.75); }
 .plan-card { border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; font-size: 0.68rem; background: #fff; }
 .plan-card.short.is-primary { border-color: #dc2626; box-shadow: 0 0 0 1px rgba(220,38,38,0.18); }
 .plan-card.long.is-primary { border-color: #16a34a; box-shadow: 0 0 0 1px rgba(22,163,74,0.18); }
@@ -710,10 +717,14 @@ def render_decision_summary(report: dict[str, Any]) -> str:
     """First-screen decision strip: price, bias, executable state, and main risk."""
     metrics = report.get("metrics", {})
     conclusion = report.get("conclusion", {})
+    meta = report.get("meta") or {}
     signals = report.get("signals") or []
-    primary = _primary_signal(signals)
+    execution_authorized = bool(meta.get("execution_authorized"))
+    primary = _primary_signal(signals) if execution_authorized else None
     status = str((primary or {}).get("status") or "candidate")
     status_label, status_cls = _status_meta(status)
+    if not execution_authorized:
+        status_label, status_cls = "未授权", "invalid"
     direction_cls = _direction_class(primary, conclusion)
     price = _fmt_price(metrics.get("current_price"))
     change = (
@@ -724,8 +735,12 @@ def render_decision_summary(report: dict[str, Any]) -> str:
     direction = html.escape(
         str((primary or {}).get("direction_cn") or conclusion.get("market_sentiment") or "—")
     )
-    plan_name = html.escape(str((primary or {}).get("name") or "暂无主计划"))
-    trigger = html.escape(str((primary or {}).get("trigger_note") or "等待交易假设确认"))
+    plan_name = html.escape(
+        str((primary or {}).get("name") or label_action(meta.get("manager_decision", {}).get("action", "wait")))
+    )
+    trigger = html.escape(
+        str((primary or {}).get("trigger_note") or execution_banner(meta) or "等待交易假设确认")
+    )
     risk_items = list(report.get("invalidation", []) or []) + list(
         report.get("risk_control", []) or []
     )
@@ -786,6 +801,7 @@ def _render_plan_card(
     *,
     plan_label: str,
     is_primary: bool = False,
+    unauthorized: bool = False,
 ) -> str:
     role = sig.get("signal_role", "primary")
     css_theme = infer_trade_theme(
@@ -793,11 +809,12 @@ def _render_plan_card(
         direction=str(sig.get("direction") or ""),
         direction_cn=str(sig.get("direction_cn") or ""),
     )
-    alt = " alt" if role == "alternate" else ""
+    alt = " alt" if role == "alternate" and not unauthorized else ""
     status = str(sig.get("status") or "candidate")
     status_label, status_cls = _status_meta(status)
     invalid_cls = " invalid" if status == "invalid" else ""
-    primary_cls = " is-primary" if is_primary else ""
+    primary_cls = " is-primary" if is_primary and not unauthorized else ""
+    unauth_cls = " unauthorized" if unauthorized else ""
     weight = html.escape(str(sig.get("sentiment_bias_pct", sig.get("win_rate", "—"))))
     trigger_note = html.escape(str(sig.get("trigger_note") or "等待触发确认"))
     reasons = sig.get("score_reasons") or []
@@ -807,11 +824,13 @@ def _render_plan_card(
         if str(sig.get("setup_type", "")).startswith("llm_")
         else ""
     )
-    role_badge = (
-        '<span class="signal-mini-badge primary">主</span>'
-        if is_primary
-        else '<span class="signal-mini-badge alt">备</span>'
-    )
+    role_badge = ""
+    if unauthorized:
+        role_badge = '<span class="signal-mini-badge alt">未授权</span>'
+    elif is_primary:
+        role_badge = '<span class="signal-mini-badge primary">主</span>'
+    elif role == "alternate":
+        role_badge = '<span class="signal-mini-badge alt">备</span>'
     title = html.escape(str(sig.get("name") or plan_label))
     plan_name = html.escape(plan_label)
     direction = html.escape(str(sig.get("direction_cn") or sig.get("direction") or "—"))
@@ -819,7 +838,7 @@ def _render_plan_card(
     note = html.escape(str(sig.get("note") or ""))
 
     return f"""
-<div class="plan-card {css_theme}{alt}{invalid_cls}{primary_cls}">
+<div class="plan-card {css_theme}{alt}{invalid_cls}{primary_cls}{unauth_cls}">
   <div class="head">
     <div class="head-title">{plan_name} · {title}</div>
     <div class="head-badges">
@@ -1006,7 +1025,7 @@ def render_narrative_section(section: dict[str, Any] | None) -> str:
     """Render one compact institutional-copy block from the shared contract."""
     section = section or {}
     source = str(section.get("source") or "rule")
-    source_text = {"rule": "规则", "llm": "LLM", "fallback": "回退"}.get(source, "规则")
+    source_text = NARRATIVE_SOURCE_CN.get(source, "规则")
     source_cls = "llm" if source == "llm" else ("fallback" if source == "fallback" else "rule")
     rows: list[tuple[str, str]] = []
     if summary := str(section.get("summary") or "").strip():
@@ -1028,8 +1047,18 @@ def render_narrative_section(section: dict[str, Any] | None) -> str:
     )
     return (
         f'<div class="narrative-section"><span class="narrative-source {source_cls}">{source_text}</span>'
-        f'{body or "<div class=\"narrative-line\">数据不足，等待确认。</div>"}</div>'
+        f'{body or "<div class=\"narrative-line\">数据不足，等待确认。</div>"}'
+        f'{_narrative_fallback_hint(section)}</div>'
     )
+
+
+def _narrative_fallback_hint(section: dict[str, Any]) -> str:
+    if str(section.get("source") or "") != "fallback":
+        return ""
+    reason = str(section.get("fallback_reason") or "").strip()
+    if not reason:
+        return ""
+    return f'<div class="plan-stack-note" style="margin-top:4px">兜底原因：{html.escape(reason[:120])}</div>'
 
 
 def render_key_levels(levels: list[dict]) -> str:
@@ -1054,7 +1083,7 @@ def render_strategy_sections(report: dict[str, Any]) -> str:
         ("1 主方向", f"<p>{c['direction_summary']}。{c['action']}</p>"),
         ("2 关键压力", "<ul class='bullet-list'>" + "".join(f"<li>{x}</li>" for x in report.get("resistance_levels", [])) + "</ul>"),
         ("3 关键支撑", "<ul class='bullet-list'>" + "".join(f"<li>{x}</li>" for x in report.get("support_levels", [])) + "</ul>"),
-        ("4 交易计划", render_trading_plans(report.get("signals") or [])),
+        ("4 交易计划", render_trading_plans(report.get("signals") or [], meta=report.get("meta"))),
         ("5 关键提醒", "<ul class='bullet-list'>" + "".join(f"<li>{x}</li>" for x in report.get("risk_control", [])) + "</ul>"),
     ]
     parts = []
@@ -1083,18 +1112,40 @@ def render_calendar(events: list[dict]) -> str:
     return f'<div class="panel-box"><h4>📅 宏观日历</h4>{rows}</div>'
 
 
-def render_trading_plans(signals: list[dict], *, include_primary: bool = True) -> str:
-    """Unified A/B/C plan cards with confidence score (score_total / score_grade)."""
-    del include_primary  # kept for backward compatibility; all plans render in one stack
-    display_signals = _display_plan_signals(signals)
+def render_trading_plans(
+    signals: list[dict],
+    *,
+    meta: dict | None = None,
+    include_primary: bool = True,
+) -> str:
+    """Unified A/B/C plan cards; separates authorized vs rule-only candidates."""
+    del include_primary
+    meta = meta or {}
+    execution_authorized = bool(meta.get("execution_authorized"))
+    if execution_authorized:
+        display_signals = [
+            s
+            for s in signals
+            if s.get("signal_role") in ("primary", "alternate") and s.get("status") != "invalid"
+        ][:3]
+        unauthorized = False
+    else:
+        display_signals = _display_plan_signals(signals)
+        unauthorized = True
     if not display_signals:
         return '<div class="plan-stack"><p>暂无交易计划</p></div>'
+    banner = ""
+    if unauthorized:
+        note = html.escape(execution_banner(meta))
+        banner = f'<div class="plan-stack-note warn">⚠ {note}</div>'
     cards = []
     for idx, sig in enumerate(display_signals):
         label = _PLAN_LABELS[idx] if idx < len(_PLAN_LABELS) else f"方案 {idx + 1}"
-        is_primary = sig.get("signal_role") == "primary" or idx == 0
-        cards.append(_render_plan_card(sig, plan_label=label, is_primary=is_primary))
-    return f'<div class="plan-stack">{"".join(cards)}</div>'
+        is_primary = (not unauthorized) and sig.get("signal_role") == "primary"
+        cards.append(
+            _render_plan_card(sig, plan_label=label, is_primary=is_primary, unauthorized=unauthorized)
+        )
+    return f'<div class="plan-stack">{banner}{"".join(cards)}</div>'
 
 
 def render_liquidity(items: list[dict]) -> str:

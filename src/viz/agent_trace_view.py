@@ -7,6 +7,13 @@ import json
 
 import streamlit as st
 
+from src.viz.display_labels import (
+    label_action,
+    label_bias,
+    label_position_scale,
+    label_risk_profile,
+    label_trade_direction,
+)
 from src.viz.llm_meta import format_latency_ms, stage_llm_caption
 from src.viz.source_labels import (
     STAGE_LABELS,
@@ -64,7 +71,7 @@ def _render_stage_summary_grid(report: dict, trace: dict) -> str:
     for key in ("technical", "fundamentals", "news", "sentiment"):
         row = analyst_team.get(key) or {}
         if row:
-            analyst_biases.append(f"{STAGE_LABELS.get(key, key)}={row.get('bias', '—')}")
+            analyst_biases.append(f"{STAGE_LABELS.get(key, key)}={label_bias(row.get('bias', '—'))}")
 
     accepted = sum(1 for row in validated if row.get("accepted"))
     rejected = len(validated) - accepted
@@ -81,7 +88,7 @@ def _render_stage_summary_grid(report: dict, trace: dict) -> str:
         _stage_card(
             "debate",
             stage_meta.get("debate") or {},
-            f"共识 {debate.get('consensus_bias', '—')}",
+            f"共识 {label_bias(debate.get('consensus_bias', '—'))}",
             f"强度 {float(debate.get('consensus_strength') or 0):.0%}",
         ),
         _stage_card(
@@ -93,7 +100,7 @@ def _render_stage_summary_grid(report: dict, trace: dict) -> str:
         _stage_card(
             "manager",
             stage_meta.get("manager") or {},
-            f"{decision.get('action', '—')} · {decision.get('primary_direction', '—')}",
+            f"{label_action(decision.get('action', '—'))} · {label_trade_direction(decision.get('primary_direction', '—'))}",
             f"置信 {float(decision.get('confidence') or 0):.0%}；风控通过 {approved_risk}/{len(risk_reviews)}",
         ),
     ]
@@ -122,7 +129,7 @@ def _decision_flow_markdown(report: dict, trace: dict) -> str:
         ("sentiment", "情绪"),
     ):
         row = team.get(key) or {}
-        analyst_bits.append(f"{label}={row.get('bias', '—')}")
+        analyst_bits.append(f"{label}={label_bias(row.get('bias', '—'))}")
 
     signal_bits = []
     for idx, sig in enumerate(signals[:3], start=1):
@@ -159,17 +166,17 @@ def _decision_flow_markdown(report: dict, trace: dict) -> str:
             f"- **多空研究**：看多={_stage_source_text(stage_meta, 'bullish')}；看空={_stage_source_text(stage_meta, 'bearish')}。",
             (
                 f"- **辩论**（{_stage_source_text(stage_meta, 'debate')}）："
-                f"共识 {debate.get('consensus_bias', '—')}，强度 {debate_strength:.0%}。"
+                f"共识 {label_bias(debate.get('consensus_bias', '—'))}，强度 {debate_strength:.0%}。"
             ),
             f"- **点位**：{llm_level_line}。",
             (
                 f"- **交易员**（{trader_source}）："
-                f"主方向 {proposal.get('primary_direction', '—')}，"
+                f"主方向 {label_trade_direction(proposal.get('primary_direction', '—'))}，"
                 f"信号 {proposal.get('signal_indices', [])}。"
             ),
             (
-                f"- **风控/经理**：经理动作 {decision.get('action', '—')}，"
-                f"方向 {decision.get('primary_direction', '—')}，"
+                f"- **风控/经理**：经理动作 {label_action(decision.get('action', '—'))}，"
+                f"方向 {label_trade_direction(decision.get('primary_direction', '—'))}，"
                 f"置信 {decision_confidence:.0%}。"
             ),
             f"- **结论**：{conclusion.get('market_sentiment', '—')}；{decision.get('summary', '')}",
@@ -211,18 +218,30 @@ def render_agent_trace_panel(report: dict) -> None:
     st.markdown("**阶段摘要**")
     st.markdown(_render_stage_summary_grid(report, trace), unsafe_allow_html=True)
 
+    meta_report = report.get("meta") or {}
+    if not meta_report.get("execution_authorized"):
+        st.info(
+            "经理未授权执行：交易计划区展示的是规则候选方案；"
+            "请以本页「经理决策 / 风控」为准。"
+            + (
+                " 当前为快照观察模式，风控因行情非可执行而全部否决。"
+                if meta_report.get("observation_mode")
+                else ""
+            )
+        )
+
     c1, c2, c3 = st.columns(3)
     mgr_meta = stage_meta.get("manager") or {}
     with c1:
-        st.metric("经理决策", decision.get("action", "—"))
+        st.metric("经理决策", label_action(decision.get("action", "—")))
         st.caption(f"{_badge_md(mgr_meta)} · 置信 {decision.get('confidence', 0):.0%}")
     debate_meta = stage_meta.get("debate") or {}
     with c2:
-        st.metric("辩论共识", debate.get("consensus_bias", "—"))
+        st.metric("辩论共识", label_bias(debate.get("consensus_bias", "—")))
         st.caption(f"{_badge_md(debate_meta)} · 强度 {debate.get('consensus_strength', 0):.0%}")
     trader_meta = stage_meta.get("trader") or {}
     with c3:
-        st.metric("交易员", proposal.get("primary_direction", "—"))
+        st.metric("交易员", label_trade_direction(proposal.get("primary_direction", "—")))
         st.caption(f"{_badge_md(trader_meta)} · 信号 {proposal.get('signal_indices', [])}")
 
     st.markdown("**经理摘要**")
@@ -233,7 +252,7 @@ def render_agent_trace_panel(report: dict) -> None:
 
     if analyst_team:
         team_meta = stage_meta.get("analyst_team") or {}
-        st.markdown(f"**Analyst Team** {_badge_md(team_meta)}")
+        st.markdown(f"**分析师团队** {_badge_md(team_meta)}")
         labels = {
             "technical": "技术",
             "fundamentals": "基本面",
@@ -251,7 +270,7 @@ def render_agent_trace_panel(report: dict) -> None:
                     cap = stage_llm_caption(stage_meta, key)
                     if cap:
                         st.caption(cap)
-                st.caption(f"倾向：{analyst_report.get('bias', '—')}")
+                st.caption(f"倾向：{label_bias(analyst_report.get('bias', '—'))}")
                 st.markdown(analyst_report.get("summary", "—"))
                 st.caption(f"{len(analyst_report.get('items', []))} 条证据")
 
@@ -330,9 +349,9 @@ def render_agent_trace_panel(report: dict) -> None:
         st.dataframe(
             [
                 {
-                    "风格": r.get("profile", "—"),
+                    "风格": label_risk_profile(r.get("profile", "—")),
                     "通过": "✓" if r.get("approved") else "✗",
-                    "仓位": f"{r.get('position_scale', 0):.0%}",
+                    "仓位": label_position_scale(r.get("position_scale", 0)),
                     "信号": str(r.get("allowed_signal_indices", [])),
                 }
                 for r in risk_reviews

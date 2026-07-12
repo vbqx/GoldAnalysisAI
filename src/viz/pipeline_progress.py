@@ -18,6 +18,29 @@ _STATUS_ICONS: dict[StepStatus, str] = {
 }
 
 
+def pipeline_progress_headline(steps: list[dict] | None) -> str:
+    """Human-readable summary of the current pipeline step for waiting UI."""
+    rows = steps or []
+    running = [s for s in rows if s.get("status") == "running"]
+    if running:
+        parts: list[str] = []
+        for step in running:
+            label = str(step.get("label") or step.get("id") or "处理中")
+            detail = str(step.get("detail") or "").strip()
+            parts.append(f"{label} — {detail}" if detail else label)
+        return " · ".join(parts)
+    if rows:
+        last = rows[-1]
+        status = last.get("status")
+        label = str(last.get("label") or last.get("id") or "")
+        if status == "done" and label:
+            return f"最新完成：{label}；后续阶段继续运行中…"
+        if status == "error" and label:
+            detail = str(last.get("detail") or "").strip()
+            return f"阶段失败：{label}" + (f" — {detail}" if detail else "")
+    return "流水线启动中…"
+
+
 def _format_step(step: PipelineProgressStep) -> str:
     icon = _STATUS_ICONS.get(step.status, "•")
     detail = f" — {step.detail}" if step.detail else ""
@@ -52,23 +75,32 @@ def _render_llm_io_text(*, label: str, key: str, text: str, height: int = 360) -
     if label:
         st.markdown(f'<p class="io-label">{label}</p>', unsafe_allow_html=True)
     st.text_area(
-        key,
-        text,
+        label or key,
+        value=text,
         height=height,
         disabled=True,
         label_visibility="collapsed",
+        key=key,
     )
 
 
-def _render_llm_output_panel(*, stage: str, output: str, error: str | None = None, json_height: int = 320) -> None:
+def _render_llm_output_panel(
+    *,
+    stage: str,
+    output: str,
+    error: str | None = None,
+    json_height: int = 320,
+    widget_key: str | None = None,
+) -> None:
     if error:
         st.error(error)
         return
     raw = output or ""
+    out_key = widget_key or f"llm_out_{stage}"
     st.caption("原始输出（JSON）")
     _render_llm_io_text(
         label="",
-        key=f"llm_out_{stage}",
+        key=out_key,
         text=format_llm_output(raw)[:16000] + ("…" if len(raw) > 16000 else ""),
         height=json_height,
     )
@@ -98,7 +130,7 @@ def render_live_llm_streams(active: list[dict]) -> None:
     if not active:
         return
     st.markdown('<p class="section-h">🤖 LLM 实时推理</p>', unsafe_allow_html=True)
-    for rec in active:
+    for idx, rec in enumerate(active):
         stage = rec.get("stage", "")
         label = rec.get("label", stage)
         model = rec.get("model", "")
@@ -109,7 +141,7 @@ def render_live_llm_streams(active: list[dict]) -> None:
             st.caption("输入（Prompt）")
             _render_llm_io_text(
                 label="",
-                key=f"live_in_{stage}",
+                key=f"live_{idx}_in_{stage}",
                 text=format_messages(msgs),
                 height=200,
             )
@@ -121,7 +153,7 @@ def render_live_llm_streams(active: list[dict]) -> None:
                     preview = "…\n" + preview[-12000:]
                 _render_llm_io_text(
                     label="",
-                    key=f"live_out_{stage}",
+                    key=f"live_{idx}_out_{stage}",
                     text=preview,
                     height=280,
                 )
@@ -176,7 +208,7 @@ def render_llm_io_history(
             msgs = rec.get("messages") or []
             _render_llm_io_text(
                 label=input_label,
-                key=f"llm_in_{stage}",
+                key=f"io_{i}_in_{stage}",
                 text=format_messages(msgs),
                 height=360,
             )
@@ -186,7 +218,7 @@ def render_llm_io_history(
                 raw = rec.get("output") or ""
                 _render_llm_io_text(
                     label=output_label,
-                    key=f"llm_out_{stage}",
+                    key=f"io_{i}_out_{stage}",
                     text=format_llm_output(raw)[:16000] + ("…" if len(raw) > 16000 else ""),
                     height=360,
                 )
@@ -236,11 +268,12 @@ class StreamlitProgressReporter(ProgressReporter):
             expander = st.expander(f"🔄 {label} · `{model}`", expanded=True)
             expander.caption("输入（Prompt）")
             expander.text_area(
-                f"llm_in_{stage}",
-                format_messages(messages),
+                f"prompt_{stage}",
+                value=format_messages(messages),
                 height=280,
                 disabled=True,
                 label_visibility="collapsed",
+                key=f"reporter_in_{stage}",
             )
             expander.caption("输出（流式）")
             output_box = expander.empty()
@@ -277,7 +310,12 @@ class StreamlitProgressReporter(ProgressReporter):
             block["output_box"].error(error)
         elif output:
             with block["output_box"].container():
-                _render_llm_output_panel(stage=stage, output=output, json_height=260)
+                _render_llm_output_panel(
+                    stage=stage,
+                    output=output,
+                    json_height=260,
+                    widget_key=f"reporter_out_{stage}",
+                )
 
     def complete(self, *, ok: bool = True) -> None:
         if not self.state.steps:
