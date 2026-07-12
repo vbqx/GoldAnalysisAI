@@ -9,10 +9,16 @@ from src.agents import factory as agent_factory
 from src.analysis.ict_pa import analyze_timeframe
 from src.analysis.level_validator import validate_llm_levels
 from src.analysis.audit_summary import build_audit_summary
+from src.analysis.fact_registry import build_fact_registry
+from src.analysis.report_invariant_gate import apply_report_invariant_gate
+from src.analysis.report_invariants import validate_report_invariants
+from src.analysis.report_reliability import compute_report_reliability
 from src.analysis.data_freshness import build_data_as_of
 from src.analysis.narrative_sections import build_rule_narrative_sections, overview_bullets_from_sections
 from src.analysis.report_engine import (
+    align_conclusion_with_manager_decision,
     apply_manager_authorization,
+    build_final_decision_meta,
     build_report,
     compute_trading_signals,
     parse_risk_events_calendar,
@@ -157,19 +163,34 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     )
 
     prog.start("trader", "交易员提案")
+    as_of = build_data_as_of(raw)
+    observation_mode = not as_of.get("executable", False)
+
     llm_level_proposals = []
     level_validation = []
-    if get_run_config().llm_stage_levels and agent_mode() != "rule":
+    if (
+        not observation_mode
+        and get_run_config().llm_stage_levels
+        and agent_mode() != "rule"
+    ):
         prog.update("trader", detail="LLM level proposal")
         llm_level_proposals = agent_factory.run_level_proposer(ctx, analyst_team, debate, pipeline_meta, signals)
         llm_signals, level_validation = validate_llm_levels(ctx, llm_level_proposals)
         signals = llm_signals + signals
     else:
+        reason = "non-executable snapshot" if observation_mode else "LLM_STAGE_LEVELS disabled"
         pipeline_meta.record(
             "llm_levels",
-            StageMeta(source="rule", fallback_reason="LLM_STAGE_LEVELS disabled"),
+            StageMeta(source="rule", fallback_reason=reason),
         )
-    proposal, signals = agent_factory.run_trader(ctx, debate, pipeline_meta, signals, analyst_team)
+    proposal, signals = agent_factory.run_trader(
+        ctx,
+        debate,
+        pipeline_meta,
+        signals,
+        analyst_team,
+        observation_mode=observation_mode,
+    )
     prog.done("trader", f"{proposal.primary_direction} · {len(proposal.signal_indices)} 信号")
     log.info(
         "trader proposal direction=%s signals=%d selected_idx=%s",
@@ -177,9 +198,6 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         len(signals),
         proposal.signal_indices,
     )
-
-    as_of = build_data_as_of(raw)
-    observation_mode = not as_of.get("executable", False)
 
     prog.start("risk", "风控审核", "激进 · 中性 · 保守")
     risk_reviews = agent_factory.run_risk(
@@ -236,6 +254,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         "dxy_impact": ctx.external.dxy_impact,
         "risk_events": ctx.external.risk_events,
         "news_headlines": ctx.external.news_headlines[:12],
+        "headline_items": [h.to_dict() for h in ctx.external.headline_items[:12]],
         "headline_count": len(ctx.external.headline_items),
         "calendar_count": len(ctx.external.calendar_events),
         "macro_quotes": [m.to_dict() for m in ctx.external.macro_quotes],
@@ -267,6 +286,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
             conclusion["action"] = prefix + str(conclusion.get("action", ""))
 
     apply_manager_authorization(report, decision, risk_reviews)
+    align_conclusion_with_manager_decision(report)
     report["narrative_sections"] = build_rule_narrative_sections(report)
     report["market_overview"] = overview_bullets_from_sections(report["narrative_sections"])
     log.debug(
@@ -277,6 +297,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     )
 
     narrative_llm_enabled = llm_narrative_enabled()
+    report["meta"]["fact_registry"] = build_fact_registry(report)
     if narrative_llm_enabled:
         prog.start("llm_narrative", "LLM 报告文案", "深度分析生成中…")
     llm_result = (
@@ -285,6 +306,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         else LLMAnalysis(enabled=False)
     )
     apply_llm_to_report(report, llm_result)
+    report.setdefault("meta", {})["final_decision"] = build_final_decision_meta(report)
     if narrative_llm_enabled:
         prog.stage_io(
             "narrative_validation",
@@ -302,6 +324,26 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     else:
         prog.skip("llm_narrative", "LLM 报告文案", "未启用")
 
+    report["meta"]["fact_registry"] = build_fact_registry(report)
+    report["meta"]["report_invariants"] = validate_report_invariants(
+        report,
+        registry=report["meta"]["fact_registry"],
+    )
+    report["meta"]["report_invariants"] = apply_report_invariant_gate(
+        report,
+        report["meta"]["report_invariants"],
+    )
+    report["meta"]["fact_registry"] = build_fact_registry(report)
+    report["meta"]["report_reliability"] = compute_report_reliability(report)
+    if not report["meta"]["report_invariants"].get("passed"):
+        codes = [
+            v.get("code")
+            for v in report["meta"]["report_invariants"].get("violations", [])[:5]
+        ]
+        report["meta"].setdefault("warnings", []).append(
+            f"报告一致性校验未通过（已降级处理）：{', '.join(c for c in codes if c)}"
+        )
+
     trace = AgentTrace(
         context=ctx.to_dict(),
         analyst_team=analyst_team.to_dict(),
@@ -311,7 +353,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         proposal=proposal.to_dict(),
         risk_reviews=[r.to_dict() for r in risk_reviews],
         decision=decision.to_dict(),
-        llm=llm_result.to_dict() if llm_result.enabled else None,
+        llm=report.get("llm_analysis") if llm_result.enabled else None,
         stage_meta=pipeline_meta.to_dict(),
     )
     report["agent_trace"] = trace.to_dict()

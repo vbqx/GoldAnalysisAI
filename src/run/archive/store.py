@@ -815,15 +815,18 @@ def archive_run(
     run_config: RunConfig,
     elapsed_s: float,
 ) -> Path:
-    assert_pipeline_replay_ready(report)
     cfg = run_config.normalized()
+    meta = report.get("meta") or {}
+    pipeline_status = str(meta.get("pipeline_status") or PIPELINE_STATUS_COMPLETE)
+    if pipeline_status == PIPELINE_STATUS_COMPLETE:
+        assert_pipeline_replay_ready(report)
     summary = {
         "source_label": fetched.source_label,
         "current_price": report.get("metrics", {}).get("current_price"),
         "bars_summary": fetched.bars_summary,
         "elapsed_s": round(elapsed_s, 3),
-        "observation_mode": report.get("meta", {}).get("observation_mode"),
-        "pipeline_status": PIPELINE_STATUS_COMPLETE,
+        "observation_mode": meta.get("observation_mode"),
+        "pipeline_status": pipeline_status,
     }
     return _persist_archive_folder(
         run_id,

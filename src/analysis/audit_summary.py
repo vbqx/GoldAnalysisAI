@@ -58,4 +58,10 @@ def build_audit_summary(
         "narrative_top_level_rejected": top_audit.get("fallback_reason"),
         "slow_llm_stages": slow_stages,
         "stage_sources_digest": _hash_payload(stage_meta or meta.get("stage_sources") or {}),
+        "report_invariants_passed": (meta.get("report_invariants") or {}).get("passed"),
+        "report_invariant_codes": [
+            v.get("code") for v in (meta.get("report_invariants") or {}).get("violations", [])
+        ],
+        "overall_reliability": (meta.get("report_reliability") or {}).get("overall_reliability"),
+        "fact_registry_count": (meta.get("fact_registry") or {}).get("fact_count"),
     }
