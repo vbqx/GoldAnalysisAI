@@ -1,5 +1,8 @@
 # Architecture Review
 
+> **文档类型**：架构健康检查（持续维护，非一次性验收）  
+> **索引**：[reviews/README.md](../reviews/README.md) · 发现项状态见 [findings-status.md](../reviews/findings-status.md)（仅 F-* 金融项）
+
 本文从可读性、边界和臃肿度审视当前项目。它不是 roadmap；只记录“现在的结构是否健康”。
 
 ## 总体判断
@@ -20,7 +23,7 @@
 
 ## 可合并或延后
 
-- `docs/archive/` 中历史审计只保留引用，不参与当前架构判断。
+- `docs/reviews/` 中历史金融/GUI 评审只保留引用，不参与当前架构判断。
 - GitHub issue 批量脚本属于维护工具，可保留但不应出现在 owner 主路径。
 - GUI 细节验收应进入测试/归档，不再放 roadmap。
 - MT5 order_send 应延后到 shadow 和 order_check 稳定之后。

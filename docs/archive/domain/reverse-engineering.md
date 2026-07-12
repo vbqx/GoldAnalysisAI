@@ -154,4 +154,4 @@ MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；
 |------|------|
 | [README.md](../../README.md) | 文档中心索引 |
 | [handbook.md](../../reference/handbook.md) | 模块实现与数据流 |
-| [financial-review.md](./financial-review.md) | 金融逻辑评审 |
+| [static-code-review.md](../../reviews/financial/static-code-review.md) | 金融逻辑评审 |

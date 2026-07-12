@@ -73,8 +73,11 @@
 | `manager` | `factory.py` + `agents/manager.py` | 执行 / 减仓 / 观望 | 可选 |
 | `report` | `analysis/report_engine.py` | 界面消费的 JSON | 否 |
 | `llm_narrative` | `llm/analyst.py` | `report["llm_analysis"]` | 可选 |
+| `archive` | `data/run_archive.py` | `.cache/run_archives/<run_id>/` | 否 |
 
 **切换页面不会重跑流水线** — 三页共享 `st.session_state` 中缓存的同一份 `(report, data, analyses)`。
+
+**历史回放**（配置页勾选）：`viz/replay_loader.load_replay_bundle()` 直接读归档，**0 token、不重跑 LLM**。契约见 [run-archive-schema.md](../reference/run-archive-schema.md)。
 
 ---
 
@@ -85,7 +88,8 @@
 | 顺序 | 文件 | 关注点 |
 |------|------|--------|
 | 1 | `app.py` | 纯导航，不跑流水线 |
-| 2 | `src/viz/streamlit_common.py` | `ensure_report()` — 生成前配置、缓存、后台线程 |
+| 2 | `src/viz/streamlit_common.py` | `ensure_report()` — session 缓存、后台线程 |
+| 2b | `src/viz/run_config_panel.py` | 生成前配置、历史回放控件 |
 | 3 | `src/core/run_config.py` | UI 运行配置与 import-bound 模块同步 |
 | 4 | `src/pipeline.py` | 对外 API，一行委托 |
 | 5 | `src/core/orchestrator.py` | **主调用图**，建议通读 |
@@ -207,7 +211,7 @@ python run_app.py
 | 开了 LLM 但没效果 | 检查 `LLM_API_KEY`、`AGENT_MODE`、`LLM_STAGE_*`；看 `stage_sources` |
 | 生成要 5 分钟 | 全流程多次 API 调用属正常；`AGENT_MODE=rule` 可降到约 30 秒 |
 | 文档与代码不一致 | 以 `orchestrator.py` 调用顺序为准 |
-| 胜率 62% 是回测吗？ | **不是**；见 [financial-review.md](../archive/domain/financial-review.md) F-002 |
+| 胜率 62% 是回测吗？ | **不是**；见 [financial-review.md](../reviews/financial/static-code-review.md) F-002 |
 
 ---
 
@@ -240,7 +244,7 @@ examples/report-schema.md + sample-report.json（理解输出）
     ↓
 llm-agents.md（启用大模型时）
     ↓
-financial-review.md（改信号/风控前必读）
+[reviews/financial/static-code-review.md](../reviews/financial/static-code-review.md)（改信号/风控前必读）
 ```
 
 **不要**一开始通读 [handbook.md](../reference/handbook.md)（600+ 行）——那是**参考手册**，不是**入门教程**。

@@ -97,8 +97,15 @@
 │   meta.audit_summary / data_as_of / observation_mode             │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   RUN ARCHIVE (run_archive.py)                   │
+│   manifest + report + enriched + analyses + fetch → index.json   │
+└────────────────────────────┬────────────────────────────────────┘
+                             ▼
                       app.py + views/* + viz/*
 ```
+
+**回放**（配置页选「历史回放」）：`load_replay_bundle()` 直接读归档，**不经过**上方 fetch → LLM 链路。
 
 \* News / Social / Fundamentals 已接入真实数据源（金十 MCP 快讯/资讯/日历、TradingView DXY、TV Ideas/Minds）；失败时回退占位文案，UI schema 不变。
 
@@ -263,11 +270,46 @@ Swings + ATR -> Liquidity zones -> Sweep quality -> TradingSignal status/score
 
 这不会替换现有的 Analyst Team -> Bull/Bear -> Debate 架构。流动性层同时服务规则候选信号和 LLM 点位上下文，但不替代研究智能体。
 
-金融侧验收见 [financial-review.md](../archive/domain/financial-review.md#2026-06-21-流动性可靠性验收口径)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)。
+金融侧验收见 [financial-review.md](../reviews/financial/static-code-review.md#2026-06-21-流动性可靠性验收口径)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)。
 
 ---
 
-## 9. 调试 agent_trace
+## 10. Run Archive 与历史回放
+
+每次 **实时生成** 结束后，`orchestrator` 通过 `finalize_pipeline_archive()` 将完整结果写入 `.cache/run_archives/<run_id>/`：
+
+| 文件 | 内容 |
+|------|------|
+| `manifest.json` | schema v2 契约入口 |
+| `report.json` | 完整报告（含 LLM 文案） |
+| `enriched/*.json` | 各周期 K 线 + 指标 |
+| `analyses.json` | ICT 结构分析 |
+| `fetch.json` | 原始拉数快照（可选回放外部数据） |
+| `index.json` | 全局索引（加速 list，避免扫盘） |
+
+**回放路径**（0 token · 不重跑 LLM）：
+
+```text
+Streamlit 回放模式 → load_replay_bundle() → inspect + load_bundle → UI
+```
+
+与实时路径对比：
+
+```text
+Live:  RunConfig → orchestrator → archive_run → UI
+Replay: RunConfig(replay) → load_replay_bundle → UI（零计算）
+```
+
+兼容层：`run_archive_schema` → `run_archive_compat`（inspect / migrate / normalize_report）。
+保留策略：`RUN_ARCHIVE_MAX_COUNT` / `RUN_ARCHIVE_MAX_MB`（LRU 清理）。
+CLI：`python scripts/inspect_archive.py list|inspect|validate <run_id>`。
+回测对齐：`backtest.engine.run_backtest_from_archive(run_id)` 读取同一 `fetch.json` 5m 数据。
+
+详见 [run-archive-schema.md](../reference/run-archive-schema.md)。
+
+---
+
+## 11. 调试 agent_trace
 
 ```python
 report, _, _ = run_analysis()

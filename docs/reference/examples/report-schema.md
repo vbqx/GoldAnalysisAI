@@ -113,7 +113,7 @@ python scripts/export_sample_report.py
 { "bullish": 25.0, "bearish": 62.0, "ranging": 13.0 }
 ```
 
-来自 `ict_pa.sentiment_score()` 多周期趋势加权。界面若展示为「胜率」，须标注为**结构权重**。见 [financial-review.md](../../archive/domain/financial-review.md) F-002。
+来自 `ict_pa.sentiment_score()` 多周期趋势加权。界面若展示为「胜率」，须标注为**结构权重**。见 [financial-review.md](../../reviews/financial/static-code-review.md) F-002。
 
 ---
 

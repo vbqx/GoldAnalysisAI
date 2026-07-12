@@ -69,6 +69,18 @@ fetch_all_data()
 | news | 分 channel 的 flash / article / calendar + `news_topics` |
 | sentiment | 完整 `social_posts`（上限 `ANALYST_SOCIAL_MAX`） |
 
+### 结论漏斗（`LLM_PAYLOAD_FUNNEL=true`，默认）
+
+| 下游阶段 | Payload | 主输入 |
+|----------|---------|--------|
+| 看多/看空研究 | `research_payload(ctx, team, direction)` | `analyst_team` |
+| 辩论 | `debate_payload(...)` | bull/bear evidence + analyst top items |
+| 交易员 | `trader_decision_payload(...)` | debate + analyst summaries + signals |
+| 点位提议 | `level_proposer_payload(...)` | analyst_team + `structure_context` |
+| 经理 | `manager_payload(...)` | proposal + risk reviews only |
+
+相关 env：`DEBATE_ANALYST_ITEMS_MAX`（默认 3）、`TRADER_DEBATE_NOTES_MAX`（默认 8）。设 `LLM_PAYLOAD_FUNNEL=false` 回退旧版全量 market 输入。
+
 ## 可观测性
 
 - `MarketContext.context_stats` — headline/calendar/macro/ICT 计数 + external payload 字节数
@@ -132,5 +144,5 @@ fetch_all_data()
 
 ## 专项边界
 
-流动性质量专项不在本文重复维护。实现边界见 [architecture.md §8.2](./architecture.md#82-流动性质量层)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)，金融验收见 [financial-review.md](../archive/domain/financial-review.md#2026-06-21-流动性可靠性验收口径)。
+流动性质量专项不在本文重复维护。实现边界见 [architecture.md §8.2](./architecture.md#82-流动性质量层)，后续计划见 [roadmap.md](../planning/roadmap.md#流动性质量专项)，金融验收见 [financial-review.md](../reviews/financial/static-code-review.md#2026-06-21-流动性可靠性验收口径)。
 

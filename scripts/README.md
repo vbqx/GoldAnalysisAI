@@ -4,7 +4,7 @@
 
 ## 启动 Streamlit 应用
 
-**跨平台官方入口**在仓库根目录：
+**跨平台官方入口**在仓库根目录（仅此一处）：
 
 ```bash
 python run_app.py
@@ -14,8 +14,6 @@ python run_app.py
 |----------|------|
 | `../run_app.bat` | Windows → 调用 `run_app.py` |
 | `../run_app.sh` | Linux/macOS → 调用 `run_app.py` |
-| `run_app.py`（本目录） | 兼容薄封装，转调根目录 `run_app.py` |
-| `run_app.ps1` / `run_app.bat` / `run_app.sh`（本目录） | 已弃用，仍可用，均转调根目录 |
 
 **不要**直接 `streamlit run app.py`。
 
@@ -24,6 +22,8 @@ python run_app.py
 | 脚本 | 说明 |
 |------|------|
 | `export_sample_report.py` | 生成 `docs/reference/examples/sample-report.json`（无网络） |
+| `replay_llm_narrative.py` | **零 token** 校验已保存 LLM JSON 与 narrative 规则（离线调试） |
+| `inspect_archive.py` | 列出 / 检查 / 校验 `.cache/run_archives/`（`list` / `inspect` / `validate`） |
 | `dev-env.ps1` | Windows 开发终端初始化：UTF-8 控制台、Python UTF-8 输出、OpenBLAS 单线程 |
 | `show_utf8.py` | 按 UTF-8 显式读取并带行号输出文本文件，适合中文文档/源码补丁上下文 |
 | `check_mt5_connection.py` | 读取本机 `.env` 的 MT5 配置，做账号连接自检，不读取 K 线、不发送订单 |
@@ -55,7 +55,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 读取含中文的源码或文档时，优先使用：
 
 ```powershell
-python scripts/show_utf8.py docs/archive/domain/financial-review.md --start 520 --count 40
+python scripts/show_utf8.py docs/reviews/financial/static-code-review.md --start 520 --count 40
 ```
 
 如果只需要临时用 PowerShell 读取文件，先显式设置输出编码：

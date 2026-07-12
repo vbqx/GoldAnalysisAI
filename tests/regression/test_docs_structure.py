@@ -20,6 +20,8 @@ KEY_DOCS = [
     "docs/testing/strategy.md",
     "docs/reference/handbook.md",
     "docs/reference/examples/report-schema.md",
+    "docs/reviews/README.md",
+    "docs/reviews/findings-status.md",
     "docs/archive/README.md",
 ]
 

@@ -1,6 +1,6 @@
 # 金融 Review 测试用例设计
 
-> 来源：[docs/archive/domain/financial-review.md](../../docs/archive/domain/financial-review.md) §6
+> 来源：[docs/reviews/financial/static-code-review.md](../../docs/reviews/financial/static-code-review.md) §6
 > 登记：[catalog.yaml](./catalog.yaml)（`FIN-*` / `FIN-UI-*`）
 > 版本：v1.1 · 2026-06-20
 

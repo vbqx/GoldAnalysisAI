@@ -14,7 +14,7 @@ def pytest_configure(config: pytest.Config) -> None:
     config.addinivalue_line("markers", "integration: full pipeline or external services")
     config.addinivalue_line("markers", "external_api: live News/DXY/Social HTTP smoke tests")
     config.addinivalue_line("markers", "regression: regression checks from system test report")
-    config.addinivalue_line("markers", "financial: financial review cases (FIN-*) from docs/archive/domain/financial-review.md")
+    config.addinivalue_line("markers", "financial: financial review cases (FIN-*) from docs/reviews/financial/static-code-review.md")
 
 
 def _skip_offline_external_mock(request) -> bool:

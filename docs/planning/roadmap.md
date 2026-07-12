@@ -1,6 +1,6 @@
 ﻿# GoldAnalysisAI 路线图
 
-本文只维护“计划、优先级、验收标准”。稳定架构事实放在 [architecture.md](../architecture/architecture.md)，LLM 阶段细节放在 [llm-agents.md](../architecture/llm-agents.md)，金融风险发现与验收记录放在 [financial-review.md](../archive/domain/financial-review.md)。
+本文只维护“计划、优先级、验收标准”。稳定架构事实放在 [architecture.md](../architecture/architecture.md)，LLM 阶段细节放在 [llm-agents.md](../architecture/llm-agents.md)，金融风险发现与验收记录放在 [reviews/findings-status.md](../reviews/findings-status.md) 与 [reviews/financial/static-code-review.md](../reviews/financial/static-code-review.md)。
 
 ---
 
@@ -107,7 +107,7 @@
 
 ## GUI 信息架构优化
 
-目标：继续把界面维持在“先给交易判断，再给证据链审计”的结构。GUI-1 至 GUI-5 已完成首轮落地；历史验收快照已归档到 [gui-acceptance-2026-07-08.md](../archive/gui-acceptance-2026-07-08.md)。
+目标：继续把界面维持在“先给交易判断，再给证据链审计”的结构。GUI-1 至 GUI-5 已完成首轮落地；历史验收快照已归档到 [reviews/gui/streamlit-acceptance-2026-07-08.md](../reviews/gui/streamlit-acceptance-2026-07-08.md)。
 
 后续只保留增量优化：
 

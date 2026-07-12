@@ -5,7 +5,7 @@
 | 文件 | 说明 |
 |------|------|
 | [test-plan.md](./test-plan.md) | 分层测试设计（UI → 指标 → 功能 → 性能 → 金融） |
-| [financial-review-cases.md](./financial-review-cases.md) | **金融 Review** Finding→用例追溯（FIN-*） |
+| [financial-review-cases.md](./financial-review-cases.md) | **金融 Review** Finding→用例追溯（FIN-*）；状态见 [docs/reviews/findings-status.md](../../docs/reviews/findings-status.md) |
 | [catalog.yaml](./catalog.yaml) | 用例 ID、优先级、套件、自动化状态、关联 Issue |
 
 ## 用例 ID 规则

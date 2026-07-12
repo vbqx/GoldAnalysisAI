@@ -1,6 +1,6 @@
 # Current Status
 
-本文是 owner 视角的当前状态，不记录历史流水账。历史金融评审和实跑快照在 `docs/archive/`。
+本文是 owner 视角的当前状态，不记录历史流水账。历史金融评审和实跑快照在 `docs/reviews/`（见 [findings-status.md](../reviews/findings-status.md)）。
 
 ## 已具备
 

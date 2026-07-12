@@ -12,6 +12,7 @@
 | LLM 多智能体怎么工作 | [architecture/llm-agents.md](./architecture/llm-agents.md) |
 | 回测和执行边界 | [architecture/backtesting.md](./architecture/backtesting.md) -> [architecture/review.md](./architecture/review.md) |
 | 日常怎么测 | [testing/strategy.md](./testing/strategy.md) |
+| 评审与验收（含完成状态） | [reviews/README.md](./reviews/README.md) -> [reviews/findings-status.md](./reviews/findings-status.md) |
 | 让我持续自动优化该怎么下目标 | [overview/codex-autonomy.md](./overview/codex-autonomy.md) |
 
 ## 权威分工
@@ -19,16 +20,17 @@
 | 目录 | 放什么 | 不放什么 |
 |------|--------|----------|
 | `overview/` | 项目定位、当前状态、 owner 决策入口、Codex 工作方式 | 代码级调用链 |
-| `architecture/` | 稳定系统边界、数据流、Agent/LLM、回测、执行层、架构评审 | 历史验收流水账 |
+| `architecture/` | 稳定系统边界、数据流、Agent/LLM、回测、执行层、架构健康检查 | 历史验收流水账 |
+| `reviews/` | 金融/GUI 评审、实跑结论、**F-* 完成状态** | 当前架构事实 |
 | `operations/` | 本地/VPS/MT5/环境变量/运行手册/UI 操作 | 架构论证 |
 | `testing/` | 测试分层、命令矩阵、用例维护、输出边界 | 单次测试结果 |
 | `reference/` | 字段、术语、速查、样例 JSON、机器同步清单 | 计划和历史复盘 |
 | `planning/` | 后续计划、优先级、验收标准 | 已完成 GUI 验收细节 |
-| `archive/` | 历史金融评审、实跑快照、旧审计资料 | 当前架构事实 |
+| `archive/` | 算法反推、旧笔记；评审见 `reviews/` | 当前架构事实 |
 
 ## 维护规则
 
-1. 架构事实更新 `architecture/`，未来计划更新 `planning/roadmap.md`，历史记录进入 `archive/`。
+1. 架构事实更新 `architecture/`，未来计划更新 `planning/roadmap.md`，评审结论更新 `reviews/` 并同步 [findings-status.md](./reviews/findings-status.md)。
 2. 报告字段变化更新 `reference/examples/report-schema.md`，必要时重生成 `reference/examples/sample-report.json`。
 3. 流水线阶段变化同步 `reference/pipeline-steps.yaml`，并跑 `pytest tests/regression/test_doc_pipeline_sync.py`。
 4. 测试策略变化更新 `testing/strategy.md` 和 `tests/cases/catalog.yaml`。
