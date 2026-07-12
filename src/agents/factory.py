@@ -452,8 +452,16 @@ def run_trader(
     pipeline: AgentPipelineMeta,
     signals: list[TradingSignal],
     team: AnalystTeam | None = None,
+    *,
+    observation_mode: bool = False,
 ):
     rule_result = rule_trader(ctx, debate, signals)
+    if observation_mode:
+        pipeline.record(
+            "trader",
+            StageMeta(source="rule", fallback_reason="non-executable snapshot"),
+        )
+        return rule_result
     if not _use_llm_stage(get_run_config().llm_stage_trader):
         get_progress().update("trader", detail="规则引擎")
         pipeline.record("trader", StageMeta(source="rule"))
@@ -503,11 +511,20 @@ def run_risk(
         data_as_of=data_as_of,
         observation_mode=observation_mode,
     )
+    if observation_mode:
+        pipeline.record("risk", StageMeta(source="rule", fallback_reason="non-executable snapshot"))
+        return rule_result
     if not _use_llm_stage(get_run_config().llm_stage_risk):
         pipeline.record("risk", StageMeta(source="rule"))
         return rule_result
 
-    llm_result, trace = run_llm_risk(proposal, len(signals))
+    llm_result, trace = run_llm_risk(
+        proposal,
+        len(signals),
+        signals=signals,
+        current_price=current_price,
+        data_as_of=data_as_of,
+    )
     if get_run_config().agent_mode == "llm" and llm_result is not None and not trace.error:
         pipeline.record("risk", StageMeta(source="llm", llm=trace))
         return _gate(llm_result)

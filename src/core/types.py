@@ -23,6 +23,7 @@ class EvidenceItem:
     strength: float  # 0.0 – 1.0
     timeframe: str | None = None
     refs: dict[str, Any] = field(default_factory=dict)
+    evidence_id: str | None = None
 
 
 @dataclass
@@ -70,6 +71,7 @@ class AgentEvidence:
     items: list[EvidenceItem]
     confidence: float
     summary: str
+    provenance_meta: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
@@ -84,6 +86,7 @@ class ResearchDebate:
     consensus_bias: Bias
     consensus_strength: float
     discussion_notes: list[str]
+    debate_meta: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -92,6 +95,7 @@ class ResearchDebate:
             "consensus_bias": self.consensus_bias,
             "consensus_strength": self.consensus_strength,
             "discussion_notes": self.discussion_notes,
+            "debate_meta": self.debate_meta,
         }
 
 
@@ -108,6 +112,7 @@ class LevelProposal:
     reason: str
     confidence: float
     invalidation: str = ""
+    path_id: str = ""
     source: str = "llm"
 
     def to_dict(self) -> dict[str, Any]:

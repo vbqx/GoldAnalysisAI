@@ -90,7 +90,7 @@ def parse_analyst_report(data: dict[str, Any], *, agent: str) -> AnalystReport:
     items_raw = data.get("items") or []
     items: list[EvidenceItem] = []
     if isinstance(items_raw, list):
-        for row in items_raw[:ANALYST_TEAM_ITEMS_MAX]:
+        for idx, row in enumerate(items_raw[:ANALYST_TEAM_ITEMS_MAX]):
             if not isinstance(row, dict):
                 continue
             summary = str(row.get("summary", "")).strip()
@@ -98,6 +98,7 @@ def parse_analyst_report(data: dict[str, Any], *, agent: str) -> AnalystReport:
                 continue
             category = str(row.get("category", "external"))
             refs = _item_refs(row, category)
+            evidence_id = str(row.get("evidence_id") or "").strip() or f"{agent}:{idx}"
             items.append(
                 EvidenceItem(
                     category=category,
@@ -105,6 +106,7 @@ def parse_analyst_report(data: dict[str, Any], *, agent: str) -> AnalystReport:
                     strength=_clamp_strength(row.get("strength", 0.3)),
                     timeframe=row.get("timeframe"),
                     refs=refs,
+                    evidence_id=evidence_id,
                 )
             )
 
@@ -127,27 +129,71 @@ def parse_analyst_report(data: dict[str, Any], *, agent: str) -> AnalystReport:
     )
 
 
-def parse_agent_evidence(data: dict[str, Any], *, agent: str, direction: Bias) -> AgentEvidence:
-    items_raw = data.get("items") or []
-    items: list[EvidenceItem] = []
-    if isinstance(items_raw, list):
-        for row in items_raw[:PAYLOAD_EVIDENCE_MAX]:
-            if not isinstance(row, dict):
-                continue
-            summary = str(row.get("summary", "")).strip()
-            if not summary:
-                continue
-            items.append(
-                EvidenceItem(
-                    category=str(row.get("category", "structure")),
-                    summary=summary,
-                    strength=_clamp_strength(row.get("strength", 0.3)),
-                    timeframe=row.get("timeframe"),
-                )
-            )
+def parse_agent_evidence(
+    data: dict[str, Any],
+    *,
+    agent: str,
+    direction: Bias,
+    allowed_evidence_ids: set[str] | None = None,
+    evidence_registry: dict[str, EvidenceItem] | None = None,
+) -> AgentEvidence:
+    from src.agents.analysts.evidence_provenance import (
+        blend_research_confidence,
+        build_research_provenance_meta,
+        parse_research_items,
+    )
 
-    confidence = _clamp_strength(data.get("confidence", 0.5))
+    items_raw = data.get("items") or []
+    model_confidence = _clamp_strength(data.get("confidence", 0.5))
     summary = str(data.get("summary", "")).strip()
+
+    if allowed_evidence_ids is not None:
+        if not isinstance(items_raw, list):
+            raise ValueError(f"{agent} returned non-list items")
+        items, dropped = parse_research_items(
+            items_raw,
+            agent=agent,
+            direction=direction,
+            allowed_ids=allowed_evidence_ids,
+            registry=evidence_registry or {},
+            item_refs_fn=_item_refs,
+        )
+        meta = build_research_provenance_meta(
+            items,
+            allowed_ids=allowed_evidence_ids,
+            model_confidence=model_confidence,
+            dedupe_dropped=dropped,
+        )
+        confidence = blend_research_confidence(model_confidence, meta)
+    else:
+        items: list[EvidenceItem] = []
+        if isinstance(items_raw, list):
+            for idx, row in enumerate(items_raw[:PAYLOAD_EVIDENCE_MAX]):
+                if not isinstance(row, dict):
+                    continue
+                summary_text = str(row.get("summary", "")).strip()
+                if not summary_text:
+                    continue
+                category = str(row.get("category", "structure"))
+                refs = _item_refs(row, category)
+                evidence_id = str(row.get("evidence_id") or "").strip() or f"{agent}:{idx}"
+                items.append(
+                    EvidenceItem(
+                        category=category,
+                        summary=summary_text,
+                        strength=_clamp_strength(row.get("strength", 0.3)),
+                        timeframe=row.get("timeframe"),
+                        refs=refs,
+                        evidence_id=evidence_id,
+                    )
+                )
+        meta = build_research_provenance_meta(
+            items,
+            allowed_ids=set(),
+            model_confidence=model_confidence,
+        )
+        confidence = blend_research_confidence(model_confidence, meta)
+
     if not summary:
         summary = f"LLM：共 {len(items)} 条证据，置信度 {confidence:.2f}"
 
@@ -157,6 +203,7 @@ def parse_agent_evidence(data: dict[str, Any], *, agent: str, direction: Bias) -
         items=items,
         confidence=confidence,
         summary=summary,
+        provenance_meta=meta,
     )
 
 
@@ -166,11 +213,24 @@ def parse_research_debate(
     bullish: AgentEvidence,
     bearish: AgentEvidence,
 ) -> ResearchDebate:
+    from src.agents.analysts.evidence_provenance import (
+        blend_debate_consensus,
+        build_debate_provenance_meta,
+    )
+
     bias = str(data.get("consensus_bias", "neutral")).lower()
     if bias not in ("bullish", "bearish", "neutral"):
         bias = "neutral"
 
-    strength = _clamp_strength(data.get("consensus_strength", 0.5))
+    model_strength = _clamp_strength(data.get("consensus_strength", 0.5))
+    debate_meta = build_debate_provenance_meta(
+        bullish.items,
+        bearish.items,
+        model_consensus_strength=model_strength,
+    )
+    strength = blend_debate_consensus(model_strength, debate_meta)
+    debate_meta["consensus_strength"] = round(strength, 3)
+
     notes_raw = data.get("discussion_notes") or []
     notes: list[str] = []
     if isinstance(notes_raw, list):
@@ -189,6 +249,7 @@ def parse_research_debate(
         consensus_bias=bias,  # type: ignore[arg-type]
         consensus_strength=strength,
         discussion_notes=notes,
+        debate_meta=debate_meta,
     )
 
 
@@ -198,12 +259,15 @@ def parse_level_proposals(data: dict[str, Any]) -> list[LevelProposal]:
         raise ValueError("level proposer returned non-list setups")
 
     proposals: list[LevelProposal] = []
-    for row in raw_setups[:5]:
+    for idx, row in enumerate(raw_setups[:5]):
         if not isinstance(row, dict):
             continue
         direction = str(row.get("direction", "")).upper()
         if direction not in ("BUY", "SELL"):
             continue
+        path_id = str(row.get("path_id") or row.get("path") or "").strip().upper()
+        if path_id not in ("A", "B", "C"):
+            raise ValueError(f"level proposal[{idx}] missing or invalid path_id (must be A/B/C)")
 
         entry_low = _float_field(row, "entry_low")
         entry_high = _float_field(row, "entry_high")
@@ -237,10 +301,20 @@ def parse_level_proposals(data: dict[str, Any]) -> list[LevelProposal]:
                 reason=reason,
                 confidence=_clamp_strength(row.get("confidence", 0.5)),
                 invalidation=str(row.get("invalidation", "")).strip(),
+                path_id=path_id,
             )
         )
 
+    _validate_level_path_contract(proposals)
     return proposals
+
+
+def _validate_level_path_contract(proposals: list[LevelProposal]) -> None:
+    if len(proposals) != 3:
+        raise ValueError(f"level proposer must return exactly 3 setups, got {len(proposals)}")
+    paths = sorted(p.path_id for p in proposals)
+    if paths != ["A", "B", "C"]:
+        raise ValueError(f"path_id must be A,B,C exactly once, got {[p.path_id for p in proposals]}")
 
 
 def parse_transaction_proposal(

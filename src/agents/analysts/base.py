@@ -5,6 +5,8 @@ from __future__ import annotations
 from src.config import PAYLOAD_EVIDENCE_MAX
 from src.core.types import AnalystReport, Bias, EvidenceItem
 
+from src.agents.analysts.evidence_ids import assign_evidence_ids
+
 
 def confidence_from_items(items: list[EvidenceItem]) -> float:
     if not items:
@@ -28,7 +30,7 @@ def build_report(
     return AnalystReport(
         agent=agent,
         bias=bias,
-        items=items,
+        items=assign_evidence_ids(agent, items),
         confidence=conf,
         summary=summary,
     )
@@ -42,13 +44,15 @@ def items_for_direction(team_reports: list[AnalystReport], direction: Bias) -> l
             continue
         label = report.agent.replace("_", " ")
         for item in report.items:
+            upstream_id = item.evidence_id or f"{report.agent}:?"
             merged.append(
                 EvidenceItem(
                     category=f"analyst_{report.agent}",
                     summary=f"[{label}] {item.summary}",
                     strength=min(item.strength * max(report.confidence, 0.35), 1.0),
                     timeframe=item.timeframe,
-                    refs={**item.refs, "analyst": report.agent},
+                    refs={**item.refs, "analyst": report.agent, "upstream_id": upstream_id},
+                    evidence_id=upstream_id,
                 )
             )
     merged.sort(key=lambda i: i.strength, reverse=True)
