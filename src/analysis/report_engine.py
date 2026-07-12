@@ -993,9 +993,76 @@ def build_strategy_plans(signals: list[TradingSignal | dict[str, Any]]) -> list[
     return plans
 
 
+def authorized_position_scale(reviews: list, decision) -> float:
+    """Minimum approved risk scale across profiles covering selected indices."""
+    if decision.action == "wait" or not decision.selected_signal_indices:
+        return 0.0
+    if getattr(decision, "position_scale", 0.0) > 0:
+        return float(decision.position_scale)
+    selected = set(decision.selected_signal_indices)
+    scales = [
+        float(review.position_scale)
+        for review in reviews
+        if review.approved and selected.intersection(review.allowed_signal_indices)
+    ]
+    return min(scales) if scales else 0.0
+
+
+def format_authorized_position_size(scale: float, action: str) -> str:
+    if scale <= 0:
+        return "0% 观望"
+    pct = max(1, int(round(scale * 100)))
+    if action == "reduce":
+        return f"{pct}% 缩减仓"
+    return f"{pct}% 标准仓"
+
+
+def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> None:
+    """Map manager decision + risk scales onto report signals (single primary source)."""
+    sig_dicts = list(report.get("signals") or [])
+    selected = list(decision.selected_signal_indices or [])
+    selected_set = set(selected)
+    scale = authorized_position_scale(risk_reviews, decision)
+    meta = report.setdefault("meta", {})
+
+    if decision.action == "wait" or not selected_set:
+        for sig in sig_dicts:
+            sig["signal_role"] = "rejected"
+            sig["position_size"] = "0% 观望"
+            sig["position_scale"] = 0.0
+        report["signals"] = sig_dicts
+        report["strategy_plans"] = []
+        meta["execution_authorized"] = False
+        meta["authorized_position_scale"] = 0.0
+        return
+
+    primary_idx = selected[0]
+    pos_label = format_authorized_position_size(scale, decision.action)
+    for j, sig in enumerate(sig_dicts):
+        if j not in selected_set:
+            sig["signal_role"] = "rejected"
+            sig["position_size"] = "0% 观望"
+            sig["position_scale"] = 0.0
+        elif j == primary_idx:
+            sig["signal_role"] = "primary"
+            sig["position_size"] = pos_label
+            sig["position_scale"] = scale
+        else:
+            sig["signal_role"] = "alternate"
+            sig["position_size"] = pos_label
+            sig["position_scale"] = scale
+
+    ordered = [sig_dicts[i] for i in selected if i < len(sig_dicts)]
+    rest = [s for j, s in enumerate(sig_dicts) if j not in selected_set]
+    report["signals"] = ordered + rest
+    primary = [s for s in report["signals"] if s.get("signal_role") == "primary"]
+    report["strategy_plans"] = build_strategy_plans(primary)
+    meta["execution_authorized"] = True
+    meta["authorized_position_scale"] = scale
+
+
 def build_path_summary(projections: list[dict]) -> list[dict[str, Any]]:
     labels = ["路径 A", "路径 B", "路径 C"]
-    colors = ["#ef4444", "#22c55e", "#3b82f6"]
     out = []
     for i, p in enumerate(projections[:3]):
         steps = p.get("steps", [])
@@ -1004,7 +1071,7 @@ def build_path_summary(projections: list[dict]) -> list[dict[str, Any]]:
             "id": labels[i],
             "name": p["name"],
             "probability": p["probability"],
-            "color": colors[i] if i < len(colors) else p.get("color", "#64748b"),
+            "color": p.get("color", "#64748b"),
             "summary": desc,
         })
     return out

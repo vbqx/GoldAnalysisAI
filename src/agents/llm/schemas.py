@@ -331,10 +331,20 @@ def parse_manager_decision(
     if not summary:
         summary = "LLM manager generated the final trade authorization."
 
+    scale = 0.0
+    if selected:
+        scales = [
+            review.position_scale
+            for review in reviews
+            if review.approved and set(review.allowed_signal_indices).intersection(selected)
+        ]
+        scale = min(scales) if scales else 0.0
+
     return ManagerDecision(
         action=action,  # type: ignore[arg-type]
         primary_direction=proposal.primary_direction,
         selected_signal_indices=selected,
         confidence=_clamp_strength(data.get("confidence", 0.0 if action == "wait" else 0.5)),
         summary=summary,
+        position_scale=scale if action != "wait" else 0.0,
     )

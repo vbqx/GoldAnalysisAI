@@ -144,6 +144,7 @@ class ManagerDecision:
     selected_signal_indices: list[int]
     confidence: float
     summary: str
+    position_scale: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
