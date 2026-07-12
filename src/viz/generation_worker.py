@@ -16,6 +16,50 @@ from src.viz.replay_loader import load_replay_bundle
 log = get_logger(__name__)
 
 _GEN_LOCK = threading.Lock()
+_LIVE_LLM_OUTPUT_CAP = 6000
+_LIVE_LLM_MESSAGE_CAP = 800
+_CHUNK_SYNC_INTERVAL_S = 1.5
+
+
+def _is_streaming_llm_record(rec: dict) -> bool:
+    if rec.get("kind") == "rule" or rec.get("model") == "规则引擎":
+        return False
+    if rec.get("error"):
+        return False
+    return rec.get("latency_ms") is None
+
+
+def compact_llm_io_for_live(records: list[dict]) -> list[dict]:
+    """Trim LLM I/O for polling UI — avoids multi-MB widget payloads during streaming."""
+    compacted: list[dict] = []
+    for rec in records:
+        streaming = _is_streaming_llm_record(rec)
+        row: dict = {
+            "stage": rec.get("stage"),
+            "label": rec.get("label"),
+            "model": rec.get("model"),
+            "error": rec.get("error"),
+            "latency_ms": rec.get("latency_ms"),
+            "kind": rec.get("kind"),
+        }
+        if streaming:
+            row["output"] = ""
+            row["stream_chars"] = len(str(rec.get("output") or ""))
+            row["messages"] = []
+        else:
+            row["output"] = str(rec.get("output") or "")
+            trimmed_msgs: list[dict[str, str]] = []
+            for msg in (rec.get("messages") or [])[:3]:
+                content = str(msg.get("content") or "")
+                if len(content) > _LIVE_LLM_MESSAGE_CAP:
+                    content = content[:_LIVE_LLM_MESSAGE_CAP] + "…"
+                trimmed_msgs.append({"role": str(msg.get("role") or "user"), "content": content})
+            row["messages"] = trimmed_msgs
+            out = row["output"]
+            if len(out) > _LIVE_LLM_OUTPUT_CAP:
+                row["output"] = "…" + out[-_LIVE_LLM_OUTPUT_CAP:]
+        compacted.append(row)
+    return compacted
 
 
 class ModuleSyncProgressReporter(ProgressReporter):
@@ -24,6 +68,7 @@ class ModuleSyncProgressReporter(ProgressReporter):
     def __init__(self, job_key: str) -> None:
         super().__init__()
         self._job_key = job_key
+        self._last_io_sync = 0.0
         self._sync()
 
     def _sync(self) -> None:
@@ -36,7 +81,7 @@ class ModuleSyncProgressReporter(ProgressReporter):
             steps = self.snapshot()
             snapshot = {
                 "steps": steps,
-                "llm_io": self.llm_io_snapshot(),
+                "llm_io": compact_llm_io_for_live(self.llm_io_snapshot()),
                 "external": external,
                 "headline": self._headline_from_steps(steps),
             }
@@ -53,7 +98,10 @@ class ModuleSyncProgressReporter(ProgressReporter):
 
     def _on_llm_chunk(self, stage: str, chunk: str) -> None:
         super()._on_llm_chunk(stage, chunk)
-        self._sync()
+        now = time.monotonic()
+        if now - self._last_io_sync >= _CHUNK_SYNC_INTERVAL_S:
+            self._last_io_sync = now
+            self._sync()
 
     def llm_begin(self, stage: str, model: str, messages: list[dict[str, str]]) -> None:
         super().llm_begin(stage, model, messages)

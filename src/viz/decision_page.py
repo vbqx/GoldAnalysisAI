@@ -26,14 +26,18 @@ def _render_generation_and_llm_io(
     empty_steps_msg: str = "暂无生成步骤记录",
     empty_io_msg: str = "暂无 LLM 调用记录",
     live_streaming: bool = False,
+    show_steps: bool = True,
 ) -> None:
     """Single panel: pipeline steps on top, LLM I/O below."""
-    if steps:
-        render_progress_steps(steps, title="生成步骤")
-    else:
-        st.info(empty_steps_msg)
-
-    st.divider()
+    if show_steps:
+        if steps:
+            render_progress_steps(steps, title="生成步骤")
+        else:
+            st.info(empty_steps_msg)
+        st.divider()
+    elif not records:
+        st.info(empty_io_msg if live_streaming else empty_steps_msg)
+        return
 
     if records:
         merged = (
@@ -62,7 +66,7 @@ def _render_generation_and_llm_io(
         st.info(empty_io_msg)
 
 
-def render_live_generation_panel(live: dict) -> None:
+def render_live_generation_panel(live: dict, *, show_steps: bool = True) -> None:
     """Same tab layout as the decision page, fed by in-flight pipeline snapshots."""
     steps = live.get("steps") or []
     records = live.get("llm_io") or []
@@ -77,6 +81,7 @@ def render_live_generation_panel(live: dict) -> None:
             records=records,
             expand_last=True,
             live_streaming=True,
+            show_steps=show_steps,
             empty_steps_msg="流水线启动中，即将显示各阶段进度…",
             empty_io_msg="数据拉取与 Analyst Team 完成后，将在此展示各阶段输入/输出与 LLM 整理摘要。",
         )

@@ -54,7 +54,7 @@ def test_subpage_waiting_ui_has_hero_and_live_panel() -> None:
     common_src = (ROOT / "src" / "viz" / "streamlit_common.py").read_text(encoding="utf-8")
     strategy_src = (ROOT / "views" / "2_短线策略.py").read_text(encoding="utf-8")
     assert "正在生成报告…" in common_src
-    assert "render_live_generation_panel" in common_src
+    assert "render_live_llm_status_lightweight" in common_src
     assert strategy_src.index("ensure_report") < strategy_src.index("render_page_hero")
 
 

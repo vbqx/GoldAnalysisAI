@@ -202,52 +202,79 @@ def _resolve_confirmed_run_config() -> RunConfig | None:
 
 
 def _render_waiting_ui(job_key_str: str, *, show_generation_ui: bool) -> None:
-    from src.viz.decision_page import render_live_generation_panel
-    from src.viz.pipeline_progress import pipeline_progress_headline, render_progress_steps
+    from src.viz.pipeline_progress import (
+        pipeline_progress_headline,
+        render_live_llm_status_lightweight,
+        render_progress_steps,
+    )
 
     title = "正在生成机构级分析报告…" if show_generation_ui else "正在生成报告…"
+    render_page_hero(
+        title,
+        "约 2–8 分钟 · 下方显示流水线步骤；完整 LLM I/O 生成后见「LLM 决策链」",
+    )
+    steps_slot = st.empty()
+    llm_slot = st.empty()
 
-    @st.fragment(run_every=timedelta(milliseconds=400))
+    @st.fragment(run_every=timedelta(milliseconds=1000))
     def _live_poll() -> None:
-        job = get_job(job_key_str, session_id=_session_id())
-        live = job.live if job else {}
-        steps = live.get("steps") or []
-        subtitle = pipeline_progress_headline(steps)
-        if not steps:
-            subtitle = "约 2–3 分钟 · 下方可实时查看生成步骤与 LLM 输入/输出"
-        render_page_hero(title, subtitle)
-        if steps:
-            render_progress_steps(steps, title="当前进度")
-        render_live_generation_panel(live)
-        if job and (job.result is not None or job.error is not None):
-            st.rerun()
+        try:
+            job = get_job(job_key_str, session_id=_session_id())
+            live = job.live if job else {}
+            steps = live.get("steps") or []
+            with steps_slot.container():
+                if steps:
+                    render_progress_steps(steps, title="当前进度")
+                else:
+                    headline = pipeline_progress_headline(steps)
+                    if headline:
+                        st.caption(headline)
+            with llm_slot.container():
+                render_live_llm_status_lightweight(live)
+            if job and (job.result is not None or job.error is not None):
+                st.rerun()
+        except Exception as exc:
+            log.exception("live waiting UI render failed job=%s", job_key_str)
+            st.warning(f"进度面板刷新异常（后台生成仍在继续）：{exc}")
 
     _live_poll()
 
 
 def _render_external_waiting(job_key_str: str) -> None:
-    from src.viz.decision_page import render_live_generation_panel
-    from src.viz.pipeline_progress import pipeline_progress_headline, render_progress_steps
+    from src.viz.pipeline_progress import (
+        pipeline_progress_headline,
+        render_live_llm_status_lightweight,
+        render_progress_steps,
+    )
 
-    @st.fragment(run_every=timedelta(milliseconds=400))
+    render_page_hero(
+        "正在生成报告数据…",
+        "K 线 · 金十 · DXY · 社媒 — 外部数据就绪后本页自动刷新",
+    )
+    steps_slot = st.empty()
+    llm_slot = st.empty()
+
+    @st.fragment(run_every=timedelta(milliseconds=1000))
     def _poll() -> None:
-        job = get_job(job_key_str, session_id=_session_id())
-        live = job.live if job else {}
-        if live.get("external"):
-            st.rerun()
-        if job and (job.result is not None or job.error is not None):
-            st.rerun()
-        steps = live.get("steps") or []
-        subtitle = pipeline_progress_headline(steps)
-        render_page_hero(
-            "正在生成报告数据…",
-            subtitle or "K 线 · 金十 · DXY · 社媒 — 外部数据就绪后本页自动刷新",
-        )
-        if steps:
-            render_progress_steps(steps, title="流水线进度")
-        else:
-            st.info("等待后台线程同步进度…")
-        render_live_generation_panel(live)
+        try:
+            job = get_job(job_key_str, session_id=_session_id())
+            live = job.live if job else {}
+            if live.get("external"):
+                st.rerun()
+            if job and (job.result is not None or job.error is not None):
+                st.rerun()
+            steps = live.get("steps") or []
+            with steps_slot.container():
+                if steps:
+                    render_progress_steps(steps, title="流水线进度")
+                else:
+                    headline = pipeline_progress_headline(steps)
+                    st.info(headline or "等待后台线程同步进度…")
+            with llm_slot.container():
+                render_live_llm_status_lightweight(live)
+        except Exception as exc:
+            log.exception("external waiting UI render failed job=%s", job_key_str)
+            st.warning(f"进度面板刷新异常（后台生成仍在继续）：{exc}")
 
     _poll()
 

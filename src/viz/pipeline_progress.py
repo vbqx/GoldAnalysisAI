@@ -48,6 +48,8 @@ def _format_step(step: PipelineProgressStep) -> str:
     if step.elapsed_ms is not None and step.status in ("done", "error"):
         if step.elapsed_ms >= 1000:
             timing = f" ({step.elapsed_ms / 1000:.1f}s)"
+        elif step.elapsed_ms == 0:
+            timing = " (<1ms)"
         else:
             timing = f" ({step.elapsed_ms}ms)"
     weight = "**" if step.status == "running" else ""
@@ -123,6 +125,26 @@ def partition_llm_records_for_live(records: list[dict]) -> tuple[list[dict], lis
     active = [r for r in filtered if is_streaming_llm_record(r)]
     completed = [r for r in filtered if not is_streaming_llm_record(r)]
     return active, completed
+
+
+def render_live_llm_status_lightweight(live: dict) -> None:
+    """Minimal LLM status for waiting UI — no text_area widgets (prevents Streamlit blank-screen)."""
+    records = live.get("llm_io") or []
+    if not records:
+        return
+    active, completed = partition_llm_records_for_live(records)
+    if not active and not completed:
+        return
+    st.markdown('<p class="section-h">LLM 状态</p>', unsafe_allow_html=True)
+    for rec in active:
+        label = rec.get("label") or rec.get("stage") or "LLM"
+        model = rec.get("model") or "—"
+        chars = rec.get("stream_chars")
+        if chars is None:
+            chars = len(str(rec.get("output") or ""))
+        st.markdown(f"- 🔄 **{label}** · `{model}` · 已输出 {chars} 字符")
+    if completed:
+        st.caption(f"已完成 {len(completed)} 个阶段；完整 Prompt / JSON 见生成完成后的「LLM 决策链」。")
 
 
 def render_live_llm_streams(active: list[dict]) -> None:
