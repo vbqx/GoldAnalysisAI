@@ -7,18 +7,20 @@ import json
 from src.agents.llm.base import run_llm_stage
 from src.agents.llm.payload import manager_payload
 from src.agents.llm.schemas import parse_manager_decision
+from src.analysis.field_glossary import RISK_MANAGER_HINT
 from src.core.types import LLMStageTrace, ManagerDecision, RiskReview, TransactionProposal
 from src.llm.router import get_strong_client
 
-SYSTEM = """You are the final XAUUSD portfolio manager.
-Authorize execution only when risk reviews support it. Prefer reduce when approvals are mixed.
-Use only signal indexes approved by risk. Return JSON:
-{
+SYSTEM = f"""你是 XAUUSD 最终授权经理。
+{RISK_MANAGER_HINT}
+仅在风控批准时授权执行；批准意见分歧时优先 reduce；只能使用风控 allowed_signal_indices 中的索引。
+返回 JSON：
+{{
   "action": "execute|reduce|wait",
   "selected_signal_indices": [0],
   "confidence": 0.0-1.0,
-  "summary": "one concise authorization summary"
-}"""
+  "summary": "一句简洁授权结论"
+}}"""
 
 
 def run_llm_manager(
@@ -31,7 +33,7 @@ def run_llm_manager(
         {"role": "system", "content": SYSTEM},
         {
             "role": "user",
-            "content": f"Make the final authorization:\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
+            "content": f"请做出最终授权决策：\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
         },
     ]
     result, trace = run_llm_stage(

@@ -41,3 +41,19 @@ RESEARCH_PRIORITY_HINT = (
     "提取证据时 SMC 定结构方向，PA 量价作确认；"
     "category=structure|liquidity 偏 SMC，可引用 analyst 的 price_action 条目。"
 )
+
+TRADER_PRIORITY_HINT = (
+    "交易计划：rule_signals 已由 PA（POC/VAH/VAL、量价 S/R）定入场/止损/目标区；"
+    "SMC 仅作方向与置信度过滤，不得重新发明价位。"
+    "只选 payload 中存在的 signal_index，invalid 信号不可选。"
+)
+
+LEVELS_PRIORITY_HINT = (
+    "定区以 PA 为主（POC/VAH/VAL、近端量价 S/R）；"
+    "setup_type 优先 llm_poc_va|llm_volume_sr；"
+    "SMC（FVG/OB/流动性扫取）仅作共振或 reason 补充，不得单独压过 PA 区。"
+)
+
+RISK_MANAGER_HINT = (
+    "风控/经理阶段只审核交易员提案与已批准 signal_index，不重新定义价位或结构。"
+)

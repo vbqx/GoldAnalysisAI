@@ -7,20 +7,21 @@ import json
 from src.agents.llm.base import run_llm_stage
 from src.agents.llm.payload import trader_payload
 from src.agents.llm.schemas import parse_transaction_proposal
+from src.analysis.field_glossary import TRADER_PRIORITY_HINT
 from src.analysis.report_engine import TradingSignal
 from src.core.types import LLMStageTrace, MarketContext, ResearchDebate, TransactionProposal
 from src.llm.router import get_strong_client
 
-SYSTEM = """You are the XAUUSD trader agent.
-Choose a primary direction and a small set of candidate signal indexes from the supplied list.
-Never invent levels. Never reference a signal index that is not present. Invalid signals must not be selected.
-Return JSON:
-{
+SYSTEM = f"""你是 XAUUSD 交易员智能体。
+{TRADER_PRIORITY_HINT}
+根据辩论共识从已有 rule_signals 中选择主方向与少量候选 signal_index。
+返回 JSON：
+{{
   "primary_direction": "long|short|wait",
   "signal_indices": [0, 1],
   "confidence": 0.0-1.0,
-  "rationale": ["reason 1", "reason 2"]
-}"""
+  "rationale": ["依据1", "依据2"]
+}}"""
 
 
 def run_llm_trader(
@@ -47,7 +48,7 @@ def run_llm_trader(
         {"role": "system", "content": SYSTEM},
         {
             "role": "user",
-            "content": f"Create the trader proposal:\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
+            "content": f"请生成交易员提案：\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
         },
     ]
     result, trace = run_llm_stage(

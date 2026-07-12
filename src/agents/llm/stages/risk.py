@@ -7,21 +7,22 @@ import json
 from src.agents.llm.base import run_llm_stage
 from src.agents.llm.payload import risk_payload
 from src.agents.llm.schemas import parse_risk_reviews
+from src.analysis.field_glossary import RISK_MANAGER_HINT
 from src.core.types import LLMStageTrace, RiskReview, TransactionProposal
 from src.llm.router import get_strong_client
 
-SYSTEM = """You are a three-profile XAUUSD risk committee.
-Review the trader proposal as aggressive, neutral, and conservative profiles.
-Use only existing proposal signal indexes. Keep position_scale between 0 and 1.
-Return JSON:
-{
+SYSTEM = f"""你是 XAUUSD 三档风控委员会（激进 / 中性 / 保守）。
+{RISK_MANAGER_HINT}
+分别审核交易员提案；position_scale 取值 0~1；只能使用提案中已有的 signal_index。
+返回 JSON：
+{{
   "confidence": 0.0-1.0,
   "reviews": [
-    {"profile": "aggressive", "approved": true, "allowed_signal_indices": [0], "position_scale": 1.0, "notes": ["..."]},
-    {"profile": "neutral", "approved": true, "allowed_signal_indices": [0], "position_scale": 0.7, "notes": ["..."]},
-    {"profile": "conservative", "approved": false, "allowed_signal_indices": [], "position_scale": 0.0, "notes": ["..."]}
+    {{"profile": "aggressive", "approved": true, "allowed_signal_indices": [0], "position_scale": 1.0, "notes": ["..."]}},
+    {{"profile": "neutral", "approved": true, "allowed_signal_indices": [0], "position_scale": 0.7, "notes": ["..."]}},
+    {{"profile": "conservative", "approved": false, "allowed_signal_indices": [], "position_scale": 0.0, "notes": ["..."]}}
   ]
-}"""
+}}"""
 
 
 def run_llm_risk(
@@ -43,7 +44,7 @@ def run_llm_risk(
         {"role": "system", "content": SYSTEM},
         {
             "role": "user",
-            "content": f"Review the proposal:\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
+            "content": f"请审核交易员提案：\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
         },
     ]
     result, trace = run_llm_stage(

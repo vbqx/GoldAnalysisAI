@@ -7,39 +7,41 @@ import json
 from src.agents.llm.base import run_llm_stage
 from src.agents.llm.payload import level_proposer_payload
 from src.agents.llm.schemas import parse_level_proposals
+from src.analysis.field_glossary import LEVELS_PRIORITY_HINT, PA_SMC_PRIORITY
 from src.core.types import AnalystTeam, LLMStageTrace, LevelProposal, MarketContext, ResearchDebate
 from src.llm.router import get_strong_client
 from src.log import get_logger
 
 log = get_logger(__name__)
 
-SYSTEM = """You are an XAUUSD institutional level proposer.
-Use only the supplied market facts, analyst summaries, debate consensus, and rule candidate signals.
-Do not invent unsupported macro events or hidden order flow.
+SYSTEM = f"""你是 XAUUSD 机构级价位提案员。
+{LEVELS_PRIORITY_HINT}
+{PA_SMC_PRIORITY}
 
-Return JSON only:
-{
+仅使用输入中的市场事实、分析师摘要、辩论共识与 rule_signals 候选；不得编造宏观事件或未给出的订单流。
+返回 JSON：
+{{
   "setups": [
-    {
+    {{
       "direction": "BUY|SELL",
       "entry_low": 0.0,
       "entry_high": 0.0,
       "stop_loss": 0.0,
       "take_profits": [0.0, 0.0, 0.0],
-      "setup_type": "llm_fvg|llm_order_block|llm_liquidity_sweep|llm_breakout_retest|llm_pullback",
-      "reason": "why this zone is supported by the supplied facts",
-      "invalidation": "specific condition that cancels this setup",
+      "setup_type": "llm_poc_va|llm_volume_sr|llm_fvg|llm_order_block|llm_liquidity_sweep|llm_breakout_retest|llm_pullback",
+      "reason": "为何该区间有 PA/SMC 事实支撑",
+      "invalidation": "失效条件",
       "confidence": 0.0
-    }
+    }}
   ],
   "bias": "bullish|bearish|neutral",
-  "summary": "brief rationale"
-}
+  "summary": "简要理由"
+}}
 
-Hard constraints:
-- SELL: stop_loss must be above the entry zone; first take profit must be below the entry zone.
-- BUY: stop_loss must be below the entry zone; first take profit must be above the entry zone.
-- Prefer 1 to 3 setups. If levels are unclear, return an empty setups array.
+硬性约束：
+- SELL：stop_loss 高于入场区；首个 take_profit 低于入场区。
+- BUY：stop_loss 低于入场区；首个 take_profit 高于入场区。
+- 优先 1~3 个 setup；价位不清晰时返回空 setups 数组。
 """
 
 
@@ -62,7 +64,7 @@ def run_llm_level_proposer(
         {"role": "system", "content": SYSTEM},
         {
             "role": "user",
-            "content": f"Propose validated candidate trade levels from this evidence:\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
+            "content": f"请基于下列证据提案交易区间（PA 定区，SMC 仅确认）：\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
         },
     ]
     result, trace = run_llm_stage(
