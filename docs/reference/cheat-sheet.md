@@ -21,6 +21,9 @@
 | `manager` | 经理 | `agents/factory.py` + `agents/manager.py` | 可选 |
 | `report` | 组装报告 | `analysis/report_engine.py` | 否 |
 | `llm_narrative` | LLM 文案 | `llm/analyst.py` | 可选 |
+| `archive` | 运行归档 | `data/run_archive.py` | 否 |
+
+**回放**（不进上表进度条）：`viz/replay_loader.py` → `load_replay_bundle()`，读 `.cache/run_archives/`。
 
 ---
 
@@ -46,6 +49,7 @@
 | **LLM 叙事授权边界** | `analysis/narrative_sections.py`, `llm/analyst.py` | `pytest tests/unit/test_narrative_authorization.py tests/unit/test_narrative_top_level.py` |
 | **日历过滤 / 外部文本** | `data/calendar_utils.py`, `data/external_format.py` | `pytest tests/unit/test_external_sources.py tests/unit/test_analyst_input_density.py` |
 | **运行审计摘要** | `analysis/audit_summary.py` | `pytest tests/unit/test_audit_summary.py` |
+| **历史回放归档 / 兼容** | `run/archive/`（入口 `src/run`） | `pytest tests/unit/test_run_archive.py tests/unit/test_archive_optimizations.py` |
 | **主图 OB/FVG 可见范围** | `analysis/chart_zone_filters.py`, `viz/lightweight_chart.py` | `pytest tests/unit/test_chart_projections.py`；见 [chart-layers.md](../architecture/chart-layers.md) |
 | 规则模式一致性门禁 | `tests/tools/coherence_check.py` | `$env:AGENT_MODE="rule"; python tests/tools/coherence_check.py` |
 | 金融实跑快照 | `tests/tools/financial_review_run.py` | 输出 `tests/reports/financial_review_snapshot.json` |
@@ -53,10 +57,13 @@
 | 接入新外部数据源 | `data/sources/` + `fetch_pipeline.py` | `pytest tests/unit/test_external_sources.py` |
 | 金十 MCP 参数 | `config.py` + `jin10_feed.py` | `python tests/run.py --external` |
 | 新增 LLM 阶段 | `agents/llm/stages/` + `factory.py` | `pytest tests/unit/test_analyst_team_llm.py tests/unit/test_llm_trade_stages.py` |
-| LLM 传输/重试 | `agents/llm/base.py` | `pytest tests/unit/test_llm_transport.py` |
+| LLM 传输/重试/超时 | `llm/client.py`, `agents/llm/base.py` | `pytest tests/unit/test_llm_transport.py tests/unit/test_llm_client_timeouts.py` |
 | 改 Streamlit 布局 | `viz/report_views.py` + `viz/dashboard_components.py` | 手工界面 / 用例 catalog `UIL-*` |
 | 改外部数据页 | `viz/external_data_view.py` + `views/4_外部数据.py` | `pytest tests/unit/test_external_data_view.py` |
-| 改运行前配置/缓存/刷新行为 | `viz/streamlit_common.py` + `core/run_config.py` | 用例 catalog `FN-*` / `pytest tests/unit/test_run_config.py tests/unit/test_streamlit_ensure_report.py` |
+| 改运行前配置/回放 UI | `viz/run_config_panel.py` + `core/run_config.py` | `pytest tests/unit/test_run_config.py tests/unit/test_streamlit_ensure_report.py` |
+| **评审发现项 / FIN-* 状态** | [reviews/findings-status.md](../reviews/findings-status.md) | 改信号/风控前必读 |
+| 改后台生成/回放加载 | `viz/generation_worker.py`, `viz/replay_loader.py` | 同上 + `pytest tests/unit/test_archive_optimizations.py` |
+| 改 session 缓存/ensure_report | `viz/streamlit_common.py`, `viz/session_keys.py` | 同上 |
 | 改进度条/I/O 展示 | `viz/pipeline_progress.py` | 手工生成报告 |
 | 改流水线顺序 | `core/orchestrator.py` + **`docs/reference/pipeline-steps.yaml`** | `pytest tests/regression/test_doc_pipeline_sync.py` |
 
@@ -75,6 +82,12 @@
 | `LLM_STAGE_TRADER` | `true` | 交易员 LLM |
 | `LLM_STAGE_RISK` | `true` | 风控 LLM |
 | `LLM_STAGE_MANAGER` | `true` | 经理 LLM |
+| `LLM_PAYLOAD_FUNNEL` | `true` | 研究/辩论/交易员只读上游结论（非全量 market） |
+| `LLM_TIMEOUT` | `120` | 遗留总超时；未单独设 read 时作为流式 chunk 空闲上限 |
+| `LLM_CONNECT_TIMEOUT` | `min(30, LLM_TIMEOUT)` | TCP/TLS 建连超时（秒） |
+| `LLM_READ_TIMEOUT` | `LLM_TIMEOUT` | SSE chunk 空闲超时（秒） |
+| `LLM_MAX_RETRIES` | `2` | 每阶段重试次数（实际尝试 = 1 + 此值） |
+| `LLM_RETRY_BACKOFF_BASE_S` | `1.0` | 重试指数退避基数（秒） |
 | `LLM_STAGE_WARN_MS` | `120000` | 单阶段 LLM 耗时超过此值写 warning 日志 |
 | `MT5_ENABLED` | `false` | 可选 MT5 provider，默认不影响 TradingView |
 | `JIN10_API_TOKEN` | — | 金十 MCP |

@@ -19,8 +19,18 @@ T = TypeVar("T")
 
 # Fix #4 [Bug] LLM 阶段 JSON 解析偶发失败，hybrid 模式回退规则引擎
 # 解析或传输失败时自动重试；传输错误使用指数退避（整次 SSE 请求重打，非流内续传）。
-_MAX_STAGE_RETRIES = 2
-_TRANSPORT_BACKOFF_BASE_S = 1.0
+
+
+def _max_stage_retries() -> int:
+    from src.config import LLM_MAX_RETRIES
+
+    return LLM_MAX_RETRIES
+
+
+def _backoff_seconds(attempt: int) -> float:
+    from src.config import LLM_RETRY_BACKOFF_BASE_S
+
+    return LLM_RETRY_BACKOFF_BASE_S * (2**attempt)
 
 
 def _parse_llm_json(raw: str) -> dict[str, Any]:
@@ -57,10 +67,6 @@ def _parse_llm_json(raw: str) -> dict[str, Any]:
     raise last_err
 
 
-def _backoff_seconds(attempt: int) -> float:
-    return _TRANSPORT_BACKOFF_BASE_S * (2**attempt)
-
-
 def stream_llm_json(
     client: LLMClient,
     messages: list[dict[str, str]],
@@ -70,19 +76,20 @@ def stream_llm_json(
 ) -> str:
     """Stream an LLM JSON response with transport retries. Raises LLMClientError on exhaustion."""
     last_exc: LLMClientError | None = None
-    for attempt in range(_MAX_STAGE_RETRIES + 1):
+    max_retries = _max_stage_retries()
+    for attempt in range(max_retries + 1):
         temp = temperature if attempt == 0 else min(temperature + 0.1, 0.5)
         try:
             return _stream_json_response(client, messages, stage=stage, temperature=temp)
         except LLMClientError as exc:
             last_exc = exc
-            if attempt < _MAX_STAGE_RETRIES:
+            if attempt < max_retries:
                 wait = _backoff_seconds(attempt)
                 log.warning(
                     "llm stage %s transport retry %d/%d after %.1fs: %s",
                     stage,
                     attempt + 1,
-                    _MAX_STAGE_RETRIES,
+                    max_retries,
                     wait,
                     exc,
                 )
@@ -133,8 +140,9 @@ def run_llm_stage(
     """Execute one LLM stage with streaming I/O; returns (result, trace)."""
     t0 = time.perf_counter()
     last_exc: Exception | None = None
+    max_retries = _max_stage_retries()
 
-    for attempt in range(_MAX_STAGE_RETRIES + 1):
+    for attempt in range(max_retries + 1):
         try:
             temp = temperature if attempt == 0 else min(temperature + 0.1, 0.5)
             raw = stream_llm_json(client, messages, stage=stage, temperature=temp)
@@ -160,12 +168,12 @@ def run_llm_stage(
             return None, LLMStageTrace(stage=stage, model=model, latency_ms=elapsed, error=str(exc))
         except (ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
             last_exc = exc
-            if attempt < _MAX_STAGE_RETRIES:
+            if attempt < max_retries:
                 log.warning(
                     "llm stage %s json retry %d/%d: %s",
                     stage,
                     attempt + 1,
-                    _MAX_STAGE_RETRIES,
+                    max_retries,
                     exc,
                 )
                 time.sleep(_backoff_seconds(attempt))

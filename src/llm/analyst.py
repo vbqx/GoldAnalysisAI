@@ -7,14 +7,15 @@ from copy import deepcopy
 from typing import Any
 
 import src.config as app_config
-from src.analysis.narrative_sections import validate_and_merge_llm_sections, validate_llm_top_level
+from src.analysis.narrative_sections import (
+    validate_and_merge_llm_sections,
+    validate_llm_top_level_fields,
+)
 
 from src.config import (
-    LLM_API_KEY,
     LLM_BASE_URL,
     LLM_ENHANCE_CONCLUSION,
     LLM_MODEL,
-    LLM_TIMEOUT,
 )
 from src.core.run_context import llm_narrative_enabled
 from src.core.progress import get_progress
@@ -22,6 +23,7 @@ from src.core.types import LLMAnalysis, ManagerDecision, MarketContext, Research
 from src.llm.client import LLMClient, LLMClientError
 from src.llm.context import build_llm_context
 from src.llm.prompts import build_messages
+from src.llm.router import client_for_model, llm_configured
 from src.log import get_logger
 
 log = get_logger(__name__)
@@ -49,14 +51,9 @@ def _disabled_result(reason: str = "LLM 未启用") -> LLMAnalysis:
 
 
 def _client_from_config() -> LLMClient:
-    if not LLM_API_KEY:
+    if not llm_configured():
         raise LLMClientError("未配置 LLM_API_KEY")
-    return LLMClient(
-        api_key=LLM_API_KEY,
-        base_url=LLM_BASE_URL,
-        model=LLM_MODEL,
-        timeout=LLM_TIMEOUT,
-    )
+    return client_for_model(LLM_MODEL)
 
 
 def _parse_result(data: dict[str, Any], *, model: str, provider: str) -> LLMAnalysis:
@@ -89,6 +86,47 @@ def _parse_result(data: dict[str, Any], *, model: str, provider: str) -> LLMAnal
     )
 
 
+def validate_llm_payload(
+    data: dict[str, Any],
+    report: dict[str, Any],
+    *,
+    facts: dict[str, Any] | None = None,
+    mode: str | None = None,
+    threshold: float | None = None,
+    model: str | None = None,
+    provider: str | None = None,
+) -> LLMAnalysis:
+    """Validate parsed LLM JSON against a report without calling the API."""
+    from src.analysis.narrative_facts import build_narrative_facts_for_llm
+
+    if facts is None:
+        facts = build_narrative_facts_for_llm(report)
+    result = _parse_result(
+        data,
+        model=model or LLM_MODEL or "offline",
+        provider=provider or LLM_BASE_URL or "offline",
+    )
+    sections, section_audit = validate_and_merge_llm_sections(
+        data.get("narrative_sections"),
+        rule_sections=report.get("narrative_sections") or {},
+        facts=facts,
+        mode=mode or app_config.AGENT_MODE,
+        threshold=app_config.LLM_OVERRIDE_THRESHOLD if threshold is None else threshold,
+    )
+    result.narrative_sections = sections
+    result.narrative_section_audit = section_audit
+    field_reasons = validate_llm_top_level_fields(data, facts=facts)
+    rejected = {key: reason for key, reason in field_reasons.items() if reason}
+    result.top_level_audit = {
+        "accepted": not rejected,
+        "fallback_reason": next(iter(rejected.values()), None) if rejected else None,
+        "field_audit": field_reasons,
+    }
+    for field in rejected:
+        setattr(result, field, "")
+    return result
+
+
 def run_llm_analysis(
     ctx: MarketContext,
     debate: ResearchDebate,
@@ -108,36 +146,30 @@ def run_llm_analysis(
         messages = build_messages(context)
         log.info("llm analysis start model=%s", LLM_MODEL)
 
-        from src.agents.llm.base import _parse_llm_json, stream_llm_json
+        from src.agents.llm.base import run_llm_stage
 
-        raw = stream_llm_json(
-            client,
-            messages,
+        data, trace = run_llm_stage(
             stage="llm_narrative",
+            model=LLM_MODEL,
+            client=client,
+            messages=messages,
+            parse=lambda payload: payload,
             temperature=0.0,
         )
-        data = _parse_llm_json(raw)
-        result = _parse_result(data, model=LLM_MODEL, provider=LLM_BASE_URL)
+        if data is None:
+            return _error_result(report, trace.error or "LLM 报告文案失败")
         facts = context.get("narrative_facts") or {}
-        sections, section_audit = validate_and_merge_llm_sections(
-            data.get("narrative_sections"),
-            rule_sections=report.get("narrative_sections") or {},
+        result = validate_llm_payload(
+            data,
+            report,
             facts=facts,
-            mode=app_config.AGENT_MODE,
-            threshold=app_config.LLM_OVERRIDE_THRESHOLD,
+            model=LLM_MODEL,
+            provider=LLM_BASE_URL,
         )
-        result.narrative_sections = sections
-        result.narrative_section_audit = section_audit
-        top_reason = validate_llm_top_level(data, facts=facts)
-        result.top_level_audit = {
-            "accepted": top_reason is None,
-            "fallback_reason": top_reason,
-        }
-        if top_reason:
-            result.market_summary = ""
-            result.trade_thesis = ""
-            result.action_plan = ""
-            log.warning("llm top-level narrative rejected: %s", top_reason)
+        if result.top_level_audit.get("fallback_reason"):
+            for field, reason in (result.top_level_audit.get("field_audit") or {}).items():
+                if reason:
+                    log.warning("llm top-level narrative rejected %s: %s", field, reason)
         log.info(
             "llm analysis done confidence=%.2f summary_len=%d",
             result.confidence,
@@ -165,28 +197,31 @@ def apply_llm_to_report(report: dict[str, Any], llm: LLMAnalysis) -> None:
     stage_sources = report.setdefault("meta", {}).setdefault("stage_sources", {})
     stage_sources["narrative_top_level"] = top_audit
 
-    if not llm.enabled or llm.error or not LLM_ENHANCE_CONCLUSION:
-        return
-
-    if top_audit and not top_audit.get("accepted", True):
-        return
-
-    if report.get("meta", {}).get("observation_mode"):
-        return
-
     conclusion = report.setdefault("conclusion", {})
     if llm.market_summary:
         conclusion["llm_market_summary"] = llm.market_summary
     if llm.trade_thesis:
         conclusion["llm_trade_thesis"] = llm.trade_thesis
-        conclusion["direction_summary"] = llm.trade_thesis
     if llm.action_plan:
         conclusion["llm_action_plan"] = llm.action_plan
+    if llm.risks:
+        conclusion["llm_risks"] = llm.risks
+
+    if not llm.enabled or llm.error or not LLM_ENHANCE_CONCLUSION:
+        return
+
+    if report.get("meta", {}).get("observation_mode"):
+        return
+
+    if top_audit and not top_audit.get("accepted", True):
+        return
+
+    if llm.trade_thesis:
+        conclusion["direction_summary"] = llm.trade_thesis
+    if llm.action_plan:
         conclusion["action"] = llm.action_plan.replace("\n", "；")
         conclusion["header_conclusion"] = (
             f"{llm.trade_thesis}。{conclusion['action']}"
             if llm.trade_thesis
             else conclusion.get("header_conclusion", "")
         )
-    if llm.risks:
-        conclusion["llm_risks"] = llm.risks

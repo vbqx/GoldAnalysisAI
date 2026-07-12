@@ -27,12 +27,36 @@ class LLMClient:
         api_key: str,
         base_url: str,
         model: str,
-        timeout: int = 60,
+        timeout: int | float | None = None,
+        connect_timeout: float | None = None,
+        read_timeout: float | None = None,
     ) -> None:
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
         self.model = model
-        self.timeout = timeout
+        from src.config import LLM_CONNECT_TIMEOUT, LLM_READ_TIMEOUT
+
+        if connect_timeout is not None:
+            self.connect_timeout = float(connect_timeout)
+        elif timeout is not None:
+            self.connect_timeout = min(30.0, float(timeout))
+        else:
+            self.connect_timeout = LLM_CONNECT_TIMEOUT
+
+        if read_timeout is not None:
+            self.read_timeout = float(read_timeout)
+        elif timeout is not None:
+            self.read_timeout = float(timeout)
+        else:
+            self.read_timeout = LLM_READ_TIMEOUT
+
+    @property
+    def timeout(self) -> float:
+        """Legacy alias — returns read/chunk-idle timeout."""
+        return self.read_timeout
+
+    def _request_timeout(self) -> tuple[float, float]:
+        return (self.connect_timeout, self.read_timeout)
 
     def _headers(self) -> dict[str, str]:
         return {
@@ -78,16 +102,26 @@ class LLMClient:
         if response_format:
             payload["response_format"] = response_format
 
-        log.debug("llm stream model=%s url=%s", self.model, url)
+        log.debug(
+            "llm stream model=%s url=%s connect=%.1fs read_idle=%.1fs",
+            self.model,
+            url,
+            self.connect_timeout,
+            self.read_timeout,
+        )
         try:
             resp = requests.post(
                 url,
                 headers=self._headers(),
                 json=payload,
-                timeout=self.timeout,
+                timeout=self._request_timeout(),
                 stream=True,
             )
-        except requests.RequestException as exc:
+        except Timeout as exc:
+            raise LLMClientError(
+                f"LLM 连接/读取超时 (connect={self.connect_timeout}s, read_idle={self.read_timeout}s): {exc}"
+            ) from exc
+        except RequestException as exc:
             raise LLMClientError(f"LLM 请求失败: {exc}") from exc
 
         if resp.status_code >= 400:
@@ -101,7 +135,11 @@ class LLMClient:
                 chunk = self._parse_sse_line(line)
                 if chunk:
                     yield chunk
-        except (ChunkedEncodingError, ConnectionError, Timeout, RequestException) as exc:
+        except Timeout as exc:
+            raise LLMClientError(
+                f"LLM 流式读取超时 (read_idle={self.read_timeout}s，长时间无 SSE 数据): {exc}"
+            ) from exc
+        except (ChunkedEncodingError, ConnectionError, RequestException) as exc:
             raise LLMClientError(f"LLM 流式读取失败: {exc}") from exc
 
     def chat(
@@ -136,4 +174,3 @@ class LLMClient:
         if not isinstance(parsed, dict):
             raise LLMClientError("LLM JSON 根节点必须是 object")
         return parsed
-

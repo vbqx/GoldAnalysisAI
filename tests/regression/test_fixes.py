@@ -63,7 +63,6 @@ def test_ensure_report_reruns_on_complete() -> None:
     """RG-05: fragment rerun on generation complete; no double-rerun blank (#3)."""
     common_src = (ROOT / "src" / "viz" / "streamlit_common.py").read_text(encoding="utf-8")
     assert "st.rerun()" in common_src
-    assert "Fix #3" in common_src
     assert "_store_report_bundle" in common_src
     assert "            placeholder.empty()" not in common_src
 
@@ -72,18 +71,21 @@ def test_ensure_report_reruns_on_complete() -> None:
 def test_report_generation_requires_run_config_panel() -> None:
     """RG-08: first page load gates generation behind run config."""
     common_src = (ROOT / "src" / "viz" / "streamlit_common.py").read_text(encoding="utf-8")
-    run_config_src = (ROOT / "src" / "core" / "run_config.py").read_text(encoding="utf-8")
-    assert "生成前配置" in common_src
-    assert "开始生成报告" in common_src
+    panel_src = (ROOT / "src" / "viz" / "run_config_panel.py").read_text(encoding="utf-8")
+    worker_src = (ROOT / "src" / "viz" / "generation_worker.py").read_text(encoding="utf-8")
+    run_config_src = (ROOT / "src" / "run" / "config.py").read_text(encoding="utf-8")
+    assert "生成前配置" in panel_src
+    assert "开始生成报告" in panel_src
     assert "RUN_CONFIG_READY_KEY" in common_src
-    assert "_start_generation(job_key, run_config)" in common_src
+    assert "start_generation(" in common_src
     assert "generation_state" in common_src
-    assert "RUN_CONFIG_WIDGETS_SEEDED_KEY" in common_src
-    assert "_seed_run_config_widgets_if_needed" in common_src
+    assert "RUN_CONFIG_WIDGETS_SEEDED_KEY" in panel_src
+    assert "_seed_run_config_widgets_if_needed" in panel_src
     assert "run_config_widget_state" in run_config_src
-    assert "default_panel_run_config" in common_src
-    assert "默认选择规则引擎" in common_src
+    assert "default_panel_run_config" in panel_src
+    assert "默认选择规则引擎" in panel_src
     assert "apply_run_config" in run_config_src
+    assert "load_replay_bundle" in worker_src
 
 
 @pytest.mark.regression
@@ -91,7 +93,8 @@ def test_llm_json_retry_helpers_present() -> None:
     """RG-06: LLM JSON parse + retry (#4)."""
     base_src = (ROOT / "src" / "agents" / "llm" / "base.py").read_text(encoding="utf-8")
     assert "_parse_llm_json" in base_src
-    assert "_MAX_STAGE_RETRIES" in base_src
+    assert "_max_stage_retries" in base_src
+    assert "LLM_MAX_RETRIES" in base_src
 
 
 @pytest.mark.regression

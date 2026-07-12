@@ -1,6 +1,6 @@
 # GoldAnalysisAI 开发参考手册
 
-本文件只保留代码级参考：调用链、模块职责、扩展点和调试入口。项目定位读 [project.md](../overview/project.md)，架构边界读 [architecture.md](../architecture/architecture.md) 与 [review.md](../architecture/review.md)，测试策略读 [strategy.md](../testing/strategy.md)。
+本文件只保留代码级参考：调用链、模块职责、扩展点和调试入口。项目定位读 [project.md](../overview/project.md)，架构边界读 [architecture.md](../architecture/architecture.md) 与 [review.md](../architecture/review.md)（评审索引见 [reviews/README.md](../reviews/README.md)），测试策略读 [strategy.md](../testing/strategy.md)。
 
 ## 入口
 
@@ -38,8 +38,9 @@ report, data, analyses = run_analysis()
 | `manager` | 经理 | `src/agents/manager.py` + `factory.py` | `ManagerDecision` |
 | `report` | 组装报告 | `src/analysis/report_engine.py` | report dict |
 | `llm_narrative` | LLM 文案 | `src/llm/analyst.py` | `report["llm_analysis"]` |
+| `archive` | 运行归档 | `src/run/archive/`（`from src.run import archive_run`） | `.cache/run_archives/<run_id>/` |
 
-端到端数据流：
+回放（0 token）：`src/viz/replay_loader.py` → `load_replay_bundle()` → `src.run.load_bundle`。
 
 ```text
 TradingView OHLCV
@@ -53,6 +54,7 @@ TradingView OHLCV
   -> trader / risk / manager
   -> build_report()
   -> optional llm_narrative
+  -> archive (manifest + report + enriched)
   -> Streamlit viz/*
 ```
 
@@ -83,6 +85,8 @@ MT5 不在这条行情/回测链路中。MT5 只作为账号检查和后续 `sha
 | `LLM_STAGE_ANALYSTS`, `LLM_STAGE_RESEARCH`, `LLM_STAGE_DEBATE` | 研究链 LLM 阶段 |
 | `LLM_STAGE_LEVELS`, `LLM_STAGE_TRADER`, `LLM_STAGE_RISK`, `LLM_STAGE_MANAGER` | 点位、交易、风控、经理 LLM 阶段 |
 | `LLM_ANALYST_ONLY` | 只调试单个 Analyst LLM |
+| `LLM_TIMEOUT`, `LLM_CONNECT_TIMEOUT`, `LLM_READ_TIMEOUT` | 连接与流式空闲超时（秒）；见 [llm-agents.md §3.4](../architecture/llm-agents.md#34-传输重试与规则兜底) |
+| `LLM_MAX_RETRIES`, `LLM_RETRY_BACKOFF_BASE_S` | 每阶段传输/JSON 重试与指数退避 |
 | `JIN10_API_TOKEN` | 金十 MCP |
 | `MT5_ENABLED`, `MT5_ACCOUNT`, `MT5_PASSWORD`, `MT5_SERVER`, `MT5_PATH` | MT5 执行通道配置 |
 | `LOG_LEVEL`, `LOG_FILE` | 日志控制 |
