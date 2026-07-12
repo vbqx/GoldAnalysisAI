@@ -160,6 +160,7 @@ LLM_STAGE_LEVELS = _stage_flag("LLM_STAGE_LEVELS")
 LLM_STAGE_TRADER = _stage_flag("LLM_STAGE_TRADER")
 LLM_STAGE_RISK = _stage_flag("LLM_STAGE_RISK")
 LLM_STAGE_MANAGER = _stage_flag("LLM_STAGE_MANAGER")
+LLM_STAGE_WARN_MS = max(30_000, int(os.getenv("LLM_STAGE_WARN_MS", "120000")))
 
 
 def _stage_flag_or(name: str, default: bool) -> bool:

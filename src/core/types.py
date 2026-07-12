@@ -337,6 +337,7 @@ class LLMAnalysis:
     error: str | None = None
     narrative_sections: dict[str, Any] = field(default_factory=dict)
     narrative_section_audit: dict[str, Any] = field(default_factory=dict)
+    top_level_audit: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

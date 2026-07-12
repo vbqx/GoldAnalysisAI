@@ -8,6 +8,9 @@ import time
 from src.agents import factory as agent_factory
 from src.analysis.ict_pa import analyze_timeframe
 from src.analysis.level_validator import validate_llm_levels
+from src.analysis.audit_summary import build_audit_summary
+from src.analysis.data_freshness import build_data_as_of
+from src.analysis.narrative_sections import build_rule_narrative_sections, overview_bullets_from_sections
 from src.analysis.report_engine import (
     apply_manager_authorization,
     build_report,
@@ -173,8 +176,18 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         proposal.signal_indices,
     )
 
+    as_of = build_data_as_of(raw)
+    observation_mode = not as_of.get("executable", False)
+
     prog.start("risk", "风控审核", "激进 · 中性 · 保守")
-    risk_reviews = agent_factory.run_risk(proposal, len(signals), pipeline_meta)
+    risk_reviews = agent_factory.run_risk(
+        proposal,
+        signals,
+        pipeline_meta,
+        current_price=ctx.price,
+        data_as_of=as_of,
+        observation_mode=observation_mode,
+    )
     approved = sum(1 for r in risk_reviews if r.approved)
     prog.done("risk", f"{approved}/{len(risk_reviews)} 通过")
     for review in risk_reviews:
@@ -239,6 +252,27 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     if live_cal:
         report["calendar_events"] = live_cal
 
+    report["meta"]["data_as_of"] = as_of
+    report["meta"]["run_config_fingerprint"] = get_run_config().fingerprint()
+    report["meta"]["observation_mode"] = observation_mode
+    if as_of.get("warnings"):
+        report["meta"].setdefault("warnings", []).extend(as_of["warnings"])
+    if report["meta"]["observation_mode"]:
+        conclusion = report.setdefault("conclusion", {})
+        prefix = "【快照观察，非实时执行】"
+        if not str(conclusion.get("action", "")).startswith(prefix):
+            conclusion["action"] = prefix + str(conclusion.get("action", ""))
+
+    apply_manager_authorization(report, decision, risk_reviews)
+    report["narrative_sections"] = build_rule_narrative_sections(report)
+    report["market_overview"] = overview_bullets_from_sections(report["narrative_sections"])
+    log.debug(
+        "signals authorized by manager: selected=%s scale=%.2f action=%s",
+        decision.selected_signal_indices,
+        decision.position_scale,
+        decision.action,
+    )
+
     narrative_llm_enabled = llm_narrative_enabled()
     if narrative_llm_enabled:
         prog.start("llm_narrative", "LLM 报告文案", "深度分析生成中…")
@@ -284,12 +318,17 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     if llm_latencies:
         report["meta"]["llm_stages_wall_ms"] = max(llm_latencies)
 
-    apply_manager_authorization(report, decision, risk_reviews)
-    log.debug(
-        "signals authorized by manager: selected=%s scale=%.2f action=%s",
-        decision.selected_signal_indices,
-        decision.position_scale,
-        decision.action,
+    report["meta"]["audit_summary"] = build_audit_summary(
+        report,
+        decision=decision,
+        stage_meta=pipeline_meta.to_dict(),
+    )
+    audit = report["meta"]["audit_summary"]
+    log.info(
+        "audit_summary authorized=%s signal_ids=%s observation=%s",
+        audit.get("execution_authorized"),
+        audit.get("authorized_signal_ids"),
+        audit.get("observation_mode"),
     )
 
     elapsed = time.perf_counter() - t0

@@ -18,6 +18,8 @@ from src.analysis.proximity import (
 from src.core.types import MarketContext
 from src.config import RISK_REWARD_DISPLAY_CAP, SIGNAL_SL_BELOW_SWING, SIGNAL_SWEEP_OFFSET
 from src.analysis.narrative_sections import build_rule_narrative_sections, overview_bullets_from_sections
+from src.analysis.signal_geometry import normalize_take_profits
+from src.analysis.signal_identity import stable_signal_id
 from src.analysis.plan_signals import (
     build_pa_long_sweep,
     build_pa_short_aggressive,
@@ -763,19 +765,19 @@ def build_conclusion(
         must_do = [
             "★ 主策略：回调至需求/支撑区分批做多",
             "★ 次策略：冲高至阻力区后只做轻仓逆势短空",
-            "★ 风控：单笔风险 ≤ 2%，跌破结构支撑减仓或退出",
+            "★ 风控：按授权档位控制仓位，跌破结构支撑减仓或退出",
         ]
     elif dominant_theme == "neutral":
         must_do = [
             "★ 主策略：等待区间边界确认，不在中枢追单",
             "★ 次策略：突破后回踩/反抽确认再跟随",
-            "★ 风控：单笔风险 ≤ 2%，事件前降低仓位",
+            "★ 风控：按授权档位控制仓位，事件前降低暴露",
         ]
     else:
         must_do = [
             "★ 主策略：反弹至 FVG/OB 阻力区分批做空",
             "★ 次策略：扫低流动性后短多（逆势轻仓）",
-            "★ 风控：单笔风险 ≤ 2%，止损必执行",
+            "★ 风控：按授权档位控制仓位，止损必执行",
         ]
 
     return {
@@ -1009,17 +1011,33 @@ def authorized_position_scale(reviews: list, decision) -> float:
 
 
 def format_authorized_position_size(scale: float, action: str) -> str:
+    """Qualitative sizing labels — no account/notional model in this repo."""
     if scale <= 0:
-        return "0% 观望"
-    pct = max(1, int(round(scale * 100)))
+        return "观望"
     if action == "reduce":
-        return f"{pct}% 缩减仓"
-    return f"{pct}% 标准仓"
+        return "缩仓"
+    if scale >= 0.85:
+        return "标准仓"
+    if scale >= 0.55:
+        return "缩仓"
+    return "试探仓"
+
+
+def _signal_to_dict(signal: TradingSignal) -> dict[str, Any]:
+    row = asdict(signal)
+    row["signal_id"] = stable_signal_id(row)
+    return row
+
+
+def _assign_signal_ids(sig_dicts: list[dict[str, Any]]) -> None:
+    for sig in sig_dicts:
+        sig["signal_id"] = sig.get("signal_id") or stable_signal_id(sig)
 
 
 def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> None:
     """Map manager decision + risk scales onto report signals (single primary source)."""
     sig_dicts = list(report.get("signals") or [])
+    _assign_signal_ids(sig_dicts)
     selected = list(decision.selected_signal_indices or [])
     selected_set = set(selected)
     scale = authorized_position_scale(risk_reviews, decision)
@@ -1034,11 +1052,22 @@ def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> N
         report["strategy_plans"] = []
         meta["execution_authorized"] = False
         meta["authorized_position_scale"] = 0.0
+        meta["manager_decision"] = decision.to_dict() if hasattr(decision, "to_dict") else dict(decision)
+        meta["authorized_signal_ids"] = []
         return
 
     primary_idx = selected[0]
     pos_label = format_authorized_position_size(scale, decision.action)
     for j, sig in enumerate(sig_dicts):
+        tps = sig.get("take_profits") or []
+        if tps:
+            sig["take_profits"] = normalize_take_profits(
+                direction=str(sig.get("direction") or ""),
+                theme=str(sig.get("theme") or ""),
+                entry_low=float(sig.get("entry_low") or 0),
+                entry_high=float(sig.get("entry_high") or 0),
+                take_profits=tps,
+            )
         if j not in selected_set:
             sig["signal_role"] = "rejected"
             sig["position_size"] = "0% 观望"
@@ -1059,6 +1088,10 @@ def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> N
     report["strategy_plans"] = build_strategy_plans(primary)
     meta["execution_authorized"] = True
     meta["authorized_position_scale"] = scale
+    meta["manager_decision"] = decision.to_dict() if hasattr(decision, "to_dict") else dict(decision)
+    meta["authorized_signal_ids"] = [
+        sig_dicts[i].get("signal_id") for i in selected if i < len(sig_dicts)
+    ]
 
 
 def build_path_summary(projections: list[dict]) -> list[dict[str, Any]]:
@@ -1193,7 +1226,7 @@ def build_report(
         "liquidity": liquidity[:10],
         "context_levels": context_levels,
         "fibonacci": fib,
-        "signals": [asdict(s) for s in signals],
+        "signals": [_signal_to_dict(s) for s in signals],
         "projections": projections,
         "invalidation": invalidation_rules(analyses["15m"], swing_high, signals),
         "chart": {

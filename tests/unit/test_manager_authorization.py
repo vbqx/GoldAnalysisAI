@@ -40,7 +40,7 @@ def test_manager_selection_is_only_primary_not_sentiment_theme() -> None:
     assert roles["short A"] == "primary"
     assert roles["long B"] == "rejected"
     assert report["signals"][0]["name"] == "short A"
-    assert "40%" in report["signals"][0]["position_size"]
+    assert report["signals"][0]["position_size"] == "缩仓"
 
 
 def test_wait_action_clears_executable_plans() -> None:

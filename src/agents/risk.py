@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Any
+
+from src.analysis.risk_gates import apply_risk_gates
 from src.core.types import RiskProfile, RiskReview, TransactionProposal
 
 
@@ -27,11 +30,11 @@ def _review(
     elif profile == "neutral":
         allowed = proposal.signal_indices[:2]
         scale = 0.7
-        notes.append("中性：最多 2 个信号，仓位 70%")
+        notes.append("中性：最多 2 个信号，缩仓档")
     else:
         allowed = proposal.signal_indices[:1]
         scale = 0.4
-        notes.append("保守：仅主信号，仓位 40%")
+        notes.append("保守：仅主信号，试探档")
 
     allowed = [i for i in allowed if i < signal_count]
 
@@ -54,9 +57,27 @@ def _review(
     )
 
 
-def run_risk_team(proposal: TransactionProposal, signal_count: int) -> list[RiskReview]:
-    return [
+def run_risk_team(
+    proposal: TransactionProposal,
+    signal_count: int,
+    *,
+    signals: list[Any] | None = None,
+    current_price: float = 0.0,
+    data_as_of: dict[str, Any] | None = None,
+    observation_mode: bool = False,
+) -> list[RiskReview]:
+    reviews = [
         _review("aggressive", proposal, signal_count),
         _review("neutral", proposal, signal_count),
         _review("conservative", proposal, signal_count),
     ]
+    if signals is None:
+        return reviews
+    return apply_risk_gates(
+        reviews,
+        proposal,
+        signals,
+        current_price=current_price,
+        data_as_of=data_as_of,
+        observation_mode=observation_mode,
+    )
