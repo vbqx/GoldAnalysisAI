@@ -158,14 +158,15 @@ def run_llm_analysis(
         )
         if data is None:
             return _error_result(report, trace.error or "LLM 报告文案失败")
-        facts = context.get("narrative_facts") or {}
+        validation_facts = build_narrative_facts_for_llm(report)
         result = validate_llm_payload(
             data,
             report,
-            facts=facts,
+            facts=validation_facts,
             model=LLM_MODEL,
             provider=LLM_BASE_URL,
         )
+        report.setdefault("meta", {})["llm_context_meta"] = context.get("context_meta")
         if result.top_level_audit.get("fallback_reason"):
             for field, reason in (result.top_level_audit.get("field_audit") or {}).items():
                 if reason:
@@ -202,7 +203,7 @@ def apply_llm_to_report(report: dict[str, Any], llm: LLMAnalysis) -> None:
         conclusion["llm_market_summary"] = llm.market_summary
     if llm.trade_thesis:
         conclusion["llm_trade_thesis"] = llm.trade_thesis
-    if llm.action_plan:
+    if llm.action_plan and report.get("meta", {}).get("execution_authorized"):
         conclusion["llm_action_plan"] = llm.action_plan
     if llm.risks:
         conclusion["llm_risks"] = llm.risks
@@ -211,6 +212,9 @@ def apply_llm_to_report(report: dict[str, Any], llm: LLMAnalysis) -> None:
         return
 
     if report.get("meta", {}).get("observation_mode"):
+        return
+
+    if not report.get("meta", {}).get("execution_authorized"):
         return
 
     if top_audit and not top_audit.get("accepted", True):

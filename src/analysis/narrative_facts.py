@@ -18,6 +18,7 @@ def build_narrative_facts_for_llm(
     ctx: MarketContext | None = None,
     technical_context: dict[str, Any] | None = None,
     event_limit: int | None = None,
+    compact_for_llm: bool = True,
 ) -> dict[str, Any]:
     """Build narrative_facts once from report + optional market context."""
     limit = NARRATIVE_ICT_PER_TF if event_limit is None else event_limit
@@ -26,7 +27,7 @@ def build_narrative_facts_for_llm(
             technical_context = build_technical_context(ctx, event_limit=limit)
         else:
             technical_context = {}
-    return build_narrative_facts(report, technical_context)
+    return build_narrative_facts(report, technical_context, compact_for_llm=compact_for_llm)
 
 
 __all__ = ["NARRATIVE_ICT_PER_TF", "build_narrative_facts", "build_narrative_facts_for_llm"]

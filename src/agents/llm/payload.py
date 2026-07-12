@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from src.agents.analysts.evidence_provenance import analyst_evidence_ids
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
 from src.analysis.narrative_combine import build_pa_llm_summary
 from src.analysis.technical_context import build_technical_context, fibonacci_context, timeframe_context
@@ -19,6 +20,13 @@ from src.config import (
 )
 from src.core.types import AgentEvidence, AnalystTeam, MarketContext, ResearchDebate, RiskReview, TransactionProposal
 from src.indicators.technical import ema_relation
+
+RESEARCH_ITEMS_SCHEMA = (
+    '{"evidence_id": "analyst_team 原 id 或新 id", '
+    '"category": "structure|liquidity|external|analyst_*", '
+    '"summary": "...", "strength": 0.0-1.0, "timeframe": "4h", '
+    '"refs": {"source": "...", "upstream_id": "可选"}}'
+)
 
 
 def _tf_block(tf: str, analysis: TimeframeAnalysis, *, price: float) -> dict[str, Any]:
@@ -53,6 +61,7 @@ def analyst_team_payload(team: AnalystTeam) -> dict[str, Any]:
             "summary": getattr(team, role).summary,
             "items": [
                 {
+                    "evidence_id": i.evidence_id,
                     "category": i.category,
                     "summary": i.summary,
                     "strength": i.strength,
@@ -129,15 +138,18 @@ def market_payload(ctx: MarketContext, team: AnalystTeam | None = None) -> dict[
 
 def research_payload(ctx: MarketContext, team: AnalystTeam, direction: str) -> dict[str, Any]:
     """Research stage: analyst conclusions primary; minimal structure/event validation."""
+    allowed_ids = sorted(analyst_evidence_ids(team))
     if not LLM_PAYLOAD_FUNNEL:
         payload = market_payload(ctx, team)
         payload["direction"] = direction
+        payload["allowed_evidence_ids"] = allowed_ids
         return payload
     return {
         "symbol": "XAUUSD",
         "price": ctx.price,
         "direction": direction,
         "analyst_team": analyst_team_payload(team),
+        "allowed_evidence_ids": allowed_ids,
         "structure_vote": _structure_vote(ctx.analyses),
         "timeframe_trends": _timeframe_trends(ctx),
         "event_risk": _event_risk_block(ctx),
@@ -151,14 +163,12 @@ def technical_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
         ema_block = ema_relation(ctx.price, last_5m)
     base = build_technical_context(ctx, event_limit=ANALYST_ICT_EVENTS_MAX)
     pa = base.get("price_action") or {}
-    return {
+    payload: dict[str, Any] = {
         "symbol": "XAUUSD",
         "price": ctx.price,
-        "price_action": pa,
         "price_action_summary": build_pa_llm_summary(pa, price=ctx.price),
         "support_resistance": base.get("support_resistance"),
         "lux_timeframe_panels": base.get("lux_timeframe_panels"),
-        "timeframes": base.get("timeframes"),
         "structure_sentiment": ctx.derived.get("structure_sentiment") or base.get("structure_sentiment"),
         "metrics": ctx.metrics,
         "market_position": ctx.derived.get("market_position"),
@@ -170,6 +180,10 @@ def technical_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
         "quality": base.get("quality"),
         "technical_input_stats": ctx.context_stats.get("technical_inputs", {}),
     }
+    if not LLM_PAYLOAD_FUNNEL:
+        payload["price_action"] = pa
+        payload["timeframes"] = base.get("timeframes")
+    return payload
 
 
 def fundamentals_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
@@ -291,6 +305,7 @@ def evidence_payload(evidence: AgentEvidence) -> dict[str, Any]:
         "summary": evidence.summary,
         "items": [
             {
+                "evidence_id": i.evidence_id,
                 "category": i.category,
                 "summary": i.summary,
                 "strength": i.strength,
@@ -387,15 +402,48 @@ def trader_payload(
 def risk_payload(
     proposal: TransactionProposal,
     signal_count: int,
+    *,
+    signals: list[Any] | None = None,
+    current_price: float | None = None,
+    data_as_of: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    selected: list[dict[str, Any]] = []
+    for idx in proposal.signal_indices:
+        if signals is None or idx < 0 or idx >= len(signals):
+            continue
+        sig = signals[idx]
+        if isinstance(sig, dict):
+            row = {
+                "index": idx,
+                "name": sig.get("name"),
+                "direction": sig.get("direction"),
+                "entry_low": sig.get("entry_low"),
+                "entry_high": sig.get("entry_high"),
+                "stop_loss": sig.get("stop_loss"),
+                "take_profits": sig.get("take_profits"),
+                "risk_reward": sig.get("risk_reward"),
+                "score_grade": sig.get("score_grade"),
+                "score_total": sig.get("score_total"),
+                "status": sig.get("status"),
+            }
+        else:
+            row = {"index": idx, **_signal_payload(sig)}
+        if current_price is not None and row.get("entry_low") is not None:
+            entry_mid = (float(row["entry_low"]) + float(row["entry_high"])) / 2
+            row["distance_pct"] = round((entry_mid - float(current_price)) / float(current_price) * 100, 3)
+        selected.append(row)
     return {
         "proposal": proposal.to_dict(),
         "signal_count": signal_count,
+        "selected_signals": selected,
+        "current_price": current_price,
+        "data_as_of": data_as_of or {},
         "profiles": ["aggressive", "neutral", "conservative"],
         "review_constraints": {
             "approved": "Reject neutral or weak proposals when risk is unclear.",
             "allowed_signal_indices": "Use only proposal.signal_indices values below signal_count.",
             "position_scale": "0.0 to 1.0; conservative should normally be smaller than neutral.",
+            "notes": "Only cite geometry and freshness fields present in selected_signals and data_as_of.",
         },
     }
 
