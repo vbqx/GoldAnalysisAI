@@ -60,3 +60,14 @@ def test_same_bar_stop_first_is_conservative() -> None:
         BacktestConfig(conservative_same_bar=True),
     )
     assert result.exit_reason == "stop"
+
+
+def test_slippage_fill_must_be_inside_bar_range() -> None:
+    result = simulate_signal(
+        _signal("BUY"),
+        _df([(100, 101, 99, 100.5)]),
+        pd.Timestamp("2026-01-01", tz="UTC"),
+        BacktestConfig(slippage_points=1.0),
+    )
+    assert result.exit_reason == "not_triggered"
+    assert result.entry_time is None

@@ -67,7 +67,12 @@ def macro_state_at(dxy_daily: pd.DataFrame | None, timestamp: pd.Timestamp) -> M
         )
 
     dxy = normalize_macro_ohlcv(dxy_daily)
-    hist = dxy.loc[dxy.index <= ts]
+    # Daily bars are indexed at day open; intraday replay must not use the current day's close.
+    day_start = ts.floor("D")
+    if ts > day_start:
+        hist = dxy.loc[dxy.index < day_start]
+    else:
+        hist = dxy.loc[dxy.index < ts]
     if len(hist) < 2:
         return MacroReplayState(
             time=ts,

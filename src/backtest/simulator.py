@@ -22,16 +22,18 @@ def _entry_price(signal: TradingSignal | dict, direction: str, slippage: float) 
     return low - slippage
 
 
+def _fillable(row: pd.Series, entry: float) -> bool:
+    return float(row["Low"]) <= entry <= float(row["High"])
+
+
 def _risk_points(entry: float, stop: float, direction: str) -> float:
     if direction == "BUY":
         return entry - stop
     return stop - entry
 
 
-def _entered(row: pd.Series, signal: TradingSignal | dict) -> bool:
-    low = float(_signal_value(signal, "entry_low"))
-    high = float(_signal_value(signal, "entry_high"))
-    return float(row["Low"]) <= high and float(row["High"]) >= low
+def _entered(row: pd.Series, entry: float) -> bool:
+    return _fillable(row, entry)
 
 
 def _hit_stop(row: pd.Series, stop: float, direction: str) -> bool:
@@ -124,7 +126,7 @@ def simulate_signal(
     entry_time: pd.Timestamp | None = None
     entry_offset = 0
     for offset, (ts, row) in enumerate(bars.iterrows()):
-        if _entered(row, signal):
+        if _entered(row, entry):
             entry_time = ts
             entry_offset = offset
             break
@@ -146,7 +148,7 @@ def simulate_signal(
             pnl_points=0.0,
             holding_bars=len(bars),
             signal_score=score,
-            metadata=_signal_metadata(signal),
+            metadata={**_signal_metadata(signal), "entry_not_fillable": True},
         )
 
     active = bars.iloc[entry_offset:]

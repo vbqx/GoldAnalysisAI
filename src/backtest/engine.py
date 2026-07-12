@@ -256,12 +256,17 @@ def run_random_window_backtest(
 
     all_trades: list[TradeResult] = []
     window_stats: list[dict] = []
+    seen: set[tuple] = set()
     max_start = len(history) - window
     for n in range(cfg.random_windows):
         start = rng.randint(0, max_start)
         segment = history.iloc[start : start + window]
         result = run_backtest(segment, cfg, dxy_daily=macro_data)
-        all_trades.extend(result.trades)
+        for trade in result.trades:
+            key = (trade.signal_time, trade.direction, trade.signal_name, trade.entry_price)
+            if key not in seen:
+                seen.add(key)
+                all_trades.append(trade)
         window_stats.append(
             {
                 "window": n + 1,
@@ -270,6 +275,8 @@ def run_random_window_backtest(
                 **result.summary,
             }
         )
+
+    all_trades.sort(key=lambda t: t.signal_time)
 
     summary = summarize_trades(all_trades)
     avg_window_r = sum(row["total_r"] for row in window_stats) / len(window_stats) if window_stats else 0.0
@@ -287,5 +294,7 @@ def run_random_window_backtest(
             "bars": len(history),
             "macro_enabled": cfg.use_macro,
             "macro_error": macro_error,
+            "trades_deduped": True,
+            "note": "Aggregate trade stats dedupe overlapping windows; use per-window rows for distribution.",
         },
     )
