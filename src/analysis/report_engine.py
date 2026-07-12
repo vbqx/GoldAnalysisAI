@@ -18,7 +18,7 @@ from src.analysis.proximity import (
 from src.core.types import MarketContext
 from src.config import RISK_REWARD_DISPLAY_CAP, SIGNAL_SL_BELOW_SWING, SIGNAL_SWEEP_OFFSET
 from src.analysis.narrative_sections import build_rule_narrative_sections, overview_bullets_from_sections
-from src.analysis.signal_geometry import normalize_take_profits
+from src.analysis.signal_geometry import normalize_signal_take_profits, normalize_take_profits
 from src.analysis.signal_identity import stable_signal_id
 from src.analysis.plan_signals import (
     build_pa_long_sweep,
@@ -1023,8 +1023,18 @@ def format_authorized_position_size(scale: float, action: str) -> str:
     return "试探仓"
 
 
+def _normalize_signal_dict_take_profits(sig: dict[str, Any]) -> None:
+    tps = sig.get("take_profits") or []
+    if not tps:
+        return
+    ordered = normalize_signal_take_profits(sig)
+    if ordered:
+        sig["take_profits"] = ordered
+
+
 def _signal_to_dict(signal: TradingSignal) -> dict[str, Any]:
     row = asdict(signal)
+    _normalize_signal_dict_take_profits(row)
     row["signal_id"] = stable_signal_id(row)
     return row
 
@@ -1036,15 +1046,37 @@ def _assign_signal_ids(sig_dicts: list[dict[str, Any]]) -> None:
 
 def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> None:
     """Map manager decision + risk scales onto report signals (single primary source)."""
+    from src.core.types import ManagerDecision
+
     sig_dicts = list(report.get("signals") or [])
     _assign_signal_ids(sig_dicts)
+    meta = report.setdefault("meta", {})
+
+    if meta.get("observation_mode"):
+        action = str(getattr(decision, "action", "wait") or "wait")
+        selected = list(getattr(decision, "selected_signal_indices", None) or [])
+        if action != "wait" or selected:
+            summary = str(getattr(decision, "summary", "") or "").strip()
+            if summary and "观察模式" not in summary:
+                summary = f"{summary}；观察模式下不授权执行"
+            elif not summary:
+                summary = "观察模式下不授权执行"
+            decision = ManagerDecision(
+                action="wait",
+                primary_direction=str(getattr(decision, "primary_direction", "wait") or "wait"),
+                selected_signal_indices=[],
+                confidence=0.0,
+                summary=summary,
+                position_scale=0.0,
+            )
+
     selected = list(decision.selected_signal_indices or [])
     selected_set = set(selected)
     scale = authorized_position_scale(risk_reviews, decision)
-    meta = report.setdefault("meta", {})
 
     if decision.action == "wait" or not selected_set:
         for sig in sig_dicts:
+            _normalize_signal_dict_take_profits(sig)
             sig["signal_role"] = "rejected"
             sig["position_size"] = "0% 观望"
             sig["position_scale"] = 0.0
@@ -1059,15 +1091,7 @@ def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> N
     primary_idx = selected[0]
     pos_label = format_authorized_position_size(scale, decision.action)
     for j, sig in enumerate(sig_dicts):
-        tps = sig.get("take_profits") or []
-        if tps:
-            sig["take_profits"] = normalize_take_profits(
-                direction=str(sig.get("direction") or ""),
-                theme=str(sig.get("theme") or ""),
-                entry_low=float(sig.get("entry_low") or 0),
-                entry_high=float(sig.get("entry_high") or 0),
-                take_profits=tps,
-            )
+        _normalize_signal_dict_take_profits(sig)
         if j not in selected_set:
             sig["signal_role"] = "rejected"
             sig["position_size"] = "0% 观望"

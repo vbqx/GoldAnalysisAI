@@ -2,6 +2,16 @@
 
 from __future__ import annotations
 
+from typing import Any
+
+
+def _dedupe_preserve_order(levels: list[float]) -> list[float]:
+    out: list[float] = []
+    for level in levels:
+        if level not in out:
+            out.append(level)
+    return out
+
 
 def normalize_take_profits(
     *,
@@ -25,6 +35,20 @@ def normalize_take_profits(
             continue
     if is_short:
         valid = [tp for tp in cleaned if tp < entry_mid]
-        return sorted(valid, reverse=True)
+        return _dedupe_preserve_order(sorted(valid, reverse=True))
     valid = [tp for tp in cleaned if tp > entry_mid]
-    return sorted(valid)
+    return _dedupe_preserve_order(sorted(valid))
+
+
+def normalize_signal_take_profits(signal: dict[str, Any]) -> list[float]:
+    """Return direction-aware TP ladder for a report/signal dict."""
+    tps = signal.get("take_profits") or []
+    if not tps:
+        return []
+    return normalize_take_profits(
+        direction=str(signal.get("direction") or ""),
+        theme=str(signal.get("theme") or ""),
+        entry_low=float(signal.get("entry_low") or 0),
+        entry_high=float(signal.get("entry_high") or 0),
+        take_profits=[float(x) for x in tps if x is not None],
+    )

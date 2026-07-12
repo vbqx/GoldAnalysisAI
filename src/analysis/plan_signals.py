@@ -191,13 +191,34 @@ def _sell_targets(
     val: float | None,
     swing_low: float,
 ) -> tuple[float, float, float] | None:
+    from src.analysis.signal_geometry import normalize_take_profits
+
     entry_mid = (entry_low + entry_high) / 2
     zone_width = max(entry_high - entry_low, 0.01)
-    tp1 = round(entry_mid - max(zone_width * 1.5, entry_mid * 0.003), 2)
-    tp2 = round(float(poc), 2) if poc is not None and poc < entry_mid else round(
-        swing_low + (entry_mid - swing_low) * 0.35, 2
+    candidates: list[float] = [
+        round(entry_mid - max(zone_width * 1.5, entry_mid * 0.003), 2),
+    ]
+    if poc is not None:
+        poc_tp = round(float(poc), 2)
+        if poc_tp < entry_mid:
+            candidates.append(poc_tp)
+    candidates.append(round(swing_low + (entry_mid - swing_low) * 0.35, 2))
+    if val is not None:
+        val_tp = round(float(val), 2)
+        if val_tp < entry_mid:
+            candidates.append(val_tp)
+    candidates.append(round(swing_low, 2))
+
+    ordered = normalize_take_profits(
+        direction="SELL",
+        theme="short",
+        entry_low=entry_low,
+        entry_high=entry_high,
+        take_profits=candidates,
     )
-    tp3 = round(float(val), 2) if val is not None and val < tp2 else round(swing_low, 2)
+    if len(ordered) < 3:
+        return None
+    tp1, tp2, tp3 = ordered[0], ordered[1], ordered[2]
     if tp1 >= entry_mid or tp3 >= tp1:
         return None
     return tp1, tp2, tp3
@@ -213,15 +234,33 @@ def _buy_targets(
     swing_high: float,
     swing_low: float,
 ) -> tuple[float, float, float]:
+    from src.analysis.signal_geometry import normalize_take_profits
+
     entry_mid = (entry_low + entry_high) / 2
-    tp1 = round(price, 2)
-    tp2 = round(float(poc), 2) if poc is not None and poc > entry_mid else round(
-        swing_low + (swing_high - swing_low) * 0.382, 2
+    candidates: list[float] = [round(price, 2)]
+    if poc is not None:
+        poc_tp = round(float(poc), 2)
+        if poc_tp > entry_mid:
+            candidates.append(poc_tp)
+    candidates.append(round(swing_low + (swing_high - swing_low) * 0.382, 2))
+    if vah is not None:
+        vah_tp = round(float(vah), 2)
+        if vah_tp > entry_mid:
+            candidates.append(vah_tp)
+    candidates.append(round(swing_low + (swing_high - swing_low) * 0.5, 2))
+
+    ordered = normalize_take_profits(
+        direction="BUY",
+        theme="long",
+        entry_low=entry_low,
+        entry_high=entry_high,
+        take_profits=candidates,
     )
-    tp3 = round(float(vah), 2) if vah is not None and vah > tp2 else round(
-        swing_low + (swing_high - swing_low) * 0.5, 2
-    )
-    return tp1, tp2, tp3
+    if len(ordered) >= 3:
+        return ordered[0], ordered[1], ordered[2]
+    while len(ordered) < 3:
+        ordered.append(round(ordered[-1] + max(entry_mid * 0.002, 1.0), 2))
+    return ordered[0], ordered[1], ordered[2]
 
 
 def _smc_zones(analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis) -> list[tuple[float, float, str]]:
