@@ -39,6 +39,13 @@ from src.run.archive.schema import (
     artifact_envelope,
     build_manifest,
 )
+from src.run.archive.completion import (
+    PIPELINE_STATUS_COMPLETE,
+    PIPELINE_STATUS_FAILED,
+    PIPELINE_STATUS_PARTIAL,
+    assert_pipeline_replay_ready,
+)
+from src.data.fetcher import format_utc8
 from src.log import get_logger
 
 log = get_logger(__name__)
@@ -82,11 +89,13 @@ def inspect_run_archive(run_id: str) -> Any:
 
 
 def _archive_row_from_path(run_id: str, path: Path) -> dict[str, Any] | None:
+    if not path.is_dir():
+        return None
+    if not (path / "manifest.json").is_file() and not (path / "meta.json").is_file():
+        return None
     try:
         inspection = inspect_archive(run_id, path)
     except (OSError, json.JSONDecodeError, ValueError):
-        return None
-    if not inspection.loadable:
         return None
     manifest = inspection.manifest
     summary = manifest.get("summary") or {}
@@ -96,6 +105,8 @@ def _archive_row_from_path(run_id: str, path: Path) -> dict[str, Any] | None:
         "schema_version": inspection.schema_version,
         "compatibility": inspection.level.value,
         "compatibility_warnings": inspection.warnings,
+        "pipeline_status": summary.get("pipeline_status"),
+        "replayable": inspection.replayable,
         "current_price": summary.get("current_price"),
         "bars_summary": summary.get("bars_summary") or {},
         "run_config": manifest.get("run_config") or {},
@@ -149,17 +160,24 @@ def archives_exist() -> bool:
 
 def archive_label(meta: dict[str, Any]) -> str:
     run_id = str(meta.get("run_id") or "—")
-    saved_at = str(meta.get("saved_at") or run_id)[:19].replace("T", " ")
+    saved_at = format_utc8(meta.get("saved_at") or run_id)
     mode = str((meta.get("run_config") or {}).get("agent_mode") or "—")
     price = meta.get("current_price")
     price_text = f"{float(price):.2f}" if isinstance(price, (int, float)) else "—"
     bars = meta.get("bars_summary") or {}
     bar_5m = bars.get("5m", "—")
     compat = str(meta.get("compatibility") or "")
+    pipeline_status = str(meta.get("pipeline_status") or "")
     tag = ""
-    if compat == "degraded":
+    if pipeline_status == PIPELINE_STATUS_PARTIAL:
+        tag = " · ⚠中断"
+    elif pipeline_status == PIPELINE_STATUS_FAILED:
+        tag = " · ❌失败"
+    elif compat == "degraded":
         tag = " · ⚠兼容降级"
-    return f"{saved_at} UTC · {mode} · {price_text} · 5m {bar_5m}根{tag}"
+    elif meta.get("replayable") is False and pipeline_status == PIPELINE_STATUS_COMPLETE:
+        tag = " · ⚠不可回放"
+    return f"{saved_at} · {mode} · {price_text} · 5m {bar_5m}根{tag}"
 
 
 def _ts_to_str(value: Any) -> str:
@@ -495,6 +513,9 @@ def load_bundle(run_id: str) -> tuple[dict[str, Any], dict[str, pd.DataFrame], d
     report["meta"]["viewing_replay_saved_at"] = manifest.get("saved_at")
     report["meta"]["archive_schema_version"] = inspection.schema_version
     report["meta"]["archive_compatibility"] = inspection.level.value
+    report["meta"]["archive_pipeline_status"] = (manifest.get("summary") or {}).get("pipeline_status")
+    report["meta"]["archive_replayable"] = inspection.replayable
+    report["meta"]["archived_producer_build"] = (manifest.get("producer") or {}).get("build")
     if load_warnings:
         report["meta"]["archive_replay_warnings"] = load_warnings
         log.warning(
@@ -513,27 +534,95 @@ def load_archive_5m_bars(run_id: str) -> pd.DataFrame:
     return fetched.raw["5m"]
 
 
-def archive_run(
+def _failure_payload(reason: str, *, step: str | None = None) -> dict[str, Any]:
+    return {
+        "reason": reason,
+        "step": step or "",
+        "saved_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def _stub_failure_report(
+    *,
+    run_config: RunConfig,
+    reason: str,
+    generation_steps: list[dict] | None = None,
+    llm_io: list[dict] | None = None,
+    current_price: float | None = None,
+) -> dict[str, Any]:
+    cfg = run_config.normalized()
+    metrics: dict[str, Any] = {}
+    if current_price is not None:
+        metrics["current_price"] = current_price
+    return {
+        "metrics": metrics,
+        "meta": {
+            "title": "流水线未完成 — 问题现场快照",
+            "updated_at": format_utc8(datetime.now(timezone.utc).isoformat()),
+            "agent_mode": cfg.agent_mode,
+            "run_config": cfg.to_dict(),
+            "run_config_fingerprint": cfg.fingerprint(),
+            "pipeline_status": PIPELINE_STATUS_FAILED,
+            "failure_reason": reason,
+            "generation_steps": generation_steps or [],
+            "llm_io": llm_io or [],
+        },
+    }
+
+
+def _persist_archive_folder(
     run_id: str,
     *,
-    fetched: DataFetchResult,
-    report: dict[str, Any],
-    enriched: dict[str, pd.DataFrame],
-    analyses: dict[str, TimeframeAnalysis],
     run_config: RunConfig,
-    elapsed_s: float,
+    summary: dict[str, Any],
+    report: dict[str, Any],
+    fetched: DataFetchResult | None = None,
+    enriched: dict[str, pd.DataFrame] | None = None,
+    analyses: dict[str, TimeframeAnalysis] | None = None,
+    failure: dict[str, Any] | None = None,
 ) -> Path:
     target = run_dir(run_id)
     target.mkdir(parents=True, exist_ok=True)
     saved_at = datetime.now(timezone.utc).isoformat()
     cfg = run_config.normalized()
-    summary = {
-        "source_label": fetched.source_label,
-        "current_price": report.get("metrics", {}).get("current_price"),
-        "bars_summary": fetched.bars_summary,
-        "elapsed_s": round(elapsed_s, 3),
-        "observation_mode": report.get("meta", {}).get("observation_mode"),
-    }
+
+    if fetched is not None:
+        (target / "fetch.json").write_text(
+            json.dumps(_fetch_payload(fetched), ensure_ascii=False),
+            encoding="utf-8",
+        )
+    (target / "report.json").write_text(
+        json.dumps(_sanitize_json(report), ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    if analyses:
+        analyses_body = {tf: encode_analysis(row) for tf, row in analyses.items()}
+        (target / "analyses.json").write_text(
+            json.dumps(
+                artifact_envelope(kind="analysis", artifact_version=ARTIFACT_ANALYSIS, payload=analyses_body),
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+    if enriched:
+        enriched_dir = target / "enriched"
+        enriched_dir.mkdir(exist_ok=True)
+        for tf, df in enriched.items():
+            frame_body = _frame_to_json(df)
+            (enriched_dir / f"{tf}.json").write_text(
+                json.dumps(
+                    artifact_envelope(kind="frame", artifact_version=ARTIFACT_FRAME, payload=frame_body),
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+    if failure:
+        (target / "failure.json").write_text(
+            json.dumps(_sanitize_json(failure), ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+
+    pipeline_status = str(summary.get("pipeline_status") or PIPELINE_STATUS_COMPLETE)
     manifest = build_manifest(
         run_id=run_id,
         saved_at=saved_at,
@@ -550,44 +639,21 @@ def archive_run(
         "saved_at": saved_at,
         "run_config": cfg.to_dict(),
         "run_config_fingerprint": cfg.fingerprint(),
+        "pipeline_status": pipeline_status,
         **summary,
     }
     (target / "meta.json").write_text(
         json.dumps(_sanitize_json(meta), ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    (target / "fetch.json").write_text(
-        json.dumps(_fetch_payload(fetched), ensure_ascii=False),
-        encoding="utf-8",
-    )
-    (target / "report.json").write_text(
-        json.dumps(_sanitize_json(report), ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
-    analyses_body = {tf: encode_analysis(row) for tf, row in analyses.items()}
-    (target / "analyses.json").write_text(
-        json.dumps(
-            artifact_envelope(kind="analysis", artifact_version=ARTIFACT_ANALYSIS, payload=analyses_body),
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
-    enriched_dir = target / "enriched"
-    enriched_dir.mkdir(exist_ok=True)
-    for tf, df in enriched.items():
-        frame_body = _frame_to_json(df)
-        (enriched_dir / f"{tf}.json").write_text(
-            json.dumps(
-                artifact_envelope(kind="frame", artifact_version=ARTIFACT_FRAME, payload=frame_body),
-                ensure_ascii=False,
-            ),
-            encoding="utf-8",
-        )
+    inspection = inspect_archive(run_id, target)
     index_row = {
         "run_id": run_id,
         "saved_at": saved_at,
         "schema_version": SCHEMA_VERSION,
-        "compatibility": "compatible",
+        "compatibility": inspection.level.value,
+        "pipeline_status": pipeline_status,
+        "replayable": inspection.replayable,
         "current_price": summary.get("current_price"),
         "bars_summary": summary.get("bars_summary") or {},
         "run_config": cfg.to_dict(),
@@ -597,5 +663,174 @@ def archive_run(
     upsert_index_entry(archives_root(), index_row)
     all_rows = list_archives(limit=10000)
     prune_archives(archives_root(), all_rows)
-    log.info("run archived id=%s schema=v%s path=%s", run_id, SCHEMA_VERSION, target)
+    log.info(
+        "run archived id=%s schema=v%s status=%s replayable=%s path=%s",
+        run_id,
+        SCHEMA_VERSION,
+        pipeline_status,
+        inspection.replayable,
+        target,
+    )
     return target
+
+
+def archive_failure_run(
+    run_id: str,
+    reason: str,
+    *,
+    run_config: RunConfig,
+    elapsed_s: float,
+    fetched: DataFetchResult | None = None,
+    enriched: dict[str, pd.DataFrame] | None = None,
+    analyses: dict[str, TimeframeAnalysis] | None = None,
+    report: dict[str, Any] | None = None,
+    failure_step: str | None = None,
+) -> Path | None:
+    """Persist a partial/failed run for forensics (not full replay)."""
+    target = run_dir(run_id)
+    if target.exists():
+        try:
+            existing = load_archive_meta(run_id)
+            if str(existing.get("pipeline_status") or "") == PIPELINE_STATUS_COMPLETE:
+                return target
+        except (OSError, json.JSONDecodeError, ValueError):
+            pass
+
+    from src.core.progress import get_progress
+
+    prog = get_progress()
+    steps = prog.snapshot()
+    llm_io = prog.llm_io_snapshot()
+    running = [s for s in steps if str(s.get("status") or "") == "running"]
+    status = PIPELINE_STATUS_PARTIAL if running else PIPELINE_STATUS_FAILED
+
+    if report is None:
+        price = None
+        if fetched is not None and fetched.raw.get("5m") is not None and not fetched.raw["5m"].empty:
+            price = float(fetched.raw["5m"]["Close"].iloc[-1])
+        report = _stub_failure_report(
+            run_config=run_config,
+            reason=reason,
+            generation_steps=steps,
+            llm_io=llm_io,
+            current_price=price,
+        )
+    else:
+        report.setdefault("meta", {})
+        report["meta"]["failure_reason"] = reason
+        report["meta"]["pipeline_status"] = status
+        if not report["meta"].get("generation_steps"):
+            report["meta"]["generation_steps"] = steps
+        if not report["meta"].get("llm_io"):
+            report["meta"]["llm_io"] = llm_io
+
+    summary = {
+        "source_label": fetched.source_label if fetched else None,
+        "current_price": report.get("metrics", {}).get("current_price"),
+        "bars_summary": fetched.bars_summary if fetched else {},
+        "elapsed_s": round(elapsed_s, 3),
+        "observation_mode": report.get("meta", {}).get("observation_mode"),
+        "pipeline_status": status,
+        "failure_reason": reason,
+        "failure_step": failure_step or (running[0].get("id") if running else ""),
+    }
+    return _persist_archive_folder(
+        run_id,
+        run_config=run_config,
+        summary=summary,
+        report=report,
+        fetched=fetched,
+        enriched=enriched or None,
+        analyses=analyses or None,
+        failure=_failure_payload(reason, step=failure_step),
+    )
+
+
+def load_forensic_bundle(
+    run_id: str,
+) -> tuple[dict[str, Any], dict[str, pd.DataFrame], dict[str, TimeframeAnalysis]]:
+    """Load a partial/failed archive for problem-scene review (not full chart replay)."""
+    directory = run_dir(run_id)
+    if not directory.is_dir():
+        raise FileNotFoundError(f"run archive not found: {run_id}")
+
+    inspection = inspect_archive(run_id, directory)
+    manifest = upgrade_manifest_if_needed(inspection.manifest, run_id, directory)
+    summary = manifest.get("summary") or {}
+
+    report: dict[str, Any]
+    report_warnings: list[str] = []
+    try:
+        report_raw = load_report(run_id)
+        contract_version = int((manifest.get("replay") or {}).get("report_contract_version") or 1)
+        report, report_warnings = normalize_report(report_raw, contract_version=contract_version)
+    except FileNotFoundError:
+        failure_path = directory / "failure.json"
+        reason = "unknown failure"
+        if failure_path.is_file():
+            failure = json.loads(failure_path.read_text(encoding="utf-8"))
+            reason = str(failure.get("reason") or reason)
+        cfg_dict = manifest.get("run_config") if isinstance(manifest.get("run_config"), dict) else {}
+        stub_cfg = RunConfig.from_dict(cfg_dict)
+        report, report_warnings = normalize_report(
+            _stub_failure_report(run_config=stub_cfg, reason=reason),
+            contract_version=1,
+        )
+
+    load_warnings = list(inspection.warnings) + report_warnings
+    try:
+        enriched = load_enriched(run_id)
+    except (FileNotFoundError, ValueError):
+        enriched = {}
+        load_warnings.append("enriched bars unavailable — charts may be empty")
+    try:
+        analyses = load_analyses(run_id, enriched) if enriched else {}
+    except (FileNotFoundError, ValueError):
+        analyses = {}
+
+    report.setdefault("meta", {})
+    report["meta"]["viewing_replay"] = True
+    report["meta"]["viewing_replay_forensic"] = True
+    report["meta"]["viewing_replay_run_id"] = run_id
+    report["meta"]["viewing_replay_saved_at"] = manifest.get("saved_at")
+    report["meta"]["archive_schema_version"] = inspection.schema_version
+    report["meta"]["archive_compatibility"] = inspection.level.value
+    report["meta"]["archive_pipeline_status"] = summary.get("pipeline_status")
+    report["meta"]["archive_replayable"] = inspection.replayable
+    report["meta"]["archived_producer_build"] = (manifest.get("producer") or {}).get("build")
+    if summary.get("failure_reason"):
+        report["meta"]["failure_reason"] = summary.get("failure_reason")
+    if load_warnings:
+        report["meta"]["archive_replay_warnings"] = load_warnings
+    return report, enriched, analyses
+
+
+def archive_run(
+    run_id: str,
+    *,
+    fetched: DataFetchResult,
+    report: dict[str, Any],
+    enriched: dict[str, pd.DataFrame],
+    analyses: dict[str, TimeframeAnalysis],
+    run_config: RunConfig,
+    elapsed_s: float,
+) -> Path:
+    assert_pipeline_replay_ready(report)
+    cfg = run_config.normalized()
+    summary = {
+        "source_label": fetched.source_label,
+        "current_price": report.get("metrics", {}).get("current_price"),
+        "bars_summary": fetched.bars_summary,
+        "elapsed_s": round(elapsed_s, 3),
+        "observation_mode": report.get("meta", {}).get("observation_mode"),
+        "pipeline_status": PIPELINE_STATUS_COMPLETE,
+    }
+    return _persist_archive_folder(
+        run_id,
+        run_config=cfg,
+        summary=summary,
+        report=report,
+        fetched=fetched,
+        enriched=enriched,
+        analyses=analyses,
+    )

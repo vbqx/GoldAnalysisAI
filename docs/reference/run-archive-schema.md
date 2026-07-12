@@ -29,7 +29,11 @@ Each pipeline run is stored under `.cache/run_archives/<run_id>/`.
 
 ## Producer
 
-New runs write `manifest.json` first, then artifacts. See `src/run/archive/schema.py`.
+New runs write artifacts first, then `manifest.json` last with `summary.pipeline_status: complete`.
+Only runs whose `meta.generation_steps` are all terminal (`done` / `skipped` / `error`) are archived and replayable.
+Interrupted writes without a final manifest are not listed for replay.
+
+See `src/run/archive/schema.py` and `src/run/archive/completion.py`.
 
 ## Changing this contract
 

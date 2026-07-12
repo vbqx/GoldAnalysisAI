@@ -14,6 +14,9 @@ from src.data.run_archive_index import list_index_entries
 from src.data.run_archive_prune import prune_archives
 
 
+from tests._archive_helpers import report_for_archive
+
+
 def _minimal_archive(tmp_path, monkeypatch, *, run_id: str | None = None) -> str:
     monkeypatch.setattr("src.run.archive.store.archives_root", lambda: tmp_path)
     run_id = run_id or allocate_run_id()
@@ -27,7 +30,7 @@ def _minimal_archive(tmp_path, monkeypatch, *, run_id: str | None = None) -> str
     archive_run(
         run_id,
         fetched=fetched,
-        report={"metrics": {"current_price": 2650.0}, "meta": {}},
+        report=report_for_archive(),
         enriched={"5m": df},
         analyses={"5m": analyze_timeframe(df, "5m")},
         run_config=run_config_for_mode("rule"),

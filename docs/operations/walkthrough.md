@@ -47,8 +47,8 @@ flowchart LR
 生成开始后：
 
 1. 页面显示 **「正在生成报告…」** 及进度
-2. 步骤条按 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative`）
-   中文含义：数据拉取 → 技术指标 → ICT 结构 → 分析师团队 → 看多/看空 → 辩论 → 交易 → 风控 → 经理 → 报告 →（可选）LLM 文案
+2. 步骤条按 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative` → `archive`）
+   中文含义：数据拉取 → 技术指标 → ICT 结构 → 分析师团队 → 看多/看空 → 辩论 → 交易 → 风控 → 经理 → 报告 →（可选）LLM 文案 → **运行归档**
 3. 生成过程中可切换到 **LLM决策链** 页，打开 Tab **「生成与 LLM I/O」** — 顶部 **「LLM 实时推理」** 会随 chunk 刷新（约 400ms）；机构报告页等待时同样可见
 4. 完成后渲染机构报告，主图为 **5 分钟 K 线**（叠加近位 5 个 Internal OB 与可见范围 active FVG；远位多周期结构在关键流动性/市场总览；路径推演见底栏）
 
@@ -58,6 +58,21 @@ flowchart LR
 |------|----------|
 | `AGENT_MODE=rule`，未启用 LLM | 约 30 秒～2 分钟（视 TradingView 网络） |
 | `AGENT_MODE=hybrid` 且全开 LLM | 约 5～6 分钟 |
+| `AGENT_MODE=llm` 且全开 LLM + 报告文案 | 约 5～8 分钟（视模型与网络） |
+
+超时与重试见 [llm-agents.md §3.4](../architecture/llm-agents.md#34-传输重试与规则兜底)（`LLM_READ_TIMEOUT`、`LLM_MAX_RETRIES` 等）。
+
+### 历史回放（0 token）
+
+完成任意一次生成后，配置面板会出现 **历史回放** 区块：
+
+1. 勾选 **回放模式（0 token · 不重跑 LLM · 即时加载已保存报告）**
+2. 在下拉框选择一条历史记录
+3. 点击 **加载历史回放**
+
+行为：直接读取 `.cache/run_archives/<run_id>/` 中的 `report.json` + 图表数据，**不拉 TradingView、不调用 LLM**。适合复盘某次完整 LLM 结果或对比不同模式输出。
+
+CLI 校验：`python scripts/inspect_archive.py list|validate <run_id>`
 
 ---
 
@@ -194,7 +209,7 @@ sequenceDiagram
 - [ ] `meta.stage_sources` 与顶栏来源条一致
 - [ ] 切换「外部数据」页在 fetch 完成后展示新闻/日历（无需等完整报告）
 - [ ] 切换「短线策略」页在 2 秒内打开（缓存生效）
-- [ ] 饼图/信号区有 **非回测** 相关说明（见 financial-review FIN-UI-01）
+- [ ] 饼图/信号区有 **非回测** 相关说明（见 [findings-status.md](../reviews/findings-status.md) FIN-UI-01）
 
 ---
 

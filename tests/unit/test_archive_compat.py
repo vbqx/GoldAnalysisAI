@@ -14,6 +14,7 @@ from src.run.archive.compat import (
     synthesize_manifest_from_legacy,
     upgrade_manifest_if_needed,
 )
+from src.run.archive.completion import pipeline_replay_errors
 from src.run.archive.schema import (
     ARTIFACT_FETCH,
     CompatibilityLevel,
@@ -93,3 +94,57 @@ def test_migrate_fetch_payload_warns_on_newer_version(caplog) -> None:
     with caplog.at_level("WARNING"):
         result = migrate_fetch_payload(wrapped)
     assert result == payload
+
+
+def test_inspect_archive_rejects_partial_pipeline_status(tmp_path: Path) -> None:
+    folder = tmp_path / "partial-run"
+    folder.mkdir()
+    enriched = folder / "enriched"
+    enriched.mkdir()
+    (enriched / "5m.json").write_text("{}", encoding="utf-8")
+    (folder / "report.json").write_text(
+        json.dumps(
+            {
+                "metrics": {"current_price": 2650.0},
+                "meta": {
+                    "generation_steps": [
+                        {"id": "fetch", "status": "done"},
+                        {"id": "trader", "status": "running"},
+                    ]
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (folder / "manifest.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 2,
+                "run_id": "partial-run",
+                "saved_at": "2026-01-01T00:00:00+00:00",
+                "summary": {"pipeline_status": "partial"},
+                "artifacts": {
+                    "report": {"path": "report.json"},
+                    "enriched": {"dir": "enriched"},
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    inspection = inspect_archive("partial-run", folder)
+    assert inspection.level == CompatibilityLevel.INCOMPATIBLE
+    assert not inspection.loadable
+    assert any("partial" in err for err in inspection.errors)
+
+
+def test_pipeline_replay_errors_flags_running_step() -> None:
+    report = {
+        "meta": {
+            "generation_steps": [
+                {"id": "fetch", "status": "done"},
+                {"id": "trader", "status": "running"},
+            ]
+        }
+    }
+    errors = pipeline_replay_errors(report, manifest={"summary": {"pipeline_status": "complete"}})
+    assert any("trader" in err for err in errors)

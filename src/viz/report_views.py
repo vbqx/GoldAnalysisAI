@@ -5,6 +5,8 @@ from __future__ import annotations
 import streamlit as st
 
 from src.config import TV_EXCHANGE, TV_SYMBOL, WATERMARK_TEXT
+from src.data.fetcher import format_utc8
+from src.viz.archive_config_summary import format_archived_run_config, pipeline_status_label
 from src.viz.charts import build_sentiment_donut
 from src.viz.dashboard_components import (
     render_bottom_row,
@@ -75,6 +77,32 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
     meta = report["meta"]
     conclusion = report["conclusion"]
     narratives = report.get("narrative_sections") or {}
+
+    if meta.get("viewing_replay"):
+        saved_at = format_utc8(meta.get("viewing_replay_saved_at"))
+        run_id = meta.get("viewing_replay_run_id") or "—"
+        compat = meta.get("archive_compatibility") or "compatible"
+        status = meta.get("archive_pipeline_status") or meta.get("pipeline_status") or "complete"
+        forensic = bool(meta.get("viewing_replay_forensic"))
+        if forensic or status in ("partial", "failed"):
+            msg = (
+                f"问题现场 · 记录 `{run_id}` · 保存于 {saved_at} · "
+                f"状态 {pipeline_status_label(status)} · 流水线未完成，优先查看「LLM 决策链」页。"
+            )
+            st.warning(msg)
+        else:
+            msg = f"历史回放 · 记录 `{run_id}` · 保存于 {saved_at} · 以下为当时完整结果，未重新生成。"
+            if compat == "degraded":
+                msg += "（兼容降级：部分字段已用默认值补齐）"
+            st.info(msg)
+        cfg_line = format_archived_run_config(meta.get("run_config"))
+        fingerprint = meta.get("run_config_fingerprint") or "—"
+        build = meta.get("archived_producer_build") or "—"
+        st.caption(f"{cfg_line} · 配置指纹 `{fingerprint}` · build `{build}`")
+        if reason := meta.get("failure_reason"):
+            st.caption(f"失败原因：{reason}")
+        for warning in meta.get("archive_replay_warnings") or []:
+            st.caption(f"归档兼容提示：{warning}")
 
     if not hide_title:
         st.markdown(f'<p class="report-title">{meta["title"]}</p>', unsafe_allow_html=True)
@@ -175,7 +203,7 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
         )
     with plan_col:
         st.markdown('<p class="section-h tight">交易计划</p>', unsafe_allow_html=True)
-        st.markdown(render_trading_plans(report["signals"]), unsafe_allow_html=True)
+        st.markdown(render_trading_plans(report["signals"], meta=report.get("meta")), unsafe_allow_html=True)
 
     st.markdown(render_bottom_row(report, conclusion), unsafe_allow_html=True)
     st.markdown(render_footer(report), unsafe_allow_html=True)

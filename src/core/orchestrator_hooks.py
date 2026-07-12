@@ -13,7 +13,10 @@ log = get_logger(__name__)
 
 
 def begin_pipeline_run() -> tuple[str, float]:
+    from src.run.pipeline_run import set_current_run_id
+
     run_id = allocate_run_id()
+    set_current_run_id(run_id)
     log.info("pipeline start run_id=%s", run_id)
     return run_id, time.perf_counter()
 

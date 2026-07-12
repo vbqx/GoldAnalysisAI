@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pandas as pd
 import pytest
 
@@ -23,6 +25,8 @@ from src.data.run_archive import (
     load_report,
     run_dir,
 )
+
+from tests._archive_helpers import report_for_archive
 
 
 def _sample_fetch() -> DataFetchResult:
@@ -82,11 +86,8 @@ def test_archive_roundtrip_and_load_bundle(tmp_path, monkeypatch) -> None:
     fetched = _sample_fetch()
     enriched = {"5m": fetched.raw["5m"]}
     analyses = {"5m": analyze_timeframe(enriched["5m"], "5m")}
-    report = {
-        "metrics": {"current_price": 2650.0},
-        "meta": {"agent_mode": "llm"},
-        "llm_analysis": {"enabled": True, "market_summary": "测试"},
-    }
+    report = report_for_archive(agent_mode="llm")
+    report["llm_analysis"] = {"enabled": True, "market_summary": "测试"}
     archive_run(
         run_id,
         fetched=fetched,
@@ -112,6 +113,27 @@ def test_archive_roundtrip_and_load_bundle(tmp_path, monkeypatch) -> None:
     assert load_report(run_id)["metrics"]["current_price"] == 2650.0
     assert (run_dir(run_id) / "analyses.json").is_file()
     assert (run_dir(run_id) / "manifest.json").is_file()
+    manifest = json.loads((run_dir(run_id) / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["summary"]["pipeline_status"] == "complete"
+
+
+def test_archive_run_rejects_incomplete_pipeline_report(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr("src.run.archive.store.archives_root", lambda: tmp_path)
+    run_id = allocate_run_id()
+    fetched = _sample_fetch()
+    enriched = {"5m": fetched.raw["5m"]}
+    report = report_for_archive()
+    report["meta"]["generation_steps"] = [{"id": "fetch", "status": "done"}, {"id": "trader", "status": "running"}]
+    with pytest.raises(ValueError, match="trader"):
+        archive_run(
+            run_id,
+            fetched=fetched,
+            report=report,
+            enriched=enriched,
+            analyses={"5m": analyze_timeframe(enriched["5m"], "5m")},
+            run_config=run_config_for_mode("rule"),
+            elapsed_s=1.0,
+        )
 
 
 def test_load_analyses_rebuilds_when_missing(tmp_path, monkeypatch) -> None:
@@ -119,7 +141,7 @@ def test_load_analyses_rebuilds_when_missing(tmp_path, monkeypatch) -> None:
     run_id = allocate_run_id()
     fetched = _sample_fetch()
     enriched = {"5m": fetched.raw["5m"]}
-    report = {"metrics": {"current_price": 2650.0}, "meta": {}}
+    report = report_for_archive()
     archive_run(
         run_id,
         fetched=fetched,
@@ -138,6 +160,24 @@ def test_replay_run_config_fingerprint() -> None:
     a = RunConfig(replay_mode=True, replay_run_id="20260712T074512Z").normalized()
     b = RunConfig(replay_mode=True, replay_run_id="20260712T080000Z").normalized()
     assert a.fingerprint() != b.fingerprint()
+
+
+def test_archive_label_uses_beijing_time() -> None:
+    from src.data.fetcher import format_utc8
+
+    assert format_utc8("2026-07-12T08:51:17+00:00") == "2026-07-12 16:51 (UTC+8)"
+    label = archive_label(
+        {
+            "run_id": "20260712T085117Z",
+            "saved_at": "2026-07-12T08:51:17+00:00",
+            "run_config": {"agent_mode": "llm"},
+            "current_price": 2650.0,
+            "bars_summary": {"5m": 100},
+        }
+    )
+    assert "16:51" in label
+    assert "UTC+8" in label
+    assert " UTC ·" not in label
 
 
 def test_load_missing_archive_raises(tmp_path, monkeypatch) -> None:
@@ -207,7 +247,7 @@ def test_inspect_marks_missing_analyses_degraded(tmp_path, monkeypatch) -> None:
     archive_run(
         run_id,
         fetched=fetched,
-        report={"metrics": {"current_price": 2650.0}, "meta": {}},
+        report=report_for_archive(),
         enriched=enriched,
         analyses={"5m": analyze_timeframe(enriched["5m"], "5m")},
         run_config=run_config_for_mode("rule"),

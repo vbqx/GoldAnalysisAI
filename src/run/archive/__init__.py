@@ -14,6 +14,7 @@ from src.run.archive.store import (
     ARCHIVE_VERSION,
     ARCHIVES_ROOT,
     allocate_run_id,
+    archive_failure_run,
     archive_label,
     archive_run,
     archives_exist,
@@ -28,9 +29,11 @@ from src.run.archive.store import (
     load_bundle,
     load_enriched,
     load_fetch,
+    load_forensic_bundle,
     load_report,
     run_dir,
 )
+from src.run.archive.transfer import export_archive_zip, import_archive_zip
 
 __all__ = [
     "ARCHIVE_VERSION",
@@ -41,6 +44,7 @@ __all__ = [
     "CompatibilityLevel",
     "SCHEMA_VERSION",
     "allocate_run_id",
+    "archive_failure_run",
     "archive_label",
     "archive_run",
     "archives_exist",
@@ -49,6 +53,8 @@ __all__ = [
     "build_manifest",
     "decode_analysis",
     "encode_analysis",
+    "export_archive_zip",
+    "import_archive_zip",
     "inspect_archive",
     "inspect_run_archive",
     "list_archives",
@@ -58,6 +64,7 @@ __all__ = [
     "load_bundle",
     "load_enriched",
     "load_fetch",
+    "load_forensic_bundle",
     "load_report",
     "normalize_report",
     "run_dir",

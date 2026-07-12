@@ -78,6 +78,7 @@ class ArchiveInspection:
     warnings: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
     manifest: dict[str, Any] = field(default_factory=dict)
+    replayable: bool = False
 
     @property
     def loadable(self) -> bool:

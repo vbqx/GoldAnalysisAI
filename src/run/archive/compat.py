@@ -21,6 +21,11 @@ from src.run.archive.schema import (
     build_manifest,
     unwrap_artifact,
 )
+from src.run.archive.completion import (
+    NON_REPLAY_STATUSES,
+    generation_step_statuses,
+    pipeline_replay_errors,
+)
 from src.log import get_logger
 
 log = get_logger(__name__)
@@ -98,13 +103,24 @@ def inspect_archive(run_id: str, directory: Path) -> ArchiveInspection:
         )
 
     artifacts = manifest.get("artifacts") or {}
+    summary_status = str((manifest.get("summary") or {}).get("pipeline_status") or "")
+    forensic_only = summary_status in NON_REPLAY_STATUSES
+
     report_path = directory / str((artifacts.get("report") or {}).get("path") or "report.json")
     if not report_path.is_file():
-        errors.append(f"missing required report artifact: {report_path.name}")
+        msg = f"missing required report artifact: {report_path.name}"
+        if forensic_only:
+            warnings.append(msg)
+        elif not (directory / "failure.json").is_file():
+            errors.append(msg)
 
     enriched_dir = directory / str((artifacts.get("enriched") or {}).get("dir") or "enriched")
     if not enriched_dir.is_dir() or not any(enriched_dir.glob("*.json")):
-        errors.append(f"missing or empty enriched artifact dir: {enriched_dir.name}")
+        msg = f"missing or empty enriched artifact dir: {enriched_dir.name}"
+        if forensic_only:
+            warnings.append(msg)
+        else:
+            errors.append(msg)
 
     analyses_path = directory / str((artifacts.get("analyses") or {}).get("path") or "analyses.json")
     if not analyses_path.is_file():
@@ -125,6 +141,29 @@ def inspect_archive(run_id: str, directory: Path) -> ArchiveInspection:
     if (manifest.get("legacy") or {}).get("migrated_on_read"):
         warnings.append("legacy archive layout — manifest synthesized on read")
 
+    if report_path.is_file():
+        try:
+            report = _read_json(report_path)
+            if isinstance(report, dict):
+                completion_errors = pipeline_replay_errors(report, manifest)
+                errors.extend(completion_errors)
+                if not completion_errors and not generation_step_statuses(report):
+                    summary_status = str((manifest.get("summary") or {}).get("pipeline_status") or "")
+                    if not summary_status:
+                        warnings.append(
+                            "generation_steps missing; legacy archive assumed complete"
+                        )
+        except (OSError, json.JSONDecodeError, TypeError) as exc:
+            errors.append(f"report.json unreadable: {exc}")
+            report = None
+    else:
+        report = None
+
+    replay_errors: list[str] = []
+    if isinstance(report, dict):
+        replay_errors = pipeline_replay_errors(report, manifest)
+    replayable = not replay_errors
+
     if errors:
         level = CompatibilityLevel.INCOMPATIBLE
     elif warnings:
@@ -139,6 +178,7 @@ def inspect_archive(run_id: str, directory: Path) -> ArchiveInspection:
         warnings=warnings,
         errors=errors,
         manifest=manifest,
+        replayable=replayable,
     )
 
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import threading
+import time
 
 from src.core.progress import ProgressReporter, reset_progress, set_progress
 from src.core.run_config import RunConfig
@@ -136,11 +137,14 @@ def start_generation(job_key: str, run_config: RunConfig, *, session_id: str) ->
 
         def worker() -> None:
             from src.data.fetcher import clear_cache
+            from src.run.archive.store import archive_failure_run
+            from src.run.pipeline_run import get_current_run_id, set_current_run_id
 
             reporter = ModuleSyncProgressReporter(job_key)
             cfg_token = set_run_config(run_config.normalized())
             prog_token = set_progress(reporter)
             active = access_job(job_key)
+            t0 = time.perf_counter()
             try:
                 clear_cache()
                 bundle = run_analysis()
@@ -156,11 +160,23 @@ def start_generation(job_key: str, run_config: RunConfig, *, session_id: str) ->
                 )
             except BaseException as exc:
                 log.exception("report generation failed job=%s", job_key)
+                run_id = get_current_run_id()
+                if run_id:
+                    try:
+                        archive_failure_run(
+                            run_id,
+                            format_generation_error(exc),
+                            run_config=run_config.normalized(),
+                            elapsed_s=time.perf_counter() - t0,
+                        )
+                    except Exception:
+                        log.exception("partial archive failed run_id=%s", run_id)
                 if active is not None:
                     active.error = exc
             finally:
                 reset_progress(prog_token)
                 reset_run_config(cfg_token)
+                set_current_run_id(None)
 
         thread = threading.Thread(target=worker, daemon=True, name=f"report-gen-{job_key[:8]}")
         job.thread = thread

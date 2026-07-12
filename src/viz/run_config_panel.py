@@ -111,6 +111,24 @@ _CORE_STAGE_WIDGET_KEYS = (
 )
 
 
+def _sync_stage_widgets_from_mode_preset() -> None:
+    """When advanced controls open, align stage/analyst widgets with the mode preset."""
+    mode_label = st.session_state.get("run_config_mode_label", "规则引擎")
+    mode = _MODE_LABEL_TO_VALUE.get(mode_label, "rule")
+    if mode == "rule":
+        return
+    narrative = bool(st.session_state.get("run_config_llm_narrative", True))
+    preset = run_config_for_mode(mode, llm_enabled=narrative)  # type: ignore[arg-type]
+    for key, value in run_config_widget_state(preset).items():
+        if key.startswith(("run_config_stage_", "run_config_llm_")):
+            st.session_state[key] = value
+
+
+def _on_advanced_toggle() -> None:
+    if st.session_state.get("run_config_advanced"):
+        _sync_stage_widgets_from_mode_preset()
+
+
 def _apply_mode_preset_to_widgets(mode: str) -> None:
     """When mode radio changes, re-seed LLM stage widgets from the mode preset."""
     preserve_replay = bool(st.session_state.get("run_config_replay_mode"))
@@ -273,10 +291,74 @@ def _render_replay_controls() -> None:
             format_func=lambda rid: options.get(rid, rid),
             key="run_config_replay_run_id",
         )
-        st.info("回放展示当时的报告、LLM 结果与图表，不会重新拉数或调用 LLM。")
-        st.caption(f"共 {len(archives)} 条 · `.cache/run_archives/`")
+        selected_id = str(st.session_state.get("run_config_replay_run_id") or "")
+        selected = next((row for row in archives if row.get("run_id") == selected_id), None)
+        if selected and not selected.get("replayable", True):
+            st.warning(
+                "所选记录为中断/失败快照，将加载**问题现场**（步骤、I/O、配置），"
+                "完整报告页可能不完整；请优先查看「LLM 决策链」。"
+            )
+        else:
+            st.info("回放展示当时的完整报告（流水线已全部跑完），不会重新拉数或调用 LLM。")
+        st.caption(f"共 {len(archives)} 条 · `.cache/run_archives/` · 可导出 zip 移植到其他机器")
+        _render_archive_transfer_controls(selected_id)
     else:
         st.caption(f"已有 {len(archives)} 条历史记录可选（0 token 回放）。")
+        _render_archive_import_only()
+
+
+def _render_archive_import_only() -> None:
+    uploaded = st.file_uploader(
+        "导入历史 zip 包（移植报告）",
+        type=["zip"],
+        key="run_config_import_archive_zip_idle",
+        help="从其他机器导出的 `.cache/run_archives/<run_id>/` zip 包。",
+    )
+    if uploaded is not None and st.button("导入 zip 到本地归档", key="run_config_import_archive_btn_idle"):
+        from src.run.archive.transfer import import_archive_zip
+
+        try:
+            run_id = import_archive_zip(uploaded.getvalue())
+            st.success(f"已导入 `{run_id}`，可勾选回放模式查看。")
+            st.rerun()
+        except Exception as exc:
+            st.error(str(exc))
+
+
+def _render_archive_transfer_controls(selected_id: str) -> None:
+    from src.run.archive.transfer import export_archive_zip, import_archive_zip
+
+    exp_col, imp_col = st.columns(2)
+    with exp_col:
+        if selected_id:
+            try:
+                payload = export_archive_zip(selected_id)
+                st.download_button(
+                    "导出所选 zip 包",
+                    data=payload,
+                    file_name=f"{selected_id}.zip",
+                    mime="application/zip",
+                    key=f"run_config_export_{selected_id}",
+                )
+            except FileNotFoundError:
+                st.caption("导出不可用：归档目录缺失")
+        else:
+            st.caption("选择记录后可导出 zip")
+    with imp_col:
+        uploaded = st.file_uploader(
+            "导入 zip 包",
+            type=["zip"],
+            key="run_config_import_archive_zip",
+            label_visibility="collapsed",
+        )
+        if uploaded is not None and st.button("导入 zip", key="run_config_import_archive_btn"):
+            try:
+                run_id = import_archive_zip(uploaded.getvalue())
+                st.session_state["run_config_replay_run_id"] = run_id
+                st.success(f"已导入 `{run_id}`")
+                st.rerun()
+            except Exception as exc:
+                st.error(str(exc))
 
 
 def _render_run_config_advanced_controls() -> None:
@@ -374,6 +456,7 @@ def render_run_config_panel() -> None:
         "高级调试",
         disabled=not needs_llm or replay_active,
         key="run_config_advanced",
+        on_change=_on_advanced_toggle,
         help="勾选后可分阶段、分 Analyst 控制 LLM 调用范围。",
     )
 
@@ -392,7 +475,19 @@ def render_run_config_panel() -> None:
     )
     replay_invalid = replay_active and not str(st.session_state.get("run_config_replay_run_id") or "").strip()
     start_disabled = ((needs_llm and not llm_ready) and not replay_active) or analyst_invalid or replay_invalid
-    start_label = "加载历史回放" if replay_active else "开始生成报告"
+    start_label = "开始生成报告"
+    if replay_active:
+        from src.run import inspect_run_archive
+
+        rid = str(st.session_state.get("run_config_replay_run_id") or "").strip()
+        if rid:
+            try:
+                replayable = inspect_run_archive(rid).replayable
+            except Exception:
+                replayable = True
+            start_label = "加载历史回放" if replayable else "加载问题现场"
+        else:
+            start_label = "加载历史回放"
     if st.button(start_label, type="primary", disabled=start_disabled):
         st.session_state[RUN_CONFIG_KEY] = config
         st.session_state[RUN_CONFIG_READY_KEY] = True
