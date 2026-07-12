@@ -54,7 +54,7 @@
 | `narrative_sections.py` | **机构文案五块** + LLM 校验合并 + `narrative_facts` | `report` | `narrative_sections` |
 | `report_engine.py` | 交易信号、结论、关键位、Fib、组装 `report` schema | `data` + `analyses` | `report` |
 | `dgt_price_action.py` | DGT 量价：S&R、放量、高波动、Volume Profile（POC/VAH/VAL） | OHLCV | `DgtPriceActionResult` |
-| `price_action_facts.py` | 报告级 `price_action` 汇总（5m Profile 用 5m 细拆） | `data` | `dict` |
+| `price_action_facts.py` | 报告级 `price_action` 汇总（5m Profile 用 5m 细拆；**session 锚定最新 1d open**） | `data` | `dict` |
 | `chart_zone_filters.py` | **主图**可见 K 线范围内的 Lux OB/FVG 裁剪 | `TimeframeAnalysis` + `plot_df` | 可见 zone 列表 |
 | `chart_sr_filters.py` | **主图**可见范围内的 DGT S/R 水平线 | `sr_levels` + `plot_df` | `priceLines` |
 | `proximity.py` | ATR/距离阈值（远位结构、流动性 context） | 价格 + ATR | `bool` |
@@ -80,6 +80,15 @@
 - `report["timeframes"]` = `build_tf_summaries()` → 内部调用 `build_tf_snapshot()`。
 - `technical_context.timeframes[]` = `timeframe_context()` → 同样基于 `build_tf_snapshot()`。
 - **禁止**在 UI/报告里再写一套平行的 BOS/OB 格式化逻辑；文案走 `narrative_sections.py`。
+
+### Session 量价（OANDA 交易时段）
+
+`price_action_facts.build_session_price_action_block()`：
+
+- 以 **最新 1d K 线 open** 为 session 起点（OANDA 约 21:00/22:00 UTC），**不得**用 UTC 自然日 00:00。
+- 取该 open 至当前末根 5m 的 bars 做 Volume Profile；聚合 H/L/C 须与最新 1d 线一致（容差内），否则丢弃 session block。
+- 非 `DatetimeIndex` 输入安全返回空（降级，不终止 Technical 链）。
+- 事实注册表 canonical id：`pa.session.poc` / `vah` / `val`（见 [report-trust.md](./report-trust.md)）。
 
 ### 文案单一路径（SMC + PA 组合）
 

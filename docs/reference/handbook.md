@@ -1,6 +1,6 @@
 # GoldAnalysisAI 开发参考手册
 
-本文件只保留代码级参考：调用链、模块职责、扩展点和调试入口。项目定位读 [project.md](../overview/project.md)，架构边界读 [architecture.md](../architecture/architecture.md) 与 [review.md](../architecture/review.md)（评审索引见 [reviews/README.md](../reviews/README.md)），测试策略读 [strategy.md](../testing/strategy.md)。
+本文件只保留代码级参考：调用链、模块职责、扩展点和调试入口。项目定位读 [project.md](../overview/project.md)，架构边界读 [architecture.md](../architecture/architecture.md)、[report-trust.md](../architecture/report-trust.md) 与 [review.md](../architecture/review.md)（评审索引见 [reviews/README.md](../reviews/README.md)），测试策略读 [strategy.md](../testing/strategy.md)。
 
 ## 入口
 
@@ -187,6 +187,7 @@ LOG_FILE=logs/goldanalysisai.log
 | [glossary.md](./glossary.md) | 术语表 |
 | [walkthrough.md](../operations/walkthrough.md) | UI 操作动线 |
 | [llm-agents.md](../architecture/llm-agents.md) | LLM 智能体设计 |
+| [report-trust.md](../architecture/report-trust.md) | 事实注册表、证据溯源、不变量、可靠度 |
 | [backtesting.md](../architecture/backtesting.md) | 回测边界 |
 | [strategy.md](../testing/strategy.md) | 测试策略 |
 

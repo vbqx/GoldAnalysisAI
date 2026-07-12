@@ -73,13 +73,26 @@ fetch_all_data()
 
 | 下游阶段 | Payload | 主输入 |
 |----------|---------|--------|
-| 看多/看空研究 | `research_payload(ctx, team, direction)` | `analyst_team` |
+| 看多/看空研究 | `research_payload(ctx, team, direction)` | `analyst_team` + **`allowed_evidence_ids`** |
 | 辩论 | `debate_payload(...)` | bull/bear evidence + analyst top items |
 | 交易员 | `trader_decision_payload(...)` | debate + analyst summaries + signals |
 | 点位提议 | `level_proposer_payload(...)` | analyst_team + `structure_context` |
 | 经理 | `manager_payload(...)` | proposal + risk reviews only |
 
 相关 env：`DEBATE_ANALYST_ITEMS_MAX`（默认 3）、`TRADER_DEBATE_NOTES_MAX`（默认 8）。设 `LLM_PAYLOAD_FUNNEL=false` 回退旧版全量 market 输入。
+
+## 证据溯源（Evidence Provenance）
+
+Analyst Team 每条 `EvidenceItem` 带稳定 **`evidence_id`**（`{agent}:{index}`）与 **`refs.source`**。进入 Research 时：
+
+1. `items_for_direction()` 保留 upstream id，写入 `refs.upstream_id`。
+2. LLM Research payload 列出 `allowed_evidence_ids`；parser **拒绝**缺失/未知 id（合法新增结构证据使用 `{researcher}:structure:{n}`）。
+3. LLM 若丢弃 `refs`，parser 从 analyst registry **恢复**原始 `source`。
+4. 重复 `evidence_id` 去重（保留最高 strength）。
+5. `AgentEvidence.provenance_meta` 记录覆盖率/来源多样性；`confidence` 为模型值与确定性值的混合。
+6. Debate 输出 `debate_meta`（多空证据平衡、共享 id 等）。
+
+完整契约与不变量见 [report-trust.md](./report-trust.md) §3。
 
 ## 可观测性
 

@@ -87,6 +87,11 @@ python scripts/export_sample_report.py
 | `authorized_position_scale` | 授权仓位系数（0–1，映射定性标签） |
 | `manager_decision` | 经理决策快照 |
 | `audit_summary` | 每轮运行紧凑审计块（供 Codex / 回归比对） |
+| `fact_registry` | 统一事实注册表（`fr-v2`）：价位/宏观/日历/时效等，含 `fact_count`、`conflict_fact_ids` |
+| `report_invariants` | 确定性跨板块校验：`passed`、`violations[]`（`INV-*` 错误码）、`gate_applied` |
+| `invariant_gate` | gate 处理结果：`remediated`、`remediations[]`、`violation_codes` |
+| `pipeline_status` | `complete`（可 replay）或 `degraded`（不变量失败，不可 replay） |
+| `report_reliability` | 启发式 `report_quality_score` 及分项（`calibration_status=heuristic`，非 LLM 胜率） |
 | `stage_sources.narrative_top_level` | 顶层 LLM 文案校验结果 |
 
 ---
@@ -157,7 +162,12 @@ python scripts/export_sample_report.py
   "debate": {
     "consensus_bias": "bearish",
     "consensus_strength": 0.65,
-    "discussion_notes": ["..."]
+    "discussion_notes": ["..."],
+    "debate_meta": {
+      "evidence_balance": 0.67,
+      "computed_consensus_strength": 0.58,
+      "shared_evidence_ids": []
+    }
   },
   "proposal": { "primary_direction": "short", "signal_indices": [0] },
   "risk_reviews": [ { "profile": "conservative", "approved": true } ],
@@ -170,7 +180,32 @@ python scripts/export_sample_report.py
 在「LLM决策链」页 **智能体决策** 标签页中可视化。
 `decision.action` 常见值：`execute`（执行）、`reduce`（减仓）、`wait`（观望）。
 
+Research 侧 `bullish` / `bearish` 条目含 `provenance_meta`（上游覆盖率、来源多样性、确定性置信分量）及带 `evidence_id` + `refs` 的 `items`。详见 [report-trust.md](../../architecture/report-trust.md)。
+
 `agent_trace.llm_levels` 与 `agent_trace.validated_plans` 是决策链页展示 LLM 点位建议和确定性校验结果的审计字段；顶层 `llm_levels` / `validated_plans` 保留同一批数据，便于导出和回放。
+
+---
+
+## `meta.fact_registry` — 统一事实层
+
+归档前由 `build_fact_registry(report)` 写入。单条事实含 `fact_id`、`value`、`value_type`（`numeric`|`text`）、`as_of`、`source`、`timeframe`、`calculation_version`、`quality`。
+
+- 价位类可通过 `price_index` 反查 `fact_id`。
+- Session 量价使用 `pa.session.poc` 等 canonical id（非 UTC 自然日切片）。
+- 冲突事实出现在 `conflict_fact_ids`，并可能触发 `report_invariants` 的 `INV-FACT-001`。
+
+---
+
+## `meta.report_invariants` / `meta.report_reliability`
+
+| 字段 | 说明 |
+|------|------|
+| `report_invariants.passed` | 是否通过全部确定性不变量 |
+| `report_invariants.violations` | `{code, field, message}` 列表（如 `INV-GEO-003`） |
+| `report_reliability.overall_reliability` | UI 主展示可靠度（0–1） |
+| `report_reliability.model_self_reported_confidence` | LLM 自报值，**非胜率** |
+
+完整规则见 [report-trust.md](../../architecture/report-trust.md)。
 
 ---
 
@@ -180,11 +215,16 @@ python scripts/export_sample_report.py
 {
   "dxy_impact": "偏强 → 利空黄金",
   "news_headlines": ["..."],
+  "headline_items": [
+    { "source": "jin10_flash", "time": "2026-07-12T14:30:00Z", "text": "..." }
+  ],
   "macro_quotes": [ { "name": "DXY", "close": 104.2, "bias": "bearish" } ],
   "sources": { "dxy": "tradingview", "news": "jin10_mcp" },
   "fetch_errors": []
 }
 ```
+
+`headline_items` 供事实注册表写入 `news.{i}.published_at`；编排器在 `orchestrator.py` 注入报告。
 
 | `sources` 取值 | 含义 |
 |----------------|------|

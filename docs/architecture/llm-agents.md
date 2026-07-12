@@ -178,6 +178,20 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 
 设 `LLM_PAYLOAD_FUNNEL=false` 可回退旧版（研究/交易员含 `market_payload`）。Analyst Team 的 `stage_io` 记录四位 specialist 实际输入（`analyst_team_input_payload`），而非泛化 `market_payload`。
 
+### 3.8 报告可信度层（2026-07）
+
+在叙事层与归档之间增加确定性门禁，详见 **[report-trust.md](./report-trust.md)**。与 LLM 链直接相关的变更：
+
+| 主题 | 行为 |
+|------|------|
+| **observation_mode** | `data_as_of.executable=false` 时跳过 LLM Levels/Trader/Risk |
+| **证据溯源** | Research parser 白名单校验 `evidence_id`；`AgentEvidence.provenance_meta` |
+| **fact_registry** | 叙事前构建；`llm/context.py` 传 `price_fact_id` + 紧凑 fact 索引 |
+| **叙事校验** | wait/观察模式下拒绝可执行措辞；失败字段在 `validate_llm_payload` 清空 |
+| **可靠度 UI** | 展示 `overall_reliability`，LLM confidence 仅作审计 |
+
+Research payload 额外包含 `allowed_evidence_ids`（Analyst 已有 ID 列表）。
+
 ---
 
 ## 4. 流式 I/O 与 UI

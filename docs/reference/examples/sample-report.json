@@ -1,11 +1,11 @@
 {
   "meta": {
     "symbol": "XAUUSD",
-    "title": "XAUUSD 黄金/美元 机构级交易分析报告 (LuxAlgo SMC)",
+    "title": "XAUUSD 黄金/美元 机构级交易分析报告 (SMC+PA)",
     "strategy_title": "XAUUSD 黄金 短线交易策略图",
-    "strategy_subtitle": "LuxAlgo SMC | 5min / 15min 简版执行策略",
-    "updated_at": "2026-07-12 17:41 (UTC+8)",
-    "methodology": "LuxAlgo Smart Money Concepts",
+    "strategy_subtitle": "SMC+PA | 5min / 15min 简版执行策略",
+    "updated_at": "2026-06-16 08:39 (UTC+8)",
+    "methodology": "SMC + PA",
     "indicator_notes": [
       "EMA610 仅基于 120 根 K 线，历史不足 610 根时与 TV 长周期 EMA 可能有偏差"
     ],
@@ -437,6 +437,23 @@
         ],
         "volume_ok": true
       }
+    },
+    "session": {
+      "timeframe": "session",
+      "lookback_bars": 1,
+      "volume_ok": true,
+      "volume_spike_count": 0,
+      "high_volatility_count": 0,
+      "sr_levels": [],
+      "volume_profile": {
+        "poc": 2658.53,
+        "vah": 2659.88,
+        "val": 2658.52,
+        "profile_high": 2660.52,
+        "profile_low": 2658.52,
+        "supply_demand_zones": [],
+        "volume_ok": true
+      }
     }
   },
   "liquidity": [
@@ -612,13 +629,13 @@
   },
   "narrative_sections": {
     "market_overview": {
-      "summary": "现价2659.52附近，日内主方向为偏多，现价在量价价值区上方。",
+      "summary": "现价2659.52附近，日内主方向为偏多，现价在量价价值区内。",
       "context": [
         "4H、1H、15m 量价价值区一致，当前以偏多路径为主。"
       ],
       "levels": [
-        "日内已走 2644.52-2671.52；量价 POC 2651.02，VA 2650.96-2657.52。",
-        "PA 入场区 2645.96-2650.96（贴近VAL/POC共振）。"
+        "日内已走 2644.52-2671.52；当日 POC 2658.53，VA 2658.52-2659.88。",
+        "PA 入场区 2645.96-2650.96。"
       ],
       "conditions": [
         "不追多，优先等待 2646-2651 反弹至阻力区做空"
@@ -631,9 +648,11 @@
     "liquidity": {
       "summary": "量价支撑阻力为主：先扫过关键线再收回，再谈反转。",
       "context": [
-        "5m 连续量价/放量衰竭/高波动线反映成交密集区；POC/VAH/VAL 定价值区。"
+        "日内连续量价/放量衰竭/高波动线反映成交密集区；POC/VAH/VAL 定价值区。"
       ],
-      "levels": [],
+      "levels": [
+        "日内 POC 2658.53，VA 2658.52-2659.88。"
+      ],
       "conditions": [
         "扫过上方最近量价位后跌回可观察空头；扫过下方最近量价位后收回可观察多头。"
       ],
@@ -693,10 +712,10 @@
     }
   },
   "market_overview": [
-    "现价2659.52附近，日内主方向为偏多，现价在量价价值区上方。",
+    "现价2659.52附近，日内主方向为偏多，现价在量价价值区内。",
     "4H、1H、15m 量价价值区一致，当前以偏多路径为主。",
-    "日内已走 2658.52-2660.52；量价 POC 2651.02，VA 2650.96-2657.52。",
-    "PA 入场区 2645.96-2650.96（贴近VAL/POC共振）。",
+    "日内已走 2658.52-2660.52；当日 POC 2658.53，VA 2658.52-2659.88。",
+    "PA 入场区 2645.96-2650.96。",
     "不追多，优先等待 2646-2651 反弹至阻力区做空",
     "主方向偏空，当前处于逆势反弹阶段"
   ],
@@ -720,7 +739,8 @@
             "refs": {
               "current_price": 2659.52,
               "daily_change_pct": 0.003
-            }
+            },
+            "evidence_id": "technical_analyst:0"
           },
           {
             "category": "market",
@@ -730,7 +750,8 @@
             "refs": {
               "daily_high": 2660.52,
               "daily_low": 2658.52
-            }
+            },
+            "evidence_id": "technical_analyst:1"
           },
           {
             "category": "market",
@@ -739,7 +760,8 @@
             "timeframe": "5m",
             "refs": {
               "EMA20": 2658.76
-            }
+            },
+            "evidence_id": "technical_analyst:2"
           },
           {
             "category": "market",
@@ -748,7 +770,8 @@
             "timeframe": "5m",
             "refs": {
               "EMA50": 2657.5768
-            }
+            },
+            "evidence_id": "technical_analyst:3"
           },
           {
             "category": "market",
@@ -757,42 +780,48 @@
             "timeframe": "5m",
             "refs": {
               "VWAP": 2654.76
-            }
+            },
+            "evidence_id": "technical_analyst:4"
           },
           {
             "category": "technical",
             "summary": "1d 结构趋势偏空",
             "strength": 0.2,
             "timeframe": "1d",
-            "refs": {}
+            "refs": {},
+            "evidence_id": "technical_analyst:5"
           },
           {
             "category": "technical",
             "summary": "4h 结构趋势偏空",
             "strength": 0.3,
             "timeframe": "4h",
-            "refs": {}
+            "refs": {},
+            "evidence_id": "technical_analyst:6"
           },
           {
             "category": "technical",
             "summary": "1h 结构趋势偏空",
             "strength": 0.25,
             "timeframe": "1h",
-            "refs": {}
+            "refs": {},
+            "evidence_id": "technical_analyst:7"
           },
           {
             "category": "technical",
             "summary": "15m 结构趋势偏空",
             "strength": 0.15,
             "timeframe": "15m",
-            "refs": {}
+            "refs": {},
+            "evidence_id": "technical_analyst:8"
           },
           {
             "category": "technical",
             "summary": "5m 结构趋势偏空",
             "strength": 0.1,
             "timeframe": "5m",
-            "refs": {}
+            "refs": {},
+            "evidence_id": "technical_analyst:9"
           },
           {
             "category": "technical",
@@ -801,7 +830,8 @@
             "timeframe": "5m",
             "refs": {
               "EMA20": "附近"
-            }
+            },
+            "evidence_id": "technical_analyst:10"
           },
           {
             "category": "technical",
@@ -810,7 +840,8 @@
             "timeframe": "5m",
             "refs": {
               "EMA50": "附近"
-            }
+            },
+            "evidence_id": "technical_analyst:11"
           },
           {
             "category": "technical",
@@ -819,7 +850,8 @@
             "timeframe": "5m",
             "refs": {
               "EMA610": "上方"
-            }
+            },
+            "evidence_id": "technical_analyst:12"
           },
           {
             "category": "technical",
@@ -828,7 +860,8 @@
             "timeframe": "5m",
             "refs": {
               "VWAP": "上方"
-            }
+            },
+            "evidence_id": "technical_analyst:13"
           },
           {
             "category": "technical",
@@ -837,7 +870,8 @@
             "timeframe": "1d",
             "refs": {
               "volume_signal": "正常 1.0x"
-            }
+            },
+            "evidence_id": "technical_analyst:14"
           },
           {
             "category": "technical",
@@ -850,7 +884,8 @@
               "dist_pct": 0.396,
               "strength": 0.72,
               "swept": false
-            }
+            },
+            "evidence_id": "technical_analyst:15"
           },
           {
             "category": "technical",
@@ -859,7 +894,8 @@
             "timeframe": "4h",
             "refs": {
               "volume_signal": "正常 1.0x"
-            }
+            },
+            "evidence_id": "technical_analyst:16"
           },
           {
             "category": "technical",
@@ -872,7 +908,8 @@
               "dist_pct": 0.396,
               "strength": 0.72,
               "swept": false
-            }
+            },
+            "evidence_id": "technical_analyst:17"
           },
           {
             "category": "technical",
@@ -881,7 +918,8 @@
             "timeframe": "1h",
             "refs": {
               "volume_signal": "正常 1.0x"
-            }
+            },
+            "evidence_id": "technical_analyst:18"
           },
           {
             "category": "technical",
@@ -894,7 +932,8 @@
               "dist_pct": 0.396,
               "strength": 0.72,
               "swept": false
-            }
+            },
+            "evidence_id": "technical_analyst:19"
           },
           {
             "category": "technical",
@@ -903,7 +942,8 @@
             "timeframe": "15m",
             "refs": {
               "volume_signal": "正常 1.0x"
-            }
+            },
+            "evidence_id": "technical_analyst:20"
           },
           {
             "category": "technical",
@@ -916,7 +956,8 @@
               "dist_pct": 0.396,
               "strength": 0.72,
               "swept": false
-            }
+            },
+            "evidence_id": "technical_analyst:21"
           },
           {
             "category": "technical",
@@ -925,7 +966,8 @@
             "timeframe": "5m",
             "refs": {
               "volume_signal": "正常 1.0x"
-            }
+            },
+            "evidence_id": "technical_analyst:22"
           },
           {
             "category": "technical",
@@ -938,7 +980,8 @@
               "dist_pct": 0.396,
               "strength": 0.72,
               "swept": false
-            }
+            },
+            "evidence_id": "technical_analyst:23"
           },
           {
             "category": "technical",
@@ -949,7 +992,8 @@
               "fibonacci": 0.5,
               "price": 2660.26,
               "dist_pct": -0.028
-            }
+            },
+            "evidence_id": "technical_analyst:24"
           },
           {
             "category": "technical",
@@ -960,7 +1004,8 @@
               "fibonacci": 0.382,
               "price": 2657.6,
               "dist_pct": 0.072
-            }
+            },
+            "evidence_id": "technical_analyst:25"
           },
           {
             "category": "technical",
@@ -971,7 +1016,8 @@
               "fibonacci": 0.618,
               "price": 2662.92,
               "dist_pct": -0.128
-            }
+            },
+            "evidence_id": "technical_analyst:26"
           },
           {
             "category": "technical",
@@ -982,7 +1028,8 @@
               "indicator": "RSI14",
               "value": 100.0,
               "bias": "bearish"
-            }
+            },
+            "evidence_id": "technical_analyst:27"
           },
           {
             "category": "technical",
@@ -992,7 +1039,8 @@
             "refs": {
               "indicator": "ADX14",
               "value": 100.0
-            }
+            },
+            "evidence_id": "technical_analyst:28"
           },
           {
             "category": "technical",
@@ -1003,7 +1051,8 @@
               "indicator": "MACD",
               "macd": 0.5599,
               "signal": 0.5598
-            }
+            },
+            "evidence_id": "technical_analyst:29"
           },
           {
             "category": "technical",
@@ -1014,7 +1063,8 @@
               "indicator": "ATR14",
               "value": 2.0,
               "atr_pct": 0.075
-            }
+            },
+            "evidence_id": "technical_analyst:30"
           },
           {
             "category": "technical",
@@ -1025,7 +1075,8 @@
               "indicator": "RSI14",
               "value": 100.0,
               "bias": "bearish"
-            }
+            },
+            "evidence_id": "technical_analyst:31"
           },
           {
             "category": "technical",
@@ -1035,7 +1086,8 @@
             "refs": {
               "indicator": "ADX14",
               "value": 100.0
-            }
+            },
+            "evidence_id": "technical_analyst:32"
           },
           {
             "category": "technical",
@@ -1046,7 +1098,8 @@
               "indicator": "MACD",
               "macd": 0.5599,
               "signal": 0.5598
-            }
+            },
+            "evidence_id": "technical_analyst:33"
           },
           {
             "category": "technical",
@@ -1057,7 +1110,8 @@
               "indicator": "ATR14",
               "value": 2.0,
               "atr_pct": 0.075
-            }
+            },
+            "evidence_id": "technical_analyst:34"
           },
           {
             "category": "technical",
@@ -1068,7 +1122,8 @@
               "indicator": "RSI14",
               "value": 100.0,
               "bias": "bearish"
-            }
+            },
+            "evidence_id": "technical_analyst:35"
           },
           {
             "category": "technical",
@@ -1078,7 +1133,8 @@
             "refs": {
               "indicator": "ADX14",
               "value": 100.0
-            }
+            },
+            "evidence_id": "technical_analyst:36"
           },
           {
             "category": "technical",
@@ -1089,7 +1145,8 @@
               "indicator": "MACD",
               "macd": 0.5599,
               "signal": 0.5598
-            }
+            },
+            "evidence_id": "technical_analyst:37"
           },
           {
             "category": "technical",
@@ -1100,7 +1157,8 @@
               "indicator": "ATR14",
               "value": 2.0,
               "atr_pct": 0.075
-            }
+            },
+            "evidence_id": "technical_analyst:38"
           },
           {
             "category": "technical",
@@ -1111,7 +1169,8 @@
               "indicator": "RSI14",
               "value": 100.0,
               "bias": "bearish"
-            }
+            },
+            "evidence_id": "technical_analyst:39"
           },
           {
             "category": "technical",
@@ -1121,7 +1180,8 @@
             "refs": {
               "indicator": "ADX14",
               "value": 100.0
-            }
+            },
+            "evidence_id": "technical_analyst:40"
           },
           {
             "category": "technical",
@@ -1132,7 +1192,8 @@
               "indicator": "MACD",
               "macd": 0.5599,
               "signal": 0.5598
-            }
+            },
+            "evidence_id": "technical_analyst:41"
           },
           {
             "category": "technical",
@@ -1143,7 +1204,8 @@
               "indicator": "ATR14",
               "value": 2.0,
               "atr_pct": 0.075
-            }
+            },
+            "evidence_id": "technical_analyst:42"
           },
           {
             "category": "technical",
@@ -1154,7 +1216,8 @@
               "indicator": "RSI14",
               "value": 100.0,
               "bias": "bearish"
-            }
+            },
+            "evidence_id": "technical_analyst:43"
           },
           {
             "category": "technical",
@@ -1164,7 +1227,8 @@
             "refs": {
               "indicator": "ADX14",
               "value": 100.0
-            }
+            },
+            "evidence_id": "technical_analyst:44"
           },
           {
             "category": "technical",
@@ -1175,7 +1239,8 @@
               "indicator": "MACD",
               "macd": 0.5599,
               "signal": 0.5598
-            }
+            },
+            "evidence_id": "technical_analyst:45"
           },
           {
             "category": "technical",
@@ -1186,7 +1251,8 @@
               "indicator": "ATR14",
               "value": 2.0,
               "atr_pct": 0.075
-            }
+            },
+            "evidence_id": "technical_analyst:46"
           },
           {
             "category": "technical",
@@ -1201,7 +1267,8 @@
               "timeframe": "4h",
               "strength": 0.7,
               "dist_pct": -0.128
-            }
+            },
+            "evidence_id": "technical_analyst:47"
           },
           {
             "category": "technical",
@@ -1216,7 +1283,8 @@
               "timeframe": "4h",
               "strength": 0.65,
               "dist_pct": 0.072
-            }
+            },
+            "evidence_id": "technical_analyst:48"
           },
           {
             "category": "technical",
@@ -1231,7 +1299,8 @@
               "timeframe": "4h",
               "strength": 0.55,
               "dist_pct": -0.028
-            }
+            },
+            "evidence_id": "technical_analyst:49"
           },
           {
             "category": "technical",
@@ -1242,7 +1311,8 @@
               "poc": 2651.02,
               "vah": 2657.52,
               "val": 2650.96
-            }
+            },
+            "evidence_id": "technical_analyst:50"
           }
         ],
         "confidence": 0.2288,
@@ -1265,7 +1335,8 @@
               "impact": "偏强 → 利空黄金",
               "bias": "bearish",
               "source": "tradingview"
-            }
+            },
+            "evidence_id": "fundamentals_analyst:0"
           },
           {
             "category": "fundamentals",
@@ -1280,7 +1351,8 @@
               "missing": [
                 "US10Y"
               ]
-            }
+            },
+            "evidence_id": "fundamentals_analyst:1"
           }
         ],
         "confidence": 0.475,
@@ -1299,7 +1371,8 @@
               "source": "jin10_flash",
               "time": "2026-06-15 10:30",
               "url": ""
-            }
+            },
+            "evidence_id": "news_analyst:0"
           },
           {
             "category": "news",
@@ -1308,7 +1381,8 @@
             "timeframe": null,
             "refs": {
               "source": "jin10_calendar"
-            }
+            },
+            "evidence_id": "news_analyst:1"
           },
           {
             "category": "news",
@@ -1321,7 +1395,8 @@
               "articles": 0,
               "calendar_events": 0,
               "is_live": false
-            }
+            },
+            "evidence_id": "news_analyst:2"
           }
         ],
         "confidence": 0.3842,
@@ -1340,7 +1415,8 @@
               "bullish": 0.0,
               "bearish": 100.0,
               "ranging": 0.0
-            }
+            },
+            "evidence_id": "sentiment_analyst:0"
           },
           {
             "category": "sentiment",
@@ -1349,7 +1425,8 @@
             "timeframe": null,
             "refs": {
               "source": "tradingview_social"
-            }
+            },
+            "evidence_id": "sentiment_analyst:1"
           }
         ],
         "confidence": 0.725,
@@ -1362,7 +1439,8 @@
         "direction": "bullish",
         "items": [],
         "confidence": 0.0,
-        "summary": "暂无明确看多结构证据"
+        "summary": "暂无明确看多结构证据",
+        "provenance_meta": {}
       },
       "bearish": {
         "agent": "bearish_researcher",
@@ -1375,7 +1453,8 @@
             "timeframe": "4h",
             "refs": {
               "trend": "bearish"
-            }
+            },
+            "evidence_id": null
           },
           {
             "category": "structure",
@@ -1384,7 +1463,8 @@
             "timeframe": "1h",
             "refs": {
               "trend": "bearish"
-            }
+            },
+            "evidence_id": null
           },
           {
             "category": "structure",
@@ -1393,7 +1473,8 @@
             "timeframe": "15m",
             "refs": {
               "trend": "bearish"
-            }
+            },
+            "evidence_id": null
           },
           {
             "category": "structure",
@@ -1402,7 +1483,8 @@
             "timeframe": "5m",
             "refs": {
               "trend": "bearish"
-            }
+            },
+            "evidence_id": null
           },
           {
             "category": "analyst_sentiment_analyst",
@@ -1413,8 +1495,10 @@
               "bullish": 0.0,
               "bearish": 100.0,
               "ranging": 0.0,
-              "analyst": "sentiment_analyst"
-            }
+              "analyst": "sentiment_analyst",
+              "upstream_id": "sentiment_analyst:0"
+            },
+            "evidence_id": "sentiment_analyst:0"
           },
           {
             "category": "analyst_sentiment_analyst",
@@ -1423,8 +1507,10 @@
             "timeframe": null,
             "refs": {
               "source": "tradingview_social",
-              "analyst": "sentiment_analyst"
-            }
+              "analyst": "sentiment_analyst",
+              "upstream_id": "sentiment_analyst:1"
+            },
+            "evidence_id": "sentiment_analyst:1"
           },
           {
             "category": "analyst_fundamentals_analyst",
@@ -1439,8 +1525,10 @@
               "impact": "偏强 → 利空黄金",
               "bias": "bearish",
               "source": "tradingview",
-              "analyst": "fundamentals_analyst"
-            }
+              "analyst": "fundamentals_analyst",
+              "upstream_id": "fundamentals_analyst:0"
+            },
+            "evidence_id": "fundamentals_analyst:0"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1455,8 +1543,10 @@
               "timeframe": "4h",
               "strength": 0.7,
               "dist_pct": -0.128,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:47"
+            },
+            "evidence_id": "technical_analyst:47"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1471,8 +1561,10 @@
               "timeframe": "4h",
               "strength": 0.65,
               "dist_pct": 0.072,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:48"
+            },
+            "evidence_id": "technical_analyst:48"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1483,8 +1575,10 @@
               "fibonacci": 0.618,
               "price": 2662.92,
               "dist_pct": -0.128,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:26"
+            },
+            "evidence_id": "technical_analyst:26"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1495,8 +1589,10 @@
               "fibonacci": 0.382,
               "price": 2657.6,
               "dist_pct": 0.072,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:25"
+            },
+            "evidence_id": "technical_analyst:25"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1507,8 +1603,10 @@
               "fibonacci": 0.5,
               "price": 2660.26,
               "dist_pct": -0.028,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:24"
+            },
+            "evidence_id": "technical_analyst:24"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1523,8 +1621,10 @@
               "timeframe": "4h",
               "strength": 0.55,
               "dist_pct": -0.028,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:49"
+            },
+            "evidence_id": "technical_analyst:49"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1535,8 +1635,10 @@
               "poc": 2651.02,
               "vah": 2657.52,
               "val": 2650.96,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:50"
+            },
+            "evidence_id": "technical_analyst:50"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1546,8 +1648,10 @@
             "refs": {
               "daily_high": 2660.52,
               "daily_low": 2658.52,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:1"
+            },
+            "evidence_id": "technical_analyst:1"
           },
           {
             "category": "analyst_fundamentals_analyst",
@@ -1562,8 +1666,10 @@
               "missing": [
                 "US10Y"
               ],
-              "analyst": "fundamentals_analyst"
-            }
+              "analyst": "fundamentals_analyst",
+              "upstream_id": "fundamentals_analyst:1"
+            },
+            "evidence_id": "fundamentals_analyst:1"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1572,8 +1678,10 @@
             "timeframe": "5m",
             "refs": {
               "EMA20": "附近",
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:10"
+            },
+            "evidence_id": "technical_analyst:10"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1582,8 +1690,10 @@
             "timeframe": "5m",
             "refs": {
               "EMA50": "附近",
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:11"
+            },
+            "evidence_id": "technical_analyst:11"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1592,8 +1702,10 @@
             "timeframe": "5m",
             "refs": {
               "EMA610": "上方",
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:12"
+            },
+            "evidence_id": "technical_analyst:12"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1602,8 +1714,10 @@
             "timeframe": "5m",
             "refs": {
               "VWAP": "上方",
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:13"
+            },
+            "evidence_id": "technical_analyst:13"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1612,8 +1726,10 @@
             "timeframe": "5m",
             "refs": {
               "EMA20": 2658.76,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:2"
+            },
+            "evidence_id": "technical_analyst:2"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1622,8 +1738,10 @@
             "timeframe": "5m",
             "refs": {
               "EMA50": 2657.5768,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:3"
+            },
+            "evidence_id": "technical_analyst:3"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1632,8 +1750,10 @@
             "timeframe": "5m",
             "refs": {
               "VWAP": 2654.76,
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:4"
+            },
+            "evidence_id": "technical_analyst:4"
           },
           {
             "category": "analyst_technical_analyst",
@@ -1641,12 +1761,15 @@
             "strength": 0.105,
             "timeframe": "4h",
             "refs": {
-              "analyst": "technical_analyst"
-            }
+              "analyst": "technical_analyst",
+              "upstream_id": "technical_analyst:6"
+            },
+            "evidence_id": "technical_analyst:6"
           }
         ],
         "confidence": 0.2253,
-        "summary": "共 24 条看空证据，加权强度 0.23"
+        "summary": "共 24 条看空证据，加权强度 0.23",
+        "provenance_meta": {}
       },
       "consensus_bias": "bearish",
       "consensus_strength": 0.9987,
@@ -1660,7 +1783,8 @@
         "看空研究员：共 24 条看空证据，加权强度 0.23",
         "多周期技术投票：多 0% / 空 100% / 震荡 0%",
         "讨论结论：看空证据占优，关注反抽卖区"
-      ]
+      ],
+      "debate_meta": {}
     },
     "llm_levels": [],
     "validated_plans": [],

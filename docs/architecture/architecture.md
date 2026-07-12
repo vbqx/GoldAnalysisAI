@@ -94,6 +94,7 @@
 │   build_report → 规则 narrative_sections                         │
 │   apply_manager_authorization（在 LLM 叙事之前）                    │
 │   llm/analyst.py → 五块 + 顶层文案（action_plan 仅授权执行价）       │
+│   fact_registry → report_invariants → report_reliability（归档前）   │
 │   meta.audit_summary / data_as_of / observation_mode             │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
@@ -106,6 +107,8 @@
 ```
 
 **回放**（配置页选「历史回放」）：`load_replay_bundle()` 直接读归档，**不经过**上方 fetch → LLM 链路。
+
+**报告可信度层**（事实注册、证据溯源、不变量、可靠度）见 **[report-trust.md](./report-trust.md)**（2026-07 落地，对应 daily-audit #27–#32）。
 
 \* News / Social / Fundamentals 已接入真实数据源（金十 MCP 快讯/资讯/日历、TradingView DXY、TV Ideas/Minds）；失败时回退占位文案，UI schema 不变。
 
@@ -128,6 +131,9 @@
 - `analysis/technical_context.py` — 共享技术上下文，供规则技术分析师、LLM 技术分析师 payload 与最终报告文案层复用
 - `analysis/luxalgo_smc.py` + `analysis/dgt_price_action.py` — Lux SMC 结构与 DGT 量价检测
 - `analysis/narrative_sections.py` + `analysis/narrative_combine.py` — 报告五块规则文案与 PA/SMC 合并
+- `analysis/fact_registry.py` — 统一事实注册表（`report.meta.fact_registry`）
+- `analysis/report_invariants.py` / `report_reliability.py` — 归档前确定性门禁与可靠度
+- `agents/analysts/evidence_provenance.py` — Research/Debate 证据 ID 白名单与溯源元数据
 - `analysis/field_glossary.py` — PA/SMC 字段释义与各场景提示词主次
 
 技术分析分层（检测 / 事实 / 文案 / 主图裁剪）见 [technical-analysis.md](./technical-analysis.md)；叙事组合见 [smc-pa-narrative.md](./smc-pa-narrative.md)。
@@ -173,6 +179,11 @@ src/
 │       ├── social_feed.py       # TV Ideas/Minds
 │       └── market.py            # TradingView OHLCV
 ├── analysis/
+│   ├── fact_registry.py       # 事实注册表 fr-v2
+│   ├── report_invariants.py   # 跨板块不变量
+│   ├── report_reliability.py  # 确定性可靠度
+│   ├── data_freshness.py      # data_as_of / observation_mode
+│   └── price_action_facts.py  # Session PA（1d open 锚定）
 ├── indicators/
 ├── viz/
 └── pipeline.py

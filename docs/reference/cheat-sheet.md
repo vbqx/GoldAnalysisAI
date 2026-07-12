@@ -47,6 +47,11 @@
 | **信号几何 / 稳定 signal_id** | `analysis/signal_geometry.py`, `analysis/signal_identity.py` | `pytest tests/unit/test_signal_geometry.py tests/unit/test_signal_identity.py` |
 | **数据时效 / 观察模式** | `analysis/data_freshness.py`, `core/orchestrator.py` | `pytest tests/unit/test_data_freshness.py` |
 | **LLM 叙事授权边界** | `analysis/narrative_sections.py`, `llm/analyst.py` | `pytest tests/unit/test_narrative_authorization.py tests/unit/test_narrative_top_level.py` |
+| **事实注册表 / 不变量 / 质量分** | `analysis/fact_registry.py`, `report_invariants.py`, `report_invariant_gate.py`, `report_reliability.py` | `pytest tests/unit/test_fact_registry.py tests/unit/test_report_invariants.py tests/unit/test_report_invariant_gate.py tests/unit/test_report_reliability.py tests/unit/test_golden_report_benchmark.py`；见 [report-trust.md](../architecture/report-trust.md) |
+| **证据溯源（Research/Debate）** | `agents/analysts/evidence_provenance.py`, `agents/llm/schemas.py` | `pytest tests/unit/test_evidence_provenance.py` |
+| **Session PA / 1d 交易时段** | `analysis/price_action_facts.py` | `pytest tests/unit/test_dgt_price_action.py` |
+| **LLM 叙事 context 压缩** | `llm/context.py`, `analysis/narrative_facts.py` | `pytest tests/unit/test_llm_context_compact.py` |
+| **Levels A/B/C 硬契约** | `agents/llm/schemas.py`, `analysis/level_validator.py` | `pytest tests/unit/test_llm_levels.py` |
 | **日历过滤 / 外部文本** | `data/calendar_utils.py`, `data/external_format.py` | `pytest tests/unit/test_external_sources.py tests/unit/test_analyst_input_density.py` |
 | **运行审计摘要** | `analysis/audit_summary.py` | `pytest tests/unit/test_audit_summary.py` |
 | **历史回放归档 / 兼容** | `run/archive/`（入口 `src/run`） | `pytest tests/unit/test_run_archive.py tests/unit/test_archive_optimizations.py` |
