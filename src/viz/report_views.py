@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
+import html
+
 import streamlit as st
 
 from src.config import TV_EXCHANGE, TV_SYMBOL, WATERMARK_TEXT
 from src.data.fetcher import format_utc8
+from src.viz.display_labels import format_report_branding, conclusion_display_lines
 from src.viz.archive_config_summary import format_archived_run_config, pipeline_status_label
 from src.viz.charts import build_sentiment_donut
 from src.viz.dashboard_components import (
     render_bottom_row,
     render_decision_summary,
+    render_final_decision_banner,
     render_footer,
     render_key_levels,
     render_narrative_section,
@@ -105,10 +109,11 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
             st.caption(f"归档兼容提示：{warning}")
 
     if not hide_title:
-        st.markdown(f'<p class="report-title">{meta["title"]}</p>', unsafe_allow_html=True)
+        st.markdown(f'<p class="report-title">{format_report_branding(meta["title"])}</p>', unsafe_allow_html=True)
         st.markdown(
             f'<p class="report-meta">更新时间: {meta["updated_at"]} &nbsp;|&nbsp; '
-            f'数据源: {meta.get("data_source", "TradingView")} &nbsp;|&nbsp; {meta["methodology"]}</p>',
+            f'数据源: {meta.get("data_source", "TradingView")} &nbsp;|&nbsp; '
+            f'{format_report_branding(meta["methodology"])}</p>',
             unsafe_allow_html=True,
         )
     else:
@@ -118,6 +123,7 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
             unsafe_allow_html=True,
         )
 
+    st.markdown(render_final_decision_banner(report), unsafe_allow_html=True)
     st.markdown(render_decision_summary(report), unsafe_allow_html=True)
     st.markdown('<div class="report-top-row-anchor"></div>', unsafe_allow_html=True)
 
@@ -143,11 +149,13 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
             liquidity_html = f'<ul class="bullet-list">{liq_html or "<li>—</li>"}</ul>'
         _top_text_panel("💧 关键流动性", liquidity_html)
     with top3:
+        conclusion_lines = conclusion_display_lines(conclusion)
+        conclusion_html = "".join(
+            f"<li>{html.escape(line)}</li>" for line in conclusion_lines
+        )
         _top_text_panel(
             "⚡ 结论要点",
-            f'<ul class="bullet-list">'
-            f'<li>{conclusion.get("header_conclusion", conclusion["action"])}</li>'
-            f'<li>{conclusion["direction_summary"]}</li></ul>',
+            f'<ul class="bullet-list">{conclusion_html}</ul>',
         )
     with top4:
         with st.container(border=True):
@@ -211,9 +219,10 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
 
 def render_strategy_map(report, data, analyses) -> None:
     meta = report["meta"]
-    st.markdown(f'<p class="report-title center">{meta["strategy_title"]}</p>', unsafe_allow_html=True)
-    st.markdown(f'<p class="report-subtitle">{meta["strategy_subtitle"]}</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="report-title center">{format_report_branding(meta["strategy_title"])}</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="report-subtitle">{format_report_branding(meta["strategy_subtitle"])}</p>', unsafe_allow_html=True)
     st.markdown(f'<p class="report-meta" style="text-align:right;">生成时间: {meta["updated_at"]}</p>', unsafe_allow_html=True)
+    st.markdown(render_final_decision_banner(report), unsafe_allow_html=True)
     st.markdown(render_decision_summary(report), unsafe_allow_html=True)
 
     st.markdown('<div class="strategy-layout-anchor"></div>', unsafe_allow_html=True)

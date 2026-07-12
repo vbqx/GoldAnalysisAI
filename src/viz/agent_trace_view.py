@@ -219,6 +219,20 @@ def render_agent_trace_panel(report: dict) -> None:
     st.markdown(_render_stage_summary_grid(report, trace), unsafe_allow_html=True)
 
     meta_report = report.get("meta") or {}
+    invariants = meta_report.get("report_invariants") or {}
+    reliability = meta_report.get("report_reliability") or {}
+    if reliability:
+        st.caption(
+            f"报告质量分 {reliability.get('report_quality_score', reliability.get('overall_reliability', 0)):.0%}"
+            f" · 事实注册 {((meta_report.get('fact_registry') or {}).get('fact_count') or 0)} 条"
+        )
+    if invariants and not invariants.get("passed"):
+        codes = ", ".join(
+            str(v.get("code") or "?")
+            for v in invariants.get("violations", [])[:4]
+        )
+        st.warning(f"报告一致性校验未通过：{codes}")
+
     if not meta_report.get("execution_authorized"):
         st.info(
             "经理未授权执行：交易计划区展示的是规则候选方案；"
@@ -308,6 +322,7 @@ def render_agent_trace_panel(report: dict) -> None:
             st.dataframe(
                 [
                     {
+                        "路径": p.get("path_id") or "—",
                         "方向": p.get("direction", "—"),
                         "入场": f"{p.get('entry_low', '—')} ~ {p.get('entry_high', '—')}",
                         "止损": p.get("stop_loss", "—"),

@@ -104,6 +104,28 @@ def bootstrap_env() -> None:
         pass
 
 
+def missing_runtime_dependencies() -> list[str]:
+    """Packages required for live report generation (not replay-only)."""
+    missing: list[str] = []
+    try:
+        import tvDatafeed  # noqa: F401
+    except ModuleNotFoundError:
+        missing.append("tvdatafeed-enhanced (import tvDatafeed)")
+    return missing
+
+
+def render_runtime_dependency_banner() -> None:
+    missing = missing_runtime_dependencies()
+    if not missing:
+        return
+    st.error(
+        "缺少运行依赖："
+        + "、".join(missing)
+        + "。请在项目根目录执行 `python -m pip install -r requirements.txt`，"
+        "然后用 `python run_app.py` 重启（不要用裸 `streamlit run`）。"
+    )
+
+
 def page_setup() -> None:
     from src.log import setup_logging
 

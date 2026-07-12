@@ -95,6 +95,14 @@ class ModuleSyncProgressReporter(ProgressReporter):
 
 
 def format_generation_error(exc: BaseException) -> str:
+    if isinstance(exc, ModuleNotFoundError):
+        missing = str(getattr(exc, "name", "") or exc).strip()
+        if missing in ("tvDatafeed", "tvdatafeed"):
+            return (
+                "缺少 TradingView 数据依赖 tvDatafeed（PyPI 包名 tvdatafeed-enhanced）。"
+                "请在项目目录执行：python -m pip install -r requirements.txt，"
+                "再用 python run_app.py 重启（勿用裸 streamlit run）。"
+            )
     raw = str(exc or type(exc).__name__).strip()
     if not raw:
         return type(exc).__name__

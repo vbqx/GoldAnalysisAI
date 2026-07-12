@@ -24,8 +24,25 @@ def render_llm_panel(report: dict) -> None:
         st.error(f"LLM 调用失败：{llm['error']}")
         return
 
+    meta = report.get("meta") or {}
+    execution_authorized = bool(meta.get("execution_authorized"))
+    observation_mode = bool(meta.get("observation_mode"))
+    top_audit = (meta.get("stage_sources") or {}).get("narrative_top_level") or {}
+    action_plan = str(llm.get("action_plan") or "").strip()
+
     model = llm.get("model") or ""
-    st.caption(f"模型 `{model}` · 置信度 {llm.get('confidence', 0):.0%}")
+    reliability = (report.get("meta") or {}).get("report_reliability") or {}
+    overall = reliability.get("overall_reliability")
+    if overall is not None:
+        st.caption(
+            f"模型 `{model}` · 报告质量分 {overall:.0%}（启发式，非胜率）"
+            f"；模型自报 {llm.get('confidence', 0):.0%}"
+        )
+    else:
+        st.caption(f"模型 `{model}` · 模型自报置信 {llm.get('confidence', 0):.0%}（非胜率）")
+
+    if not execution_authorized or observation_mode:
+        st.info("经理未授权执行：以下内容仅为市场观察，不含可执行交易指令。")
 
     if llm.get("market_summary"):
         st.markdown("**市场总览**")
@@ -35,17 +52,20 @@ def render_llm_panel(report: dict) -> None:
         st.markdown("**交易逻辑**")
         st.write(llm["trade_thesis"])
 
-    if llm.get("action_plan"):
+    if action_plan and execution_authorized and not observation_mode:
         st.markdown("**操作建议**")
-        for line in str(llm["action_plan"]).split("\n"):
+        for line in action_plan.split("\n"):
             line = line.strip()
             if line:
                 st.markdown(f"- {line}")
+    elif action_plan and not top_audit.get("accepted", True):
+        st.caption("操作建议已因未授权执行或含可执行措辞而被系统抑制。")
 
     col_a, col_b = st.columns(2)
     with col_a:
         if llm.get("watch_levels"):
-            st.markdown("**关注价位**")
+            label = "**观察价位**" if not execution_authorized else "**关注价位**"
+            st.markdown(label)
             for level in llm["watch_levels"]:
                 st.markdown(f"- {level}")
     with col_b:

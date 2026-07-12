@@ -7,7 +7,7 @@ from typing import Any
 
 from src.analysis.report_engine import parse_risk_events_calendar
 from src.config import GITHUB_REPO, PROJECT_NAME
-from src.viz.display_labels import NARRATIVE_SOURCE_CN, execution_banner, infer_trade_theme, label_action
+from src.viz.display_labels import NARRATIVE_SOURCE_CN, conclusion_display_lines, execution_banner, format_report_branding, humanize_narrative_fallback, infer_trade_theme, label_action
 from src.viz.source_labels import render_source_badge, stage_source
 
 _SOURCE_LABELS = {
@@ -293,6 +293,44 @@ iframe { border: none; display: block; }
   grid-template-columns: 1.05fr 1.3fr 1.25fr 1.4fr;
   gap: 8px;
   margin-bottom: 10px;
+}
+.final-decision-banner {
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0 0 10px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+.final-decision-banner.execute {
+  border-color: #86efac;
+  background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+}
+.final-decision-banner.reduce {
+  border-color: #fcd34d;
+  background: linear-gradient(135deg, #fffbeb, #fefce8);
+}
+.final-decision-banner.wait {
+  border-color: #cbd5e1;
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+}
+.final-decision-banner .fd-title {
+  margin: 0;
+  color: #0f172a;
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+.final-decision-banner .fd-verdict {
+  font-size: 1rem;
+}
+.final-decision-banner.execute .fd-verdict { color: #15803d; }
+.final-decision-banner.reduce .fd-verdict { color: #b45309; }
+.final-decision-banner.wait .fd-verdict { color: #475569; }
+.final-decision-banner .fd-sub {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 0.72rem;
+  line-height: 1.45;
 }
 .decision-cell {
   background: #fff;
@@ -713,6 +751,46 @@ def _first_text(items: list[Any], fallback: str = "—") -> str:
     return fallback
 
 
+def render_final_decision_banner(report: dict[str, Any]) -> str:
+    """Prominent one-line verdict: execute / reduce / wait."""
+    meta = report.get("meta") or {}
+    final = meta.get("final_decision")
+    if not final and meta.get("manager_decision"):
+        from src.analysis.report_engine import build_final_decision_meta
+
+        final = build_final_decision_meta(report)
+    if not final:
+        return ""
+
+    authorized = bool(final.get("execution_authorized"))
+    action = str(final.get("action") or "wait").lower()
+    css = "execute" if action == "execute" else "reduce" if action == "reduce" else "wait"
+    verdict = html.escape(str(final.get("verdict_cn") or label_action(action)))
+
+    if authorized:
+        plan = final.get("primary_plan") or {}
+        direction = html.escape(str(plan.get("direction_cn") or "—"))
+        zone = html.escape(str(plan.get("zone") or "—"))
+        detail = f"{direction} · 入场 {zone}"
+        pos = str(plan.get("position_size") or "").strip()
+        if pos:
+            detail += f" · {html.escape(pos)}"
+        sub = "以下为授权主方案；计划卡与叙述与之对应，可按触发条件执行。"
+    else:
+        detail = "不执行交易"
+        summary = str(final.get("summary") or "").strip()
+        sub = summary or "候选方案与结构叙述仅供观察，不可当作下单依据。"
+        if final.get("observation_mode"):
+            sub = f"快照观察模式 · {sub}"
+
+    return f"""
+<div class="final-decision-banner {css}">
+  <p class="fd-title"><span class="fd-verdict">{verdict}</span> · {detail}</p>
+  <p class="fd-sub">{html.escape(sub)}</p>
+</div>
+"""
+
+
 def render_decision_summary(report: dict[str, Any]) -> str:
     """First-screen decision strip: price, bias, executable state, and main risk."""
     metrics = report.get("metrics", {})
@@ -881,7 +959,9 @@ def render_top_overview_row(report: dict[str, Any]) -> str:
     c = report["conclusion"]
     debate_src = stage_source(report, "debate")
     debate_badge = render_source_badge(debate_src, small=True)
-    conclusion_text = html.escape(c.get("header_conclusion", c["action"]))
+    conclusion_items = "".join(
+        f"<li>{html.escape(line)}</li>" for line in conclusion_display_lines(c)
+    )
 
     ov_html = "".join(f"<li>{html.escape(str(x))}</li>" for x in overview[:5])
     liq_html = "".join(
@@ -895,8 +975,7 @@ def render_top_overview_row(report: dict[str, Any]) -> str:
   <div class="hbox panel donut-slot"><p class="lbl">📈 多空结构权重</p><p class="val sm" style="color:#94a3b8">← 右侧图表</p></div>
   <div class="hbox panel"><p class="lbl">💧 关键流动性</p><ul class="bullet-list">{liq_html or "<li>—</li>"}</ul></div>
   <div class="hbox panel"><p class="lbl">⚡ 结论与要点 {debate_badge}</p><ul class="bullet-list">
-    <li>{conclusion_text}</li>
-    <li>{html.escape(c['direction_summary'])}</li>
+    {conclusion_items}
   </ul></div>
 </div>
 """
@@ -1055,7 +1134,7 @@ def render_narrative_section(section: dict[str, Any] | None) -> str:
 def _narrative_fallback_hint(section: dict[str, Any]) -> str:
     if str(section.get("source") or "") != "fallback":
         return ""
-    reason = str(section.get("fallback_reason") or "").strip()
+    reason = humanize_narrative_fallback(str(section.get("fallback_reason") or "").strip())
     if not reason:
         return ""
     return f'<div class="plan-stack-note" style="margin-top:4px">兜底原因：{html.escape(reason[:120])}</div>'

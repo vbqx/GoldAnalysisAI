@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 BIAS_CN = {
     "bullish": "偏多",
     "bearish": "偏空",
@@ -31,6 +33,33 @@ NARRATIVE_SOURCE_CN = {
     "llm": "LLM",
     "fallback": "规则兜底",
 }
+
+_REPORT_BRANDING_REPLACEMENTS = (
+    ("LuxAlgo Smart Money Concepts", "SMC + PA"),
+    ("LuxAlgo SMC", "SMC+PA"),
+)
+
+
+def format_report_branding(text: object) -> str:
+    """Normalize legacy LuxAlgo strings for reader-facing UI (incl. replay archives)."""
+    out = str(text or "")
+    for old, new in _REPORT_BRANDING_REPLACEMENTS:
+        out = out.replace(old, new)
+    return out
+
+
+def humanize_narrative_fallback(reason: object) -> str:
+    """Short Chinese hint for narrative block fallback reasons shown in UI."""
+    raw = str(reason or "").strip()
+    if not raw:
+        return ""
+    if raw.startswith("unapproved price "):
+        price = raw.removeprefix("unapproved price ").strip()
+        return (
+            f"LLM 引用了价位 {price}，与系统白名单精确价不匹配（常见于整数简写，如 4021 vs 4021.82），"
+            "该块已回退为规则叙述。"
+        )
+    return raw
 
 
 def label_bias(value: object) -> str:
@@ -107,3 +136,21 @@ def execution_banner(meta: dict | None) -> str:
     if summary:
         parts.append(summary[:120])
     return " ".join(parts)
+
+
+def conclusion_display_lines(conclusion: dict[str, Any] | None) -> list[str]:
+    """De-duplicated lines for 结论要点 panels (header + direction_summary)."""
+    conclusion = conclusion or {}
+    header = str(conclusion.get("header_conclusion") or conclusion.get("action") or "").strip()
+    summary = str(conclusion.get("direction_summary") or "").strip()
+    lines: list[str] = []
+    if header:
+        lines.append(header)
+    if not summary:
+        return lines or ["—"]
+    if summary == header:
+        return lines or ["—"]
+    if header and (summary in header or header.startswith(summary.rstrip("。."))):
+        return lines
+    lines.append(summary)
+    return lines
