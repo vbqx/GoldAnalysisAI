@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 import pandas as pd
@@ -37,6 +38,8 @@ from src.data.news_topics import cluster_headline_topics
 from src.data.sources.jin10_feed import fetch_jin10_kline
 from src.indicators.technical import enrich
 from src.llm.context import build_llm_context
+
+FUTURE_CALENDAR_TIME = (datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d %H:%M")
 
 
 def _minimal_ctx(ext: ExternalFactors) -> MarketContext:
@@ -118,7 +121,7 @@ def _multi_analyst_ctx() -> MarketContext:
             HeadlineItem(source="jin10_news", text="美联储官员暗示降息路径"),
         ],
         calendar_events=[
-            CalendarEvent(time="2026-06-16 20:30", region="美国", event="美国6月CPI年率", importance=3.0),
+            CalendarEvent(time=FUTURE_CALENDAR_TIME, region="美国", event="美国6月CPI年率", importance=3.0),
         ],
         macro_quotes=[
             MacroQuote(name="DXY", symbol="TVC:DXY", close=104.0, change_pct=0.3, impact="偏强", bias="bearish"),
@@ -140,7 +143,7 @@ def test_context_stats_counts_structured_fields() -> None:
             HeadlineItem(source="jin10_flash", text="黄金上涨"),
             HeadlineItem(source="jin10_news", text="美联储讲话"),
         ],
-        calendar_events=[CalendarEvent(time="t", region="美国", event="CPI", importance=3.0)],
+        calendar_events=[CalendarEvent(time=FUTURE_CALENDAR_TIME, region="美国", event="CPI", importance=3.0)],
         macro_quotes=[
             MacroQuote(
                 name="DXY",
@@ -277,9 +280,9 @@ def test_news_analyst_structured_evidence_and_bias() -> None:
             HeadlineItem(source="jin10_flash", text="地缘冲突升级，避险买盘推升黄金"),
         ],
         calendar_events=[
-            CalendarEvent(time="2026-06-16 20:30", region="美国", event="美国6月CPI年率", importance=3.0),
+            CalendarEvent(time=FUTURE_CALENDAR_TIME, region="美国", event="美国6月CPI年率", importance=3.0),
         ],
-        risk_events="2026-06-16 20:30 美国 美国6月CPI年率",
+        risk_events=f"{FUTURE_CALENDAR_TIME} 美国 美国6月CPI年率",
         sources=["jin10_flash", "jin10_calendar"],
     )
     ctx = _minimal_ctx(ext)
@@ -316,7 +319,7 @@ def test_cluster_headline_topics() -> None:
     assert topics[0]["count"] >= 1
 
 
-@patch("src.data.context_builder.fetch_jin10_quote", return_value=({"close": "4300.0", "code": "XAUUSD"}, None))
+@patch("src.data.sources.jin10_feed.fetch_jin10_quote", return_value=({"close": "4300.0", "code": "XAUUSD"}, None))
 def test_derived_spot_cross_check(_mock_quote) -> None:
     ext = ExternalFactors()
     ctx = _minimal_ctx(ext)
@@ -333,7 +336,7 @@ def test_news_analyst_payload_channels() -> None:
             HeadlineItem(source="jin10_news", text="美联储降息预期升温"),
         ],
         calendar_events=[
-            CalendarEvent(time="2026-06-16 20:30", region="美国", event="CPI", importance=3.0),
+            CalendarEvent(time=FUTURE_CALENDAR_TIME, region="美国", event="CPI", importance=3.0),
         ],
         sources=["jin10_flash", "jin10_news", "jin10_calendar"],
     )
@@ -369,8 +372,8 @@ def test_fetch_external_bundle_parallel(mock_news, mock_social, mock_fund) -> No
     assert "jin10_flash" in ext.sources
 
 
-@patch("src.data.context_builder.fetch_jin10_kline", return_value=([{"close": 4300.0, "open": 4295.0, "time": "t"}], None))
-@patch("src.data.context_builder.fetch_jin10_quote", return_value=({"close": "4300.0", "code": "XAUUSD"}, None))
+@patch("src.data.sources.jin10_feed.fetch_jin10_kline", return_value=([{"close": 4300.0, "open": 4295.0, "time": "t"}], None))
+@patch("src.data.sources.jin10_feed.fetch_jin10_quote", return_value=({"close": "4300.0", "code": "XAUUSD"}, None))
 def test_derived_kline_and_event_countdown(_mock_quote, _mock_kline) -> None:
     from datetime import datetime, timedelta
 

@@ -269,9 +269,11 @@ def fetch_jin10_calendar() -> tuple[list[CalendarEvent], str | None]:
 def fetch_jin10_risk_events() -> tuple[str, str | None]:
     events, err = fetch_jin10_calendar()
     if events:
-        from src.data.context_builder import calendar_to_risk_text
+        from src.data.calendar_utils import calendar_to_risk_text, filter_upcoming_calendar_events
 
-        return calendar_to_risk_text(events), None
+        upcoming = filter_upcoming_calendar_events(events)
+        if upcoming:
+            return calendar_to_risk_text(upcoming), None
     return "—", err
 
 
@@ -302,10 +304,11 @@ def fetch_jin10_bundle() -> Jin10NewsBundle:
     if cal_err:
         bundle.errors.append(f"jin10_calendar: {cal_err}")
     if calendar:
-        bundle.calendar_events = calendar
-        from src.data.context_builder import calendar_to_risk_text
+        from src.data.calendar_utils import calendar_to_risk_text, filter_upcoming_calendar_events
 
-        bundle.risk_events = calendar_to_risk_text(calendar)
+        upcoming = filter_upcoming_calendar_events(calendar)
+        bundle.calendar_events = upcoming
+        bundle.risk_events = calendar_to_risk_text(upcoming) if upcoming else "—"
         bundle.sources.append("jin10_calendar")
 
     return bundle

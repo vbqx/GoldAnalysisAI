@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from src.core.types import CalendarEvent, EvidenceItem, ExternalFactors, HeadlineItem
-from src.data.context_builder import calendar_to_risk_text, headlines_to_strings, sync_external_legacy_fields
+from src.data.external_format import headlines_to_strings, sync_external_legacy_fields
 from src.data.sources.jin10_feed import Jin10NewsBundle, fetch_jin10_bundle
 
 _PLACEHOLDER_EVENTS = "美盘数据/讲话 → 波动放大（占位）"

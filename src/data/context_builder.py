@@ -9,7 +9,6 @@ Called once after ``assemble_market_context()`` via ``finalize_market_context()`
 from __future__ import annotations
 
 import json
-import re
 from datetime import datetime
 from typing import Any
 
@@ -18,13 +17,12 @@ import pandas as pd
 from src.data.news_topics import cluster_headline_topics
 from src.analysis.ict_pa import sentiment_score
 from src.config import (
-    ANALYST_CALENDAR_MAX,
-    ANALYST_NEWS_MAX,
     JIN10_KLINE_ENABLED,
     JIN10_QUOTE_ENABLED,
 )
-from src.core.types import CalendarEvent, ExternalFactors, HeadlineItem, MarketContext
-from src.data.sources.jin10_feed import fetch_jin10_kline, fetch_jin10_quote
+from src.core.types import CalendarEvent, MarketContext
+from src.data.calendar_utils import filter_upcoming_calendar_events, parse_event_time
+from src.data.external_format import sync_external_legacy_fields
 from src.indicators.technical import ema_relation
 
 _TECHNICAL_READY_COLUMNS = (
@@ -41,35 +39,6 @@ _TECHNICAL_READY_COLUMNS = (
     "MACD_SIGNAL",
     "MACD_HIST",
 )
-
-
-def calendar_to_risk_text(events: list[CalendarEvent], *, limit: int = 6) -> str:
-    if not events:
-        return "—"
-    return "；".join(e.display() for e in events[:limit])
-
-
-def headlines_to_strings(items: list[HeadlineItem], *, limit: int | None = None) -> list[str]:
-    cap = limit or ANALYST_NEWS_MAX
-    out: list[str] = []
-    seen: set[str] = set()
-    for item in items:
-        text = item.text.strip()
-        if not text or text in seen:
-            continue
-        seen.add(text)
-        out.append(text[:240])
-        if len(out) >= cap:
-            break
-    return out
-
-
-def sync_external_legacy_fields(ext: ExternalFactors) -> None:
-    """Keep news_headlines / risk_events in sync with structured fields."""
-    if ext.headline_items:
-        ext.news_headlines = headlines_to_strings(ext.headline_items)
-    if ext.calendar_events:
-        ext.risk_events = calendar_to_risk_text(ext.calendar_events)
 
 
 def build_market_position(enriched: dict[str, pd.DataFrame], price: float) -> dict[str, Any]:
@@ -117,39 +86,15 @@ def build_spot_cross_check(tv_price: float, quote: dict[str, Any] | None) -> dic
     }
 
 
-def _parse_event_time(raw: str) -> datetime | None:
-    text = (raw or "").strip()
-    if not text:
-        return None
-    for fmt in (
-        "%Y-%m-%d %H:%M:%S",
-        "%Y-%m-%d %H:%M",
-        "%Y/%m/%d %H:%M",
-        "%Y-%m-%dT%H:%M:%S",
-        "%Y-%m-%dT%H:%M",
-    ):
-        try:
-            return datetime.strptime(text, fmt)
-        except ValueError:
-            continue
-    match = re.search(r"(\d{4}-\d{2}-\d{2})\s+(\d{1,2}:\d{2})", text)
-    if match:
-        try:
-            return datetime.strptime(f"{match.group(1)} {match.group(2)}", "%Y-%m-%d %H:%M")
-        except ValueError:
-            return None
-    return None
-
-
 def build_event_countdown(events: list[CalendarEvent]) -> dict[str, Any]:
     """Hours until the next high-impact calendar event."""
     now = datetime.now()
     best: CalendarEvent | None = None
     best_hours: float | None = None
-    for event in events:
+    for event in filter_upcoming_calendar_events(events):
         if event.importance < 3.0:
             continue
-        when = _parse_event_time(event.time)
+        when = parse_event_time(event.time)
         if when is None:
             continue
         hours = (when - now).total_seconds() / 3600
@@ -200,14 +145,15 @@ def build_jin10_kline_summary(bars: list[dict[str, Any]], tv_price: float) -> di
 def build_derived_context(ctx: MarketContext) -> dict[str, Any]:
     vote = sentiment_score(ctx.analyses)
     ext = ctx.external
-    high_impact = sum(1 for e in ext.calendar_events if e.importance >= 3.0)
+    upcoming = filter_upcoming_calendar_events(ext.calendar_events)
+    high_impact = sum(1 for e in upcoming if e.importance >= 3.0)
     derived: dict[str, Any] = {
         "market_position": build_market_position(ctx.enriched, ctx.price),
         "structure_sentiment": vote,
         "calendar_high_impact_count": high_impact,
-        "upcoming_calendar": [e.to_dict() for e in ext.calendar_events[:6]],
+        "upcoming_calendar": [e.to_dict() for e in upcoming[:6]],
         "news_topics": cluster_headline_topics(ext.headline_items),
-        "event_countdown": build_event_countdown(ext.calendar_events),
+        "event_countdown": build_event_countdown(upcoming),
         "headline_count": len(ext.headline_items),
         "flash_count": sum(1 for h in ext.headline_items if h.source == "jin10_flash"),
         "article_count": sum(1 for h in ext.headline_items if h.source == "jin10_news"),
@@ -216,11 +162,15 @@ def build_derived_context(ctx: MarketContext) -> dict[str, Any]:
         },
     }
     if JIN10_QUOTE_ENABLED:
+        from src.data.sources.jin10_feed import fetch_jin10_quote
+
         quote, _ = fetch_jin10_quote()
         cross = build_spot_cross_check(ctx.price, quote)
         if cross:
             derived["spot_cross_check"] = cross
     if JIN10_KLINE_ENABLED:
+        from src.data.sources.jin10_feed import fetch_jin10_kline
+
         bars, _ = fetch_jin10_kline()
         kline_summary = build_jin10_kline_summary(bars, ctx.price)
         if kline_summary:
@@ -366,6 +316,8 @@ def _analyst_input_stats(ctx: MarketContext) -> dict[str, Any]:
 
 def finalize_market_context(ctx: MarketContext) -> MarketContext:
     """Attach derived signals and density stats after assembly."""
+    upcoming = filter_upcoming_calendar_events(ctx.external.calendar_events)
+    ctx.external.calendar_events = upcoming
     sync_external_legacy_fields(ctx.external)
     ctx.derived = build_derived_context(ctx)
     ctx.context_stats = compute_context_stats(ctx)

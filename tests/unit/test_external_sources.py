@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 import pandas as pd
@@ -13,6 +14,8 @@ from src.data.sources.jin10_feed import Jin10NewsBundle, fetch_jin10_bundle
 from src.data.sources.news import NewsDataSource
 from src.data.sources.social import SocialDataSource
 from src.data.sources.social_feed import fetch_social_sentiment
+
+FUTURE_CALENDAR_TIME = (datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d %H:%M")
 
 
 def _dxy_df(change_pct: float) -> pd.DataFrame:
@@ -82,7 +85,7 @@ def test_fundamentals_source_uses_dxy(mock_fetch) -> None:
 @patch(
     "src.data.sources.jin10_feed.fetch_jin10_calendar",
     return_value=(
-        [CalendarEvent(time="2026-06-16 20:30", region="美国", event="美国6月CPI年率", importance=3.0)],
+        [CalendarEvent(time=FUTURE_CALENDAR_TIME, region="美国", event="美国6月CPI年率", importance=3.0)],
         None,
     ),
 )
