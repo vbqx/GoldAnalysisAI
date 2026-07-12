@@ -158,6 +158,8 @@ def run_llm_analysis(
         )
         if data is None:
             return _error_result(report, trace.error or "LLM 报告文案失败")
+        from src.analysis.narrative_facts import build_narrative_facts_for_llm
+
         validation_facts = build_narrative_facts_for_llm(report)
         result = validate_llm_payload(
             data,
