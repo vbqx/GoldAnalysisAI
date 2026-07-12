@@ -12,7 +12,7 @@ meta:
 
   project: GoldAnalysisAI
 
-  last_review: "2026-06-15"
+  last_review: "2026-07-12"
 
   owner: qa
 
@@ -195,6 +195,278 @@ cases:
     module: tests.unit.test_tradingview_retry
 
     priority: P1
+
+    automated: true
+
+
+
+  - id: UT-09
+
+    suite: unit
+
+    layer: functional
+
+    title: Run 归档 roundtrip + legacy v1 兼容
+
+    module: tests.unit.test_run_archive
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-10
+
+    suite: unit
+
+    layer: functional
+
+    title: 归档 index/prune/replay bundle
+
+    module: tests.unit.test_archive_optimizations
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-11
+
+    suite: unit
+
+    layer: functional
+
+    title: RunConfig 模式/normalized/replay 剥离
+
+    module: tests.unit.test_run_config
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-12
+
+    suite: unit
+
+    layer: functional
+
+    title: RunConfig 面板 replay 优先
+
+    module: tests.unit.test_run_config_panel
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-13
+
+    suite: unit
+
+    layer: functional
+
+    title: LLM payload funnel 各阶段
+
+    module: tests.unit.test_llm_payload_funnel
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-14
+
+    suite: unit
+
+    layer: functional
+
+    title: 离线 LLM narrative replay
+
+    module: tests.unit.test_replay_llm_narrative
+
+    priority: P2
+
+    automated: true
+
+
+
+  - id: UT-15
+
+    suite: unit
+
+    layer: functional
+
+    title: 风险门控 + 信号几何
+
+    module: tests.unit.test_risk_gates
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-16
+
+    suite: unit
+
+    layer: functional
+
+    title: audit_summary meta 块
+
+    module: tests.unit.test_audit_summary
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-17
+
+    suite: unit
+
+    layer: functional
+
+    title: 叙事授权边界
+
+    module: tests.unit.test_narrative_authorization
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-18
+
+    suite: unit
+
+    layer: functional
+
+    title: Manager 授权映射
+
+    module: tests.unit.test_manager_authorization
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-19
+
+    suite: unit
+
+    layer: functional
+
+    title: 信号 identity 稳定
+
+    module: tests.unit.test_signal_identity
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-20
+
+    suite: unit
+
+    layer: functional
+
+    title: Streamlit ensure_report 生命周期
+
+    module: tests.unit.test_streamlit_ensure_report
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-21
+
+    suite: unit
+
+    layer: functional
+
+    title: display_labels 交易主题
+
+    module: tests.unit.test_display_labels
+
+    priority: P2
+
+    automated: true
+
+
+
+  - id: UT-22
+
+    suite: unit
+
+    layer: functional
+
+    title: orchestrator hooks
+
+    module: tests.unit.test_orchestrator_hooks
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-23
+
+    suite: unit
+
+    layer: functional
+
+    title: generation_worker replay/错误格式化
+
+    module: tests.unit.test_generation_worker
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-24
+
+    suite: unit
+
+    layer: functional
+
+    title: archive compat normalize/inspect
+
+    module: tests.unit.test_archive_compat
+
+    priority: P1
+
+    automated: true
+
+
+
+  - id: UT-25
+
+    suite: unit
+
+    layer: functional
+
+    title: narrative_facts 统一构建
+
+    module: tests.unit.test_narrative_facts
+
+    priority: P2
 
     automated: true
 

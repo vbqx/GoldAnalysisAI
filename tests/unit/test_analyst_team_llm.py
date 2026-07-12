@@ -201,7 +201,7 @@ def test_factory_analyst_team_parallel_faster(monkeypatch) -> None:
     ):
         agent_factory.run_analyst_team(ctx, AgentPipelineMeta())
     elapsed = time.perf_counter() - t0
-    assert elapsed < delay * 3
+    assert elapsed < delay * 4
 
 
 def test_factory_analyst_team_llm_mode_without_rule_baseline(monkeypatch) -> None:

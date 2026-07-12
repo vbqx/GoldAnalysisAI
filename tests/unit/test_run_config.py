@@ -128,3 +128,35 @@ def test_apply_run_config_binds_thread_context() -> None:
         assert cfg.llm_analyst_only == "technical"
     finally:
         reset_run_config(token)
+
+
+def test_replay_normalized_strips_llm_fields() -> None:
+    cfg = RunConfig(
+        agent_mode="llm",
+        llm_enabled=True,
+        llm_stage_analysts=True,
+        llm_stage_trader=True,
+        replay_mode=True,
+        replay_run_id="20260712T100000Z",
+    ).normalized()
+    assert cfg.replay_mode is True
+    assert cfg.replay_run_id == "20260712T100000Z"
+    assert cfg.llm_enabled is False
+    assert cfg.agent_mode == "rule"
+    assert cfg.llm_stage_trader is False
+
+
+def test_run_config_for_mode_llm_enables_levels() -> None:
+    cfg = run_config_for_mode("llm")
+    assert cfg.llm_stage_levels is True
+    assert cfg.llm_enabled is True
+
+
+def test_run_config_scope_restores_previous() -> None:
+    from src.run.context import get_run_config, run_config_scope
+
+    outer = run_config_from_env()
+    inner = run_config_for_mode("llm")
+    with run_config_scope(inner):
+        assert get_run_config().agent_mode == "llm"
+    assert get_run_config().agent_mode == outer.agent_mode

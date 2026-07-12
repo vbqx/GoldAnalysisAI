@@ -10,7 +10,7 @@ from src.agents.llm.schemas import (
     parse_risk_reviews,
     parse_transaction_proposal,
 )
-from src.core.types import AgentPipelineMeta, LLMStageTrace, ManagerDecision, RiskReview, TransactionProposal
+from src.core.types import AgentPipelineMeta, LevelProposal, LLMStageTrace, ManagerDecision, RiskReview, TransactionProposal
 from tests._run_config_helpers import bind_run_config
 
 
@@ -97,7 +97,7 @@ def test_factory_trader_hybrid_accepts_high_confidence_llm(monkeypatch) -> None:
             signals,
         )
 
-    def fake_llm(_ctx, _debate, _signals):
+    def fake_llm(_ctx, _debate, _signals, team=None):
         return llm_proposal, LLMStageTrace(stage="trader", model="test", confidence=0.9)
 
     with bind_run_config(agent_mode="hybrid", llm_enabled=True, llm_stage_trader=True), patch.object(
@@ -132,3 +132,51 @@ def test_factory_manager_llm_mode_accepts_llm(monkeypatch) -> None:
 
     assert decision is llm_decision
     assert meta.stages["manager"].source == "llm"
+
+
+def test_factory_level_proposer_disabled_returns_empty(monkeypatch) -> None:
+    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: False)
+    meta = AgentPipelineMeta()
+    result = agent_factory.run_level_proposer(None, None, None, meta, [])  # type: ignore[arg-type]
+    assert result == []
+    assert meta.stages["llm_levels"].source == "rule"
+
+
+def test_factory_level_proposer_accepts_llm_proposals(monkeypatch) -> None:
+    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
+    proposals = [
+        LevelProposal(
+            direction="BUY",
+            entry_low=2650.0,
+            entry_high=2652.0,
+            stop_loss=2640.0,
+            take_profits=[2665.0],
+            setup_type="ob",
+            reason="test zone",
+            confidence=0.8,
+        )
+    ]
+    trace = LLMStageTrace(stage="llm_levels", model="test")
+
+    with bind_run_config(agent_mode="llm", llm_enabled=True, llm_stage_levels=True), patch.object(
+        agent_factory, "run_llm_level_proposer", return_value=(proposals, trace)
+    ):
+        meta = AgentPipelineMeta()
+        result = agent_factory.run_level_proposer(None, None, None, meta, [])  # type: ignore[arg-type]
+
+    assert result is proposals
+    assert meta.stages["llm_levels"].source == "llm"
+
+
+def test_factory_level_proposer_falls_back_when_llm_empty(monkeypatch) -> None:
+    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
+    trace = LLMStageTrace(stage="llm_levels", model="test", error="no proposals")
+
+    with bind_run_config(agent_mode="hybrid", llm_enabled=True, llm_stage_levels=True), patch.object(
+        agent_factory, "run_llm_level_proposer", return_value=(None, trace)
+    ):
+        meta = AgentPipelineMeta()
+        result = agent_factory.run_level_proposer(None, None, None, meta, [])  # type: ignore[arg-type]
+
+    assert result == []
+    assert meta.stages["llm_levels"].source == "rule"

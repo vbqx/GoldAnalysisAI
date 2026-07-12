@@ -1,0 +1,250 @@
+{
+  "metrics": {
+    "current_price": 4140.0,
+    "daily_low": 4135.0,
+    "daily_high": 4160.0
+  },
+  "sentiment": {
+    "bullish": 32.0,
+    "bearish": 55.0,
+    "ranging": 13.0
+  },
+  "conclusion": {
+    "action": "等待反抽确认",
+    "direction_summary": "反抽失败后偏空"
+  },
+  "timeframes": {
+    "4h": {
+      "trend": "bearish",
+      "premium_discount": "premium",
+      "bos": "bearish @ 4148",
+      "choch": "none",
+      "swing_high": 4175.0,
+      "swing_low": 4122.0,
+      "order_blocks": [
+        {
+          "direction": "bearish",
+          "low": 4148.0,
+          "high": 4160.0
+        }
+      ],
+      "fvgs": [
+        {
+          "direction": "bullish",
+          "low": 4122.0,
+          "high": 4135.0
+        }
+      ]
+    },
+    "1h": {
+      "trend": "bearish",
+      "premium_discount": "premium",
+      "bos": "bearish @ 4148",
+      "choch": "none",
+      "swing_high": 4175.0,
+      "swing_low": 4122.0,
+      "order_blocks": [
+        {
+          "direction": "bearish",
+          "low": 4148.0,
+          "high": 4160.0
+        }
+      ],
+      "fvgs": [
+        {
+          "direction": "bullish",
+          "low": 4122.0,
+          "high": 4135.0
+        }
+      ]
+    },
+    "15m": {
+      "trend": "bearish",
+      "premium_discount": "premium",
+      "bos": "bearish @ 4148",
+      "choch": "none",
+      "swing_high": 4175.0,
+      "swing_low": 4122.0,
+      "order_blocks": [
+        {
+          "direction": "bearish",
+          "low": 4148.0,
+          "high": 4160.0
+        }
+      ],
+      "fvgs": [
+        {
+          "direction": "bullish",
+          "low": 4122.0,
+          "high": 4135.0
+        }
+      ]
+    }
+  },
+  "liquidity": [
+    {
+      "price": 4148.0,
+      "kind": "swing_high",
+      "label": "上方流动性",
+      "timeframe": "15m"
+    },
+    {
+      "price": 4135.0,
+      "kind": "swing_low",
+      "label": "下方流动性",
+      "timeframe": "15m"
+    }
+  ],
+  "signals": [
+    {
+      "direction": "short",
+      "theme": "short",
+      "entry_low": 4148.0,
+      "entry_high": 4160.0,
+      "stop_loss": 4175.0,
+      "take_profits": [
+        4135.0,
+        4122.0
+      ],
+      "status": "candidate"
+    }
+  ],
+  "price_action": {
+    "5m": {
+      "volume_ok": true,
+      "volume_spike_count": 2,
+      "high_volatility_count": 3,
+      "volume_profile": {
+        "poc": 4140.0,
+        "vah": 4155.0,
+        "val": 4125.0
+      },
+      "sr_levels": [
+        {
+          "price": 4150.0,
+          "direction": "resistance",
+          "label": "量价连续阻力",
+          "kind": "consecutive_sr"
+        },
+        {
+          "price": 4130.0,
+          "direction": "support",
+          "label": "量价连续支撑",
+          "kind": "consecutive_sr"
+        }
+      ]
+    },
+    "4h": {
+      "volume_ok": true,
+      "volume_profile": {
+        "poc": 4142.0,
+        "vah": 4160.0,
+        "val": 4120.0
+      },
+      "sr_levels": []
+    },
+    "1h": {
+      "volume_ok": true,
+      "volume_profile": {
+        "poc": 4141.0,
+        "vah": 4158.0,
+        "val": 4122.0
+      },
+      "sr_levels": []
+    },
+    "15m": {
+      "volume_ok": true,
+      "volume_profile": {
+        "poc": 4140.0,
+        "vah": 4155.0,
+        "val": 4128.0
+      },
+      "sr_levels": []
+    }
+  },
+  "narrative_sections": {
+    "market_overview": {
+      "summary": "现价4140附近，日内主方向为震荡，现价在量价价值区内。",
+      "context": [
+        "4H、1H、15m 量价价值区一致，当前以震荡路径为主。"
+      ],
+      "levels": [
+        "日内已走 4135-4160；量价 POC 4140，VA 4125-4155。",
+        "PA 入场区 4148-4160（贴近VAH/量价S/R共振）。"
+      ],
+      "conditions": [
+        "等待反抽确认"
+      ],
+      "invalidation": "反抽失败后偏空",
+      "source": "rule",
+      "confidence": 1.0,
+      "fallback_reason": null
+    },
+    "liquidity": {
+      "summary": "量价支撑阻力为主：先扫过关键线再收回，再谈反转。",
+      "context": [
+        "5m 连续量价/放量衰竭/高波动线反映成交密集区；POC/VAH/VAL 定价值区。"
+      ],
+      "levels": [
+        "上方：量价 4150(量价连续阻力)。",
+        "下方：量价 4130(量价连续支撑)。"
+      ],
+      "conditions": [
+        "扫过4150后跌回可观察空头；扫过4130后收回可观察多头。"
+      ],
+      "invalidation": "价格持续站在被突破量价位外侧时，反转假设失效。",
+      "source": "rule",
+      "confidence": 1.0,
+      "fallback_reason": null
+    },
+    "4h": {
+      "summary": "大级别背景：震荡。",
+      "context": [
+        "量价 POC 4142，VA 4120-4160。"
+      ],
+      "levels": [
+        "POC 4142，VA 4120-4160。"
+      ],
+      "conditions": [
+        "价值区内保持等待，突破 VA 边界并回踩确认后再跟随。"
+      ],
+      "invalidation": "有效脱离 VA 4120-4160 且无法收回时，当前判断失效。",
+      "source": "rule",
+      "confidence": 1.0,
+      "fallback_reason": null
+    },
+    "1h": {
+      "summary": "当前结构阶段：震荡。",
+      "context": [
+        "量价 POC 4141，VA 4122-4158，现价在量价价值区内。"
+      ],
+      "levels": [
+        "POC 4141，VA 4122-4158。"
+      ],
+      "conditions": [
+        "价值区内保持等待，突破 VA 边界并回踩确认后再跟随。"
+      ],
+      "invalidation": "有效脱离 VA 4122-4158 且无法收回时，当前判断失效。",
+      "source": "rule",
+      "confidence": 1.0,
+      "fallback_reason": null
+    },
+    "15m": {
+      "summary": "执行前结构：震荡。",
+      "context": [
+        "量价 POC 4140，VA 4128-4155，现价在量价价值区内。"
+      ],
+      "levels": [
+        "POC 4140，VA 4128-4155。",
+        "近端 VAH 拒绝参考 4155。"
+      ],
+      "conditions": [
+        "等待量价关键区收回或拒绝确认，现价不追单。"
+      ],
+      "invalidation": "有效脱离 VA 4128-4155 且无法收回时，当前判断失效。",
+      "source": "rule",
+      "confidence": 1.0,
+      "fallback_reason": null
+    }
+  }
+}

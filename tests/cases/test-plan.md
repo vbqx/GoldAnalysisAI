@@ -1,6 +1,6 @@
 # GoldAnalysisAI 测试用例设计
 
-> 版本：v1.1 · 2026-06-20
+> 版本：v1.2 · 2026-07-12
 > 范围：UI 布局 → 指标显示 → 整体功能 → 性能
 > 用例明细见 [catalog.yaml](./catalog.yaml)
 
@@ -208,3 +208,61 @@ pytest tests/integration -m integration -q       # FN + PERF
 **Sprint 1 优先（P0/P1）：** FIN-01 风控 approved · FIN-02 win_rate · FIN-06 结论硬编码 · FIN-03 R:R · FIN-UI-01/05
 
 **已有覆盖：** F-005 现价一致 → `IND-01`；signals schema → `IT-03`；EMA610 notes → `IND-12`
+
+---
+
+## 9. 归档与 Replay（UT-09 ~ UT-25）
+
+> 审查日期：2026-07-12 · 覆盖近 6 周流水线/归档/Replay/LLM 压缩改动
+
+### 9.1 变更 → 测试覆盖矩阵
+
+| 提交/模块 | 测试文件 | 缺口（本 Sprint 补齐） |
+|-----------|----------|------------------------|
+| `src/run/archive/*` 归档 v2 | `test_run_archive`, `test_archive_optimizations`, `test_archive_compat` | compat normalize/inspect/upgrade |
+| `src/viz/replay_loader` | `test_archive_optimizations` | 缺 ID / INCOMPATIBLE 错误路径 |
+| `src/viz/generation_worker` | `test_generation_worker`（新建） | replay 同步路径、错误格式化 |
+| `src/core/orchestrator_hooks` | `test_orchestrator_hooks`（新建） | 四 hook 全 mock |
+| `src/run/config` ContextVar | `test_run_config` | replay normalized 剥离 LLM；`run_config_scope` |
+| `src/agents/llm/payload` 漏斗 | `test_llm_payload_funnel` | risk/trader_decision payload |
+| risk gates / audit summary | `test_risk_gates`, `test_audit_summary` | 目录登记 |
+| narrative authorization | `test_narrative_authorization` | 目录登记 |
+| manager authorization | `test_manager_authorization` | 目录登记 |
+| `narrative_facts` 统一入口 | `test_narrative_facts`（新建） | ctx / technical_context 分支 |
+| `factory.run_level_proposer` | `test_llm_trade_stages` | LLM 路由 |
+| Streamlit 会话隔离 | `test_streamlit_ensure_report`, `test_run_config_panel` | 目录登记 |
+
+### 9.2 用例 ID 速查
+
+| ID | 模块 | 要点 |
+|----|------|------|
+| UT-09 | `test_run_archive` | roundtrip、legacy v1、degraded inspect |
+| UT-10 | `test_archive_optimizations` | index、prune count/MB、replay happy path |
+| UT-11 | `test_run_config` | 模式 preset、replay 剥离、scope |
+| UT-12 | `test_run_config_panel` | replay 优先于 mode |
+| UT-13 | `test_llm_payload_funnel` | 各阶段 payload 形状 |
+| UT-14 | `test_replay_llm_narrative` | 离线 fixture + script |
+| UT-15 ~ UT-20 | 风控/审计/授权/Streamlit | 已有实现，补登记 |
+| UT-21 | `test_display_labels` | infer_trade_theme、execution_banner |
+| UT-22 | `test_orchestrator_hooks` | begin/fetch/publish/finalize |
+| UT-23 | `test_generation_worker` | replay 同步、format_generation_error |
+| UT-24 | `test_archive_compat` | normalize、INCOMPATIBLE inspect |
+| UT-25 | `test_narrative_facts` | ctx 分支、event_limit |
+
+### 9.3 Scenario 命令
+
+```bash
+# 归档 + Replay + Worker
+pytest tests/unit/test_run_archive.py tests/unit/test_archive_optimizations.py \
+  tests/unit/test_archive_compat.py tests/unit/test_generation_worker.py \
+  tests/unit/test_orchestrator_hooks.py -q
+
+# RunConfig + payload funnel
+pytest tests/unit/test_run_config.py tests/unit/test_run_config_panel.py \
+  tests/unit/test_llm_payload_funnel.py -q
+
+# 风控 / 授权 / 叙事
+pytest tests/unit/test_risk_gates.py tests/unit/test_audit_summary.py \
+  tests/unit/test_narrative_authorization.py tests/unit/test_manager_authorization.py \
+  tests/unit/test_narrative_facts.py -q
+```

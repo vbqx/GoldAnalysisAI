@@ -1,0 +1,55 @@
+{
+  "market_summary": "黄金在 4140 附近，上方 4148-4160 为量价阻力区。",
+  "trade_thesis": "反抽失败后结构仍偏空，等待 4148 附近确认。",
+  "action_plan": "观望：4148-4160 反抽失败后再评估回落。",
+  "risks": ["有效站上 4175", "数据非实时"],
+  "confidence": 0.82,
+  "watch_levels": ["4148 阻力", "4135 支撑"],
+  "narrative_sections": {
+    "market_overview": {
+      "summary": "现价 4140 附近，整体偏空。",
+      "context": ["背景一", "背景二", "背景三"],
+      "levels": ["4148", "4155", "4160", "4175"],
+      "conditions": ["条件一", "条件二"],
+      "invalidation": "有效站上 4175 后失效。",
+      "source": "llm",
+      "confidence": 0.85
+    },
+    "liquidity": {
+      "summary": "上方流动性在 4148 附近。",
+      "context": ["扫取后收回偏空。"],
+      "levels": ["4148 上方流动性", "4135 下方流动性"],
+      "conditions": ["若扫高后收回，则观察回落。"],
+      "invalidation": "有效突破 4175 失效。",
+      "source": "llm",
+      "confidence": 0.8
+    },
+    "4h": {
+      "summary": "4H 宏观背景偏空。",
+      "context": ["反弹仍受压。"],
+      "levels": ["POC 4142", "VAH 4160"],
+      "conditions": ["维持 premium 则偏空。"],
+      "invalidation": "4H 收上 4175 失效。",
+      "source": "llm",
+      "confidence": 0.78
+    },
+    "1h": {
+      "summary": "1H 处于反抽阶段。",
+      "context": ["结构未转多。"],
+      "levels": ["4148-4160 压力", "4135 支撑"],
+      "conditions": ["等待 1H 收盘确认。"],
+      "invalidation": "1H BOS 转多失效。",
+      "source": "llm",
+      "confidence": 0.81
+    },
+    "15m": {
+      "summary": "15m 等待执行确认。",
+      "context": ["不追单。"],
+      "levels": ["4148 反抽区", "4130 支撑"],
+      "conditions": ["仅在确认后观察。"],
+      "invalidation": "15m 有效突破 4160 失效。",
+      "source": "llm",
+      "confidence": 0.79
+    }
+  }
+}
