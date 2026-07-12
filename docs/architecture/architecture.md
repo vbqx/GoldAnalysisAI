@@ -47,6 +47,7 @@
 │                        DATA LAYER                                │
 │  market(TV) │ jin10_mcp (快讯/资讯/日历/quote/kline) │ macro(DXY+US10Y) │ tv_social │
 │  context_builder.py → derived + context_stats                         │
+│  calendar_utils.py / external_format.py → 过滤 upcoming 日历 + risk_events │
 │  jin10_mcp_client → jin10_feed → news.py (NewsDataSource)       │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
@@ -80,17 +81,20 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │                   RISK MANAGEMENT TEAM                           │
 │   Aggressive │ Neutral │ Conservative → RiskReview[]             │
+│   + analysis/risk_gates.py（几何 / 时效 / 观察模式确定性门控）      │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                       MANAGER                                    │
-│   ManagerDecision → 排序 signals / 观望                          │
+│   ManagerDecision → apply_manager_authorization → 授权 signal_id │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                   REPORT BUILDER                                 │
-│   analysis/report_engine.build_report(signals=…) (JSON schema 不变) │
-│   + report["agent_trace"]["analyst_team"] + stage_sources      │
+│   build_report → 规则 narrative_sections                         │
+│   apply_manager_authorization（在 LLM 叙事之前）                    │
+│   llm/analyst.py → 五块 + 顶层文案（action_plan 仅授权执行价）       │
+│   meta.audit_summary / data_as_of / observation_mode             │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
                       app.py + views/* + viz/*

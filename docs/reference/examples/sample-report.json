@@ -4,7 +4,7 @@
     "title": "XAUUSD 黄金/美元 机构级交易分析报告 (LuxAlgo SMC)",
     "strategy_title": "XAUUSD 黄金 短线交易策略图",
     "strategy_subtitle": "LuxAlgo SMC | 5min / 15min 简版执行策略",
-    "updated_at": "2026-07-12 14:07 (UTC+8)",
+    "updated_at": "2026-07-12 14:46 (UTC+8)",
     "methodology": "LuxAlgo Smart Money Concepts",
     "indicator_notes": [
       "EMA610 仅基于 120 根 K 线，历史不足 610 根时与 TV 长周期 EMA 可能有偏差"
@@ -68,7 +68,7 @@
     "must_do": [
       "★ 主策略：反弹至 FVG/OB 阻力区分批做空",
       "★ 次策略：扫低流动性后短多（逆势轻仓）",
-      "★ 风控：单笔风险 ≤ 2%，止损必执行"
+      "★ 风控：按授权档位控制仓位，止损必执行"
     ],
     "starred": [
       "暂不建议追空",
@@ -154,7 +154,7 @@
       "id": "路径 C",
       "name": "极端路径 (直接破位)",
       "probability": 0.0,
-      "color": "#3b82f6",
+      "color": "#64748b",
       "summary": "当前(2659.52) → 直接下破(2634.0)"
     }
   ],
@@ -534,7 +534,8 @@
         "收盘收回 VAL 上方",
         "SMC 无明确结构确认，仅作参考 (-3)",
         "SMC 结构区未对齐 PA 价位 (-4)"
-      ]
+      ],
+      "signal_id": "sig-25ff3c6d9f9c"
     }
   ],
   "projections": [
@@ -1696,7 +1697,7 @@
         ],
         "position_scale": 0.7,
         "notes": [
-          "中性：最多 2 个信号，仓位 70%"
+          "中性：最多 2 个信号，缩仓档"
         ]
       },
       {
@@ -1707,7 +1708,7 @@
         ],
         "position_scale": 0.4,
         "notes": [
-          "保守：仅主信号，仓位 40%"
+          "保守：仅主信号，试探档"
         ]
       }
     ],
@@ -1717,7 +1718,7 @@
       "selected_signal_indices": [
         0
       ],
-      "confidence": 0.55,
+      "confidence": 0.72,
       "summary": "经理：保守风控通过，缩减至主信号执行",
       "position_scale": 0.4
     },

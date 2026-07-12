@@ -53,6 +53,7 @@ python scripts/export_sample_report.py
 - 固定键：`market_overview`、`liquidity`、`4h`、`1h`、`15m`。
 - 每块最多 6 行；`source` 为 `rule`、`llm` 或 `fallback`。
 - LLM 只能引用输入白名单中的价位。缺字段、虚构价位、方向冲突或 Hybrid 置信度不足时，仅回退对应块。
+- **顶层 `action_plan`** 仅允许引用 Manager 授权信号的执行价（`authorized_execution_levels`）；`market_summary` / `trade_thesis` 可使用参考位（`context_levels`）。
 - 逐块采用与回退原因记录在 `meta.stage_sources.narrative_sections`，完整提示词和原始 JSON 继续记录在 `meta.llm_io`。
 
 ---
@@ -79,6 +80,14 @@ python scripts/export_sample_report.py
 | `generation_steps` | 与 [pipeline-steps.yaml](../pipeline-steps.yaml) 步骤 ID 对应 |
 | `llm_io` | 规则阶段输入输出 + LLM 消息与响应 |
 | `context_stats` | 分析师输入密度，见 [analyst-context.md](../../architecture/analyst-context.md) |
+| `data_as_of` | K 线时效契约：`executable`、`data_age_hours`、`warnings` |
+| `observation_mode` | `true` 时为快照观察，禁止 LLM 覆盖可执行结论 |
+| `execution_authorized` | Manager 是否授权执行 |
+| `authorized_signal_ids` | 授权信号的 content-hash ID 列表 |
+| `authorized_position_scale` | 授权仓位系数（0–1，映射定性标签） |
+| `manager_decision` | 经理决策快照 |
+| `audit_summary` | 每轮运行紧凑审计块（供 Codex / 回归比对） |
+| `stage_sources.narrative_top_level` | 顶层 LLM 文案校验结果 |
 
 ---
 
@@ -114,6 +123,7 @@ python scripts/export_sample_report.py
 
 | 字段 | 说明 |
 |------|------|
+| `signal_id` | 由方向/入场/止损/TP/setup 生成的稳定哈希 ID（`sig-{12hex}`） |
 | `name` | 策略名称（如「激进做空」） |
 | `theme` | `"short"` 空 / `"long"` 多 |
 | `entry_low` / `entry_high` | 入场区间 |

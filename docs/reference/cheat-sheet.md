@@ -39,6 +39,13 @@
 | 调整报告五块文案 (总览/流动性/结构) | `analysis/narrative_sections.py` | `pytest tests/unit/test_narrative_sections.py` |
 | 调整报告流动性/周期汇总事实 | `analysis/report_facts.py` | `pytest tests/unit/test_report_facts.py` |
 | 改交易信号几何 | `analysis/report_engine.py` | `pytest tests/unit/test_financial_review.py` |
+| **Manager 授权 / 仓位映射** | `analysis/report_engine.py` (`apply_manager_authorization`) | `pytest tests/unit/test_manager_authorization.py` |
+| **确定性风控门控** | `analysis/risk_gates.py`, `agents/risk.py`, `agents/factory.py` | `pytest tests/unit/test_risk_gates.py tests/unit/test_rule_chain_stability.py` |
+| **信号几何 / 稳定 signal_id** | `analysis/signal_geometry.py`, `analysis/signal_identity.py` | `pytest tests/unit/test_signal_geometry.py tests/unit/test_signal_identity.py` |
+| **数据时效 / 观察模式** | `analysis/data_freshness.py`, `core/orchestrator.py` | `pytest tests/unit/test_data_freshness.py` |
+| **LLM 叙事授权边界** | `analysis/narrative_sections.py`, `llm/analyst.py` | `pytest tests/unit/test_narrative_authorization.py tests/unit/test_narrative_top_level.py` |
+| **日历过滤 / 外部文本** | `data/calendar_utils.py`, `data/external_format.py` | `pytest tests/unit/test_external_sources.py tests/unit/test_analyst_input_density.py` |
+| **运行审计摘要** | `analysis/audit_summary.py` | `pytest tests/unit/test_audit_summary.py` |
 | **主图 OB/FVG 可见范围** | `analysis/chart_zone_filters.py`, `viz/lightweight_chart.py` | `pytest tests/unit/test_chart_projections.py`；见 [chart-layers.md](../architecture/chart-layers.md) |
 | 规则模式一致性门禁 | `tests/tools/coherence_check.py` | `$env:AGENT_MODE="rule"; python tests/tools/coherence_check.py` |
 | 金融实跑快照 | `tests/tools/financial_review_run.py` | 输出 `tests/reports/financial_review_snapshot.json` |
@@ -68,6 +75,7 @@
 | `LLM_STAGE_TRADER` | `true` | 交易员 LLM |
 | `LLM_STAGE_RISK` | `true` | 风控 LLM |
 | `LLM_STAGE_MANAGER` | `true` | 经理 LLM |
+| `LLM_STAGE_WARN_MS` | `120000` | 单阶段 LLM 耗时超过此值写 warning 日志 |
 | `MT5_ENABLED` | `false` | 可选 MT5 provider，默认不影响 TradingView |
 | `JIN10_API_TOKEN` | — | 金十 MCP |
 | `LOG_LEVEL` | `DEBUG` | 跟踪流水线 |
