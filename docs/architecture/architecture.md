@@ -185,9 +185,9 @@ report, data, analyses = run_analysis()
 
 ## 6. 运行配置边界
 
-Streamlit 首屏先展示运行配置，用户确认后再触发数据拉取与分析。当前为了保持 `run_analysis()` 返回签名兼容，配置通过 `apply_run_config()` 同步到已 import 模块。
+Streamlit 首屏先展示运行配置，用户确认后再触发数据拉取与分析。后台 worker 通过 `apply_run_config()` 将不可变 `RunConfig` 绑定到当前线程的 `ContextVar`（`src/core/run_context.py`），`factory` 等阶段通过 `get_run_config()` 读取，避免多会话并发时模块全局被覆盖。
 
-后续是否改为显式传递 `RunConfig` 属于路线图事项，见 [roadmap.md](../planning/roadmap.md#运行配置与-ui)。
+报告生成状态按 `session_id + generation_id` 隔离（`src/viz/generation_state.py`），经理授权与 `position_scale` 在 `apply_manager_authorization()` 中一次性写入报告，不再由 orchestrator 二次覆盖。
 
 ---
 
