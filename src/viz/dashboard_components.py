@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 from typing import Any
 
+from src.analysis.display_labels import infer_trade_theme
 from src.analysis.report_engine import parse_risk_events_calendar
 from src.config import GITHUB_REPO, PROJECT_NAME
 from src.viz.source_labels import render_source_badge, stage_source
@@ -253,7 +254,8 @@ iframe { border: none; display: block; }
   background: #f8fafc;
 }
 .plan-card { border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; font-size: 0.68rem; background: #fff; }
-.plan-card.is-primary { border-color: #0ea5e9; box-shadow: 0 0 0 1px rgba(14,165,233,0.15); }
+.plan-card.short.is-primary { border-color: #dc2626; box-shadow: 0 0 0 1px rgba(220,38,38,0.18); }
+.plan-card.long.is-primary { border-color: #16a34a; box-shadow: 0 0 0 1px rgba(22,163,74,0.18); }
 .plan-card.invalid { opacity: 0.78; }
 .plan-card .head {
   display: flex; align-items: center; justify-content: space-between; gap: 6px;
@@ -268,6 +270,8 @@ iframe { border: none; display: block; }
 }
 .plan-card .plan-grid .k { color: #64748b; font-size: 0.62rem; font-weight: 700; }
 .plan-card .plan-grid .v { color: #0f172a; font-size: 0.72rem; font-weight: 700; word-break: break-word; }
+.plan-card.short .plan-grid .direction-v { color: #dc2626; }
+.plan-card.long .plan-grid .direction-v { color: #16a34a; }
 .plan-card .plan-meta { color: #64748b; font-size: 0.66rem; line-height: 1.4; }
 .plan-card .confidence-pill {
   display: inline-flex; align-items: center; border-radius: 999px;
@@ -296,6 +300,8 @@ iframe { border: none; display: block; }
 .decision-cell .s { margin: 4px 0 0; color: #64748b; font-size: 0.7rem; line-height: 1.35; }
 .decision-cell.direction-short { border-left: 4px solid #dc2626; }
 .decision-cell.direction-long { border-left: 4px solid #16a34a; }
+.decision-cell.direction-short .v { color: #dc2626; }
+.decision-cell.direction-long .v { color: #16a34a; }
 .decision-cell.direction-neutral { border-left: 4px solid #64748b; }
 .status-pill {
   display: inline-flex;
@@ -666,7 +672,14 @@ def _status_meta(status: str) -> tuple[str, str]:
 
 
 def _direction_class(signal: dict[str, Any] | None, conclusion: dict[str, Any]) -> str:
-    raw = str((signal or {}).get("theme") or conclusion.get("market_sentiment") or "").lower()
+    if signal:
+        theme = infer_trade_theme(
+            theme=str(signal.get("theme") or ""),
+            direction=str(signal.get("direction") or ""),
+            direction_cn=str(signal.get("direction_cn") or ""),
+        )
+        return f"direction-{theme}"
+    raw = str(conclusion.get("market_sentiment") or "").lower()
     if raw in ("short", "bear", "bearish") or "空" in raw or "跌" in raw:
         return "direction-short"
     if raw in ("long", "bull", "bullish") or "多" in raw or "涨" in raw:
@@ -775,7 +788,11 @@ def _render_plan_card(
     is_primary: bool = False,
 ) -> str:
     role = sig.get("signal_role", "primary")
-    css_theme = "short" if sig.get("theme") == "short" else "long"
+    css_theme = infer_trade_theme(
+        theme=str(sig.get("theme") or ""),
+        direction=str(sig.get("direction") or ""),
+        direction_cn=str(sig.get("direction_cn") or ""),
+    )
     alt = " alt" if role == "alternate" else ""
     status = str(sig.get("status") or "candidate")
     status_label, status_cls = _status_meta(status)
@@ -813,7 +830,7 @@ def _render_plan_card(
   </div>
   <div class="body">
     <div class="plan-grid">
-      <div><div class="k">方向</div><div class="v">{direction}</div></div>
+      <div><div class="k">方向</div><div class="v direction-v">{direction}</div></div>
       <div><div class="k">入场区</div><div class="v">{_signal_zone(sig)}</div></div>
       <div><div class="k">止损</div><div class="v">{_fmt_price(sig.get('stop_loss'))}</div></div>
       <div><div class="k">目标</div><div class="v">{_signal_targets(sig)}</div></div>
