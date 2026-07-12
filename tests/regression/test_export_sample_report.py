@@ -14,6 +14,7 @@ pytestmark = pytest.mark.regression
 
 ROOT = Path(__file__).resolve().parents[2]
 SAMPLE = ROOT / "docs" / "reference" / "examples" / "sample-report.json"
+SAMPLE_REPORT_UPDATED_AT = "2026-06-16 08:39 (UTC+8)"
 
 
 def test_export_sample_report_script() -> None:
@@ -30,6 +31,7 @@ def test_export_sample_report_script() -> None:
 
     sample = json.loads(SAMPLE.read_text(encoding="utf-8"))
     assert sample["meta"]["sample"] is True
+    assert sample["meta"]["updated_at"] == SAMPLE_REPORT_UPDATED_AT
     trace = sample["agent_trace"]
     assert "llm_levels" in trace
     assert "validated_plans" in trace

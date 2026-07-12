@@ -1,0 +1,16 @@
+{
+  "metrics": {"current_price": 4140.0},
+  "signals": [],
+  "llm_analysis": {
+    "enabled": true,
+    "market_summary": "数据偏旧但仍可跟踪结构。",
+    "trade_thesis": "建议立即入场做空4140附近。"
+  },
+  "meta": {
+    "observation_mode": false,
+    "execution_authorized": false,
+    "manager_decision": {"action": "wait"},
+    "data_as_of": {"executable": false, "data_age_hours": 30},
+    "stage_sources": {"narrative_top_level": "llm"}
+  }
+}

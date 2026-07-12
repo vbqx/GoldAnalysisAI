@@ -214,10 +214,10 @@ def test_technical_analyst_payload_uses_shared_context() -> None:
     assert payload["fibonacci"]["nearest"]
     assert payload["support_resistance"]["nearest_resistance"]
     assert payload["support_resistance"]["nearest_support"]
-    assert payload["timeframes"][0]["timeframe"] == "1d"
     assert set(payload["lux_timeframe_panels"]) == {"4h", "1h", "15m"}
     assert payload["lux_timeframe_panels"]["4h"]["bos_list"]
-    assert "price_action" in payload
+    assert "price_action" not in payload
+    assert "timeframes" not in payload
     assert "price_action_summary" in payload
     assert payload["price_action_summary"]["5m"]["poc"] is not None
     assert "_hint" in payload["price_action_summary"]
@@ -242,7 +242,14 @@ def test_narrative_context_includes_shared_technical_context() -> None:
     )
     payload = build_llm_context(ctx, debate, decision, {"meta": {"symbol": "XAUUSD"}})
     assert payload["technical_context"]["support_resistance"]["nearest_resistance"]
-    assert payload["technical_context"]["indicators"]["5m"]["indicators"]["ATR14"] is not None
+    assert payload["technical_context"]["quality"] is not None
+    assert "indicators" not in payload["technical_context"]
+    assert payload["price_fact_id"] == "metrics.current_price"
+    assert "timeframes" not in payload
+    assert "price_action" not in payload
+    assert "price_action" not in payload["narrative_facts"]
+    assert "price_action_summary" in payload["narrative_facts"]
+    assert payload["context_meta"]["input_chars"] > 0
 
 
 def test_technical_analyst_degrades_low_quality_inputs() -> None:

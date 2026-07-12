@@ -50,6 +50,34 @@ def _minimal_report() -> dict:
     }
 
 
+def test_market_overview_prefers_session_day_poc() -> None:
+    report = _minimal_report()
+    report["price_action"]["session"] = {
+        "timeframe": "session",
+        "volume_profile": {"poc": 4100.0, "vah": 4110.0, "val": 4090.0},
+        "sr_levels": [],
+    }
+    report["price_action"]["15m"]["volume_profile"] = {"poc": 4125.0, "vah": 4138.0, "val": 4122.0}
+    report["price_action"]["5m"]["volume_profile"] = {"poc": 9999.0, "vah": 9998.0, "val": 9997.0}
+    ov = build_rule_narrative_sections(report)["market_overview"]
+    text = " ".join([ov["summary"], *ov.get("levels", [])])
+    assert "当日 POC" in text
+    assert "4100" in text
+    assert "4125" not in text
+    assert "9999" not in text
+
+
+def test_market_overview_uses_15m_volume_profile_not_5m() -> None:
+    report = _minimal_report()
+    report["price_action"]["5m"]["volume_profile"] = {"poc": 9999.0, "vah": 9998.0, "val": 9997.0}
+    report["price_action"]["15m"]["volume_profile"] = {"poc": 4125.0, "vah": 4138.0, "val": 4122.0}
+    ov = build_rule_narrative_sections(report)["market_overview"]
+    text = " ".join([ov["summary"], *ov.get("levels", [])])
+    assert "4125" in text
+    assert "9999" not in text
+    assert "15m POC" in text
+
+
 def test_narrative_combines_smc_and_pa_in_overview() -> None:
     sections = build_rule_narrative_sections(_minimal_report())
     ov = sections["market_overview"]
@@ -60,8 +88,35 @@ def test_narrative_combines_smc_and_pa_in_overview() -> None:
     assert "4136" in text
 
 
+def test_narrative_liquidity_uses_intraday_pa_not_5m() -> None:
+    report = _minimal_report()
+    report["price_action"]["session"] = {
+        "timeframe": "session",
+        "volume_profile": {"poc": 4125.0, "vah": 4138.0, "val": 4122.0},
+        "sr_levels": [
+            {"price": 4137.0, "direction": "resistance", "label": "量价连续阻力", "kind": "consecutive_sr"},
+        ],
+    }
+    report["price_action"]["5m"]["sr_levels"] = [
+        {"price": 9999.0, "direction": "resistance", "label": "5m不应出现", "kind": "consecutive_sr"},
+    ]
+    sections = build_rule_narrative_sections(report)
+    liq = sections["liquidity"]
+    levels_text = " ".join(liq.get("levels", []))
+    context = liq.get("context", [""])[0]
+    assert "量价" in levels_text or "4137" in levels_text
+    assert "9999" not in levels_text
+    assert "5m" not in context
+    assert "日内" in context
+    assert "结构" not in levels_text
+
+
 def test_narrative_liquidity_uses_pa_only() -> None:
-    sections = build_rule_narrative_sections(_minimal_report())
+    report = _minimal_report()
+    report["price_action"]["15m"]["sr_levels"] = [
+        {"price": 4137.0, "direction": "resistance", "label": "量价连续阻力", "kind": "consecutive_sr"},
+    ]
+    sections = build_rule_narrative_sections(report)
     liq = sections["liquidity"]
     levels_text = " ".join(liq.get("levels", []))
     assert "量价" in levels_text
@@ -70,8 +125,12 @@ def test_narrative_liquidity_uses_pa_only() -> None:
 
 def test_narrative_facts_include_price_action_for_llm() -> None:
     report = _minimal_report()
-    facts = build_narrative_facts(report, {"price_action": report["price_action"], "quality": {}})
-    assert "price_action" in facts
+    facts = build_narrative_facts(
+        report,
+        {"price_action": report["price_action"], "quality": {}},
+        compact_for_llm=True,
+    )
+    assert "price_action" not in facts
     assert "price_action_summary" in facts
     assert "combination_rules" in facts
     assert facts["price_action_summary"]["5m"]["poc"] == 4125.0

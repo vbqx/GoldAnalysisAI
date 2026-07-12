@@ -153,3 +153,42 @@ def test_pa_long_uses_val_zone() -> None:
     long_sig = next(s for s in signals if s.direction == "BUY")
     assert long_sig.setup_type == "pa_val_sweep_long"
     assert long_sig.entry_high == 4198.0
+
+
+def test_aggressive_short_skips_resistance_below_price() -> None:
+    """现价已越过下方阻力时，不应生成「激进反抽做空」."""
+    a5, a15 = _bearish_analyses()
+    pa = {
+        "5m": {
+            "volume_ok": True,
+            "sr_levels": [
+                {
+                    "price": 4116.0,
+                    "direction": "resistance",
+                    "kind": "consecutive_sr",
+                    "label": "已突破阻力",
+                    "time": "2026-06-01T00:00:00",
+                },
+                {
+                    "price": 4125.0,
+                    "direction": "resistance",
+                    "kind": "consecutive_sr",
+                    "label": "上方阻力",
+                    "time": "2026-06-01T00:00:00",
+                },
+            ],
+            "volume_profile": {"poc": 4110.0, "vah": 4130.0, "val": 4098.0},
+        }
+    }
+    signals = generate_trading_signals(
+        4120.0,
+        a5,
+        a15,
+        4300.0,
+        4180.0,
+        {"bearish": 62.0, "bullish": 28.0, "ranging": 10.0},
+        price_action=pa,
+    )
+    aggressive = [s for s in signals if s.setup_type == "pa_resistance_short"]
+    assert len(aggressive) == 1
+    assert aggressive[0].entry_low >= 4120.0 or aggressive[0].entry_high >= 4120.0

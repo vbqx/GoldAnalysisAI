@@ -37,6 +37,23 @@ def test_top_level_rejects_executable_wording_on_wait() -> None:
     assert reason is not None
 
 
+def test_top_level_rejects_chase_wording_on_wait() -> None:
+    facts = {
+        "context_levels": [{"price": 4103.0}, {"price": 4072.0}],
+        "authorized_execution_levels": [],
+        "common": {
+            "primary_signal": {"theme": "short"},
+            "manager_decision": {"action": "wait", "primary_direction": "wait"},
+            "sentiment": {"bearish": 60, "bullish": 30},
+        },
+    }
+    reason = validate_llm_top_level(
+        {"action_plan": "若价格跌破4103，可追空至4072附近"},
+        facts=facts,
+    )
+    assert reason is not None
+
+
 def test_top_level_allows_observation_action_plan_on_wait() -> None:
     facts = {
         "context_levels": [{"price": 4130.0}, {"price": 4200.0}],
