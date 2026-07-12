@@ -298,3 +298,21 @@ def run_random_window_backtest(
             "note": "Aggregate trade stats dedupe overlapping windows; use per-window rows for distribution.",
         },
     )
+
+
+def run_backtest_from_archive(
+    run_id: str,
+    config: BacktestConfig | None = None,
+    *,
+    dxy_daily: pd.DataFrame | None = None,
+) -> BacktestResult:
+    """Run rule backtest on 5m bars stored in a run archive (same artifact contract as UI replay)."""
+    from src.data.run_archive import load_archive_5m_bars
+
+    df_5m = load_archive_5m_bars(run_id)
+    cfg = config or BacktestConfig()
+    result = run_backtest(df_5m, cfg, dxy_daily=dxy_daily)
+    diagnostics = dict(result.diagnostics)
+    diagnostics["source_run_id"] = run_id
+    diagnostics["archive_contract"] = "run_archive_v2"
+    return replace(result, diagnostics=diagnostics)

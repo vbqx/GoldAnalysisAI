@@ -19,7 +19,7 @@ Custom port: `python run_app.py --port 8503`
 
 Default URL: `http://localhost:8501`
 
-Legacy wrappers (`run_app.ps1`, `scripts/run_app.sh`) delegate to `run_app.py`.
+Legacy wrapper `scripts/run_app.sh` was removed; use root `run_app.py` / `run_app.bat` / `run_app.sh` only.
 
 ## Environment
 
@@ -33,6 +33,7 @@ Legacy wrappers (`run_app.ps1`, `scripts/run_app.sh`) delegate to `run_app.py`.
 python tests/run.py                    # fast unit + regression (no network)
 python tests/run.py --full             # includes pipeline integration
 python scripts/check_mt5_connection.py # optional MT5 self-check
+python scripts/inspect_archive.py list # list saved run archives (replay bundles)
 ```
 
 ## Key docs

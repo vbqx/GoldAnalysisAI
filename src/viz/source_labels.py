@@ -5,7 +5,7 @@ from __future__ import annotations
 from src.config import short_model_name
 
 STAGE_LABELS = {
-    "analyst_team": "Analyst Team",
+    "analyst_team": "分析师团队",
     "technical": "技术分析师",
     "fundamentals": "基本面分析师",
     "news": "新闻分析师",
@@ -56,7 +56,7 @@ def stage_meta_label(meta: dict) -> str:
     if source == "llm":
         return "LLM"
     if source == "rule" and llm_was_invoked(meta):
-        return "规则·LLM失败回退" if llm.get("error") else "规则"
+        return "规则·LLM失败兜底" if llm.get("error") else "规则"
     return "规则"
 
 

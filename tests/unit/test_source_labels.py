@@ -27,5 +27,5 @@ def test_pure_rule_no_llm() -> None:
 
 def test_llm_mode_failure_fallback() -> None:
     meta = {"source": "rule", "fallback_reason": "timeout", "llm": {"error": "timeout"}}
-    assert stage_meta_label(meta) == "规则·LLM失败回退"
+    assert stage_meta_label(meta) == "规则·LLM失败兜底"
     assert llm_was_invoked(meta)

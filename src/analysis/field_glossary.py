@@ -38,14 +38,21 @@ NARRATIVE_PRIORITY_HINT = (
 )
 
 RESEARCH_PRIORITY_HINT = (
-    "提取证据时 SMC 定结构方向，PA 量价作确认；"
-    "category=structure|liquidity 偏 SMC，可引用 analyst 的 price_action 条目。"
+    "以 analyst_team 四位分析师结论为主提取同向 evidence；"
+    "structure_vote / timeframe_trends / event_risk 仅作交叉校验，不得绕过 analyst 重读原始新闻。"
+    "category 可用 structure|liquidity|external|analyst_*；可引用 analyst 的 price_action 条目。"
 )
 
 TRADER_PRIORITY_HINT = (
-    "交易计划：rule_signals 已由 PA（POC/VAH/VAL、量价 S/R）定入场/止损/目标区；"
-    "SMC 仅作方向与置信度过滤，不得重新发明价位。"
+    "依据 debate 共识与 analyst_team_summaries 选方向；"
+    "candidate_signals 已由 PA（POC/VAH/VAL、量价 S/R）定入场/止损/目标区；"
+    "不得重读原始市场数据或重新发明价位。"
     "只选 payload 中存在的 signal_index，invalid 信号不可选。"
+)
+
+DEBATE_PRIORITY_HINT = (
+    "综合 bullish/bearish evidence 与 analyst_team 摘要；"
+    "event_risk 用于宏观波动提示；不得引入 payload 外的新闻或价位。"
 )
 
 LEVELS_PRIORITY_HINT = (

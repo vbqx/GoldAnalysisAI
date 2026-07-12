@@ -4,7 +4,7 @@
     "title": "XAUUSD 黄金/美元 机构级交易分析报告 (LuxAlgo SMC)",
     "strategy_title": "XAUUSD 黄金 短线交易策略图",
     "strategy_subtitle": "LuxAlgo SMC | 5min / 15min 简版执行策略",
-    "updated_at": "2026-07-12 14:46 (UTC+8)",
+    "updated_at": "2026-07-12 17:41 (UTC+8)",
     "methodology": "LuxAlgo Smart Money Concepts",
     "indicator_notes": [
       "EMA610 仅基于 120 根 K 线，历史不足 610 根时与 TV 长周期 EMA 可能有偏差"

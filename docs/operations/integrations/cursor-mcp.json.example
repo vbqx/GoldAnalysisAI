@@ -1,6 +1,6 @@
 # Cursor / Claude MCP — 金十官方数据（可选，供 AI 对话直接查行情/快讯/日历）
 # Token 申请: https://mcp.jin10.com/app
-# 文档: docs/integrations/jin10-mcp.md
+# 文档: docs/operations/integrations/jin10-mcp.md
 #
 # 复制为 ~/.cursor/mcp.json 或在 Cursor Settings → MCP 中添加：
 #

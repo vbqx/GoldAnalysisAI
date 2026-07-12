@@ -1,18 +1,35 @@
+# Python
 .venv/
-.env
-.streamlit/credentials.toml
-.codex-remote-attachments/
 __pycache__/
 *.pyc
-_chart_test.html
+.pytest_cache/
+
+# Secrets & local env
+.env
+.streamlit/credentials.toml
+
+# IDE / editor (never commit — local MCP tokens, rules, workspace state)
+.cursor/
+.agents/
+.codex/
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Runtime & cache
+.cache/
+# Replay bundles live at .cache/run_archives/<run_id>/ — never commit
 logs/
 *.log
-.pytest_cache/
+.codex-remote-attachments/
+
+# Local / one-off
 indicator/
-
-tests/reports/*
-!tests/reports/.gitkeep
-
-# local swing_low demo (one-off debug, not part of product)
+_chart_test.html
 scripts/show_swing_low_calc.py
 scripts/swing_low_output.txt
+
+# Test artifacts
+tests/reports/*
+!tests/reports/.gitkeep

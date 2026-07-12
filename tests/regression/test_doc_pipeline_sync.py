@@ -32,9 +32,12 @@ def _prog_start_keys(*paths: Path) -> set[str]:
     return keys
 
 
-def _yaml_step_ids() -> list[str]:
+def _yaml_step_ids(*, progress_only: bool = False) -> list[str]:
     data = yaml.safe_load(PIPELINE_YAML.read_text(encoding="utf-8"))
-    return [step["id"] for step in data["steps"]]
+    steps = data["steps"]
+    if progress_only:
+        return [step["id"] for step in steps if step.get("progress", True)]
+    return [step["id"] for step in steps]
 
 
 def test_pipeline_yaml_exists() -> None:
@@ -43,7 +46,7 @@ def test_pipeline_yaml_exists() -> None:
 
 def test_yaml_steps_match_prog_start_keys() -> None:
     code_keys = _prog_start_keys(ORCHESTRATOR, FETCH_PIPELINE)
-    yaml_ids = set(_yaml_step_ids())
+    yaml_ids = set(_yaml_step_ids(progress_only=True))
     assert code_keys == yaml_ids, (
         f"prog.start keys {sorted(code_keys)} != pipeline-steps.yaml ids {sorted(yaml_ids)}"
     )

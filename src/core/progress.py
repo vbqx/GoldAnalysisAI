@@ -92,7 +92,7 @@ class ProgressReporter:
         self._on_change()
 
     def start(self, step_id: str, label: str, detail: str = "") -> None:
-        self._finish_running()
+        self._finish_all_running()
         step = PipelineProgressStep(
             id=step_id, label=label, status="running", detail=detail, started_at=time.perf_counter()
         )
@@ -225,6 +225,12 @@ class ProgressReporter:
             if step.id == step_id:
                 return step
         return None
+
+    def _finish_all_running(self) -> None:
+        for step in self.state.steps:
+            if step.status == "running":
+                step.status = "done"
+                step.elapsed_ms = self._elapsed_since_step_start(step)
 
     def _finish_running(self) -> None:
         for step in reversed(self.state.steps):

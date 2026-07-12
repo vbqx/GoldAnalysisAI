@@ -91,3 +91,17 @@ steps:
     function: run_llm_analysis
     uses_llm: optional
     progress: true
+
+  - id: archive
+    label: 运行归档
+    module: src/run/archive/store.py
+    function: archive_run
+    uses_llm: false
+    progress: false
+
+replay:
+  entry: src/viz/replay_loader.py::load_replay_bundle
+  storage: .cache/run_archives/
+  uses_llm: false
+  uses_fetch: false
+  note: UI 回放仅 load_bundle，不重跑流水线

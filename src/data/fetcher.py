@@ -65,6 +65,32 @@ def daily_metrics(df_1d: pd.DataFrame) -> dict:
     }
 
 
+UTC8 = timezone(timedelta(hours=8))
+
+
 def utc8_now() -> datetime:
-    tz = timezone(timedelta(hours=8))
-    return datetime.now(tz)
+    return datetime.now(UTC8)
+
+
+def format_utc8(iso_value: object, *, fmt: str = "%Y-%m-%d %H:%M") -> str:
+    """Format an ISO UTC timestamp for UI display in Beijing time (UTC+8)."""
+    raw = str(iso_value or "").strip()
+    if not raw:
+        return "—"
+    if len(raw) >= 16 and raw[0].isdigit() and "T" in raw[:20]:
+        compact = raw.rstrip("Z")[:15]
+        try:
+            dt = datetime.strptime(compact, "%Y%m%dT%H%M%S").replace(tzinfo=timezone.utc)
+            local = dt.astimezone(UTC8)
+            return f"{local.strftime(fmt)} (UTC+8)"
+        except ValueError:
+            pass
+    try:
+        normalized = raw.replace("Z", "+00:00")
+        dt = datetime.fromisoformat(normalized)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        local = dt.astimezone(UTC8)
+        return f"{local.strftime(fmt)} (UTC+8)"
+    except ValueError:
+        return raw[:19].replace("T", " ")

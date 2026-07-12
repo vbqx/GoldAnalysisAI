@@ -42,7 +42,7 @@ news.py               # NewsDataSource → ExternalFactors
 
 MCP 是 **给 AI 助手用的协议**；Streamlit 报告生成走的是 Python MCP 客户端，两者共用同一个 Token。
 
-在 Cursor 中配置（见 `.cursor/mcp.json.example`）：
+在 Cursor 中配置（见 [cursor-mcp.json.example](./cursor-mcp.json.example)）：
 
 ```json
 {

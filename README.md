@@ -22,7 +22,7 @@ python run_app.py
 # Linux/macOS:   ./run_app.sh
 ```
 
-浏览器打开 `http://localhost:8501`。启动后先在 **生成前配置** 面板选择规则 / LLM / 混合模式，点击「开始生成报告」后才拉取数据并生成报告。
+浏览器打开 `http://localhost:8501`。启动后先在 **生成前配置** 面板选择规则 / LLM / 混合模式，点击「开始生成报告」后才拉取数据并生成报告。每次生成会自动归档；勾选 **历史回放** 可 **0 token** 即时查看已保存报告（不重跑 LLM）。
 
 > **AI / 自动化**：见 [AGENTS.md](AGENTS.md)；统一用 `python run_app.py` 启动。
 
@@ -56,44 +56,45 @@ python run_app.py
 
 ## 项目结构
 
+根目录只保留 **入口、依赖、文档索引**；业务代码在 `src/`，页面在 `views/`。
+
 ```
 GoldAnalysisAI/
-├── AGENTS.md                   # AI/自动化：官方启动方式与常用命令
-├── run_app.py                  # 官方跨平台启动器（Windows/Linux/macOS）
-├── run_app.bat                 # Windows 快捷方式 → run_app.py
-├── run_app.sh                  # Linux/macOS 快捷方式 → run_app.py
-├── app.py                      # Streamlit 导航入口；用 run_app.py 启动
-├── views/                      # 四页视图（由 app.py 导航注册）
-│   ├── 1_机构级分析报告.py
-│   ├── 4_外部数据.py
-│   ├── 2_短线策略.py
-│   └── 3_LLM决策链.py
-├── tests/                      # 测试体系（用例 / 单元 / 集成 / 回归 / 工具）
-│   ├── run.py                  # 统一入口
-│   ├── cases/catalog.yaml      # 用例目录
-│   ├── unit/
-│   ├── integration/
-│   └── regression/
-└── src/
-    ├── pipeline.py             # 对外 API 薄封装
-    ├── config.py
-    ├── core/                   # types, orchestrator, progress
-    ├── data/
-    │   ├── fetch_pipeline.py
-    │   ├── context_builder.py
-    │   └── sources/            # jin10_mcp, macro (DXY/US10Y), news, social
-    ├── agents/
-    │   ├── factory.py
-    │   ├── analysts/           # Analyst Team（TradingAgents 对齐）
-    │   └── llm/stages/         # LLM 各阶段
-    ├── analysis/               # ict_pa, report_engine
-    ├── indicators/
-    ├── llm/
-    └── viz/
-        ├── streamlit_common.py # 共享 bootstrap + session 缓存
-        ├── decision_page.py
-        └── pipeline_progress.py
+├── app.py                 # Streamlit 导航（用 run_app.py 启动）
+├── run_app.py             # 官方启动器
+├── run_app.bat / run_app.sh
+├── requirements*.txt
+├── pytest.ini
+├── AGENTS.md              # AI / 自动化说明
+├── README.md
+│
+├── src/                   # 应用源码（pipeline / agents / analysis / viz …）
+├── views/                 # Streamlit 四页
+├── tests/                 # 测试（run.py 统一入口）
+├── scripts/               # 开发脚本（非测试）
+└── docs/                  # 文档
 ```
+
+本地生成、勿提交：`.venv/` `.cache/` `.env` `.cursor/` `.pytest_cache/` 等（见 `.gitignore`）。
+
+<details>
+<summary>src/ 目录展开</summary>
+
+```
+src/
+├── pipeline.py            # 对外 API：run_analysis()
+├── config.py
+├── core/                  # orchestrator, types, progress
+├── run/                   # 运行配置 + 归档（from src.run import …）
+├── data/                  # fetch, sources
+├── agents/                # Analyst Team + LLM stages
+├── analysis/              # ICT/PA, report_engine
+├── indicators/
+├── llm/
+└── viz/                   # Streamlit 组件
+```
+
+</details>
 
 ## 能力一览
 
@@ -103,6 +104,7 @@ GoldAnalysisAI/
 | 金十 quote/kline 交叉校验 | ✅ `derived.spot_cross_check` / `jin10_kline_summary` |
 | 多页面 UI | ✅ 机构 / 短线 / LLM 决策 |
 | Session 会话缓存 | ✅ 切换页面秒开 |
+| 历史回放（0 token） | ✅ `.cache/run_archives/` + 配置页回放模式 |
 | 外部数据（DXY/金十快讯·资讯·日历/TV 社媒） | ✅ 拉取 + UI 展示 |
 | LLM 双轨 + 来源标识 | ✅ |
 | 智能体 I/O（Analyst Team + LLM） | ✅ LLM决策链页 |
@@ -168,11 +170,12 @@ python tests/run.py --external
 # release：完整集成（需 .env + TradingView；hybrid+LLM 可能 5–6 分钟）
 python tests/run.py --full
 
-# 规则模式一致性检查（P0 门禁；输出 tests/reports/coherence_check.json）
+# 规则模式一致性检查（输出 tests/reports/coherence_check.json）
 $env:AGENT_MODE="rule"; $env:LLM_ENABLED="false"; python tests/tools/coherence_check.py
-```
 
-**金融三阶段修复**（2026-06-20）：F-003/F-013/F-014（P0）+ UI/配置（P1）+ 数据质量/Agent 边界（P2）已落地；详见 [docs/archive/domain/financial-review.md §7](docs/archive/domain/financial-review.md#7-修复路径规划2026-06-20)。
+# 列出 / 校验历史归档（无需 Streamlit）
+python scripts/inspect_archive.py list
+```
 
 测试分层、用例目录与维护说明见 [docs/testing/strategy.md](docs/testing/strategy.md)、[tests/README.md](tests/README.md)、[tests/cases/catalog.yaml](tests/cases/catalog.yaml)。
 
@@ -198,7 +201,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 读取含中文的源码或文档时，优先使用：
 
 ```powershell
-python scripts/show_utf8.py docs/archive/domain/financial-review.md --start 520 --count 40
+python scripts/show_utf8.py docs/reviews/financial/static-code-review.md --start 520 --count 40
 ```
 
 不要用未初始化编码环境下的 `Get-Content` 作为补丁上下文来源；它可能把 UTF-8 无 BOM 文件按系统 ANSI 解码，导致看到的文本与磁盘真实内容不一致。
