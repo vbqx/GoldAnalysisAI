@@ -12,11 +12,11 @@ from src.analysis.narrative_sections import validate_and_merge_llm_sections
 from src.config import (
     LLM_API_KEY,
     LLM_BASE_URL,
-    LLM_ENABLED,
     LLM_ENHANCE_CONCLUSION,
     LLM_MODEL,
     LLM_TIMEOUT,
 )
+from src.core.run_context import llm_narrative_enabled
 from src.core.progress import get_progress
 from src.core.types import LLMAnalysis, ManagerDecision, MarketContext, ResearchDebate
 from src.llm.client import LLMClient, LLMClientError
@@ -99,7 +99,7 @@ def run_llm_analysis(
     Call LLM to produce narrative analysis from structured pipeline output.
     Returns disabled/error result on failure — never raises to caller.
     """
-    if not LLM_ENABLED:
+    if not llm_narrative_enabled():
         return _disabled_result()
 
     try:

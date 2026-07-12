@@ -27,22 +27,12 @@ from src.agents.manager import run_manager as rule_manager
 from src.agents.risk import run_risk_team as rule_risk
 from src.agents.trader import run_trader_agent as rule_trader
 from src.config import (
-    AGENT_MODE,
-    LLM_ANALYST_ONLY,
     LLM_OVERRIDE_THRESHOLD,
     LLM_PARALLEL_ENABLED,
     LLM_PARALLEL_MAX_WORKERS,
     LLM_PARALLEL_RESEARCH,
-    LLM_STAGE_ANALYSTS,
-    LLM_STAGE_BULLISH,
-    LLM_STAGE_BEARISH,
-    LLM_STAGE_DEBATE,
-    LLM_STAGE_LEVELS,
-    LLM_STAGE_TRADER,
-    LLM_STAGE_RISK,
-    LLM_STAGE_MANAGER,
-    LLM_STAGE_RESEARCH,
 )
+from src.core.run_context import get_run_config
 from src.core.parallel import run_parallel
 from src.core.progress import get_progress
 from src.analysis.report_engine import TradingSignal
@@ -67,12 +57,12 @@ log = get_logger(__name__)
 
 
 def _use_llm_stage(stage_enabled: bool) -> bool:
-    if AGENT_MODE == "rule":
+    if get_run_config().agent_mode == "rule":
         return False
     if not stage_enabled:
         return False
     if not llm_configured():
-        log.warning("AGENT_MODE=%s but LLM_API_KEY missing — fallback to rule", AGENT_MODE)
+        log.warning("agent_mode=%s but LLM_API_KEY missing — fallback to rule", get_run_config().agent_mode)
         return False
     return True
 
@@ -84,11 +74,11 @@ def _pick_evidence(
     trace,
     pipeline: AgentPipelineMeta,
 ) -> AgentEvidence:
-    if AGENT_MODE == "rule" or llm_result is None:
+    if get_run_config().agent_mode == "rule" or llm_result is None:
         pipeline.record(stage, StageMeta(source="rule", llm=trace if trace and trace.error else None))
         return rule_result
 
-    if AGENT_MODE == "llm":
+    if get_run_config().agent_mode == "llm":
         if llm_result and not trace.error:
             pipeline.record(stage, StageMeta(source="llm", llm=trace))
             return llm_result
@@ -116,15 +106,15 @@ def _pick_analyst_report(
     trace,
     pipeline: AgentPipelineMeta,
 ) -> AnalystReport:
-    if AGENT_MODE == "rule" or llm_result is None:
-        if _use_llm_stage(LLM_STAGE_ANALYSTS):
+    if get_run_config().agent_mode == "rule" or llm_result is None:
+        if _use_llm_stage(get_run_config().llm_stage_analysts):
             pipeline.record(
                 stage,
                 StageMeta(source="rule", llm=trace if trace and trace.error else None),
             )
         return rule_result
 
-    if AGENT_MODE == "llm":
+    if get_run_config().agent_mode == "llm":
         if llm_result and not trace.error:
             pipeline.record(stage, StageMeta(source="llm", llm=trace))
             return llm_result
@@ -146,18 +136,18 @@ def _pick_analyst_report(
 def _analyst_team_aggregate_source(llm_picked: int, total: int = 4) -> StageSource:
     if llm_picked == 0:
         return "rule"
-    if llm_picked == total and AGENT_MODE == "llm":
+    if llm_picked == total and get_run_config().agent_mode == "llm":
         return "llm"
     return "hybrid"
 
 
 def _use_llm_analyst(stage: str) -> bool:
-    return not LLM_ANALYST_ONLY or stage == LLM_ANALYST_ONLY
+    return not get_run_config().llm_analyst_only or stage == get_run_config().llm_analyst_only
 
 
 def _needs_rule_baseline() -> bool:
     """Hybrid always needs rule output; pure LLM tries LLM first."""
-    return AGENT_MODE == "hybrid"
+    return get_run_config().agent_mode == "hybrid"
 
 
 def _llm_stage_ok(llm_result, trace) -> bool:
@@ -168,7 +158,7 @@ def _ensure_rule_baseline(rule_result, llm_result, trace, compute_rule):
     """Lazy rule baseline: skip in pure LLM mode when LLM already succeeded."""
     if rule_result is not None:
         return rule_result
-    if AGENT_MODE == "llm" and _llm_stage_ok(llm_result, trace):
+    if get_run_config().agent_mode == "llm" and _llm_stage_ok(llm_result, trace):
         return None
     return compute_rule()
 
@@ -177,7 +167,7 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
     prog = get_progress()
     prog.update("analyst_team", detail="技术 · 基本面 · 新闻 · 情绪")
     t0 = time.perf_counter()
-    use_llm = _use_llm_stage(LLM_STAGE_ANALYSTS)
+    use_llm = _use_llm_stage(get_run_config().llm_stage_analysts)
     rule_team = rule_analyst_team(ctx) if (not use_llm or _needs_rule_baseline()) else None
     input_payload = market_payload(ctx)
 
@@ -208,7 +198,7 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
             picked[stage] = rule_report
             pipeline.record(
                 stage,
-                StageMeta(source="rule", fallback_reason=f"LLM_ANALYST_ONLY={LLM_ANALYST_ONLY}，跳过 LLM"),
+                StageMeta(source="rule", fallback_reason=f"llm_analyst_only={get_run_config().llm_analyst_only}，跳过 LLM"),
             )
             continue
         llm_tasks.append((stage, run_llm))
@@ -222,7 +212,7 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
             label="analyst_team",
         )
     else:
-        detail = f"LLM 单个分析师：{LLM_ANALYST_ONLY}" if LLM_ANALYST_ONLY else "LLM 四位分析师…"
+        detail = f"LLM 单个分析师：{get_run_config().llm_analyst_only}" if get_run_config().llm_analyst_only else "LLM 四位分析师…"
         prog.update("analyst_team", detail=detail)
         llm_results = {stage: run_llm(ctx) for stage, run_llm in llm_tasks}
 
@@ -234,7 +224,7 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
         if stage not in llm_results:
             continue
         llm_report, trace = llm_results[stage]
-        if rule_report is None and AGENT_MODE == "llm" and _llm_stage_ok(llm_report, trace):
+        if rule_report is None and get_run_config().agent_mode == "llm" and _llm_stage_ok(llm_report, trace):
             pipeline.record(stage, StageMeta(source="llm", llm=trace))
             picked[stage] = llm_report
             llm_picked += 1
@@ -267,7 +257,7 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
 
 
 def run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam) -> AgentEvidence:
-    use_llm = _use_llm_stage(LLM_STAGE_BULLISH)
+    use_llm = _use_llm_stage(get_run_config().llm_stage_bullish)
     rule_result = rule_bullish(ctx, team) if (not use_llm or _needs_rule_baseline()) else None
     if not use_llm:
         get_progress().update("bullish", detail="规则引擎")
@@ -287,7 +277,7 @@ def run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTe
 
 
 def run_bearish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam) -> AgentEvidence:
-    use_llm = _use_llm_stage(LLM_STAGE_BEARISH)
+    use_llm = _use_llm_stage(get_run_config().llm_stage_bearish)
     rule_result = rule_bearish(ctx, team) if (not use_llm or _needs_rule_baseline()) else None
     if not use_llm:
         get_progress().update("bearish", detail="规则引擎")
@@ -311,8 +301,8 @@ def research_uses_parallel_llm() -> bool:
     return (
         LLM_PARALLEL_ENABLED
         and LLM_PARALLEL_RESEARCH
-        and _use_llm_stage(LLM_STAGE_BULLISH)
-        and _use_llm_stage(LLM_STAGE_BEARISH)
+        and _use_llm_stage(get_run_config().llm_stage_bullish)
+        and _use_llm_stage(get_run_config().llm_stage_bearish)
     )
 
 
@@ -326,8 +316,8 @@ def run_research_team(
     Called from ``orchestrator`` when ``research_uses_parallel_llm()`` is true.
     Hybrid mode still computes rule baselines before picking LLM vs rule output.
     """
-    bull_llm = _use_llm_stage(LLM_STAGE_BULLISH)
-    bear_llm = _use_llm_stage(LLM_STAGE_BEARISH)
+    bull_llm = _use_llm_stage(get_run_config().llm_stage_bullish)
+    bear_llm = _use_llm_stage(get_run_config().llm_stage_bearish)
 
     if bull_llm and bear_llm and LLM_PARALLEL_ENABLED and LLM_PARALLEL_RESEARCH:
         rule_bull = rule_bullish(ctx, team) if _needs_rule_baseline() else None
@@ -369,11 +359,11 @@ def _pick_debate(
     trace,
     pipeline: AgentPipelineMeta,
 ) -> ResearchDebate:
-    if AGENT_MODE == "rule" or llm_result is None:
+    if get_run_config().agent_mode == "rule" or llm_result is None:
         pipeline.record("debate", StageMeta(source="rule", llm=trace if trace and trace.error else None))
         return rule_result
 
-    if AGENT_MODE == "llm":
+    if get_run_config().agent_mode == "llm":
         if llm_result and not trace.error:
             pipeline.record("debate", StageMeta(source="llm", llm=trace))
             return llm_result
@@ -400,7 +390,7 @@ def run_debate(
     team: AnalystTeam,
     ctx: MarketContext,
 ) -> ResearchDebate:
-    if not _use_llm_stage(LLM_STAGE_DEBATE):
+    if not _use_llm_stage(get_run_config().llm_stage_debate):
         get_progress().update("debate", detail="规则引擎")
         rule_result = rule_debate(bullish, bearish, analyses, team, ctx)
         pipeline.record("debate", StageMeta(source="rule"))
@@ -421,7 +411,7 @@ def run_debate(
         return _pick_debate(rule_result, llm_result, trace, pipeline)
 
     llm_result, trace = run_llm_debate(bullish, bearish, analyses, ctx=ctx, team=team)
-    if AGENT_MODE == "llm" and llm_result is not None and not trace.error:
+    if get_run_config().agent_mode == "llm" and llm_result is not None and not trace.error:
         pipeline.record("debate", StageMeta(source="llm", llm=trace))
         return llm_result
     rule_result = rule_debate(bullish, bearish, analyses, team, ctx)
@@ -435,7 +425,7 @@ def run_level_proposer(
     pipeline: AgentPipelineMeta,
     rule_signals: list[TradingSignal],
 ) -> list[LevelProposal]:
-    if not _use_llm_stage(LLM_STAGE_LEVELS):
+    if not _use_llm_stage(get_run_config().llm_stage_levels):
         log.info("llm_levels disabled or unavailable; using rule candidates only")
         pipeline.record("llm_levels", StageMeta(source="rule", fallback_reason="LLM_LEVELS disabled"))
         return []
@@ -462,14 +452,14 @@ def run_trader(
     signals: list[TradingSignal],
 ):
     rule_result = rule_trader(ctx, debate, signals)
-    if not _use_llm_stage(LLM_STAGE_TRADER):
+    if not _use_llm_stage(get_run_config().llm_stage_trader):
         get_progress().update("trader", detail="规则引擎")
         pipeline.record("trader", StageMeta(source="rule"))
         return rule_result
 
     get_progress().update("trader", detail="LLM 交易员提案")
     llm_result, trace = run_llm_trader(ctx, debate, signals)
-    if AGENT_MODE == "llm" and llm_result is not None and not trace.error:
+    if get_run_config().agent_mode == "llm" and llm_result is not None and not trace.error:
         pipeline.record("trader", StageMeta(source="llm", llm=trace))
         return llm_result, signals
     if (
@@ -486,12 +476,12 @@ def run_trader(
 
 def run_risk(proposal: TransactionProposal, signal_count: int, pipeline: AgentPipelineMeta) -> list[RiskReview]:
     rule_result = rule_risk(proposal, signal_count)
-    if not _use_llm_stage(LLM_STAGE_RISK):
+    if not _use_llm_stage(get_run_config().llm_stage_risk):
         pipeline.record("risk", StageMeta(source="rule"))
         return rule_result
 
     llm_result, trace = run_llm_risk(proposal, signal_count)
-    if AGENT_MODE == "llm" and llm_result is not None and not trace.error:
+    if get_run_config().agent_mode == "llm" and llm_result is not None and not trace.error:
         pipeline.record("risk", StageMeta(source="llm", llm=trace))
         return llm_result
     if (
@@ -508,12 +498,12 @@ def run_risk(proposal: TransactionProposal, signal_count: int, pipeline: AgentPi
 
 def run_manager(proposal: TransactionProposal, reviews: list[RiskReview], pipeline: AgentPipelineMeta) -> ManagerDecision:
     rule_result = rule_manager(proposal, reviews)
-    if not _use_llm_stage(LLM_STAGE_MANAGER):
+    if not _use_llm_stage(get_run_config().llm_stage_manager):
         pipeline.record("manager", StageMeta(source="rule"))
         return rule_result
 
     llm_result, trace = run_llm_manager(proposal, reviews)
-    if AGENT_MODE == "llm" and llm_result is not None and not trace.error:
+    if get_run_config().agent_mode == "llm" and llm_result is not None and not trace.error:
         pipeline.record("manager", StageMeta(source="llm", llm=trace))
         return llm_result
     if (

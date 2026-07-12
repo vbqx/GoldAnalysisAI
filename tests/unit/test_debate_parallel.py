@@ -20,6 +20,7 @@ from src.core.types import (
 )
 from src.indicators.technical import enrich
 from src.llm.router import get_debate_client, get_fast_client, get_strong_client
+from tests._run_config_helpers import bind_run_config
 
 
 def _sample_context() -> MarketContext:
@@ -80,11 +81,11 @@ def test_run_debate_llm_mode_skips_rule_until_fallback(monkeypatch) -> None:
     )
     meta = AgentPipelineMeta()
 
-    monkeypatch.setattr(agent_factory, "AGENT_MODE", "llm")
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_DEBATE", True)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
 
-    with patch.object(agent_factory, "rule_debate") as rule_mock, patch.object(
+    with bind_run_config(agent_mode="llm", llm_enabled=True, llm_stage_debate=True), patch.object(
+        agent_factory, "rule_debate"
+    ) as rule_mock, patch.object(
         agent_factory,
         "run_llm_debate",
         return_value=(debate, LLMStageTrace(stage="debate", model="m", latency_ms=10)),

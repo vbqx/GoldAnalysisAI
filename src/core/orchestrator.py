@@ -6,12 +6,17 @@ import json
 import time
 
 from src.agents import factory as agent_factory
-from src.config import AGENT_MODE, LLM_ENABLED
 from src.analysis.ict_pa import analyze_timeframe
 from src.analysis.level_validator import validate_llm_levels
-from src.analysis.report_engine import build_report, build_strategy_plans, compute_trading_signals, parse_risk_events_calendar
+from src.analysis.report_engine import (
+    apply_manager_authorization,
+    build_report,
+    compute_trading_signals,
+    parse_risk_events_calendar,
+)
 from src.core.parallel import run_parallel
 from src.core.progress import get_progress
+from src.core.run_context import agent_mode, get_run_config, llm_narrative_enabled
 from src.core.types import AgentPipelineMeta, AgentTrace, LLMAnalysis, StageMeta
 from src.data.aggregator import assemble_market_context
 from src.data.fetch_pipeline import fetch_all_data
@@ -149,7 +154,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     prog.start("trader", "交易员提案")
     llm_level_proposals = []
     level_validation = []
-    if agent_factory.LLM_STAGE_LEVELS and AGENT_MODE != "rule":
+    if get_run_config().llm_stage_levels and agent_mode() != "rule":
         prog.update("trader", detail="LLM level proposal")
         llm_level_proposals = agent_factory.run_level_proposer(ctx, analyst_team, debate, pipeline_meta, signals)
         llm_signals, level_validation = validate_llm_levels(ctx, llm_level_proposals)
@@ -195,7 +200,8 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     prog.start("report", "组装报告")
     report = build_report(enriched, analyses, signals=signals)
     report["meta"]["data_source"] = ctx.source_label
-    report["meta"]["agent_mode"] = AGENT_MODE
+    report["meta"]["agent_mode"] = agent_mode()
+    report["meta"]["run_config"] = get_run_config().to_dict()
     report["meta"]["stage_sources"] = pipeline_meta.to_dict()
     report["meta"]["stage_sources"]["narrative_sections"] = {
         key: {"source": "rule", "accepted": True}
@@ -233,7 +239,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     if live_cal:
         report["calendar_events"] = live_cal
 
-    narrative_llm_enabled = LLM_ENABLED and AGENT_MODE in ("llm", "hybrid")
+    narrative_llm_enabled = llm_narrative_enabled()
     if narrative_llm_enabled:
         prog.start("llm_narrative", "LLM 报告文案", "深度分析生成中…")
     llm_result = (
@@ -247,7 +253,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
             "narrative_validation",
             label="五块文案校验",
             input_text=json.dumps(
-                {"mode": AGENT_MODE, "sections": list((llm_result.narrative_sections or {}).keys())},
+                {"mode": agent_mode(), "sections": list((llm_result.narrative_sections or {}).keys())},
                 ensure_ascii=False,
             ),
             output_text=json.dumps(llm_result.narrative_section_audit, ensure_ascii=False),
@@ -278,20 +284,13 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     if llm_latencies:
         report["meta"]["llm_stages_wall_ms"] = max(llm_latencies)
 
-    if decision.selected_signal_indices:
-        sig_dicts = report["signals"]
-        ordered = [sig_dicts[i] for i in decision.selected_signal_indices if i < len(sig_dicts)]
-        rest = [s for j, s in enumerate(sig_dicts) if j not in decision.selected_signal_indices]
-        combined = ordered + rest
-        sent = report.get("sentiment") or {}
-        bearish_dominant = sent.get("bearish", 0) >= sent.get("bullish", 0)
-        pref_theme = "short" if bearish_dominant else "long"
-        combined.sort(key=lambda s: 0 if s.get("theme") == pref_theme else 1)
-        for sig in combined:
-            sig["signal_role"] = "primary" if sig.get("theme") == pref_theme else "alternate"
-        report["signals"] = combined
-        report["strategy_plans"] = build_strategy_plans(combined)
-        log.debug("signals reordered by manager + sentiment theme: %s", decision.selected_signal_indices)
+    apply_manager_authorization(report, decision, risk_reviews)
+    log.debug(
+        "signals authorized by manager: selected=%s scale=%.2f action=%s",
+        decision.selected_signal_indices,
+        decision.position_scale,
+        decision.action,
+    )
 
     elapsed = time.perf_counter() - t0
     log.info(

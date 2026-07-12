@@ -190,43 +190,7 @@ def run_config_for_mode(mode: AgentMode, *, llm_enabled: bool = True, llm_analys
 
 
 def apply_run_config(run_config: RunConfig) -> None:
-    """Apply runtime config to modules that imported config globals."""
-    cfg = run_config.normalized()
+    """Bind run config to the current worker thread (immutable, no module globals)."""
+    from src.core.run_context import set_run_config
 
-    from src import config as app_config
-    from src.agents import factory as agent_factory
-    from src.core import orchestrator
-    from src.llm import analyst as llm_analyst
-
-    app_config.AGENT_MODE = cfg.agent_mode
-    app_config.LLM_ENABLED = cfg.llm_enabled
-    app_config.LLM_STAGE_ANALYSTS = cfg.llm_stage_analysts
-    app_config.LLM_STAGE_BULLISH = cfg.llm_stage_bullish
-    app_config.LLM_STAGE_BEARISH = cfg.llm_stage_bearish
-    app_config.LLM_STAGE_DEBATE = cfg.llm_stage_debate
-    app_config.LLM_STAGE_LEVELS = cfg.llm_stage_levels
-    app_config.LLM_STAGE_TRADER = cfg.llm_stage_trader
-    app_config.LLM_STAGE_RISK = cfg.llm_stage_risk
-    app_config.LLM_STAGE_MANAGER = cfg.llm_stage_manager
-    app_config.LLM_STAGE_RESEARCH = cfg.llm_stage_bullish or cfg.llm_stage_bearish
-    app_config.LLM_ANALYST_ONLY = cfg.llm_analyst_only
-
-    agent_factory.AGENT_MODE = cfg.agent_mode
-    agent_factory.LLM_STAGE_ANALYSTS = cfg.llm_stage_analysts
-    agent_factory.LLM_STAGE_BULLISH = cfg.llm_stage_bullish
-    agent_factory.LLM_STAGE_BEARISH = cfg.llm_stage_bearish
-    agent_factory.LLM_STAGE_DEBATE = cfg.llm_stage_debate
-    agent_factory.LLM_STAGE_LEVELS = cfg.llm_stage_levels
-    agent_factory.LLM_STAGE_TRADER = cfg.llm_stage_trader
-    agent_factory.LLM_STAGE_RISK = cfg.llm_stage_risk
-    agent_factory.LLM_STAGE_MANAGER = cfg.llm_stage_manager
-    agent_factory.LLM_STAGE_RESEARCH = cfg.llm_stage_bullish or cfg.llm_stage_bearish
-    agent_factory.LLM_ANALYST_ONLY = cfg.llm_analyst_only
-    agent_factory.LLM_PARALLEL_ENABLED = app_config.LLM_PARALLEL_ENABLED
-    agent_factory.LLM_PARALLEL_MAX_WORKERS = app_config.LLM_PARALLEL_MAX_WORKERS
-    agent_factory.LLM_PARALLEL_RESEARCH = app_config.LLM_PARALLEL_RESEARCH
-
-    orchestrator.AGENT_MODE = cfg.agent_mode
-    orchestrator.LLM_ENABLED = cfg.llm_enabled
-
-    llm_analyst.LLM_ENABLED = cfg.llm_enabled
+    set_run_config(run_config.normalized())

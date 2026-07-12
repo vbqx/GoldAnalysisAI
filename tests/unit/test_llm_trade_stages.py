@@ -11,6 +11,7 @@ from src.agents.llm.schemas import (
     parse_transaction_proposal,
 )
 from src.core.types import AgentPipelineMeta, LLMStageTrace, ManagerDecision, RiskReview, TransactionProposal
+from tests._run_config_helpers import bind_run_config
 
 
 def test_parse_transaction_proposal_filters_unknown_indexes() -> None:
@@ -80,8 +81,6 @@ def test_parse_manager_decision_uses_only_approved_indexes() -> None:
 
 
 def test_factory_trader_hybrid_accepts_high_confidence_llm(monkeypatch) -> None:
-    monkeypatch.setattr(agent_factory, "AGENT_MODE", "hybrid")
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_TRADER", True)
     monkeypatch.setattr(agent_factory, "LLM_OVERRIDE_THRESHOLD", 0.65)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
 
@@ -101,7 +100,9 @@ def test_factory_trader_hybrid_accepts_high_confidence_llm(monkeypatch) -> None:
     def fake_llm(_ctx, _debate, _signals):
         return llm_proposal, LLMStageTrace(stage="trader", model="test", confidence=0.9)
 
-    with patch.object(agent_factory, "rule_trader", side_effect=fake_rule), patch.object(
+    with bind_run_config(agent_mode="hybrid", llm_enabled=True, llm_stage_trader=True), patch.object(
+        agent_factory, "rule_trader", side_effect=fake_rule
+    ), patch.object(
         agent_factory, "run_llm_trader", side_effect=fake_llm
     ):
         meta = AgentPipelineMeta()
@@ -113,8 +114,6 @@ def test_factory_trader_hybrid_accepts_high_confidence_llm(monkeypatch) -> None:
 
 
 def test_factory_manager_llm_mode_accepts_llm(monkeypatch) -> None:
-    monkeypatch.setattr(agent_factory, "AGENT_MODE", "llm")
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_MANAGER", True)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
 
     proposal = TransactionProposal("short", [0], ["test"], "bearish")
@@ -125,7 +124,9 @@ def test_factory_manager_llm_mode_accepts_llm(monkeypatch) -> None:
     ]
     llm_decision = ManagerDecision("execute", "short", [0], 0.8, "execute")
 
-    with patch.object(agent_factory, "run_llm_manager", return_value=(llm_decision, LLMStageTrace("manager", "test"))):
+    with bind_run_config(agent_mode="llm", llm_enabled=True, llm_stage_manager=True), patch.object(
+        agent_factory, "run_llm_manager", return_value=(llm_decision, LLMStageTrace("manager", "test"))
+    ):
         meta = AgentPipelineMeta()
         decision = agent_factory.run_manager(proposal, reviews, meta)
 

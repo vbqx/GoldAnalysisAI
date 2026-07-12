@@ -125,21 +125,20 @@ def test_factory_records_analyst_team_stage_io(monkeypatch) -> None:
     from src.agents import factory as agent_factory
     from src.core.progress import ProgressReporter, reset_progress, set_progress
     from src.core.types import AgentPipelineMeta
-
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", False)
-    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: False)
+    from tests._run_config_helpers import bind_run_config
 
     ctx = _sample_context()
     reporter = ProgressReporter()
     token = set_progress(reporter)
     try:
-        meta = AgentPipelineMeta()
-        agent_factory.run_analyst_team(ctx, meta)
-        records = reporter.llm_io_snapshot()
-        assert any(r["stage"] == "analyst_team" for r in records)
-        rec = next(r for r in records if r["stage"] == "analyst_team")
-        assert rec["kind"] == "rule"
-        assert rec["model"] == "规则引擎"
-        assert "technical" in rec["output"]
+        with bind_run_config(llm_stage_analysts=False):
+            meta = AgentPipelineMeta()
+            agent_factory.run_analyst_team(ctx, meta)
+            records = reporter.llm_io_snapshot()
+            assert any(r["stage"] == "analyst_team" for r in records)
+            rec = next(r for r in records if r["stage"] == "analyst_team")
+            assert rec["kind"] == "rule"
+            assert rec["model"] == "规则引擎"
+            assert "technical" in rec["output"]
     finally:
         reset_progress(token)

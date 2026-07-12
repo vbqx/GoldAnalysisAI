@@ -103,13 +103,11 @@ def test_is_advanced_run_config_disabled_stage() -> None:
     assert is_advanced_run_config(cfg) is True
 
 
-def test_apply_run_config_updates_import_bound_modules() -> None:
-    from src import config as app_config
-    from src.agents import factory as agent_factory
-    from src.core import orchestrator
-    from src.llm import analyst as llm_analyst
+def test_apply_run_config_binds_thread_context() -> None:
+    from src.core.run_context import get_run_config, reset_run_config, set_run_config
 
     original = run_config_from_env()
+    token = set_run_config(original)
     target = RunConfig(
         agent_mode="llm",
         llm_enabled=True,
@@ -119,18 +117,14 @@ def test_apply_run_config_updates_import_bound_modules() -> None:
         llm_stage_debate=True,
         llm_analyst_only="technical",
     )
-
     try:
         apply_run_config(target)
-
-        assert app_config.AGENT_MODE == "llm"
-        assert agent_factory.AGENT_MODE == "llm"
-        assert agent_factory.LLM_STAGE_ANALYSTS is True
-        assert agent_factory.LLM_STAGE_BULLISH is True
-        assert agent_factory.LLM_STAGE_BEARISH is False
-        assert agent_factory.LLM_ANALYST_ONLY == "technical"
-        assert orchestrator.AGENT_MODE == "llm"
-        assert orchestrator.LLM_ENABLED is True
-        assert llm_analyst.LLM_ENABLED is True
+        cfg = get_run_config()
+        assert cfg.agent_mode == "llm"
+        assert cfg.llm_enabled is True
+        assert cfg.llm_stage_analysts is True
+        assert cfg.llm_stage_bullish is True
+        assert cfg.llm_stage_bearish is False
+        assert cfg.llm_analyst_only == "technical"
     finally:
-        apply_run_config(original)
+        reset_run_config(token)

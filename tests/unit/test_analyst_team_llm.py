@@ -12,6 +12,7 @@ from src.analysis.ict_pa import analyze_timeframe
 from src.core.progress import ProgressReporter, reset_progress, set_progress
 from src.core.types import AgentPipelineMeta, ExternalFactors, MacroQuote, MarketContext
 from src.indicators.technical import enrich
+from tests._run_config_helpers import bind_run_config
 
 
 def _sample_context() -> MarketContext:
@@ -80,8 +81,6 @@ def test_factory_analyst_team_llm_hybrid_picks_high_confidence(monkeypatch) -> N
     ctx = _sample_context()
     reporter = ProgressReporter()
     token = set_progress(reporter)
-    monkeypatch.setattr(agent_factory, "AGENT_MODE", "hybrid")
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", True)
     monkeypatch.setattr(agent_factory, "LLM_OVERRIDE_THRESHOLD", 0.65)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
 
@@ -109,7 +108,9 @@ def test_factory_analyst_team_llm_hybrid_picks_high_confidence(monkeypatch) -> N
         return None, LLMStageTrace(stage="x", model="test-model", error="skip")
 
     try:
-        with patch.object(agent_factory, "run_llm_technical_analyst", side_effect=fake_technical), patch.object(
+        with bind_run_config(agent_mode="hybrid", llm_enabled=True, llm_stage_analysts=True), patch.object(
+            agent_factory, "run_llm_technical_analyst", side_effect=fake_technical
+        ), patch.object(
             agent_factory, "run_llm_fundamentals_analyst", side_effect=fake_other
         ), patch.object(agent_factory, "run_llm_news_analyst", side_effect=fake_other), patch.object(
             agent_factory, "run_llm_sentiment_analyst", side_effect=fake_other
@@ -128,9 +129,6 @@ def test_factory_analyst_team_llm_hybrid_picks_high_confidence(monkeypatch) -> N
 
 def test_factory_analyst_team_llm_can_limit_to_single_specialist(monkeypatch) -> None:
     ctx = _sample_context()
-    monkeypatch.setattr(agent_factory, "AGENT_MODE", "hybrid")
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", True)
-    monkeypatch.setattr(agent_factory, "LLM_ANALYST_ONLY", "technical")
     monkeypatch.setattr(agent_factory, "LLM_OVERRIDE_THRESHOLD", 0.65)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
 
@@ -157,7 +155,12 @@ def test_factory_analyst_team_llm_can_limit_to_single_specialist(monkeypatch) ->
     def fail_other(_ctx):
         raise AssertionError("non-selected analyst LLM runner should not be called")
 
-    with patch.object(agent_factory, "run_llm_technical_analyst", side_effect=fake_technical), patch.object(
+    with bind_run_config(
+        agent_mode="hybrid",
+        llm_enabled=True,
+        llm_stage_analysts=True,
+        llm_analyst_only="technical",
+    ), patch.object(agent_factory, "run_llm_technical_analyst", side_effect=fake_technical), patch.object(
         agent_factory, "run_llm_fundamentals_analyst", side_effect=fail_other
     ), patch.object(agent_factory, "run_llm_news_analyst", side_effect=fail_other), patch.object(
         agent_factory, "run_llm_sentiment_analyst", side_effect=fail_other
@@ -170,15 +173,13 @@ def test_factory_analyst_team_llm_can_limit_to_single_specialist(monkeypatch) ->
     assert meta.stages["analyst_team"].source == "hybrid"
     assert meta.stages["technical"].source == "hybrid"
     assert meta.stages["fundamentals"].source == "rule"
-    assert "LLM_ANALYST_ONLY=technical" in (meta.stages["fundamentals"].fallback_reason or "")
+    assert "llm_analyst_only=technical" in (meta.stages["fundamentals"].fallback_reason or "")
 
 
 def test_factory_analyst_team_parallel_faster(monkeypatch) -> None:
     import time
 
     ctx = _sample_context()
-    monkeypatch.setattr(agent_factory, "AGENT_MODE", "hybrid")
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", True)
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_ENABLED", True)
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_MAX_WORKERS", 4)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
@@ -191,7 +192,9 @@ def test_factory_analyst_team_parallel_faster(monkeypatch) -> None:
         return None, LLMStageTrace(stage="x", model="m", error="skip")
 
     t0 = time.perf_counter()
-    with patch.object(agent_factory, "run_llm_technical_analyst", side_effect=slow), patch.object(
+    with bind_run_config(agent_mode="hybrid", llm_enabled=True, llm_stage_analysts=True), patch.object(
+        agent_factory, "run_llm_technical_analyst", side_effect=slow
+    ), patch.object(
         agent_factory, "run_llm_fundamentals_analyst", side_effect=slow
     ), patch.object(agent_factory, "run_llm_news_analyst", side_effect=slow), patch.object(
         agent_factory, "run_llm_sentiment_analyst", side_effect=slow
@@ -204,8 +207,6 @@ def test_factory_analyst_team_parallel_faster(monkeypatch) -> None:
 def test_factory_analyst_team_llm_mode_without_rule_baseline(monkeypatch) -> None:
     """Pure LLM mode skips rule baseline; successful parallel LLM must not assert."""
     ctx = _sample_context()
-    monkeypatch.setattr(agent_factory, "AGENT_MODE", "llm")
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", True)
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_ENABLED", True)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
 
@@ -229,7 +230,9 @@ def test_factory_analyst_team_llm_mode_without_rule_baseline(monkeypatch) -> Non
 
         return _run
 
-    with patch.object(agent_factory, "run_llm_technical_analyst", side_effect=fake_llm("technical")), patch.object(
+    with bind_run_config(agent_mode="llm", llm_enabled=True, llm_stage_analysts=True), patch.object(
+        agent_factory, "run_llm_technical_analyst", side_effect=fake_llm("technical")
+    ), patch.object(
         agent_factory, "run_llm_fundamentals_analyst", side_effect=fake_llm("fundamentals")
     ), patch.object(agent_factory, "run_llm_news_analyst", side_effect=fake_llm("news")), patch.object(
         agent_factory, "run_llm_sentiment_analyst", side_effect=fake_llm("sentiment")
@@ -245,10 +248,9 @@ def test_factory_analyst_team_llm_mode_without_rule_baseline(monkeypatch) -> Non
 
 def test_factory_analyst_team_llm_disabled_uses_rule(monkeypatch) -> None:
     ctx = _sample_context()
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_ANALYSTS", False)
-    monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: False)
 
-    meta = AgentPipelineMeta()
-    team = agent_factory.run_analyst_team(ctx, meta)
+    with bind_run_config(llm_stage_analysts=False):
+        meta = AgentPipelineMeta()
+        team = agent_factory.run_analyst_team(ctx, meta)
     assert team.fundamentals.bias == "bearish"
     assert meta.stages["analyst_team"].source == "rule"

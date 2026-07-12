@@ -11,6 +11,7 @@ from src.agents import factory as agent_factory
 from src.analysis.ict_pa import analyze_timeframe
 from src.core.types import AgentEvidence, AgentPipelineMeta, EvidenceItem, ExternalFactors, MarketContext
 from src.indicators.technical import enrich
+from tests._run_config_helpers import bind_run_config
 
 
 def _sample_context() -> MarketContext:
@@ -56,9 +57,6 @@ def test_research_parallel_faster_than_serial(monkeypatch) -> None:
     team = rule_analyst_team(ctx)
     delay = 0.1
 
-    monkeypatch.setattr(agent_factory, "AGENT_MODE", "hybrid")
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_BULLISH", True)
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_BEARISH", True)
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_ENABLED", True)
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_RESEARCH", True)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
@@ -76,7 +74,12 @@ def test_research_parallel_faster_than_serial(monkeypatch) -> None:
         return _fake_evidence("bear"), LLMStageTrace(stage="bearish", model="m", latency_ms=1)
 
     meta = AgentPipelineMeta()
-    with patch.object(agent_factory, "run_llm_bullish", side_effect=slow_bull), patch.object(
+    with bind_run_config(
+        agent_mode="hybrid",
+        llm_enabled=True,
+        llm_stage_bullish=True,
+        llm_stage_bearish=True,
+    ), patch.object(agent_factory, "run_llm_bullish", side_effect=slow_bull), patch.object(
         agent_factory, "run_llm_bearish", side_effect=slow_bear
     ):
         t0 = time.perf_counter()
@@ -93,9 +96,6 @@ def test_research_parallel_llm_mode_without_rule_baseline(monkeypatch) -> None:
 
     ctx = _sample_context()
     team = rule_analyst_team(ctx)
-    monkeypatch.setattr(agent_factory, "AGENT_MODE", "llm")
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_BULLISH", True)
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_BEARISH", True)
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_ENABLED", True)
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_RESEARCH", True)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
@@ -111,7 +111,12 @@ def test_research_parallel_llm_mode_without_rule_baseline(monkeypatch) -> None:
         return _fake_evidence("bear llm"), LLMStageTrace(stage="bearish", model="m", latency_ms=1)
 
     meta = AgentPipelineMeta()
-    with patch.object(agent_factory, "run_llm_bullish", side_effect=fake_bull), patch.object(
+    with bind_run_config(
+        agent_mode="llm",
+        llm_enabled=True,
+        llm_stage_bullish=True,
+        llm_stage_bearish=True,
+    ), patch.object(agent_factory, "run_llm_bullish", side_effect=fake_bull), patch.object(
         agent_factory, "run_llm_bearish", side_effect=fake_bear
     ):
         bull, bear = agent_factory.run_research_team(ctx, meta, team)
@@ -125,10 +130,20 @@ def test_research_parallel_llm_mode_without_rule_baseline(monkeypatch) -> None:
 def test_research_uses_parallel_llm_flag(monkeypatch) -> None:
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_ENABLED", True)
     monkeypatch.setattr(agent_factory, "LLM_PARALLEL_RESEARCH", True)
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_BULLISH", True)
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_BEARISH", True)
     monkeypatch.setattr(agent_factory, "_use_llm_stage", lambda enabled: enabled)
-    assert agent_factory.research_uses_parallel_llm() is True
 
-    monkeypatch.setattr(agent_factory, "LLM_STAGE_BEARISH", False)
-    assert agent_factory.research_uses_parallel_llm() is False
+    with bind_run_config(
+        agent_mode="hybrid",
+        llm_enabled=True,
+        llm_stage_bullish=True,
+        llm_stage_bearish=True,
+    ):
+        assert agent_factory.research_uses_parallel_llm() is True
+
+    with bind_run_config(
+        agent_mode="hybrid",
+        llm_enabled=True,
+        llm_stage_bullish=True,
+        llm_stage_bearish=False,
+    ):
+        assert agent_factory.research_uses_parallel_llm() is False
