@@ -64,6 +64,35 @@ def test_prune_archives_by_count(tmp_path, monkeypatch) -> None:
     assert len(remaining) == 1
 
 
+def test_load_replay_bundle_degraded_completed_archive(tmp_path, monkeypatch) -> None:
+    import json
+
+    from src.run import inspect_run_archive
+    from src.run.archive.completion import PIPELINE_STATUS_DEGRADED
+    from src.run.archive.schema import CompatibilityLevel
+    from src.viz.replay_loader import load_replay_bundle
+
+    run_id = _minimal_archive(tmp_path, monkeypatch)
+    run_dir = tmp_path / run_id
+    manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+    manifest["summary"]["pipeline_status"] = PIPELINE_STATUS_DEGRADED
+    (run_dir / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
+    report["meta"]["pipeline_status"] = PIPELINE_STATUS_DEGRADED
+    (run_dir / "report.json").write_text(json.dumps(report), encoding="utf-8")
+
+    inspection = inspect_run_archive(run_id)
+    assert inspection.loadable
+    assert inspection.replayable is False
+    assert inspection.level == CompatibilityLevel.DEGRADED
+
+    cfg = RunConfig(replay_mode=True, replay_run_id=run_id).normalized()
+    loaded, enriched, analyses = load_replay_bundle(cfg)
+    assert loaded["meta"]["viewing_replay"] is True
+    assert not loaded["meta"].get("viewing_replay_forensic")
+    assert "5m" in enriched
+
+
 def test_load_replay_bundle_gate(tmp_path, monkeypatch) -> None:
     from src.viz.replay_loader import load_replay_bundle
 

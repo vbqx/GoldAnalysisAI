@@ -146,7 +146,8 @@ def inspect_archive(run_id: str, directory: Path) -> ArchiveInspection:
             report = _read_json(report_path)
             if isinstance(report, dict):
                 completion_errors = pipeline_replay_errors(report, manifest)
-                errors.extend(completion_errors)
+                if completion_errors:
+                    warnings.extend(completion_errors)
                 if not completion_errors and not generation_step_statuses(report):
                     summary_status = str((manifest.get("summary") or {}).get("pipeline_status") or "")
                     if not summary_status:

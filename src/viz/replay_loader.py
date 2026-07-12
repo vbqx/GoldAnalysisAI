@@ -25,7 +25,11 @@ def load_replay_bundle(
         detail = "; ".join(inspection.errors) or "incompatible archive"
         raise ValueError(f"run archive {run_id}: {detail}")
 
-    if inspection.replayable:
-        return load_bundle(run_id)
+    if inspection.loadable:
+        try:
+            return load_bundle(run_id)
+        except (FileNotFoundError, ValueError):
+            if inspection.replayable:
+                raise
     return load_forensic_bundle(run_id)
 

@@ -94,6 +94,12 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
                 f"状态 {pipeline_status_label(status)} · 流水线未完成，优先查看「LLM 决策链」页。"
             )
             st.warning(msg)
+        elif status == "degraded":
+            msg = (
+                f"校验降级回放 · 记录 `{run_id}` · 保存于 {saved_at} · "
+                f"流水线已跑完，但可信层曾标记降级；以下为当时保存的完整报告。"
+            )
+            st.warning(msg)
         else:
             msg = f"历史回放 · 记录 `{run_id}` · 保存于 {saved_at} · 以下为当时完整结果，未重新生成。"
             if compat == "degraded":

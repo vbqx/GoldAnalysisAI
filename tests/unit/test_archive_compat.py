@@ -132,9 +132,10 @@ def test_inspect_archive_rejects_partial_pipeline_status(tmp_path: Path) -> None
         encoding="utf-8",
     )
     inspection = inspect_archive("partial-run", folder)
-    assert inspection.level == CompatibilityLevel.INCOMPATIBLE
-    assert not inspection.loadable
-    assert any("partial" in err for err in inspection.errors)
+    assert inspection.level == CompatibilityLevel.DEGRADED
+    assert inspection.loadable
+    assert not inspection.replayable
+    assert any("partial" in warn for warn in inspection.warnings)
 
 
 def test_pipeline_replay_errors_flags_running_step() -> None:

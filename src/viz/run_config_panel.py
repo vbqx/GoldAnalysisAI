@@ -294,10 +294,17 @@ def _render_replay_controls() -> None:
         selected_id = str(st.session_state.get("run_config_replay_run_id") or "")
         selected = next((row for row in archives if row.get("run_id") == selected_id), None)
         if selected and not selected.get("replayable", True):
-            st.warning(
-                "所选记录为中断/失败快照，将加载**问题现场**（步骤、I/O、配置），"
-                "完整报告页可能不完整；请优先查看「LLM 决策链」。"
-            )
+            pipeline_status = str(selected.get("pipeline_status") or "")
+            if pipeline_status == "degraded":
+                st.warning(
+                    "所选记录为**校验降级**（流水线已跑完，可信层曾修正几何/授权问题）。"
+                    "将加载当时的完整报告与 LLM 文案；顶部会标注降级原因。"
+                )
+            else:
+                st.warning(
+                    "所选记录为中断/失败快照，将加载**问题现场**（步骤、I/O、配置），"
+                    "完整报告页可能不完整；请优先查看「LLM 决策链」。"
+                )
         else:
             st.info("回放展示当时的完整报告（流水线已全部跑完），不会重新拉数或调用 LLM。")
         st.caption(f"共 {len(archives)} 条 · `.cache/run_archives/` · 可导出 zip 移植到其他机器")
@@ -482,10 +489,18 @@ def render_run_config_panel() -> None:
         rid = str(st.session_state.get("run_config_replay_run_id") or "").strip()
         if rid:
             try:
-                replayable = inspect_run_archive(rid).replayable
+                inspection = inspect_run_archive(rid)
+                replayable = inspection.replayable
+                pipeline_status = str((inspection.manifest.get("summary") or {}).get("pipeline_status") or "")
             except Exception:
                 replayable = True
-            start_label = "加载历史回放" if replayable else "加载问题现场"
+                pipeline_status = ""
+            if replayable:
+                start_label = "加载历史回放"
+            elif pipeline_status == "degraded":
+                start_label = "加载历史记录（校验降级）"
+            else:
+                start_label = "加载问题现场"
         else:
             start_label = "加载历史回放"
     if st.button(start_label, type="primary", disabled=start_disabled):

@@ -41,6 +41,7 @@ from src.run.archive.schema import (
 )
 from src.run.archive.completion import (
     PIPELINE_STATUS_COMPLETE,
+    PIPELINE_STATUS_DEGRADED,
     PIPELINE_STATUS_FAILED,
     PIPELINE_STATUS_PARTIAL,
     assert_pipeline_replay_ready,
@@ -173,8 +174,8 @@ def archive_label(meta: dict[str, Any]) -> str:
         tag = " · ⚠中断"
     elif pipeline_status == PIPELINE_STATUS_FAILED:
         tag = " · ❌失败"
-    elif compat == "degraded":
-        tag = " · ⚠兼容降级"
+    elif pipeline_status == PIPELINE_STATUS_DEGRADED:
+        tag = " · ⚠校验降级"
     elif meta.get("replayable") is False and pipeline_status == PIPELINE_STATUS_COMPLETE:
         tag = " · ⚠不可回放"
     return f"{saved_at} · {mode} · {price_text} · 5m {bar_5m}根{tag}"
