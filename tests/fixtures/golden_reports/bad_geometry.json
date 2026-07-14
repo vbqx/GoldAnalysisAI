@@ -7,11 +7,14 @@
       "entry_low": 4116.0,
       "entry_high": 4118.0,
       "stop_loss": 4125.0,
-      "take_profits": [4105.0, 4095.0]
+      "take_profits": [4105.0, 4095.0],
+      "signal_id": "sig-bad-geo",
+      "signal_role": "primary"
     }
   ],
   "meta": {
     "execution_authorized": true,
+    "authorized_signal_ids": ["sig-bad-geo"],
     "manager_decision": {"action": "execute"},
     "final_decision": {"action": "execute"}
   }

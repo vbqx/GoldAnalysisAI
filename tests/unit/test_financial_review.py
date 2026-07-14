@@ -694,6 +694,58 @@ def test_trading_plan_ui_marks_llm_levels() -> None:
     assert "LLM" in html
 
 
+def test_trading_plan_ui_shows_rejected_expander_with_reason() -> None:
+    html = render_trading_plans(
+        [
+            {
+                "name": "LLM路径A·做空",
+                "direction": "SELL",
+                "direction_cn": "做空",
+                "entry_low": 4060,
+                "entry_high": 4065,
+                "stop_loss": 4070,
+                "take_profits": [4040],
+                "theme": "short",
+                "status": "candidate",
+                "signal_role": "primary",
+                "signal_id": "sig-a",
+                "setup_type": "llm_poc_va",
+            },
+            {
+                "name": "右侧扫低做多",
+                "direction": "BUY",
+                "direction_cn": "做多",
+                "entry_low": 4044,
+                "entry_high": 4049,
+                "stop_loss": 4040,
+                "take_profits": [4060],
+                "theme": "long",
+                "status": "candidate",
+                "signal_role": "rejected",
+                "signal_id": "sig-b",
+                "rejection_reason": "经理选用主方案「LLM路径A·做空」，本方案未进入授权列表；方向与主方案相反",
+                "rejection_notes": [
+                    "经理选用主方案「LLM路径A·做空」，本方案未进入授权列表",
+                    "风控[激进]否决 · 仓位0%：market snapshot not executable",
+                    "交易员未提名本方案（主方向 short，提名索引 [0]）",
+                    "方向与主方案相反，作逆势/备用库存保留，不进本次授权",
+                ],
+            },
+        ],
+        meta={"execution_authorized": True, "authorized_signal_ids": ["sig-a"]},
+    )
+    assert "未选用 / 已拒绝候选" in html
+    assert "拒绝原因" in html
+    assert "主方案" in html
+    assert "风控[激进]否决" in html
+    assert "reject-list" in html
+    assert "被拒绝" in html
+    assert "候选区" not in html.split("未选用 / 已拒绝候选")[-1]
+    # Minified HTML must still include rendered plan-grid (not markdown-escaped).
+    assert 'class="plan-grid"' in html
+    assert "\n    <div" not in html  # no indented blank-line code-fence bait
+
+
 def test_trading_plan_ui_renders_three_unified_cards() -> None:
     signals = [
         {

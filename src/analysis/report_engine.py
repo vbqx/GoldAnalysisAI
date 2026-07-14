@@ -1032,6 +1032,222 @@ def _normalize_signal_dict_take_profits(sig: dict[str, Any]) -> None:
         sig["take_profits"] = ordered
 
 
+_RISK_PROFILE_CN = {
+    "aggressive": "激进",
+    "neutral": "中性",
+    "conservative": "保守",
+}
+
+
+def _review_field(review: object, name: str, default: object = None) -> object:
+    if isinstance(review, dict):
+        return review.get(name, default)
+    return getattr(review, name, default)
+
+
+def _format_risk_veto_lines(
+    risk_reviews: list | None,
+    *,
+    candidate_index: int | None,
+) -> list[str]:
+    """One line per risk profile: pass/fail + full notes."""
+    if not risk_reviews:
+        return []
+    lines: list[str] = []
+    for review in risk_reviews:
+        profile = str(_review_field(review, "profile") or "?")
+        profile_cn = _RISK_PROFILE_CN.get(profile, profile)
+        approved = bool(_review_field(review, "approved", False))
+        allowed = list(_review_field(review, "allowed_signal_indices") or [])
+        notes = [str(n).strip() for n in (list(_review_field(review, "notes") or [])) if str(n).strip()]
+        scale = _review_field(review, "position_scale", None)
+        in_allowed = candidate_index is not None and candidate_index in allowed
+        if approved and in_allowed:
+            status = "通过"
+        elif approved and candidate_index is not None and not in_allowed:
+            status = "通过但未纳入允许索引"
+        else:
+            status = "否决"
+        scale_txt = ""
+        try:
+            if scale is not None:
+                scale_txt = f" · 仓位{float(scale):.0%}"
+        except (TypeError, ValueError):
+            scale_txt = ""
+        note_txt = "；".join(notes) if notes else "无附加说明"
+        lines.append(f"风控[{profile_cn}]{status}{scale_txt}：{note_txt}")
+    return lines
+
+
+def _format_trader_veto_lines(
+    proposal: object | None,
+    *,
+    candidate_index: int | None,
+) -> list[str]:
+    if proposal is None:
+        return []
+    if isinstance(proposal, dict):
+        indices = list(proposal.get("signal_indices") or [])
+        rationale = list(proposal.get("rationale") or [])
+        direction = str(proposal.get("primary_direction") or "")
+    else:
+        indices = list(getattr(proposal, "signal_indices", None) or [])
+        rationale = list(getattr(proposal, "rationale", None) or [])
+        direction = str(getattr(proposal, "primary_direction", "") or "")
+    lines: list[str] = []
+    if candidate_index is not None and candidate_index not in indices:
+        lines.append(
+            f"交易员未提名本方案（主方向 {direction or '—'}，提名索引 {indices or '[]'}）"
+        )
+    elif candidate_index is not None:
+        lines.append(f"交易员曾提名本方案（主方向 {direction or '—'}）")
+    rat = [str(x).strip() for x in rationale if str(x).strip()]
+    if rat:
+        lines.append("交易员理由：" + "；".join(rat[:4]))
+    return lines
+
+
+def _format_level_validation_lines(
+    validated_plans: list[dict[str, Any]] | None,
+    sig: dict[str, Any],
+) -> list[str]:
+    """Attach geometry-validator rejects when this candidate matches an LLM path."""
+    if not validated_plans:
+        return []
+    name = str(sig.get("name") or "")
+    lines: list[str] = []
+    for row in validated_plans:
+        if row.get("accepted"):
+            continue
+        prop = row.get("proposal") or {}
+        path = str(prop.get("path_id") or "").upper()
+        reason = str(row.get("reason") or "").strip()
+        if not reason:
+            continue
+        matched = bool(path and path in name)
+        if not matched:
+            try:
+                matched = abs(float(prop.get("entry_low")) - float(sig.get("entry_low"))) < 0.05
+            except (TypeError, ValueError):
+                matched = False
+        if matched:
+            lines.append(f"点位几何校验拒绝（路径{path or '?'}）：{reason}")
+    return lines
+
+
+def build_signal_rejection_notes(
+    sig: dict[str, Any],
+    *,
+    decision_action: str,
+    observation_mode: bool = False,
+    primary_name: str | None = None,
+    primary_sig: dict[str, Any] | None = None,
+    decision_summary: str = "",
+    decision_confidence: float | None = None,
+    risk_reviews: list | None = None,
+    candidate_index: int | None = None,
+    proposal: object | None = None,
+    validated_plans: list[dict[str, Any]] | None = None,
+) -> list[str]:
+    """Structured veto notes: manager / risk / trader / levels / score."""
+    parts: list[str] = []
+    if observation_mode:
+        parts.append("观察模式：行情非可执行，全部候选不授权入计划")
+
+    action = str(decision_action or "wait")
+    summary = str(decision_summary or "").strip()
+    if action == "wait":
+        parts.append("经理决策：观望（不授权执行）")
+    elif primary_name:
+        parts.append(f"经理选用主方案「{primary_name}」，本方案未进入授权列表")
+    else:
+        parts.append("经理未列入授权信号")
+    if summary:
+        parts.append(f"经理理由：{summary}")
+    if decision_confidence is not None:
+        parts.append(f"经理置信 {float(decision_confidence):.0%}")
+
+    parts.extend(_format_risk_veto_lines(risk_reviews, candidate_index=candidate_index))
+    parts.extend(_format_trader_veto_lines(proposal, candidate_index=candidate_index))
+    parts.extend(_format_level_validation_lines(validated_plans, sig))
+
+    if primary_sig and primary_sig is not sig:
+        try:
+            cand_score = float(sig.get("score_total")) if sig.get("score_total") is not None else None
+            prim_score = (
+                float(primary_sig.get("score_total")) if primary_sig.get("score_total") is not None else None
+            )
+        except (TypeError, ValueError):
+            cand_score = prim_score = None
+        cand_grade = str(sig.get("score_grade") or "")
+        prim_grade = str(primary_sig.get("score_grade") or "")
+        if cand_score is not None and prim_score is not None and cand_score + 0.5 < prim_score:
+            parts.append(
+                f"评分低于主方案（本方案 {cand_score:.0f}/{cand_grade or '—'} "
+                f"vs 主方案 {prim_score:.0f}/{prim_grade or '—'}）"
+            )
+        elif cand_grade and prim_grade and cand_grade > prim_grade:
+            parts.append(f"评级弱于主方案（{cand_grade} vs {prim_grade}）")
+
+        cand_dir = str(sig.get("direction") or sig.get("theme") or "").upper()
+        prim_dir = str(primary_sig.get("direction") or primary_sig.get("theme") or "").upper()
+        cand_is_long = cand_dir in ("BUY", "LONG", "BULLISH")
+        prim_is_short = prim_dir in ("SELL", "SHORT", "BEARISH")
+        prim_is_long = prim_dir in ("BUY", "LONG", "BULLISH")
+        cand_is_short = cand_dir in ("SELL", "SHORT", "BEARISH")
+        if (cand_is_long and prim_is_short) or (cand_is_short and prim_is_long):
+            parts.append("方向与主方案相反，作逆势/备用库存保留，不进本次授权")
+
+    status = str(sig.get("status") or "")
+    if status == "invalid":
+        note = str(sig.get("trigger_note") or "").strip()
+        parts.append(f"信号失效{('：' + note) if note else ''}")
+
+    for row in sig.get("score_reasons") or []:
+        text = str(row or "").strip()
+        if text:
+            parts.append(f"评分依据：{text}")
+
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for part in parts:
+        if part not in seen:
+            seen.add(part)
+            ordered.append(part)
+    return ordered
+
+
+def build_signal_rejection_reason(
+    sig: dict[str, Any],
+    *,
+    decision_action: str,
+    observation_mode: bool = False,
+    primary_name: str | None = None,
+    primary_sig: dict[str, Any] | None = None,
+    decision_summary: str = "",
+    decision_confidence: float | None = None,
+    risk_reviews: list | None = None,
+    candidate_index: int | None = None,
+    proposal: object | None = None,
+    validated_plans: list[dict[str, Any]] | None = None,
+) -> str:
+    """Human-readable why a candidate was not authorized for the delivered plan."""
+    notes = build_signal_rejection_notes(
+        sig,
+        decision_action=decision_action,
+        observation_mode=observation_mode,
+        primary_name=primary_name,
+        primary_sig=primary_sig,
+        decision_summary=decision_summary,
+        decision_confidence=decision_confidence,
+        risk_reviews=risk_reviews,
+        candidate_index=candidate_index,
+        proposal=proposal,
+        validated_plans=validated_plans,
+    )
+    return "；".join(notes) if notes else "未选用"
+
+
 def _signal_to_dict(signal: TradingSignal) -> dict[str, Any]:
     row = asdict(signal)
     _normalize_signal_dict_take_profits(row)
@@ -1044,13 +1260,20 @@ def _assign_signal_ids(sig_dicts: list[dict[str, Any]]) -> None:
         sig["signal_id"] = sig.get("signal_id") or stable_signal_id(sig)
 
 
-def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> None:
+def apply_manager_authorization(
+    report: dict,
+    decision,
+    risk_reviews: list,
+    *,
+    proposal: object | None = None,
+) -> None:
     """Map manager decision + risk scales onto report signals (single primary source)."""
     from src.core.types import ManagerDecision
 
     sig_dicts = list(report.get("signals") or [])
     _assign_signal_ids(sig_dicts)
     meta = report.setdefault("meta", {})
+    validated_plans = list(report.get("validated_plans") or [])
 
     if meta.get("observation_mode"):
         action = str(getattr(decision, "action", "wait") or "wait")
@@ -1074,12 +1297,36 @@ def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> N
     selected_set = set(selected)
     scale = authorized_position_scale(risk_reviews, decision)
 
+    def _attach_rejection(
+        sig: dict[str, Any],
+        *,
+        idx: int,
+        primary_name: str | None = None,
+        primary_sig: dict | None = None,
+    ) -> None:
+        notes = build_signal_rejection_notes(
+            sig,
+            decision_action=decision.action,
+            observation_mode=bool(meta.get("observation_mode")),
+            primary_name=primary_name,
+            primary_sig=primary_sig,
+            decision_summary=str(getattr(decision, "summary", "") or ""),
+            decision_confidence=getattr(decision, "confidence", None),
+            risk_reviews=risk_reviews,
+            candidate_index=idx,
+            proposal=proposal,
+            validated_plans=validated_plans,
+        )
+        sig["rejection_notes"] = notes
+        sig["rejection_reason"] = "；".join(notes) if notes else "未选用"
+
     if decision.action == "wait" or not selected_set:
-        for sig in sig_dicts:
+        for j, sig in enumerate(sig_dicts):
             _normalize_signal_dict_take_profits(sig)
             sig["signal_role"] = "rejected"
             sig["position_size"] = "0% 观望"
             sig["position_scale"] = 0.0
+            _attach_rejection(sig, idx=j)
         report["signals"] = sig_dicts
         report["strategy_plans"] = []
         meta["execution_authorized"] = False
@@ -1089,6 +1336,8 @@ def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> N
         return
 
     primary_idx = selected[0]
+    primary_sig = sig_dicts[primary_idx] if primary_idx < len(sig_dicts) else None
+    primary_name = str((primary_sig or {}).get("name") or f"#{primary_idx}")
     pos_label = format_authorized_position_size(scale, decision.action)
     for j, sig in enumerate(sig_dicts):
         _normalize_signal_dict_take_profits(sig)
@@ -1096,14 +1345,19 @@ def apply_manager_authorization(report: dict, decision, risk_reviews: list) -> N
             sig["signal_role"] = "rejected"
             sig["position_size"] = "0% 观望"
             sig["position_scale"] = 0.0
+            _attach_rejection(sig, idx=j, primary_name=primary_name, primary_sig=primary_sig)
         elif j == primary_idx:
             sig["signal_role"] = "primary"
             sig["position_size"] = pos_label
             sig["position_scale"] = scale
+            sig.pop("rejection_reason", None)
+            sig.pop("rejection_notes", None)
         else:
             sig["signal_role"] = "alternate"
             sig["position_size"] = pos_label
             sig["position_scale"] = scale
+            sig.pop("rejection_reason", None)
+            sig.pop("rejection_notes", None)
 
     ordered = [sig_dicts[i] for i in selected if i < len(sig_dicts)]
     rest = [s for j, s in enumerate(sig_dicts) if j not in selected_set]

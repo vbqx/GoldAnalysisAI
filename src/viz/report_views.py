@@ -217,7 +217,15 @@ def render_institutional_report(report, data, analyses, *, hide_title: bool = Fa
         )
     with plan_col:
         st.markdown('<p class="section-h tight">交易计划</p>', unsafe_allow_html=True)
-        st.markdown(render_trading_plans(report["signals"], meta=report.get("meta")), unsafe_allow_html=True)
+        st.markdown(
+            render_trading_plans(
+                report["signals"],
+                meta=report.get("meta"),
+                validated_plans=report.get("validated_plans")
+                or (report.get("agent_trace") or {}).get("validated_plans"),
+            ),
+            unsafe_allow_html=True,
+        )
 
     st.markdown(render_bottom_row(report, conclusion), unsafe_allow_html=True)
     st.markdown(render_footer(report), unsafe_allow_html=True)

@@ -37,13 +37,19 @@ def test_manager_selection_is_only_primary_not_sentiment_theme() -> None:
         RiskReview("conservative", True, [0], 0.4, []),
     ]
     decision = run_manager(proposal, reviews)
-    apply_manager_authorization(report, decision, reviews)
+    apply_manager_authorization(report, decision, reviews, proposal=proposal)
 
     roles = {s["name"]: s["signal_role"] for s in report["signals"]}
     assert roles["short A"] == "primary"
     assert roles["long B"] == "rejected"
     assert report["signals"][0]["name"] == "short A"
     assert report["signals"][0]["position_size"] == "缩仓"
+    rejected = next(s for s in report["signals"] if s["name"] == "long B")
+    assert "主方案" in rejected.get("rejection_reason", "")
+    assert "short A" in rejected.get("rejection_reason", "")
+    notes = rejected.get("rejection_notes") or []
+    assert any("风控[" in n for n in notes)
+    assert any("交易员" in n for n in notes)
 
 
 def test_wait_action_clears_executable_plans() -> None:
@@ -124,6 +130,62 @@ def test_execute_aligns_conclusion_with_primary_plan() -> None:
     assert report["conclusion"]["direction_summary"] != header
     assert report["meta"]["final_decision"]["execution_authorized"] is True
     assert report["meta"]["final_decision"]["primary_plan"]["zone"] == "4130-4132"
+
+
+def test_rejection_reason_explains_score_and_direction_gap() -> None:
+    from src.analysis.report_engine import build_signal_rejection_notes
+    from src.core.types import RiskReview, TransactionProposal
+
+    primary = {
+        "name": "LLM路径B·做空",
+        "direction": "SELL",
+        "score_total": 81.0,
+        "score_grade": "A",
+    }
+    cand = {
+        "name": "LLM路径C·做多",
+        "direction": "BUY",
+        "score_total": 38.0,
+        "score_grade": "D",
+        "score_reasons": ["逆主结构，结构支持仅 0%"],
+    }
+    notes = build_signal_rejection_notes(
+        cand,
+        decision_action="reduce",
+        primary_name=primary["name"],
+        primary_sig=primary,
+        decision_summary="风控意见分歧，优选近端空头",
+        decision_confidence=0.65,
+        risk_reviews=[
+            RiskReview("aggressive", False, [], 0.0, ["market snapshot not executable"]),
+            RiskReview("neutral", False, [], 0.0, ["market snapshot not executable"]),
+            RiskReview("conservative", False, [], 0.0, ["market snapshot not executable"]),
+        ],
+        candidate_index=2,
+        proposal=TransactionProposal(
+            primary_direction="short",
+            signal_indices=[0, 1],
+            rationale=["顺势近端空头优先"],
+            debate_bias="bearish",
+        ),
+        validated_plans=[
+            {
+                "accepted": False,
+                "reason": "BUY zone above current price",
+                "proposal": {"path_id": "C", "direction": "BUY", "entry_low": 38.0},
+            }
+        ],
+    )
+    blob = "；".join(notes)
+    assert "LLM路径B·做空" in blob
+    assert "经理理由" in blob
+    assert "风控[激进]否决" in blob
+    assert "market snapshot not executable" in blob
+    assert "交易员未提名" in blob
+    assert "交易员理由" in blob
+    assert "评分低于主方案" in blob
+    assert "方向与主方案相反" in blob
+    assert "逆主结构" in blob
 
 
 def test_observation_mode_blocks_execution_despite_execute_decision() -> None:

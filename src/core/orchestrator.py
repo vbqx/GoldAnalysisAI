@@ -286,7 +286,7 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
         if not str(conclusion.get("action", "")).startswith(prefix):
             conclusion["action"] = prefix + str(conclusion.get("action", ""))
 
-    apply_manager_authorization(report, decision, risk_reviews)
+    apply_manager_authorization(report, decision, risk_reviews, proposal=proposal)
     align_conclusion_with_manager_decision(report)
     report["narrative_sections"] = build_rule_narrative_sections(report)
     report["market_overview"] = overview_bullets_from_sections(report["narrative_sections"])

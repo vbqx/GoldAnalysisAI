@@ -260,6 +260,45 @@ iframe { border: none; display: block; }
 }
 .plan-card.unauthorized { opacity: 0.92; }
 .plan-card.unauthorized .head { filter: saturate(0.75); }
+.plan-card.rejected { opacity: 0.88; border-style: dashed; }
+.plan-card.rejected .head { background: linear-gradient(135deg, #64748b, #475569) !important; }
+.rejected-plans details {
+  margin-top: 6px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 4px 6px;
+  background: #f8fafc;
+}
+.rejected-plans summary {
+  cursor: pointer;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  list-style: none;
+}
+.rejected-plans summary::-webkit-details-marker { display: none; }
+.rejected-plans .reject-reason {
+  color: #b45309;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  margin: 2px 0 4px;
+}
+.rejected-plans .reject-list {
+  margin: 2px 0 0 1.1em;
+  padding: 0;
+}
+.rejected-plans .reject-list li { margin: 1px 0; }
+.plan-card .reject-reason {
+  color: #b45309;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  margin: 0 0 4px;
+}
+.plan-card .reject-list {
+  margin: 2px 0 0 1.1em;
+  padding: 0;
+}
+.plan-card .reject-list li { margin: 1px 0; }
 .plan-card { border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; font-size: 0.68rem; background: #fff; }
 .plan-card.short.is-primary { border-color: #dc2626; box-shadow: 0 0 0 1px rgba(220,38,38,0.18); }
 .plan-card.long.is-primary { border-color: #16a34a; box-shadow: 0 0 0 1px rgba(22,163,74,0.18); }
@@ -269,7 +308,6 @@ iframe { border: none; display: block; }
   padding: 5px 8px; font-weight: 700; color: #fff; font-size: 0.7rem; line-height: 1.25;
 }
 .plan-card .head-title { flex: 1; min-width: 0; text-align: left; }
-.plan-card .head-badges { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .plan-card .body { padding: 6px 8px; background: #fff; line-height: 1.45; }
 .plan-card .body b { color: #475569; font-weight: 600; }
 .plan-card .plan-grid {
@@ -362,13 +400,24 @@ iframe { border: none; display: block; }
 .status-pill.watch { background: #d97706; }
 .status-pill.candidate { background: #64748b; }
 .status-pill.invalid { background: #94a3b8; }
+.status-pill.rejected { background: #b45309; }
 .signal-mini-badge {
   font-size: 10px;
-  margin-left: 6px;
+  margin-left: 4px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.08);
+  white-space: nowrap;
 }
-.signal-mini-badge.alt { color: #64748b; }
-.signal-mini-badge.primary { color: #0ea5e9; }
-.signal-mini-badge.llm { color: #7c3aed; }
+.signal-mini-badge.alt { color: #334155; background: rgba(148, 163, 184, 0.25); }
+.signal-mini-badge.primary { color: #0369a1; background: rgba(14, 165, 233, 0.18); }
+.signal-mini-badge.llm { color: #6d28d9; background: rgba(124, 58, 237, 0.14); }
+.plan-card.rejected .signal-mini-badge.alt,
+.plan-card.rejected .signal-mini-badge.llm {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.18);
+}
+.plan-card .head-badges { display: flex; align-items: center; gap: 4px; flex-shrink: 0; flex-wrap: wrap; }
 .primary-plan-focus {
   border: 1px solid #e2e8f0;
   border-left: 4px solid #64748b;
@@ -712,6 +761,7 @@ def _status_meta(status: str) -> tuple[str, str]:
         "watch": ("等待触发", "watch"),
         "candidate": ("候选区", "candidate"),
         "invalid": ("已失效", "invalid"),
+        "rejected": ("被拒绝", "rejected"),
     }
     return status_map.get(status, status_map["candidate"])
 
@@ -874,12 +924,19 @@ def _confidence_text(sig: dict[str, Any]) -> str:
     return f"{score_txt} · {grade_txt}级"
 
 
+def _minify_plan_html(markup: str) -> str:
+    """Collapse indentation so Streamlit markdown won't treat the card as a code fence."""
+    lines = [ln.strip() for ln in markup.splitlines() if ln.strip()]
+    return "".join(lines)
+
+
 def _render_plan_card(
     sig: dict[str, Any],
     *,
     plan_label: str,
     is_primary: bool = False,
     unauthorized: bool = False,
+    rejected: bool = False,
 ) -> str:
     role = sig.get("signal_role", "primary")
     css_theme = infer_trade_theme(
@@ -887,23 +944,45 @@ def _render_plan_card(
         direction=str(sig.get("direction") or ""),
         direction_cn=str(sig.get("direction_cn") or ""),
     )
-    alt = " alt" if role == "alternate" and not unauthorized else ""
+    alt = " alt" if role == "alternate" and not unauthorized and not rejected else ""
     status = str(sig.get("status") or "candidate")
-    status_label, status_cls = _status_meta(status)
-    invalid_cls = " invalid" if status == "invalid" else ""
-    primary_cls = " is-primary" if is_primary and not unauthorized else ""
+    is_rejected = rejected or role == "rejected"
+    if is_rejected:
+        # Manager-rejected inventory is no longer a live candidate zone.
+        status_label, status_cls = _status_meta("rejected")
+        invalid_cls = " invalid" if status == "invalid" else ""
+    else:
+        status_label, status_cls = _status_meta(status)
+        invalid_cls = " invalid" if status == "invalid" else ""
+    primary_cls = " is-primary" if is_primary and not unauthorized and not is_rejected else ""
     unauth_cls = " unauthorized" if unauthorized else ""
+    rejected_cls = " rejected" if is_rejected else ""
     weight = html.escape(str(sig.get("sentiment_bias_pct", sig.get("win_rate", "—"))))
     trigger_note = html.escape(str(sig.get("trigger_note") or "等待触发确认"))
     reasons = sig.get("score_reasons") or []
     reason_text = "；".join(html.escape(str(x)) for x in reasons[:2])
+    rejection = html.escape(str(sig.get("rejection_reason") or "").strip())
+    note_items = [str(x).strip() for x in (sig.get("rejection_notes") or []) if str(x).strip()]
+    if note_items:
+        reject_block = (
+            '<div class="reject-reason"><b>拒绝原因：</b>'
+            + '<ul class="reject-list">'
+            + "".join(f"<li>{html.escape(item)}</li>" for item in note_items[:12])
+            + "</ul></div>"
+        )
+    elif rejection:
+        reject_block = f'<div class="reject-reason"><b>拒绝原因：</b>{rejection}</div>'
+    else:
+        reject_block = ""
     source_badge = (
         '<span class="signal-mini-badge llm">LLM</span>'
         if str(sig.get("setup_type", "")).startswith("llm_")
         else ""
     )
     role_badge = ""
-    if unauthorized:
+    if is_rejected:
+        role_badge = ""  # status pill already says 被拒绝
+    elif unauthorized:
         role_badge = '<span class="signal-mini-badge alt">未授权</span>'
     elif is_primary:
         role_badge = '<span class="signal-mini-badge primary">主</span>'
@@ -915,8 +994,9 @@ def _render_plan_card(
     confidence = html.escape(_confidence_text(sig))
     note = html.escape(str(sig.get("note") or ""))
 
-    return f"""
-<div class="plan-card {css_theme}{alt}{invalid_cls}{primary_cls}{unauth_cls}">
+    return _minify_plan_html(
+        f"""
+<div class="plan-card {css_theme}{alt}{invalid_cls}{primary_cls}{unauth_cls}{rejected_cls}">
   <div class="head">
     <div class="head-title">{plan_name} · {title}</div>
     <div class="head-badges">
@@ -926,6 +1006,7 @@ def _render_plan_card(
     </div>
   </div>
   <div class="body">
+    {reject_block}
     <div class="plan-grid">
       <div><div class="k">方向</div><div class="v direction-v">{direction}</div></div>
       <div><div class="k">入场区</div><div class="v">{_signal_zone(sig)}</div></div>
@@ -936,7 +1017,69 @@ def _render_plan_card(
     <div class="plan-meta"><b>触发：</b>{trigger_note}{(' · ' + note) if note else ''}</div>
     {f'<div class="plan-meta">{reason_text}</div>' if reason_text else ''}
   </div>
-</div>"""
+</div>
+"""
+    )
+
+
+def render_rejected_plan_details(
+    signals: list[dict],
+    *,
+    meta: dict | None = None,
+    validated_plans: list[dict] | None = None,
+) -> str:
+    """Collapsible inventory of manager-rejected / unused / geometry-failed candidates."""
+    del meta
+    rejected = [s for s in signals if s.get("signal_role") == "rejected"]
+    cards: list[str] = []
+    for idx, sig in enumerate(rejected[:8]):
+        cards.append(
+            _render_plan_card(
+                sig,
+                plan_label=f"未选用 {idx + 1}",
+                rejected=True,
+            )
+        )
+
+    # LLM setups that failed geometry never enter the signal list — still show them.
+    known_names = {str(s.get("name") or "") for s in signals}
+    geo_failed = 0
+    for row in validated_plans or []:
+        if row.get("accepted"):
+            continue
+        prop = row.get("proposal") or {}
+        path = str(prop.get("path_id") or "").upper() or "?"
+        name = f"LLM路径{path}·{'做空' if str(prop.get('direction')).upper() == 'SELL' else '做多'}"
+        if any(path and path in n for n in known_names):
+            continue
+        geo_failed += 1
+        synth = {
+            "name": name,
+            "direction": prop.get("direction") or "SELL",
+            "direction_cn": "做空" if str(prop.get("direction")).upper() == "SELL" else "做多",
+            "entry_low": prop.get("entry_low"),
+            "entry_high": prop.get("entry_high"),
+            "stop_loss": prop.get("stop_loss"),
+            "take_profits": prop.get("take_profits") or [],
+            "theme": "short" if str(prop.get("direction")).upper() == "SELL" else "long",
+            "status": "invalid",
+            "setup_type": prop.get("setup_type") or "llm_level",
+            "signal_role": "rejected",
+            "score_grade": "—",
+            "rejection_notes": [f"点位几何校验拒绝（路径{path}）：{row.get('reason') or '未通过'}"],
+            "rejection_reason": f"点位几何校验拒绝（路径{path}）：{row.get('reason') or '未通过'}",
+            "trigger_note": str(row.get("reason") or "几何校验失败"),
+        }
+        cards.append(_render_plan_card(synth, plan_label=f"几何拒绝 {geo_failed}", rejected=True))
+
+    total = len(rejected) + geo_failed
+    if not cards:
+        return ""
+    return _minify_plan_html(
+        f'<div class="rejected-plans">'
+        f"<details><summary>未选用 / 已拒绝候选（{total}）— 点开查看原因</summary>"
+        f'{"".join(cards)}</details></div>'
+    )
 
 
 def render_primary_plan_focus(report: dict[str, Any]) -> str:
@@ -1196,6 +1339,7 @@ def render_trading_plans(
     *,
     meta: dict | None = None,
     include_primary: bool = True,
+    validated_plans: list[dict] | None = None,
 ) -> str:
     """Unified A/B/C plan cards; separates authorized vs rule-only candidates."""
     del include_primary
@@ -1211,7 +1355,10 @@ def render_trading_plans(
     else:
         display_signals = _display_plan_signals(signals)
         unauthorized = True
-    if not display_signals:
+    has_rejected = any(s.get("signal_role") == "rejected" for s in signals) or any(
+        not row.get("accepted") for row in (validated_plans or [])
+    )
+    if not display_signals and not has_rejected:
         return '<div class="plan-stack"><p>暂无交易计划</p></div>'
     banner = ""
     if unauthorized:
@@ -1224,7 +1371,12 @@ def render_trading_plans(
         cards.append(
             _render_plan_card(sig, plan_label=label, is_primary=is_primary, unauthorized=unauthorized)
         )
-    return f'<div class="plan-stack">{banner}{"".join(cards)}</div>'
+    rejected_block = ""
+    if execution_authorized or has_rejected:
+        rejected_block = render_rejected_plan_details(
+            signals, meta=meta, validated_plans=validated_plans
+        )
+    return f'<div class="plan-stack">{banner}{"".join(cards)}{rejected_block}</div>'
 
 
 def render_liquidity(items: list[dict]) -> str:
