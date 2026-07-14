@@ -1,9 +1,11 @@
 # Architecture Review
 
 > **文档类型**：架构健康检查（持续维护，非一次性验收）  
-> **索引**：[reviews/README.md](../reviews/README.md) · 发现项状态见 [findings-status.md](../reviews/findings-status.md)（仅 F-* 金融项）
+> **索引**：[reviews/README.md](../reviews/README.md) · 发现项状态见 [findings-status.md](../reviews/findings-status.md)（仅 F-* 金融项） · [持续审核蓝图](../planning/audit-plan.md)
 
 本文从可读性、边界和臃肿度审视当前项目。它不是 roadmap；只记录“现在的结构是否健康”。
+
+交易可靠性、LLM 决策链、回放证据及发布门禁的长期审核方法，见[交易分析系统持续审核蓝图](../planning/audit-plan.md)。
 
 ## 总体判断
 
