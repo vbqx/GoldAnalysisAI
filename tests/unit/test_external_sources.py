@@ -99,6 +99,36 @@ def test_jin10_bundle_flash_articles_calendar(_cal, _articles, _flash) -> None:
     assert "jin10_calendar" in bundle.sources
 
 
+@patch(
+    "src.data.sources.jin10_feed.fetch_jin10_flash",
+    return_value=(
+        [HeadlineItem(source="jin10_flash", text="2026-06-16 10:00 现货黄金突破4200美元", time="2026-06-16")],
+        None,
+    ),
+)
+@patch(
+    "src.data.sources.jin10_feed.fetch_jin10_articles",
+    return_value=(
+        [HeadlineItem(source="jin10_news", text="2026-06-16 09:00 一周展望：黄金等待筑底", time="2026-06-16")],
+        None,
+    ),
+)
+@patch(
+    "src.data.sources.jin10_feed.fetch_jin10_calendar",
+    return_value=([], None),
+)
+def test_jin10_bundle_healthy_with_empty_calendar(_cal, _articles, _flash) -> None:
+    """Issue #33: empty calendar day is still a healthy Jin10 feed."""
+    bundle = fetch_jin10_bundle()
+    assert bundle.errors == []
+    assert bundle.calendar_events == []
+    assert bundle.risk_events == "—"
+    assert bundle.headlines
+    assert "jin10_flash" in bundle.sources
+    assert "jin10_news" in bundle.sources
+    assert "jin10_calendar" in bundle.sources
+
+
 @patch("src.data.sources.jin10_feed.JIN10_ENABLED", False)
 @patch("src.data.sources.jin10_feed.JIN10_API_TOKEN", "")
 def test_jin10_bundle_requires_token() -> None:

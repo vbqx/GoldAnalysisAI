@@ -41,19 +41,38 @@ def test_live_dxy_tradingview() -> None:
 @pytest.mark.external_api
 @pytest.mark.skipif(not JIN10_ENABLED or not JIN10_API_TOKEN, reason="JIN10_API_TOKEN not set")
 def test_live_jin10_news_bundle() -> None:
-    """Flash + articles + calendar from Jin10 official MCP."""
+    """Flash + articles + calendar from Jin10 official MCP.
+
+    Empty calendar windows are healthy: risk_events may be "—" when no events.
+    """
     bundle = fetch_jin10_bundle()
 
     if not bundle.sources and not bundle.headlines:
         pytest.skip(f"Jin10 MCP failed: {bundle.errors}")
 
-    assert "jin10_flash" in bundle.sources or "jin10_news" in bundle.sources or "jin10_calendar" in bundle.sources
-    assert bundle.risk_events and bundle.risk_events != "—"
-    if bundle.headlines:
-        assert len(bundle.headlines) >= 1
+    assert (
+        "jin10_flash" in bundle.sources
+        or "jin10_news" in bundle.sources
+        or "jin10_calendar" in bundle.sources
+    )
+    # Separate feed health from "there are calendar events today".
+    has_flash_or_news = bool(bundle.headlines) or bool(bundle.flash) or bool(bundle.articles)
+    assert has_flash_or_news or "jin10_calendar" in bundle.sources
+
+    if bundle.calendar_events:
+        assert bundle.risk_events and bundle.risk_events != "—"
+    else:
+        # Legitimate empty window — placeholder risk text is OK.
+        assert bundle.risk_events is not None
 
     ext = NewsDataSource().fetch_external()
-    assert ext.news_headlines or ext.risk_events != "—"
+    assert (
+        ext.news_headlines
+        or (ext.risk_events and ext.risk_events != "—")
+        or "jin10_calendar" in (ext.sources or [])
+        or "jin10_flash" in (ext.sources or [])
+        or "jin10_news" in (ext.sources or [])
+    )
 
 
 @pytest.mark.external_api

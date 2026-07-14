@@ -303,12 +303,13 @@ def fetch_jin10_bundle() -> Jin10NewsBundle:
     calendar, cal_err = fetch_jin10_calendar()
     if cal_err:
         bundle.errors.append(f"jin10_calendar: {cal_err}")
-    if calendar:
+    else:
         from src.data.calendar_utils import calendar_to_risk_text, filter_upcoming_calendar_events
 
         upcoming = filter_upcoming_calendar_events(calendar)
         bundle.calendar_events = upcoming
         bundle.risk_events = calendar_to_risk_text(upcoming) if upcoming else "—"
+        # Mark source healthy even when the current window has zero events.
         bundle.sources.append("jin10_calendar")
 
     return bundle
