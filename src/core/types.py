@@ -35,6 +35,8 @@ class AnalystReport:
     items: list[EvidenceItem]
     confidence: float
     summary: str
+    # Technical analyst: reaction hypotheses at POC / VA / S/R (consumed by level proposer).
+    level_reactions: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
@@ -114,6 +116,11 @@ class LevelProposal:
     invalidation: str = ""
     path_id: str = ""
     source: str = "llm"
+    # Bind to technical analyst level_reactions (short order rationale, not full TA).
+    anchor_level: str = ""
+    expected_reaction: str = ""
+    deduction: str = ""
+    reaction_evidence_id: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

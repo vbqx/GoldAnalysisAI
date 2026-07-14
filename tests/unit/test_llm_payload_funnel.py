@@ -162,6 +162,25 @@ def test_debate_payload_includes_analyst_top_items_when_funnel(monkeypatch) -> N
     assert "event_risk" in payload
 
 
+def test_level_proposer_payload_includes_technical_level_reactions(monkeypatch) -> None:
+    monkeypatch.setattr("src.agents.llm.payload.LLM_PAYLOAD_FUNNEL", True)
+    ctx = _sample_context()
+    team = _sample_team()
+    team.technical.level_reactions = [
+        {
+            "id": "tech_reaction:0",
+            "label": "POC",
+            "price": 4200.0,
+            "timeframe": "5m",
+            "expected_reaction": "承压回落",
+        }
+    ]
+    debate = _sample_debate()
+    payload = level_proposer_payload(ctx, team, debate, [])
+    assert payload["technical_level_reactions"][0]["id"] == "tech_reaction:0"
+    assert "reaction_evidence_id" in payload["level_constraints"]["execution"]
+
+
 def test_level_proposer_payload_uses_structure_context_not_external(monkeypatch) -> None:
     monkeypatch.setattr("src.agents.llm.payload.LLM_PAYLOAD_FUNNEL", True)
     ctx = _sample_context()

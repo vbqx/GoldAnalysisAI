@@ -52,13 +52,43 @@ def _event_risk_block(ctx: MarketContext) -> dict[str, Any]:
     }
 
 
+def technical_level_reactions_payload(team: AnalystTeam) -> list[dict[str, Any]]:
+    """Level-reaction hypotheses from technical analyst for the level proposer."""
+    report = team.technical
+    if report.level_reactions:
+        return list(report.level_reactions)[:8]
+    recovered: list[dict[str, Any]] = []
+    for item in report.items:
+        if item.category != "level_reaction" and not item.refs.get("expected_reaction"):
+            continue
+        price_raw = item.refs.get("price")
+        try:
+            price = round(float(price_raw), 2) if price_raw is not None else None
+        except (TypeError, ValueError):
+            price = None
+        recovered.append(
+            {
+                "id": item.evidence_id,
+                "label": str(item.refs.get("label") or "").strip(),
+                "price": price,
+                "timeframe": item.timeframe,
+                "expected_reaction": str(item.refs.get("expected_reaction") or "").strip(),
+                "rationale": item.summary,
+                "strength": item.strength,
+            }
+        )
+    return recovered[:8]
+
+
 def analyst_team_payload(team: AnalystTeam) -> dict[str, Any]:
     cap = ANALYST_TEAM_ITEMS_MAX
-    return {
-        role: {
-            "bias": getattr(team, role).bias,
-            "confidence": getattr(team, role).confidence,
-            "summary": getattr(team, role).summary,
+    out: dict[str, Any] = {}
+    for role in ("technical", "fundamentals", "news", "sentiment"):
+        report = getattr(team, role)
+        block: dict[str, Any] = {
+            "bias": report.bias,
+            "confidence": report.confidence,
+            "summary": report.summary,
             "items": [
                 {
                     "evidence_id": i.evidence_id,
@@ -68,11 +98,13 @@ def analyst_team_payload(team: AnalystTeam) -> dict[str, Any]:
                     "timeframe": i.timeframe,
                     "refs": i.refs,
                 }
-                for i in sorted(getattr(team, role).items, key=lambda x: -x.strength)[:cap]
+                for i in sorted(report.items, key=lambda x: -x.strength)[:cap]
             ],
         }
-        for role in ("technical", "fundamentals", "news", "sentiment")
-    }
+        if role == "technical" and report.level_reactions:
+            block["level_reactions"] = list(report.level_reactions)[:8]
+        out[role] = block
+    return out
 
 
 def analyst_team_summaries_payload(team: AnalystTeam, *, top_items: int = 0) -> dict[str, Any]:
@@ -474,6 +506,7 @@ def level_proposer_payload(
         return {
             "symbol": "XAUUSD",
             "price": ctx.price,
+            "technical_level_reactions": technical_level_reactions_payload(team),
             "analyst_team": analyst_team_payload(team),
             "debate": {
                 "consensus_bias": debate.consensus_bias,
@@ -488,9 +521,13 @@ def level_proposer_payload(
             },
             "rule_candidate_signals": [_signal_payload(s) for s in rule_signals[:5]],
             "level_constraints": {
-                "scope": "Use only levels supported by structure_context, analyst_team and candidate signals.",
+                "scope": "Bind setups to technical_level_reactions; fall back to structure_context PA levels only if reactions empty.",
                 "geometry": "SELL requires stop_loss above entry and TP below entry. BUY requires stop_loss below entry and TP above entry.",
-                "execution": "Return candidate zones, not market orders. Include invalidation and trigger expectation in reason.",
+                "execution": (
+                    "Return candidate zones, not market orders. "
+                    "Cite reaction_evidence_id; copy anchor_level/expected_reaction; "
+                    "keep deduction to one short bind sentence — do not rewrite technical analysis."
+                ),
                 "risk": "Prefer TP1 risk/reward >= 1.0; avoid entries already far behind current price.",
             },
         }
@@ -500,11 +537,15 @@ def level_proposer_payload(
         "consensus_strength": debate.consensus_strength,
         "discussion_notes": debate.discussion_notes[-5:],
     }
+    payload["technical_level_reactions"] = technical_level_reactions_payload(team)
     payload["rule_candidate_signals"] = [_signal_payload(s) for s in rule_signals[:5]]
     payload["level_constraints"] = {
-        "scope": "Use only levels supported by supplied price, Lux SMC structures, FVG/OB zones, swing H/L, Strong/Weak H/L, liquidity, Fib and candidate signals.",
+        "scope": "Bind setups to technical_level_reactions; use structure levels only as fallback.",
         "geometry": "SELL requires stop_loss above entry and TP below entry. BUY requires stop_loss below entry and TP above entry.",
-        "execution": "Return candidate zones, not market orders. Include invalidation and trigger expectation in reason.",
+        "execution": (
+            "Return candidate zones, not market orders. "
+            "Cite reaction_evidence_id; keep deduction to one short bind sentence."
+        ),
         "risk": "Prefer TP1 risk/reward >= 1.0; avoid entries already far behind current price.",
     }
     return payload

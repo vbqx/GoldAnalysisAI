@@ -456,3 +456,56 @@ def test_parse_analyst_report_requires_min_items() -> None:
             },
             agent="news_analyst",
         )
+
+
+def test_parse_technical_requires_level_reactions() -> None:
+    with pytest.raises(ValueError, match="level_reactions"):
+        parse_analyst_report(
+            {
+                "bias": "bearish",
+                "confidence": 0.7,
+                "summary": "no reactions",
+                "items": [
+                    {"category": "structure", "summary": f"item {i}", "strength": 0.6}
+                    for i in range(4)
+                ],
+            },
+            agent="technical_analyst",
+        )
+
+
+def test_parse_technical_level_reactions_merged_into_items() -> None:
+    report = parse_analyst_report(
+        {
+            "bias": "bearish",
+            "confidence": 0.75,
+            "summary": "偏空",
+            "items": [
+                {"category": "lux_panel", "summary": "4h 偏空", "strength": 0.8, "timeframe": "4h"},
+                {"category": "lux_panel", "summary": "1h CHoCH", "strength": 0.7, "timeframe": "1h"},
+                {"category": "price_action", "summary": "POC 上方承压", "strength": 0.75, "timeframe": "5m"},
+                {"category": "price_action", "summary": "VAL 临近", "strength": 0.65, "timeframe": "15m"},
+            ],
+            "level_reactions": [
+                {
+                    "id": "tech_reaction:0",
+                    "label": "POC",
+                    "price": 4000.0,
+                    "timeframe": "5m",
+                    "expected_reaction": "承压回落",
+                    "rationale": "多次拒绝",
+                },
+                {
+                    "id": "tech_reaction:1",
+                    "label": "量价阻力",
+                    "price": 4010.0,
+                    "timeframe": "15m",
+                    "expected_reaction": "假突破回收",
+                },
+            ],
+        },
+        agent="technical_analyst",
+    )
+    assert len(report.level_reactions) == 2
+    assert report.level_reactions[0]["expected_reaction"] == "承压回落"
+    assert any(i.category == "level_reaction" for i in report.items)

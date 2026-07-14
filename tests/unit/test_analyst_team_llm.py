@@ -94,6 +94,24 @@ def test_factory_analyst_team_llm_hybrid_picks_high_confidence(monkeypatch) -> N
             {"category": "technical", "summary": "EMA20 上方", "strength": 0.7, "timeframe": "5m"},
             {"category": "technical", "summary": "FVG 支撑", "strength": 0.65, "timeframe": "15m"},
         ],
+        "level_reactions": [
+            {
+                "id": "tech_reaction:0",
+                "label": "POC",
+                "price": 4205.0,
+                "timeframe": "5m",
+                "expected_reaction": "支撑反弹",
+                "rationale": "价在 POC 下方回踩",
+            },
+            {
+                "id": "tech_reaction:1",
+                "label": "VAL",
+                "price": 4198.0,
+                "timeframe": "15m",
+                "expected_reaction": "跌破加速",
+                "rationale": "失守价值区下沿",
+            },
+        ],
     }
 
     def fake_technical(_ctx):
@@ -141,6 +159,22 @@ def test_factory_analyst_team_llm_can_limit_to_single_specialist(monkeypatch) ->
             {"category": "technical", "summary": "1h 趋势偏多", "strength": 0.8, "timeframe": "1h"},
             {"category": "technical", "summary": "EMA20 上方", "strength": 0.7, "timeframe": "5m"},
             {"category": "technical", "summary": "FVG 支撑", "strength": 0.65, "timeframe": "15m"},
+        ],
+        "level_reactions": [
+            {
+                "id": "tech_reaction:0",
+                "label": "POC",
+                "price": 4205.0,
+                "timeframe": "5m",
+                "expected_reaction": "支撑反弹",
+            },
+            {
+                "id": "tech_reaction:1",
+                "label": "阻力",
+                "price": 4218.0,
+                "timeframe": "15m",
+                "expected_reaction": "承压回落",
+            },
         ],
     }
     calls: list[str] = []
@@ -214,18 +248,33 @@ def test_factory_analyst_team_llm_mode_without_rule_baseline(monkeypatch) -> Non
         def _run(_ctx):
             from src.core.types import LLMStageTrace
 
-            report = parse_analyst_report(
-                {
-                    "bias": "neutral",
-                    "confidence": 0.8,
-                    "summary": f"LLM {stage}",
-                    "items": [
-                        {"category": stage, "summary": f"{stage} item {i}", "strength": 0.7}
-                        for i in range(4)
-                    ],
-                },
-                agent=f"{stage}_analyst",
-            )
+            payload: dict = {
+                "bias": "neutral",
+                "confidence": 0.8,
+                "summary": f"LLM {stage}",
+                "items": [
+                    {"category": stage, "summary": f"{stage} item {i}", "strength": 0.7}
+                    for i in range(4)
+                ],
+            }
+            if stage == "technical":
+                payload["level_reactions"] = [
+                    {
+                        "id": "tech_reaction:0",
+                        "label": "POC",
+                        "price": 4200.0,
+                        "timeframe": "5m",
+                        "expected_reaction": "支撑反弹",
+                    },
+                    {
+                        "id": "tech_reaction:1",
+                        "label": "阻力",
+                        "price": 4210.0,
+                        "timeframe": "15m",
+                        "expected_reaction": "承压回落",
+                    },
+                ]
+            report = parse_analyst_report(payload, agent=f"{stage}_analyst")
             return report, LLMStageTrace(stage=stage, model="test-model", latency_ms=10)
 
         return _run

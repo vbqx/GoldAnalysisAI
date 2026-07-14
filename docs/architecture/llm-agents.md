@@ -173,7 +173,7 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | 看多/看空研究 | `research_payload()` | `analyst_team` + structure_vote + event_risk | external、timeframes、metrics |
 | 辩论 | `debate_payload()` | bull/bear evidence + analyst top items + event_risk | 原始快讯/社媒 |
 | 交易员 | `trader_decision_payload()` | debate + analyst summaries + candidate_signals | 全量 market |
-| 点位提议 | `level_proposer_payload()` | analyst_team + structure_context + debate | external 新闻 |
+| 点位提议 | `level_proposer_payload()` | `technical_level_reactions`（技术分析产出）+ structure_context + debate；setup 绑定 `reaction_evidence_id`，短 deduction | external 新闻 |
 | 风控 / 经理 | `risk_payload` / `manager_payload` | proposal + reviews | 市场与分析师 |
 
 设 `LLM_PAYLOAD_FUNNEL=false` 可回退旧版（研究/交易员含 `market_payload`）。Analyst Team 的 `stage_io` 记录四位 specialist 实际输入（`analyst_team_input_payload`），而非泛化 `market_payload`。
@@ -317,11 +317,20 @@ Analyst Team -> Bullish/Bearish Research -> Debate
   -> Trader -> Risk -> Manager -> Report
 ```
 
-LLM 点位阶段只提出候选 BUY/SELL 区。确定性 validator 检查止损/目标几何关系、风险收益方向和现有 setup 评分规则，再把通过建议转换为 `TradingSignal`，因此 Trader、Risk 和 UI 仍使用原有合同。
+**分工**：`level_reactions`（到价预期反应）由**技术分析师**产出；点位阶段只做**短绑定**并给出 A/B/C 入场几何。
+
+| 阶段 | 字段 | 含义 |
+|------|------|------|
+| 技术分析 | `level_reactions[]` | 关键 POC/VA/S/R + `expected_reaction` + 短 rationale |
+| 点位提案 | `reaction_evidence_id` | 引用技术分析 `level_reactions[].id` |
+| 点位提案 | `anchor_level` / `expected_reaction` | 从被引用反应复制 |
+| 点位提案 | `deduction` | **一句**绑定理由（禁止重写技术分析） |
+
+确定性 validator 检查止损/目标几何，再转换为 `TradingSignal`。决策链页展开「点位绑定」。
 
 审计字段：
 
-- `report["llm_levels"]`: raw structured LLM proposals.
+- `report["llm_levels"]`: raw structured LLM proposals（含推演字段）。
 - `report["validated_plans"]`: validator accept/reject audit.
 - `report["agent_trace"]["llm_levels"]` and `report["agent_trace"]["validated_plans"]`.
 - `report["meta"]["stage_sources"]["llm_levels"]`.

@@ -30,6 +30,7 @@ PA_SUMMARY_HINT: list[str] = [
 ANALYST_PRIORITY_HINT = (
     "结构判断以 SMC（timeframes/lux_timeframe_panels）为主；"
     "PA（price_action_summary）为辅，用于确认价位与共振。"
+    "技术分析师须另行给出 level_reactions：关键 POC/VA/支撑阻力到价后的预期反应（供点位提案绑定）。"
 )
 
 NARRATIVE_PRIORITY_HINT = (
@@ -58,7 +59,9 @@ DEBATE_PRIORITY_HINT = (
 LEVELS_PRIORITY_HINT = (
     "定区以 PA 为主（POC/VAH/VAL、近端量价 S/R）；"
     "setup_type 优先 llm_poc_va|llm_volume_sr；"
-    "SMC（FVG/OB/流动性扫取）仅作共振或 reason 补充，不得单独压过 PA 区。"
+    "SMC（FVG/OB/流动性扫取）仅作共振，不得单独压过 PA 区。"
+    "反应假设以 technical.level_reactions 为准：只绑定锚点/预期反应并写一句下单理由，"
+    "禁止重写技术分析长推演。"
 )
 
 RISK_MANAGER_HINT = (

@@ -82,6 +82,106 @@ def _float_field(row: dict[str, Any], name: str) -> float:
         raise ValueError(f"level proposal missing numeric {name}") from exc
 
 
+def _parse_level_reactions(data: dict[str, Any], *, agent: str) -> list[dict[str, Any]]:
+    """Technical analyst reaction hypotheses at POC / VA / S/R."""
+    raw = data.get("level_reactions") or data.get("key_level_reactions") or []
+    out: list[dict[str, Any]] = []
+    if isinstance(raw, list):
+        for idx, row in enumerate(raw[:8]):
+            if not isinstance(row, dict):
+                continue
+            label = str(row.get("label") or row.get("level") or row.get("name") or "").strip()
+            reaction = str(
+                row.get("expected_reaction") or row.get("reaction") or row.get("price_reaction") or ""
+            ).strip()
+            if not label and not reaction:
+                continue
+            price_raw = row.get("price")
+            price: float | None
+            try:
+                price = round(float(price_raw), 2) if price_raw is not None else None
+            except (TypeError, ValueError):
+                price = None
+            rid = str(row.get("id") or row.get("evidence_id") or "").strip() or f"{agent}:reaction:{idx}"
+            out.append(
+                {
+                    "id": rid,
+                    "label": label,
+                    "price": price,
+                    "timeframe": str(row.get("timeframe") or "").strip() or None,
+                    "expected_reaction": reaction,
+                    "rationale": str(row.get("rationale") or row.get("why") or "").strip(),
+                    "strength": _clamp_strength(row.get("strength", 0.5)),
+                }
+            )
+    return out
+
+
+def _level_reactions_from_items(items: list[EvidenceItem]) -> list[dict[str, Any]]:
+    recovered: list[dict[str, Any]] = []
+    for item in items:
+        if item.category != "level_reaction" and not item.refs.get("expected_reaction"):
+            continue
+        price_raw = item.refs.get("price")
+        try:
+            price = round(float(price_raw), 2) if price_raw is not None else None
+        except (TypeError, ValueError):
+            price = None
+        recovered.append(
+            {
+                "id": item.evidence_id or "",
+                "label": str(item.refs.get("label") or item.summary).strip(),
+                "price": price,
+                "timeframe": item.timeframe,
+                "expected_reaction": str(item.refs.get("expected_reaction") or item.summary).strip(),
+                "rationale": "",
+                "strength": item.strength,
+            }
+        )
+    return recovered
+
+
+def _merge_level_reactions_into_items(
+    items: list[EvidenceItem],
+    reactions: list[dict[str, Any]],
+    *,
+    agent: str,
+) -> list[EvidenceItem]:
+    """Expose reactions as evidence for research / levels binding."""
+    existing_ids = {i.evidence_id for i in items if i.evidence_id}
+    merged = list(items)
+    for idx, row in enumerate(reactions):
+        rid = str(row.get("id") or "").strip() or f"{agent}:reaction:{idx}"
+        if rid in existing_ids:
+            continue
+        label = str(row.get("label") or "").strip()
+        reaction = str(row.get("expected_reaction") or "").strip()
+        price = row.get("price")
+        price_bit = f" @{price}" if price is not None else ""
+        tf = row.get("timeframe")
+        tf_bit = f"{tf} " if tf else ""
+        summary = str(row.get("rationale") or "").strip()
+        if not summary:
+            summary = f"{tf_bit}{label}{price_bit}：{reaction}".strip(" ：")
+        merged.append(
+            EvidenceItem(
+                category="level_reaction",
+                summary=summary,
+                strength=float(row.get("strength") or 0.5),
+                timeframe=tf if isinstance(tf, str) else None,
+                refs={
+                    "source": "dgt_price_action",
+                    "price": price,
+                    "label": label,
+                    "expected_reaction": reaction,
+                },
+                evidence_id=rid,
+            )
+        )
+        existing_ids.add(rid)
+    return merged
+
+
 def parse_analyst_report(data: dict[str, Any], *, agent: str) -> AnalystReport:
     bias = str(data.get("bias", "neutral")).lower()
     if bias not in ("bullish", "bearish", "neutral"):
@@ -110,6 +210,17 @@ def parse_analyst_report(data: dict[str, Any], *, agent: str) -> AnalystReport:
                 )
             )
 
+    level_reactions = _parse_level_reactions(data, agent=agent)
+    if not level_reactions:
+        level_reactions = _level_reactions_from_items(items)
+    if agent == "technical_analyst" and len(level_reactions) < 2:
+        raise ValueError(
+            f"technical_analyst needs >=2 level_reactions "
+            f"(POC/VA/S/R + expected_reaction), got {len(level_reactions)}"
+        )
+    if level_reactions:
+        items = _merge_level_reactions_into_items(items, level_reactions, agent=agent)
+
     if len(items) < LLM_MIN_ANALYST_ITEMS:
         raise ValueError(
             f"{agent} returned {len(items)} items (min {LLM_MIN_ANALYST_ITEMS})"
@@ -126,6 +237,7 @@ def parse_analyst_report(data: dict[str, Any], *, agent: str) -> AnalystReport:
         items=items,
         confidence=confidence,
         summary=summary,
+        level_reactions=level_reactions if agent == "technical_analyst" else [],
     )
 
 
@@ -253,6 +365,48 @@ def parse_research_debate(
     )
 
 
+_GENERIC_LEVEL_REASON = "LLM proposed level based on supplied market structure."
+
+
+def _compose_level_deduction_reason(
+    *,
+    anchor_level: str,
+    expected_reaction: str,
+    deduction: str,
+    reason: str,
+) -> str:
+    """Build audit-friendly reason from structured reaction thesis fields."""
+    if reason and reason != _GENERIC_LEVEL_REASON:
+        return reason
+    parts: list[str] = []
+    if anchor_level:
+        parts.append(f"锚点 {anchor_level}")
+    if expected_reaction:
+        parts.append(f"预期反应：{expected_reaction}")
+    if deduction:
+        parts.append(f"推演：{deduction}")
+    return "；".join(parts) if parts else reason
+
+
+def _level_deduction_quality(
+    *,
+    anchor_level: str,
+    expected_reaction: str,
+    deduction: str,
+    reason: str,
+    reaction_evidence_id: str,
+) -> bool:
+    """Prefer binding to technical reactions; allow short bind reason or legacy thesis."""
+    if reaction_evidence_id and (anchor_level or expected_reaction or deduction or reason):
+        return True
+    structured = bool(deduction) and bool(anchor_level or expected_reaction)
+    if structured:
+        return True
+    if reason and reason != _GENERIC_LEVEL_REASON and len(reason) >= 12:
+        return True
+    return False
+
+
 def parse_level_proposals(data: dict[str, Any]) -> list[LevelProposal]:
     raw_setups = data.get("setups") or data.get("levels") or []
     if not isinstance(raw_setups, list):
@@ -286,9 +440,37 @@ def parse_level_proposals(data: dict[str, Any]) -> list[LevelProposal]:
         if not take_profits:
             raise ValueError("level proposal missing take_profits")
 
+        anchor_level = str(
+            row.get("anchor_level") or row.get("anchor") or row.get("key_level") or ""
+        ).strip()
+        expected_reaction = str(
+            row.get("expected_reaction") or row.get("reaction") or row.get("price_reaction") or ""
+        ).strip()
+        deduction = str(
+            row.get("deduction") or row.get("thesis") or row.get("order_thesis") or ""
+        ).strip()
+        reaction_evidence_id = str(
+            row.get("reaction_evidence_id") or row.get("level_reaction_id") or row.get("anchor_id") or ""
+        ).strip()
         reason = str(row.get("reason", "")).strip()
-        if not reason:
-            reason = "LLM proposed level based on supplied market structure."
+        reason = _compose_level_deduction_reason(
+            anchor_level=anchor_level,
+            expected_reaction=expected_reaction,
+            deduction=deduction,
+            reason=reason,
+        )
+        if not _level_deduction_quality(
+            anchor_level=anchor_level,
+            expected_reaction=expected_reaction,
+            deduction=deduction,
+            reason=reason,
+            reaction_evidence_id=reaction_evidence_id,
+        ):
+            raise ValueError(
+                f"level proposal[{idx}] path {path_id} missing technical reaction bind "
+                "(need reaction_evidence_id from technical.level_reactions, "
+                "or anchor_level+expected_reaction+short deduction)"
+            )
 
         proposals.append(
             LevelProposal(
@@ -302,6 +484,10 @@ def parse_level_proposals(data: dict[str, Any]) -> list[LevelProposal]:
                 confidence=_clamp_strength(row.get("confidence", 0.5)),
                 invalidation=str(row.get("invalidation", "")).strip(),
                 path_id=path_id,
+                anchor_level=anchor_level,
+                expected_reaction=expected_reaction,
+                deduction=deduction,
+                reaction_evidence_id=reaction_evidence_id,
             )
         )
 

@@ -130,9 +130,13 @@ def validate_llm_levels(
         setup_type = proposal.setup_type
         if not setup_type.startswith("llm_"):
             setup_type = f"llm_{setup_type}"
-        note = proposal.reason
+        note_parts = [p for p in (proposal.reason, proposal.deduction) if p]
+        # Prefer structured deduction once; avoid duplicating reason when identical.
+        if proposal.deduction and proposal.reason and proposal.deduction in proposal.reason:
+            note_parts = [proposal.reason]
+        note = "；".join(dict.fromkeys(note_parts))  # stable unique
         if proposal.invalidation:
-            note = f"{note} 失效条件：{proposal.invalidation}"
+            note = f"{note} 失效条件：{proposal.invalidation}" if note else f"失效条件：{proposal.invalidation}"
 
         signal_name = _llm_signal_name(proposal)
         status, trigger_confirmed, trigger_note, score, grade, reasons = _setup_status_and_score(
@@ -148,7 +152,17 @@ def validate_llm_levels(
             sentiment=sentiment,
             trigger_confirmed=False,
         )
+        if proposal.anchor_level and proposal.expected_reaction:
+            trigger_note = f"等待 {proposal.anchor_level} 出现{proposal.expected_reaction}"
+        elif proposal.expected_reaction:
+            trigger_note = f"等待{proposal.expected_reaction}"
+        elif proposal.anchor_level:
+            trigger_note = f"等待价格反应于 {proposal.anchor_level}"
         reasons.append(f"LLM confidence {proposal.confidence:.0%}")
+        if proposal.anchor_level:
+            reasons.append(f"锚点 {proposal.anchor_level}")
+        if proposal.expected_reaction:
+            reasons.append(f"预期反应 {proposal.expected_reaction}")
 
         signal = TradingSignal(
             name=signal_name,

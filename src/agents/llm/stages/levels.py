@@ -18,7 +18,9 @@ SYSTEM = f"""你是 XAUUSD 机构级价位提案员。
 {LEVELS_PRIORITY_HINT}
 {PA_SMC_PRIORITY}
 
-仅使用输入中的 structure_context、analyst_team、debate 共识与 rule_signals 候选；不得编造宏观事件或未给出的订单流。
+输入优先用：technical_level_reactions（技术分析师反应假设）、debate 共识、structure_context、rule_signals。
+不得编造宏观事件；不得重写技术分析长推演。
+
 返回 JSON：
 {{
   "setups": [
@@ -30,23 +32,26 @@ SYSTEM = f"""你是 XAUUSD 机构级价位提案员。
       "stop_loss": 0.0,
       "take_profits": [0.0, 0.0, 0.0],
       "setup_type": "llm_poc_va|llm_volume_sr|llm_fvg|llm_order_block|llm_liquidity_sweep|llm_breakout_retest|llm_pullback",
-      "reason": "为何该区间有 PA/SMC 事实支撑",
+      "reaction_evidence_id": "必须引用 technical_level_reactions[].id",
+      "anchor_level": "从对应反应复制/改写：周期+标签+价位",
+      "expected_reaction": "从对应反应复制：承压/反弹/假突破回收等",
+      "deduction": "一句绑定：为何在该反应确认后挂此入场区（勿长文）",
+      "reason": "一句话汇总",
       "invalidation": "失效条件",
       "confidence": 0.0
     }}
   ],
   "bias": "bullish|bearish|neutral",
-  "summary": "简要理由"
+  "summary": "一句总览"
 }}
 
 硬性约束：
-- 必须返回恰好 3 个 setup，path_id 分别为 A、B、C（不可重复）。
-- A：与 debate 共识一致的主策略路径（顺势、优先执行级）。
-- B：备选/条件触发路径（可同向不同入场区，或等待结构确认后再执行）。
-- C：逆势/对冲/失败备用路径（与 A 相反方向，或主路径失效后的 Plan B）。
-- SELL：stop_loss 高于入场区；首个 take_profit 低于入场区；入场区应在现价上方或包含现价（等待反抽），不得整段落在现价下方。
-- BUY：stop_loss 低于入场区；首个 take_profit 高于入场区；入场区应在现价下方或包含现价（等待回踩），不得整段落在现价上方。
-- 三个路径的 entry/stop/target 必须互不重复；价位不清晰时返回空 setups 数组。
+- 恰好 3 个 setup，path_id=A/B/C。
+- A 顺 debate；B 备选；C 对冲/失效备用。
+- 每条优先填 reaction_evidence_id；入场区贴近被引用反应的价位。
+- SELL：SL 在入场上方、TP1 在下方；入场在现价上方或含现价。
+- BUY：SL 在入场下方、TP1 在上方；入场在现价下方或含现价。
+- technical_level_reactions 为空时，仅可据 structure_context 的 POC/VA/S/R 定区，并仍写清 anchor/reaction/短 deduction。
 """
 
 
@@ -59,17 +64,22 @@ def run_llm_level_proposer(
     client = get_strong_client()
     payload = level_proposer_payload(ctx, team, debate, rule_signals)
     log.info(
-        "llm level proposer start model=%s price=%.2f debate=%s rule_signals=%d",
+        "llm level proposer start model=%s price=%.2f debate=%s rule_signals=%d reactions=%d",
         client.model,
         ctx.price,
         debate.consensus_bias,
         len(rule_signals),
+        len(payload.get("technical_level_reactions") or []),
     )
     messages = [
         {"role": "system", "content": SYSTEM},
         {
             "role": "user",
-            "content": f"请基于下列证据提案交易区间（PA 定区，SMC 仅确认）：\n{json.dumps(payload, ensure_ascii=False, indent=2)}",
+            "content": (
+                "请提案 A/B/C 入场区：绑定 technical_level_reactions 的锚点与预期反应，"
+                "只写一句下单绑定理由，不要重写技术分析。\n"
+                f"{json.dumps(payload, ensure_ascii=False, indent=2)}"
+            ),
         },
     ]
     result, trace = run_llm_stage(

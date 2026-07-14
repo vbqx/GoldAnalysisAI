@@ -329,12 +329,32 @@ def render_agent_trace_panel(report: dict) -> None:
                         "止盈": " / ".join(str(x) for x in p.get("take_profits", [])),
                         "置信": f"{float(p.get('confidence', 0)):.0%}",
                         "类型": p.get("setup_type", "—"),
+                        "锚点": p.get("anchor_level") or "—",
+                        "预期反应": p.get("expected_reaction") or "—",
                     }
                     for p in llm_levels
                 ],
                 width="stretch",
                 hide_index=True,
             )
+            with st.expander("点位绑定（引用技术分析反应假设）", expanded=True):
+                for p in llm_levels:
+                    path = p.get("path_id") or "—"
+                    st.markdown(
+                        f"**路径 {path} · {p.get('direction', '—')}**  "
+                        f"{p.get('entry_low', '—')}–{p.get('entry_high', '—')}"
+                    )
+                    if p.get("reaction_evidence_id"):
+                        st.caption(f"引用反应：{p.get('reaction_evidence_id')}")
+                    if p.get("anchor_level"):
+                        st.caption(f"锚点：{p.get('anchor_level')}")
+                    if p.get("expected_reaction"):
+                        st.caption(f"预期反应：{p.get('expected_reaction')}")
+                    deduction = str(p.get("deduction") or p.get("reason") or "").strip()
+                    if deduction:
+                        st.markdown(f"绑定理由：{deduction}")
+                    if p.get("invalidation"):
+                        st.caption(f"失效：{p.get('invalidation')}")
         else:
             st.caption("本次没有 LLM 点位提议，或该阶段未启用。")
 
@@ -357,6 +377,42 @@ def render_agent_trace_panel(report: dict) -> None:
                 width="stretch",
                 hide_index=True,
             )
+            rejected_validations = [row for row in validated_plans if not row.get("accepted")]
+            if rejected_validations:
+                with st.expander(f"几何校验拒绝详情（{len(rejected_validations)}）", expanded=False):
+                    for row in rejected_validations:
+                        prop = row.get("proposal") or {}
+                        path = prop.get("path_id") or row.get("index", "—")
+                        st.markdown(
+                            f"**路径 {path} · {prop.get('direction', '—')}**  "
+                            f"{prop.get('entry_low', '—')}–{prop.get('entry_high', '—')}"
+                        )
+                        st.caption(f"拒绝原因：{row.get('reason') or '未通过几何/位置校验'}")
+
+    rejected_signals = [
+        s for s in (report.get("signals") or []) if s.get("signal_role") == "rejected"
+    ]
+    if rejected_signals:
+        with st.expander(f"经理未选用 / 已拒绝候选（{len(rejected_signals)}）", expanded=False):
+            for sig in rejected_signals:
+                name = sig.get("name") or "未命名"
+                zone = f"{sig.get('entry_low', '—')}–{sig.get('entry_high', '—')}"
+                st.markdown(
+                    f"**{name}** · {sig.get('direction_cn') or sig.get('direction') or '—'} · {zone}"
+                )
+                reason = str(sig.get("rejection_reason") or "").strip()
+                notes = [str(x) for x in (sig.get("rejection_notes") or []) if str(x).strip()]
+                if notes:
+                    st.caption("拒绝原因：")
+                    for item in notes[:12]:
+                        st.markdown(f"- {item}")
+                else:
+                    if not reason:
+                        score_bits = [str(x) for x in (sig.get("score_reasons") or [])[:3] if x]
+                        reason = "；".join(score_bits) if score_bits else "未被经理授权"
+                    st.caption(f"拒绝原因：{reason}")
+                if sig.get("status") == "invalid":
+                    st.caption(f"状态：失效 · {sig.get('trigger_note') or '—'}")
 
     risk_meta = stage_meta.get("risk") or {}
     st.markdown(f"**风控** {_badge_md(risk_meta)}")
