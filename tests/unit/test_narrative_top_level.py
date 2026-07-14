@@ -75,6 +75,33 @@ def test_top_level_allows_observation_action_plan_on_wait() -> None:
     assert reason is None
 
 
+def test_top_level_allows_round_integer_near_spot() -> None:
+    """Archive 20260713T172427Z: LLM wrote 4000 while spot was 3998.5."""
+    facts = {
+        "context_levels": [{"price": 3998.5}, {"price": 4049.9}],
+        "authorized_execution_levels": [
+            {"price": 4044.5},
+            {"price": 4046.5},
+            {"price": 4048.5},
+            {"price": 4054.5},
+        ],
+        "common": {
+            "primary_signal": {"theme": "short", "direction": "SELL"},
+            "manager_decision": {"action": "reduce", "primary_direction": "short"},
+            "sentiment": {"bearish": 100, "bullish": 0},
+        },
+    }
+    reason = validate_llm_top_level(
+        {
+            "market_summary": "金价失守4000关口；美元指数偏强（101.23）仍可写非金价数字",
+            "trade_thesis": "主方向偏空，止损放在4054.5上方",
+            "action_plan": "反抽至4046.4附近评估做空",
+        },
+        facts=facts,
+    )
+    assert reason is None
+
+
 def test_top_level_partial_field_audit() -> None:
     from src.analysis.narrative_sections import validate_llm_top_level_fields
 

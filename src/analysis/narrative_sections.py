@@ -27,6 +27,8 @@ LIQUIDITY_PA_FALLBACK_TFS = ("15m", "1h")
 SECTION_FIELDS = ("summary", "context", "levels", "conditions", "invalidation")
 MAX_VISIBLE_LINES = 6
 _SECTION_LIST_CAPS = {"context": 1, "levels": 2, "conditions": 1}
+# XAUUSD prices are 1000+; skip DXY (~100), yields, % and other macro prints.
+_PRICE_TOKEN_MIN = 500.0
 
 _NUMBER_RE = re.compile(r"(?<![A-Za-z])\d+(?:\.\d+)?")
 
@@ -283,6 +285,18 @@ def build_narrative_facts(
         sid = str(signal.get("signal_id") or "unknown")
         for key in ("entry_low", "entry_high", "stop_loss"):
             add_execution(f"{sid}.{key}", signal.get(key), key, signal_id=sid, kind="validated_signal")
+        try:
+            entry_low = float(signal["entry_low"])
+            entry_high = float(signal["entry_high"])
+            add_execution(
+                f"{sid}.entry_mid",
+                (entry_low + entry_high) / 2.0,
+                "entry_mid",
+                signal_id=sid,
+                kind="validated_signal",
+            )
+        except (KeyError, TypeError, ValueError):
+            pass
         for target_idx, target in enumerate(signal.get("take_profits") or []):
             add_execution(f"{sid}.tp.{target_idx}", target, "take_profit", signal_id=sid, kind="validated_signal")
     for tf, block in (report.get("price_action") or {}).items():
@@ -439,9 +453,12 @@ def _validate_section(value: Any, *, allowed: set[float], expected_bias: str) ->
         return "unsupported win-rate wording"
     for token in _NUMBER_RE.findall(text):
         number = float(token)
-        if number < 100:  # timeframe labels, percentages, ratios
+        if number < _PRICE_TOKEN_MIN:
             continue
-        if not any(abs(number - candidate) <= _price_tolerance(candidate) for candidate in allowed):
+        if not any(
+            abs(number - candidate) <= narrative_price_tolerance(token, candidate)
+            for candidate in allowed
+        ):
             return f"unapproved price {token}"
     if expected_bias == "bearish" and any(word in text for word in ("主方向偏多", "以做多为主", "优先做多")):
         return "direction conflicts with manager/rule conclusion"
@@ -468,8 +485,20 @@ def _expected_bias(facts: dict[str, Any]) -> str:
     return "bearish" if float(sentiment.get("bearish", 0)) > float(sentiment.get("bullish", 0)) else "bullish"
 
 
+def narrative_price_tolerance(token: str, reference: float) -> float:
+    """Match LLM price tokens to whitelist levels.
+
+    - Bare integers (``4000``, ``4021``): ±5 for psychological round-offs near spot/levels.
+    - Decimals: keep tight (≤0.51) so invented cents stay rejected.
+    """
+    del reference
+    if "." in token:
+        return 0.51
+    return 5.0
+
+
 def _price_tolerance(reference: float) -> float:
-    """Loose match for rounded LLM prices (e.g. 4021 vs 4021.82 on XAUUSD)."""
+    """Legacy helper — prefer :func:`narrative_price_tolerance` with the raw token."""
     return max(1.0, abs(reference) * 0.0002)
 
 
@@ -478,9 +507,12 @@ def _unapproved_prices(text: str, allowed: set[float]) -> str | None:
         return None
     for token in _NUMBER_RE.findall(text):
         number = float(token)
-        if number < 100:
+        if number < _PRICE_TOKEN_MIN:
             continue
-        if not any(abs(number - candidate) <= _price_tolerance(candidate) for candidate in allowed):
+        if not any(
+            abs(number - candidate) <= narrative_price_tolerance(token, candidate)
+            for candidate in allowed
+        ):
             return f"unapproved price {token}"
     return None
 
@@ -556,6 +588,8 @@ def validate_llm_top_level_fields(
     execution_allowed = {
         round(float(x["price"]), 2) for x in facts.get("authorized_execution_levels", [])
     }
+    # Summary/thesis may cite authorized SL/TP/entry as well as structure levels.
+    narrative_allowed = context_allowed | execution_allowed
     execution_ok = _execution_authorized(facts)
     action_plan_allowed = execution_allowed if execution_ok else context_allowed
     expected_bias = _expected_bias(facts)
@@ -585,7 +619,7 @@ def validate_llm_top_level_fields(
         if "胜率" in text:
             reasons[key] = "unsupported win-rate wording"
             continue
-        allowed = action_plan_allowed if key == "action_plan" else context_allowed
+        allowed = action_plan_allowed if key == "action_plan" else narrative_allowed
         violation = _unapproved_prices(text, allowed)
         if violation:
             prefix = "action_plan" if key == "action_plan" else "narrative"

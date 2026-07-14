@@ -121,9 +121,12 @@ def test_integer_shorthand_price_matches_whitelist() -> None:
     """LLM may write 4021 while whitelist has 4021.82 from swing/PA levels."""
     from src.analysis.narrative_sections import _unapproved_prices
 
-    allowed = {4096.61, 4021.82, 4131.53}
+    allowed = {4096.61, 4021.82, 4131.53, 3998.5}
     assert _unapproved_prices("跌破4096后下探4021。", allowed) is None
+    assert _unapproved_prices("失守4000关口。", allowed) is None
     assert _unapproved_prices("关注9999压力。", allowed) == "unapproved price 9999"
+    assert _unapproved_prices("压制在4046.40。", {4044.5, 4048.5}) == "unapproved price 4046.40"
+    assert _unapproved_prices("压制在4046.40。", {4044.5, 4046.5, 4048.5}) is None
     report = _report()
     rules = build_rule_narrative_sections(report)
     facts = build_narrative_facts(report, {"quality": {"score": 1.0}})

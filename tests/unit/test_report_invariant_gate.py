@@ -41,6 +41,60 @@ def _contradictory_report() -> dict:
     }
 
 
+def test_rule_mode_empty_llm_does_not_degrade_or_revoke() -> None:
+    """#34: disabled LLM empty payload must keep complete authorization."""
+    report = {
+        "metrics": {"current_price": 3996.12},
+        "conclusion": {
+            "header_conclusion": "今日决策：缩仓 · 做空",
+            "action": "按授权计划缩仓执行，确认拒绝后入场",
+            "direction_summary": "偏空",
+        },
+        "signals": [
+            {
+                "signal_id": "s1",
+                "name": "rule short",
+                "direction": "SELL",
+                "entry_low": 4002.0,
+                "entry_high": 4007.0,
+                "stop_loss": 4013.0,
+                "take_profits": [3988.0],
+                "signal_role": "primary",
+                "position_scale": 0.4,
+            }
+        ],
+        "llm_analysis": {
+            "enabled": False,
+            "market_summary": "",
+            "trade_thesis": "",
+            "action_plan": "",
+        },
+        "meta": {
+            "execution_authorized": True,
+            "authorized_signal_ids": ["s1"],
+            "authorized_position_scale": 0.4,
+            "observation_mode": False,
+            "manager_decision": {
+                "action": "reduce",
+                "primary_direction": "short",
+                "confidence": 0.72,
+                "selected_signal_indices": [0],
+                "position_scale": 0.4,
+            },
+            "final_decision": {"action": "reduce", "primary_direction": "short"},
+            "data_as_of": {"executable": True},
+            "run_config": {"agent_mode": "rule", "llm_enabled": False},
+        },
+    }
+    inv = validate_report_invariants(report)
+    assert inv["passed"] is True
+    apply_report_invariant_gate(report, inv)
+    assert report["meta"]["execution_authorized"] is True
+    assert report["meta"]["observation_mode"] is False
+    assert report["meta"].get("pipeline_status", "complete") == "complete"
+    assert report["meta"]["invariant_gate"]["status"] == "passed"
+
+
 def test_invariant_gate_revokes_execution_and_rewrites_conclusion() -> None:
     report = _contradictory_report()
     inv = validate_report_invariants(report)

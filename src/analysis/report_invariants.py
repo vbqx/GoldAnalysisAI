@@ -9,6 +9,7 @@ from src.analysis.fact_registry import allowed_prices, build_fact_registry
 from src.analysis.level_validator import _geometry_error, _tp_ladder_error
 from src.analysis.narrative_facts import build_narrative_facts_for_llm
 from src.analysis.narrative_sections import (
+    narrative_price_tolerance,
     validate_llm_top_level_fields,
     _executable_wording_on_wait,
 )
@@ -37,10 +38,34 @@ def _normalize_direction(raw: str) -> str:
     return str(raw or "SELL").upper()
 
 
+def _authorized_signals_for_geometry(report: dict[str, Any]) -> list[dict[str, Any]]:
+    """Only judge the plans the report actually presents / authorizes.
+
+    Candidate inventory (rejected / unused rule paths) may be stale after a dump
+    without meaning the delivered decision is inconsistent.
+    """
+    signals = list(report.get("signals") or [])
+    if not signals:
+        return []
+    meta = report.get("meta") or {}
+    authorized_ids = {str(x) for x in (meta.get("authorized_signal_ids") or []) if x}
+    if authorized_ids:
+        matched = [s for s in signals if str(s.get("signal_id") or "") in authorized_ids]
+        if matched:
+            return matched
+    roles = [s for s in signals if str(s.get("signal_role") or "") in ("primary", "alternate")]
+    if roles:
+        return roles
+    # Pre-authorization fixtures / unfinished reports: fall back to full list.
+    if meta.get("execution_authorized") is False:
+        return []
+    return signals
+
+
 def _check_signal_geometry(report: dict[str, Any]) -> list[dict[str, str]]:
     out: list[dict[str, str]] = []
     price = float((report.get("metrics") or {}).get("current_price") or 0)
-    for idx, sig in enumerate(report.get("signals") or []):
+    for idx, sig in enumerate(_authorized_signals_for_geometry(report)):
         label = str(sig.get("name") or f"signal[{idx}]")
         direction = _normalize_direction(str(sig.get("direction") or "SELL"))
         try:
@@ -67,15 +92,28 @@ def _check_signal_geometry(report: dict[str, Any]) -> list[dict[str, str]]:
     return out
 
 
+def _llm_top_level_active(llm: dict[str, Any]) -> bool:
+    """True when LLM narrative layer is enabled or still carries top-level text to audit."""
+    if bool(llm.get("enabled")):
+        return True
+    return any(
+        str(llm.get(key) or "").strip()
+        for key in ("market_summary", "trade_thesis", "action_plan")
+    )
+
+
 def _check_authorization_narrative(report: dict[str, Any]) -> list[dict[str, str]]:
     out: list[dict[str, str]] = []
     meta = report.get("meta") or {}
     llm = report.get("llm_analysis") or {}
-    facts = build_narrative_facts_for_llm(report, compact_for_llm=True)
-    field_reasons = validate_llm_top_level_fields(llm, facts=facts)
-    for field, reason in field_reasons.items():
-        if reason:
-            out.append(_violation("INV-AUTH-001", field, reason))
+    # Rule mode with llm_enabled=false leaves empty top-level fields by design.
+    # Do not treat that as INV-AUTH-001 / empty narrative (#34).
+    if _llm_top_level_active(llm):
+        facts = build_narrative_facts_for_llm(report, compact_for_llm=True)
+        field_reasons = validate_llm_top_level_fields(llm, facts=facts)
+        for field, reason in field_reasons.items():
+            if reason:
+                out.append(_violation("INV-AUTH-001", field, reason))
 
     if _manager_wait(meta) or _observation_mode(meta):
         action_plan = str(llm.get("action_plan") or "").strip()
@@ -106,7 +144,6 @@ def _check_fact_prices(report: dict[str, Any], registry: dict[str, Any]) -> list
     allowed = allowed_prices(registry)
     if not allowed:
         return out
-    tol = 0.51
     llm = report.get("llm_analysis") or {}
     blob = " ".join(
         str(llm.get(key) or "")
@@ -119,7 +156,7 @@ def _check_fact_prices(report: dict[str, Any], registry: dict[str, Any]) -> list
             continue
         if number < 100:
             continue
-        if not any(abs(number - p) <= tol for p in allowed):
+        if not any(abs(number - p) <= narrative_price_tolerance(token, p) for p in allowed):
             out.append(
                 _violation(
                     "INV-PRICE-001",
