@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from src.analysis.dgt_price_action import DEFAULT_LOOKBACK
 from src.analysis.field_glossary import PA_SUMMARY_HINT
 
 RESONANCE_TOLERANCE = 8.0  # XAUUSD points
@@ -17,11 +18,11 @@ RESONANCE_TOLERANCE = 8.0  # XAUUSD points
 COMBINATION_RULES: dict[str, str] = {
     "market_overview": "多周期 PA 价值区投票定主方向；当日(session) POC/VA 定日内成交控制区；PA 交易计划入场区单独标注。",
     "liquidity": "仅 PA 日内(session) 量价 S/R 与 VAH/VAL；上方阻力、下方支撑分侧叙述；5m 仅用于入场计划。",
-    "4h": "仅 PA：该周期 POC/VA 与现价区位；放量/高波动线作大级别阻力支撑。",
-    "1h": "仅 PA：POC/VA 与近端量价阻力支撑；不写 BOS/CHoCH/OB。",
-    "15m": "仅 PA：执行周期 POC/VA、近端 S/R；触发条件基于量价收回/拒绝。",
+    "4h": "仅 PA：该周期 Fixed-360 POC/VA 与现价区位；放量/高波动线作大级别阻力支撑；禁止套用 5m/session POC。",
+    "1h": "仅 PA：该周期 Fixed-360 POC/VA 与近端量价阻力支撑；不写 BOS/CHoCH/OB。",
+    "15m": "仅 PA：该周期 Fixed-360 POC/VA、近端 S/R；触发条件基于量价收回/拒绝。",
     "trading_plans": "PA 定入场/止损/止盈；SMC 仅作计划评分过滤，不进文案主干。",
-    "llm": "遵循 PA_SMC 主次：叙事面板 PA 主、SMC 仅 allowed_levels；只能引用 allowed_levels 价格。",
+    "llm": "黄金日内：4H/1H 定方向，15m/5m 定执行；各周期量价独立；只能引用 allowed_levels / price_action_summary 价格。",
 }
 
 
@@ -232,18 +233,35 @@ def build_pa_llm_summary(
     *,
     price: float | None,
 ) -> dict[str, Any]:
+    """Compact per-TF PA facts for LLM (technical / narrative / levels).
+
+    Each of 5m/15m/1h/4h is an independent Fixed-360 profile; ``session`` is
+    day-anchored. Always preserve lookback + profile_source so models do not
+    treat HTF POC as interchangeable with 5m/session.
+    """
     out: dict[str, Any] = {}
     for tf, block in price_action.items():
-        vp = (block or {}).get("volume_profile") or {}
-        sr = (block or {}).get("sr_levels") or []
+        if not isinstance(block, dict):
+            continue
+        vp = block.get("volume_profile") or {}
+        sr = block.get("sr_levels") or []
+        lookback_mode = block.get("lookback_mode") or ("session" if tf == "session" else "fixed")
+        lookback_requested = block.get("lookback_requested")
+        if lookback_requested is None and lookback_mode == "fixed":
+            lookback_requested = DEFAULT_LOOKBACK
         out[tf] = {
+            "lookback_mode": lookback_mode,
+            "lookback_requested": lookback_requested,
+            "lookback_bars": block.get("lookback_bars"),
+            "profile_source": block.get("profile_source")
+            or ("session" if lookback_mode == "session" else "native_tf"),
             "volume_ok": block.get("volume_ok"),
             "volume_spike_count": block.get("volume_spike_count"),
             "high_volatility_count": block.get("high_volatility_count"),
             "poc": vp.get("poc"),
             "vah": vp.get("vah"),
             "val": vp.get("val"),
-            "value_zone_position": value_zone_position(price, vp) if tf == "5m" else "",
+            "value_zone_position": value_zone_position(price, vp),
             "nearest_resistance": nearest_pa_sr(sr, price, "resistance", limit=4),
             "nearest_support": nearest_pa_sr(sr, price, "support", limit=4),
             "supply_demand_zone_count": len(vp.get("supply_demand_zones") or []),

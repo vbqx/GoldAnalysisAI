@@ -212,22 +212,66 @@ def fetch_symbol_daily(
     )
 
 
+# DGT/Pine Fixed-Range VP uses 360 bars per chart TF; keep HTF history ≥ that.
+_HTF_FIXED_LOOKBACK = 360
+
+
+def _fetch_htf_or_resample(
+    interval: "Interval",
+    *,
+    n_bars: int,
+    label: str,
+    df_5m: pd.DataFrame,
+    resample_rule: str,
+) -> pd.DataFrame:
+    """Prefer native HTF bars so Fixed-360 lookback is reachable; else resample 5m."""
+    try:
+        time.sleep(0.8)
+        return _fetch_bars(interval, n_bars=n_bars, label=label)
+    except Exception as exc:
+        log.warning("native %s fetch failed (%s); resampling from 5m", label, exc)
+        _report_fetch(f"{label} · 改用 5m 聚合")
+        return _resample(df_5m, resample_rule)
+
+
 def _fetch_multi_timeframe_once() -> dict[str, pd.DataFrame]:
     from tvDatafeed import Interval
 
     _report_fetch("① 5m K 线 (5000 bars) · TradingView WebSocket")
     df_5m = _fetch_bars(Interval.in_5_minute, n_bars=5000, label="5m")
-    time.sleep(0.8)
 
-    _report_fetch("② 1d K 线 (365 bars) · TradingView WebSocket")
+    _report_fetch("② 15m / 1h / 4h 各 360 根（Fixed Range）· TradingView")
+    df_15m = _fetch_htf_or_resample(
+        Interval.in_15_minute,
+        n_bars=_HTF_FIXED_LOOKBACK,
+        label="15m",
+        df_5m=df_5m,
+        resample_rule="15min",
+    )
+    df_1h = _fetch_htf_or_resample(
+        Interval.in_1_hour,
+        n_bars=_HTF_FIXED_LOOKBACK,
+        label="1h",
+        df_5m=df_5m,
+        resample_rule="1h",
+    )
+    df_4h = _fetch_htf_or_resample(
+        Interval.in_4_hour,
+        n_bars=_HTF_FIXED_LOOKBACK,
+        label="4h",
+        df_5m=df_5m,
+        resample_rule="4h",
+    )
+
+    _report_fetch("③ 1d K 线 (365 bars) · TradingView WebSocket")
+    time.sleep(0.8)
     df_1d = _fetch_bars(Interval.in_daily, n_bars=365, label="1d")
 
-    _report_fetch("③ 本地聚合 15m / 1h / 4h")
     out = {
         "5m": df_5m,
-        "15m": _resample(df_5m, "15min"),
-        "1h": _resample(df_5m, "1h"),
-        "4h": _resample(df_5m, "4h"),
+        "15m": df_15m,
+        "1h": df_1h,
+        "4h": df_4h,
         "1d": df_1d,
     }
     log.info(
@@ -239,7 +283,7 @@ def _fetch_multi_timeframe_once() -> dict[str, pd.DataFrame]:
 
 
 def fetch_multi_timeframe() -> dict[str, pd.DataFrame]:
-    """Fetch all timeframes with minimal TradingView requests (2 calls)."""
+    """Fetch 5m + native HTF (≥360) + 1d; HTF falls back to 5m resample on failure."""
     log.info("fetch_multi_timeframe start %s:%s", TV_EXCHANGE, TV_SYMBOL)
     _report_fetch(f"连接 TradingView · {TV_EXCHANGE}:{TV_SYMBOL}")
 

@@ -221,6 +221,10 @@ def test_technical_analyst_payload_uses_shared_context() -> None:
     assert "price_action_summary" in payload
     assert payload["price_action_summary"]["5m"]["poc"] is not None
     assert "_hint" in payload["price_action_summary"]
+    assert "日内" in payload["trading_mandate"]
+    assert "4H" in payload["trading_mandate"] or "4H/1H" in payload["trading_mandate"]
+    assert "15m" in payload["trading_mandate"]
+    assert "反转" in payload["trading_mandate"]
 
 
 def test_narrative_context_includes_shared_technical_context() -> None:

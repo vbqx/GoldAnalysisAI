@@ -152,3 +152,9 @@ def test_pa_llm_summary_compact() -> None:
     assert summary["5m"]["poc"] == 4125.0
     assert "_hint" in summary
     assert len(summary["_hint"]) == 3
+    # Minimal fixture may omit lookback meta — summary still emits contract defaults.
+    assert summary["5m"]["lookback_mode"] == "fixed"
+    assert summary["5m"]["profile_source"] == "native_tf"
+    assert "日内" in summary["_hint"][0]
+    assert "反转" in summary["_hint"][0]
+    assert any("Fixed" in line for line in summary["_hint"])

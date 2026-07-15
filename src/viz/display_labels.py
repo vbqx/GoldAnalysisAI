@@ -14,6 +14,7 @@ ACTION_CN = {
     "execute": "执行",
     "reduce": "缩仓执行",
     "wait": "观望",
+    "await_trigger": "等待触发",
 }
 
 TRADE_DIRECTION_CN = {
@@ -56,7 +57,8 @@ def humanize_narrative_fallback(reason: object) -> str:
     if raw.startswith("unapproved price "):
         price = raw.removeprefix("unapproved price ").strip()
         return (
-            f"LLM 引用了价位 {price}，与系统白名单精确价不匹配（常见于整数简写，如 4021 vs 4021.82），"
+            f"LLM 引用了价位 {price}，与系统白名单不匹配"
+            "（整数/半点简写如 4021、4073.5 可对附近精确价；其他小数仍需贴近白名单），"
             "该块已回退为规则叙述。"
         )
     return raw
@@ -125,7 +127,18 @@ def execution_banner(meta: dict | None) -> str:
     meta = meta or {}
     if meta.get("execution_authorized"):
         return ""
-    parts: list[str] = ["以下仅为规则引擎候选方案，未经经理授权，不可按此执行。"]
+    if meta.get("plan_authorized"):
+        parts: list[str] = ["条件计划已选定，等待触发确认后再授权执行（仓位 0%）。"]
+        trigger = meta.get("primary_trigger_state") or {}
+        note = str(trigger.get("trigger_note") or "").strip()
+        if note:
+            parts.append(note[:120])
+        decision = meta.get("manager_decision") or {}
+        summary = str(decision.get("summary") or "").strip()
+        if summary:
+            parts.append(summary[:120])
+        return " ".join(parts)
+    parts = ["以下仅为规则引擎候选方案，未经经理授权，不可按此执行。"]
     if meta.get("observation_mode"):
         parts.append("当前为快照观察模式（周末闭市或行情滞后），风控已全部否决。")
     decision = meta.get("manager_decision") or {}

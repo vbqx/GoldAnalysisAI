@@ -281,8 +281,20 @@ def build_narrative_facts(
         for s in (report.get("signals") or [])
         if s.get("signal_role") in ("primary", "alternate")
     ]
+    execution_authorized = bool((report.get("meta") or {}).get("execution_authorized"))
     for signal in authorized_signals:
         sid = str(signal.get("signal_id") or "unknown")
+        # Only expose execution levels when execution is actually authorized.
+        # Conditional (await-trigger) plans stay in context so narrative can wait, not size.
+        if not execution_authorized or not signal.get("trigger_confirmed"):
+            for key in ("entry_low", "entry_high", "stop_loss"):
+                add_context(
+                    f"{sid}.{key}",
+                    signal.get(key),
+                    key,
+                    kind="conditional_plan",
+                )
+            continue
         for key in ("entry_low", "entry_high", "stop_loss"):
             add_execution(f"{sid}.{key}", signal.get(key), key, signal_id=sid, kind="validated_signal")
         try:
@@ -329,6 +341,8 @@ def build_narrative_facts(
             "manager_decision": report.get("meta", {}).get("manager_decision")
             or (report.get("agent_trace") or {}).get("decision")
             or {},
+            "execution_authorized": bool((report.get("meta") or {}).get("execution_authorized")),
+            "plan_authorized": bool((report.get("meta") or {}).get("plan_authorized")),
             "quality": quality or {"status": "unavailable", "warnings": ["technical quality unavailable"]},
         },
         "liquidity": report.get("liquidity") or [],
@@ -400,13 +414,40 @@ def _confidence(value: Any) -> float:
         return 0.0
 
 
+def _coerce_string_list(value: Any) -> list[str] | None:
+    """Normalize LLM list fields: bare string → one-item list; scalar items → str.
+
+    Returns None when the shape is unusable (not a string/list, or nested objects).
+    """
+    if value is None:
+        return []
+    if isinstance(value, str):
+        text = value.strip()
+        return [text] if text else []
+    if not isinstance(value, list):
+        return None
+    out: list[str] = []
+    for item in value:
+        if isinstance(item, str):
+            text = item.strip()
+            if text:
+                out.append(text)
+        elif isinstance(item, bool) or item is None:
+            continue
+        elif isinstance(item, (int, float)):
+            out.append(str(item))
+        else:
+            return None
+    return out
+
+
 def _capped_section_lists(value: dict[str, Any]) -> dict[str, list[str]]:
     capped: dict[str, list[str]] = {}
     for key, limit in _SECTION_LIST_CAPS.items():
-        rows = value.get(key, [])
-        if not isinstance(rows, list):
+        rows = _coerce_string_list(value.get(key, []))
+        if rows is None:
             rows = []
-        capped[key] = [str(x).strip() for x in rows if str(x).strip()][:limit]
+        capped[key] = rows[:limit]
     return capped
 
 
@@ -439,15 +480,23 @@ def _validate_section(value: Any, *, allowed: set[float], expected_bias: str) ->
         return "unknown source"
     if not str(value.get("summary", "")).strip() or not str(value.get("invalidation", "")).strip():
         return "summary and invalidation are required"
+    coerced_lists: dict[str, list[str]] = {}
     for key in ("context", "levels", "conditions"):
-        rows = value.get(key, [])
-        if not isinstance(rows, list) or any(not isinstance(x, str) for x in rows):
+        rows = _coerce_string_list(value.get(key, []))
+        if rows is None:
             return f"{key} must be a string list"
+        coerced_lists[key] = rows
     visible = _section_visible_lines(value)
     if visible > MAX_VISIBLE_LINES:
         return f"visible lines {visible} > {MAX_VISIBLE_LINES}"
     text = " ".join(
-        [str(value.get("summary", "")), *value.get("context", []), *value.get("levels", []), *value.get("conditions", []), str(value.get("invalidation", ""))]
+        [
+            str(value.get("summary", "")),
+            *coerced_lists["context"],
+            *coerced_lists["levels"],
+            *coerced_lists["conditions"],
+            str(value.get("invalidation", "")),
+        ]
     )
     if "胜率" in text:
         return "unsupported win-rate wording"
@@ -488,13 +537,22 @@ def _expected_bias(facts: dict[str, Any]) -> str:
 def narrative_price_tolerance(token: str, reference: float) -> float:
     """Match LLM price tokens to whitelist levels.
 
-    - Bare integers (``4000``, ``4021``): ±5 for psychological round-offs near spot/levels.
-    - Decimals: keep tight (≤0.51) so invented cents stay rejected.
+    - Bare integers (``4000``, ``4021``): ±5 for psychological round-offs.
+    - Half/whole decimals (``4073.5``, ``4073.50``, ``4021.0``): ±2.0 — LLM often
+      halves nearby VA/S/R instead of citing the exact whitelist print.
+    - Other 1-decimal tokens: ±1.0.
+    - Finer decimals (``4046.40``): keep tight (≤0.51) so invented cents stay rejected.
     """
     del reference
-    if "." in token:
-        return 0.51
-    return 5.0
+    if "." not in token:
+        return 5.0
+    frac = token.split(".", 1)[1]
+    frac_sig = frac.rstrip("0")
+    if frac_sig in ("", "5"):
+        return 2.0
+    if len(frac) <= 1:
+        return 1.0
+    return 0.51
 
 
 def _price_tolerance(reference: float) -> float:
@@ -571,7 +629,10 @@ def _execution_authorized(facts: dict[str, Any]) -> bool:
     execution_allowed = facts.get("authorized_execution_levels") or []
     if not execution_allowed:
         return False
-    decision = (facts.get("common") or {}).get("manager_decision") or {}
+    common = facts.get("common") or {}
+    if common.get("execution_authorized") is False:
+        return False
+    decision = common.get("manager_decision") or {}
     return str(decision.get("action") or "") not in ("wait", "")
 
 
@@ -594,7 +655,7 @@ def validate_llm_top_level_fields(
     action_plan_allowed = execution_allowed if execution_ok else context_allowed
     expected_bias = _expected_bias(facts)
     decision = (facts.get("common") or {}).get("manager_decision") or {}
-    manager_wait = str(decision.get("action") or "") == "wait"
+    manager_wait = str(decision.get("action") or "") == "wait" or not execution_ok
 
     fields = {
         "market_summary": str(llm.get("market_summary") or ""),

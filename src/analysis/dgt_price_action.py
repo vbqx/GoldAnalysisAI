@@ -12,7 +12,9 @@ from typing import Any, Literal
 import numpy as np
 import pandas as pd
 
-# Pine defaults
+# Pine defaults (dgtrd "Price Action - Support & Resistance"):
+# Volume Profile Lookback Range = Fixed Range (NOT Visible Range), Length = 360
+# chart-timeframe bars; rows=100; value area=68%.
 VOLUME_MA_LEN = 89
 VOLUME_SPIKE_MULT = 4.669
 ATR_LEN = 11
@@ -21,6 +23,7 @@ PROFILE_ROWS = 100
 VALUE_AREA_PCT = 0.68
 SUPPLY_DEMAND_THRESH = 0.15
 DEFAULT_LOOKBACK = 360
+PROFILE_LOOKBACK_MODE = "fixed"  # never chart "Visible Range"
 
 SrKind = Literal["consecutive_sr", "volume_spike", "high_volatility"]
 SrDirection = Literal["support", "resistance"]
@@ -343,7 +346,12 @@ def analyze_dgt_price_action(
     lookback: int = DEFAULT_LOOKBACK,
     profile_bars: pd.DataFrame | None = None,
 ) -> DgtPriceActionResult:
-    """Run full DGT metrics on one timeframe window."""
+    """Run full DGT metrics on a Fixed-Range lookback (default 360 chart-TF bars).
+
+    Matches Pine VP: last ``lookback`` bars of this timeframe — never the chart's
+    visible/zoom window. Optional ``profile_bars`` (usually 5m in the same clock
+    span) refine volume distribution; they must already be clipped to that window.
+    """
     if df.empty:
         return DgtPriceActionResult(timeframe=timeframe, lookback_bars=0, volume_ok=False)
 
@@ -358,7 +366,10 @@ def analyze_dgt_price_action(
     sr.extend(spike_levels)
     sr = _dedupe_sr_levels(sr)
 
-    profile_source = profile_bars.tail(lookback) if profile_bars is not None else window
+    # HTF already clips profile_bars to the TF window clock range; do not re-tail
+    # with lookback (HTF bar count ≠ 5m bar count) or every TF collapses to the
+    # same last-N 5m slice and shares one POC.
+    profile_source = profile_bars if profile_bars is not None else window
     profile = build_volume_profile(profile_source)
 
     return DgtPriceActionResult(
@@ -372,10 +383,17 @@ def analyze_dgt_price_action(
     )
 
 
-def dgt_result_to_dict(result: DgtPriceActionResult) -> dict[str, Any]:
+def dgt_result_to_dict(
+    result: DgtPriceActionResult,
+    *,
+    lookback_requested: int | None = None,
+    lookback_mode: str | None = None,
+) -> dict[str, Any]:
     vp = result.volume_profile
     return {
         "timeframe": result.timeframe,
+        "lookback_mode": lookback_mode or PROFILE_LOOKBACK_MODE,
+        "lookback_requested": DEFAULT_LOOKBACK if lookback_requested is None else lookback_requested,
         "lookback_bars": result.lookback_bars,
         "volume_ok": result.volume_ok,
         "volume_spike_count": result.volume_spike_count,

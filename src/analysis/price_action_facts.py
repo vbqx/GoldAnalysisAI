@@ -17,6 +17,29 @@ _PROFILE_LTF = "5m"
 SESSION_TF = "session"
 _SESSION_MAX_HOURS = 30
 _DAILY_HLC_TOLERANCE = 0.51
+# Require LTF to cover most of the Fixed-Range HTF window; else use native TF OHLC.
+_LTF_COVER_FRAC = 0.85
+
+
+def _ltf_covers_window(
+    ltf_slice: pd.DataFrame,
+    start: pd.Timestamp,
+    end: pd.Timestamp,
+    *,
+    min_frac: float = _LTF_COVER_FRAC,
+) -> bool:
+    """True when lower-TF bars span ≥ min_frac of the HTF clock window."""
+    if ltf_slice.empty or end <= start:
+        return False
+    window_sec = (pd.Timestamp(end) - pd.Timestamp(start)).total_seconds()
+    if window_sec <= 0:
+        return False
+    covered_from = max(pd.Timestamp(start), pd.Timestamp(ltf_slice.index[0]))
+    covered_to = min(pd.Timestamp(end), pd.Timestamp(ltf_slice.index[-1]))
+    if covered_to <= covered_from:
+        return False
+    covered = (covered_to - covered_from).total_seconds()
+    return covered >= window_sec * min_frac
 
 
 def _align_timestamp(ts: pd.Timestamp, ref: pd.DatetimeIndex) -> pd.Timestamp:
@@ -77,7 +100,11 @@ def build_session_price_action_block(
     result = analyze_dgt_price_action(session_bars, SESSION_TF, lookback=lookback)
     if result.volume_profile is None or result.volume_profile.poc is None:
         return None
-    return dgt_result_to_dict(result)
+    return dgt_result_to_dict(
+        result,
+        lookback_requested=lookback,
+        lookback_mode="session",
+    )
 
 
 def build_price_action_summaries(
@@ -85,7 +112,12 @@ def build_price_action_summaries(
     *,
     lookback: int = DEFAULT_LOOKBACK,
 ) -> dict[str, dict[str, Any]]:
-    """Per-TF DGT metrics; higher TFs use 5m bars in-window for volume profile."""
+    """Per-TF DGT metrics with Pine Fixed-Range lookback (default 360 bars).
+
+    Window = last ``lookback`` bars of that timeframe (not chart Visible Range).
+    Higher TFs fill volume from 5m in the same clock span when coverage ≥ 85%;
+    otherwise the profile uses native timeframe bars (`profile_source`).
+    """
     ltf = data.get(_PROFILE_LTF)
     summaries: dict[str, dict[str, Any]] = {}
     for tf in _PA_TFS:
@@ -94,16 +126,22 @@ def build_price_action_summaries(
             continue
         window = df.tail(lookback)
         profile_bars = None
+        profile_source = "native_tf"
         if ltf is not None and not ltf.empty and tf != _PROFILE_LTF and not window.empty:
             start, end = window.index[0], window.index[-1]
-            profile_bars = ltf.loc[(ltf.index >= start) & (ltf.index <= end)]
+            candidates = ltf.loc[(ltf.index >= start) & (ltf.index <= end)]
+            if not candidates.empty and _ltf_covers_window(candidates, start, end):
+                profile_bars = candidates
+                profile_source = "ltf_5m"
         result = analyze_dgt_price_action(
             df,
             tf,
             lookback=lookback,
-            profile_bars=profile_bars if profile_bars is not None and not profile_bars.empty else None,
+            profile_bars=profile_bars,
         )
-        summaries[tf] = dgt_result_to_dict(result)
+        row = dgt_result_to_dict(result, lookback_requested=lookback)
+        row["profile_source"] = profile_source
+        summaries[tf] = row
     session = build_session_price_action_block(ltf, data.get("1d"))
     if session:
         summaries[SESSION_TF] = session

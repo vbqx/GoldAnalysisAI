@@ -127,6 +127,10 @@ def test_integer_shorthand_price_matches_whitelist() -> None:
     assert _unapproved_prices("关注9999压力。", allowed) == "unapproved price 9999"
     assert _unapproved_prices("压制在4046.40。", {4044.5, 4048.5}) == "unapproved price 4046.40"
     assert _unapproved_prices("压制在4046.40。", {4044.5, 4046.5, 4048.5}) is None
+    # Archive 20260714T174036Z: LLM wrote 4073.5 near daily high 4072.8 / VAH 4075.13.
+    assert _unapproved_prices("价格站上4073.5后空头失效。", {4072.8, 4075.13, 4062.0}) is None
+    assert _unapproved_prices("价格站上4073.50后空头失效。", {4072.8}) is None
+    assert _unapproved_prices("价格站上4073.5后空头失效。", {4000.0, 4100.0}) == "unapproved price 4073.5"
     report = _report()
     rules = build_rule_narrative_sections(report)
     facts = build_narrative_facts(report, {"quality": {"score": 1.0}})
@@ -159,6 +163,40 @@ def test_llm_section_accepts_overlong_lists_after_display_caps() -> None:
     assert merged["1h"]["context"] == ["背景一"]
     assert merged["1h"]["levels"] == ["4130", "4140"]
     assert merged["1h"]["conditions"] == ["条件一"]
+
+
+def test_llm_section_coerces_bare_string_context_and_conditions() -> None:
+    """Archive 20260714T164248Z: model returned context/conditions as plain strings."""
+    report = _report()
+    rules = build_rule_narrative_sections(report)
+    facts = build_narrative_facts(report, {"quality": {"score": 1.0}})
+    candidate = _candidate()
+    candidate["market_overview"]["context"] = "POC 4140，VAH 4155，现价受压。"
+    candidate["market_overview"]["conditions"] = "若4148反抽失败，则观察回落。"
+    candidate["4h"]["context"] = "4H POC 4142。"
+    candidate["4h"]["conditions"] = "失守4120后偏空延续。"
+    merged, audit = validate_and_merge_llm_sections(
+        candidate, rule_sections=rules, facts=facts, mode="llm", threshold=0.65,
+    )
+    assert audit["market_overview"]["accepted"] is True
+    assert merged["market_overview"]["source"] == "llm"
+    assert merged["market_overview"]["context"] == ["POC 4140，VAH 4155，现价受压。"]
+    assert merged["market_overview"]["conditions"] == ["若4148反抽失败，则观察回落。"]
+    assert merged["4h"]["source"] == "llm"
+    assert merged["4h"]["context"] == ["4H POC 4142。"]
+
+
+def test_llm_section_rejects_nested_object_list_items() -> None:
+    report = _report()
+    rules = build_rule_narrative_sections(report)
+    facts = build_narrative_facts(report, {"quality": {"score": 1.0}})
+    candidate = _candidate()
+    candidate["1h"]["context"] = [{"text": "嵌套对象"}]
+    merged, audit = validate_and_merge_llm_sections(
+        candidate, rule_sections=rules, facts=facts, mode="llm", threshold=0.65,
+    )
+    assert merged["1h"]["source"] == "fallback"
+    assert audit["1h"]["fallback_reason"] == "context must be a string list"
 
 
 def test_missing_overlong_or_win_rate_sections_fall_back_independently() -> None:
