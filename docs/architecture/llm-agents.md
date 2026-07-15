@@ -174,7 +174,7 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | 看多/看空研究 | `research_payload()` | `analyst_team` + structure_vote + event_risk | external、timeframes、metrics |
 | 辩论 | `debate_payload()` | bull/bear evidence + analyst top items + event_risk | 原始快讯/社媒 |
 | 交易员 | `trader_decision_payload()` | debate + analyst summaries + candidate_signals | 全量 market |
-| 点位提议 | `level_proposer_payload()` | `technical_level_reactions`（技术分析产出）+ structure_context + debate；setup 绑定 `reaction_evidence_id`，短 deduction | external 新闻 |
+| 点位提议 | `level_proposer_payload()` | `technical_level_reactions` + `technical_claim_facts` + structure_context + debate；setup 绑定带 `fact_ids` / `relationships` 的 `reaction_evidence_id` | external 新闻 |
 | 风控 / 经理 | `risk_payload` / `manager_payload` | proposal + reviews | 市场与分析师 |
 
 设 `LLM_PAYLOAD_FUNNEL=false` 可回退旧版（研究/交易员含 `market_payload`）。Analyst Team 的 `stage_io` 记录四位 specialist 实际输入（`analyst_team_input_payload`），而非泛化 `market_payload`。
@@ -192,6 +192,38 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | **可靠度 UI** | 展示 `overall_reliability`，LLM confidence 仅作审计 |
 
 Research payload 额外包含 `allowed_evidence_ids`（Analyst 已有 ID 列表）。
+
+### 3.9 单次综合推理迁移方案（计划中）
+
+当前 staged 路径在全部开关启用时，会依次产生 Analyst Team、Bull/Bear、Debate、Levels、Trader、Risk、Manager 和 Narrative 调用。它保留了清晰的阶段审计，但上游自由文本被多次摘要后，可能把限定条件逐层丢失或把未验证关系强化为结论。
+
+计划新增兼容式 `synthesis` 路径，而不是删除现有对象和门禁：
+
+```text
+MarketContext + compact fact catalog
+  -> one LLM decision synthesis
+  -> adapter: AnalystTeam / ResearchDebate / LevelProposal / TransactionProposal
+  -> existing level / claim / trigger / freshness / risk gates
+  -> deterministic Manager authorization
+  -> optional narrative LLM
+```
+
+建议配置契约：
+
+```env
+LLM_PIPELINE_STYLE=staged       # 现有默认路径
+# LLM_PIPELINE_STYLE=synthesis  # 新路径完成并验收后启用
+```
+
+设计约束：
+
+1. 单次调用仍输出技术、基本面、新闻、情绪、bull case、bear case、反证、reaction 和 A/B/C 计划等独立结构化栏目；不生成角色聊天记录。
+2. 输出继续转换为现有领域对象，报告 schema、UI、归档主体和规则 fallback 不变。
+3. LLM 只能生成候选判断。事实存在性、`fact_ids` 关系、入场几何、触发、数据时效、仓位和最终授权继续由确定性代码负责。
+4. Narrative 可保留为授权后的独立低成本调用，但只能消费允许事实与最终状态，不能反向改变交易授权。
+5. 首先以 shadow 模式同时记录 staged/synthesis 输出；比较事实错误率、方向/价位稳定性、授权一致性、延迟和 token，再决定是否切换默认路径。
+
+该方案的目标是减少同一模型跨多轮转述造成的累积失真，不假设“单模型天然优于多模型”。如果未来要保留多模型评审，每个评审者必须独立读取同一份原始事实目录，且最终仍经过上述确定性门禁。
 
 ---
 

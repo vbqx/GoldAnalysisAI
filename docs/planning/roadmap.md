@@ -31,6 +31,7 @@
 | P1 | Bull/Bear 与 Analyst Team 并行 | 已完成 | `src/agents/` |
 | P1 | LLM 点位提议 + 规则 validator | 已完成 | [architecture.md §8.1](../architecture/architecture.md#81-llm-点位层) |
 | P2 | LLM 交易员 / 风控 / 经理 | 已完成基础接入 | `src/agents/llm/stages/` |
+| P2 | 单次 decision synthesis 兼容路径与 staged A/B 回放 | 计划中 | [llm-agents.md §3.9](../architecture/llm-agents.md#39-单次综合推理迁移方案计划中) |
 | P3 | ICT Interpreter 完整标准化 | 计划中 | `src/analysis/ict_pa.py` |
 
 ---
@@ -133,3 +134,14 @@
 3. 交易员、风控、经理结论必须写入 `agent_trace.stage_meta` 和 `meta.llm_io`，供 UI 决策链审计。
 4. 与规则风控冲突时，默认采用更保守结论；后续可加入显式 conflict resolver。
 5. 实盘执行仍未启用；MT5 账号连接接口已接入，下一步是模拟下单、订单回执审计和风控熔断。
+
+### 单次综合推理迁移验收
+
+该迁移只替换 LLM 决策前端，不替换现有领域对象和确定性授权层：
+
+1. 新增 `LLM_PIPELINE_STYLE=staged|synthesis`，默认保持 `staged`，可按单次运行归档实际选择。
+2. synthesis 一次输出可适配为现有 `AnalystTeam`、`ResearchDebate`、`LevelProposal`、`TransactionProposal`；旧报告与 UI 无需读取另一套 schema。
+3. shadow 回放至少覆盖趋势、震荡、多周期冲突、事件临近、陈旧/闭市和外部数据缺失样本。
+4. 对比指标必须包含 token/调用数、端到端耗时、解析失败、事实 ID 覆盖、关系验证失败、最终授权差异和跨运行稳定性。
+5. synthesis 不得绕过 `level_validator`、`claim_eligibility`、trigger/freshness/risk gates、Manager authorization 和 report invariants。
+6. 只有冻结样本回放证明事实失真率不高于 staged，且授权安全测试全部通过，才能考虑切换默认路径；staged 保留为兼容回退。

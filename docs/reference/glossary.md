@@ -55,7 +55,7 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 | **主策略 / 逆势备选** | `signal_role`：`primary` 与结构主导方向一致；`alternate` 为逆势方案，UI 徽章区分 |
 | **risk_reward** | 风险收益比展示；> 1:8 时标注「远端限价」 |
 | **计划获准 / 执行就绪** | `plan_authorized` vs `execution_authorized`：前者可保留条件方案；后者须触发确认且主张资格为 `core_execution` |
-| **claim_eligibility** | 技术主张引用资格：`core_execution` / `supporting` / `observation_only` / `uncitable`（策略 `claim-v1`） |
+| **claim_eligibility** | 技术主张引用资格：`core_execution` / `supporting` / `observation_only` / `uncitable`（策略 `claim-v2`，含结构化事实关系复算） |
 | **等待触发** | UI/叙事对 `trigger_confirmed=false` 的获准计划用语；仓位显示 0%，不得写作“执行” |
 
 ---

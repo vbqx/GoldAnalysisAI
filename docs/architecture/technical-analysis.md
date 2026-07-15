@@ -96,7 +96,7 @@
 
 `session` 除外：仍按最新 1d open 锚定交易日（见下）。
 
-FVG 进入 fact registry 时附带 `width` / `width_atr_ratio` / `atr`，供 `claim_eligibility`（`claim-v1`）判断是否可作为核心执行依据；见 [report-trust.md](./report-trust.md) §5.2。
+FVG 进入 fact registry 时附带 `width` / `width_atr_ratio` / `atr`，并与 OB、PA S/R、VA/POC 一起生成稳定 `technical_claim_facts`，供 `claim_eligibility`（`claim-v2`）复算引用关系与核心执行资格；见 [report-trust.md](./report-trust.md) §5.2。
 
 ### Session 量价（OANDA 交易时段）
 

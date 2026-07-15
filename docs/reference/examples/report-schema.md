@@ -146,12 +146,12 @@ python scripts/export_sample_report.py
 | `status` | `candidate` / `watch` / `active` / `invalid` |
 | `trigger_confirmed` | 触发条件是否满足 |
 | `trigger_note` | 触发或降级说明 |
-| `claim_id` | 技术主张 ID（Levels 裁决，`claim-v1`） |
+| `claim_id` | 技术主张 ID（Levels 裁决，`claim-v2`） |
 | `claim_eligibility` | `core_execution` / `supporting` / `observation_only` / `uncitable`；空=规则兼容 |
 | `claim_fact_ids` | 主张绑定的 `fact_id` 列表 |
 | `claim_quality` | 可复算质量指标（如 FVG `width_atr_ratio`） |
 | `counterevidence` | 反证列表（重叠反向结构等） |
-| `claim_policy_version` | 资格策略版本，如 `claim-v1` |
+| `claim_policy_version` | 资格策略版本，如 `claim-v2` |
 | `reaction_evidence_id` | 绑定的技术反应 ID |
 | `score_total` / `score_grade` | 信号质量评分与等级 |
 | `score_reasons` | 评分依据、触发缺口或降级原因 |
