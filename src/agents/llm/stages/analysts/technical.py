@@ -17,6 +17,14 @@ TECHNICAL_JSON_SCHEMA = """{
       "price": 0.0,
       "timeframe": "5m|15m|1h|4h",
       "expected_reaction": "承压回落|支撑反弹|假突破回收|扫低后收回 等",
+      "fact_ids": ["逐字引用 technical_claim_facts[].fact_ids；区间须同时引用 low/high"],
+      "relationships": [
+        {
+          "type": "overlap|near|contradiction",
+          "left_fact_ids": ["一个事实实体的完整 fact_ids"],
+          "right_fact_ids": ["另一个事实实体的完整 fact_ids"]
+        }
+      ],
       "rationale": "一两句：为何预期该反应（引用 payload 中的 PA/SMC 事实）",
       "strength": 0.0
     }
@@ -41,6 +49,8 @@ SYSTEM = f"""你是 XAUUSD 黄金日内技术分析师。{ANALYST_PRIORITY_HINT}
 - **level_reactions 至少 2 条**：至少 1 条 15m/5m **顺势**日内锚点；
   至少 1 条 **潜在反转/失效** 锚点（如关键 VA 外侧、结构失守后预期反向反应），rationale 写清触发条件；
   可另附 4H/1H 趋势位。不要写完整下单计划（留给点位阶段）。
+- 每条 reaction 必须从 technical_claim_facts 逐字复制 fact_ids；区间事实必须同时引用 low/high。
+  多个事实声称“共振/接近/矛盾”时必须填写 relationships，rationale 不得增加结构化字段中不存在的事实关系。
 - summary 一句写清：主偏见 + 反转观察条件（无则写「暂无明确反转触发」）
 - spot/kline 与 TV 价偏差大时在 summary 标注
 

@@ -103,6 +103,34 @@ def _parse_level_reactions(data: dict[str, Any], *, agent: str) -> list[dict[str
             except (TypeError, ValueError):
                 price = None
             rid = str(row.get("id") or row.get("evidence_id") or "").strip() or f"{agent}:reaction:{idx}"
+            fact_ids = [
+                str(value).strip()
+                for value in (row.get("fact_ids") or [])
+                if isinstance(value, (str, int, float)) and str(value).strip()
+            ]
+            relationships: list[dict[str, Any]] = []
+            for relation in (row.get("relationships") or [])[:8]:
+                if not isinstance(relation, dict):
+                    continue
+                relation_type = str(relation.get("type") or "").strip().lower()
+                left_ids = [
+                    str(value).strip()
+                    for value in (relation.get("left_fact_ids") or [])
+                    if isinstance(value, (str, int, float)) and str(value).strip()
+                ]
+                right_ids = [
+                    str(value).strip()
+                    for value in (relation.get("right_fact_ids") or [])
+                    if isinstance(value, (str, int, float)) and str(value).strip()
+                ]
+                if relation_type in ("overlap", "near", "contradiction") and left_ids and right_ids:
+                    relationships.append(
+                        {
+                            "type": relation_type,
+                            "left_fact_ids": left_ids,
+                            "right_fact_ids": right_ids,
+                        }
+                    )
             out.append(
                 {
                     "id": rid,
@@ -112,6 +140,8 @@ def _parse_level_reactions(data: dict[str, Any], *, agent: str) -> list[dict[str
                     "expected_reaction": reaction,
                     "rationale": str(row.get("rationale") or row.get("why") or "").strip(),
                     "strength": _clamp_strength(row.get("strength", 0.5)),
+                    "fact_ids": sorted(set(fact_ids)),
+                    "relationships": relationships,
                 }
             )
     return out
@@ -136,6 +166,8 @@ def _level_reactions_from_items(items: list[EvidenceItem]) -> list[dict[str, Any
                 "expected_reaction": str(item.refs.get("expected_reaction") or item.summary).strip(),
                 "rationale": "",
                 "strength": item.strength,
+                "fact_ids": list(item.refs.get("fact_ids") or []),
+                "relationships": list(item.refs.get("relationships") or []),
             }
         )
     return recovered
@@ -174,6 +206,8 @@ def _merge_level_reactions_into_items(
                     "price": price,
                     "label": label,
                     "expected_reaction": reaction,
+                    "fact_ids": list(row.get("fact_ids") or []),
+                    "relationships": list(row.get("relationships") or []),
                 },
                 evidence_id=rid,
             )

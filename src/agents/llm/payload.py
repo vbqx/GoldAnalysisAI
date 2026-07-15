@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from src.agents.analysts.evidence_provenance import analyst_evidence_ids
+from src.analysis.claim_eligibility import technical_claim_fact_catalog
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
 from src.analysis.field_glossary import INTRADAY_GOLD_MANDATE
 from src.analysis.narrative_combine import build_pa_llm_summary
@@ -76,6 +77,8 @@ def technical_level_reactions_payload(team: AnalystTeam) -> list[dict[str, Any]]
                 "expected_reaction": str(item.refs.get("expected_reaction") or "").strip(),
                 "rationale": item.summary,
                 "strength": item.strength,
+                "fact_ids": list(item.refs.get("fact_ids") or []),
+                "relationships": list(item.refs.get("relationships") or []),
             }
         )
     return recovered[:8]
@@ -203,6 +206,7 @@ def technical_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
         "trading_mandate": INTRADAY_GOLD_MANDATE,
         "price": ctx.price,
         "price_action_summary": build_pa_llm_summary(pa, price=ctx.price),
+        "technical_claim_facts": technical_claim_fact_catalog(ctx, price_action=pa),
         "support_resistance": base.get("support_resistance"),
         "lux_timeframe_panels": base.get("lux_timeframe_panels"),
         "structure_sentiment": ctx.derived.get("structure_sentiment") or base.get("structure_sentiment"),
@@ -519,6 +523,9 @@ def level_proposer_payload(
             "trading_mandate": INTRADAY_GOLD_MANDATE,
             "price": ctx.price,
             "technical_level_reactions": technical_level_reactions_payload(team),
+            "technical_claim_facts": technical_claim_fact_catalog(
+                ctx, price_action=structure.get("price_action") or {}
+            ),
             "analyst_team": analyst_team_payload(team),
             "debate": {
                 "consensus_bias": debate.consensus_bias,
@@ -546,7 +553,8 @@ def level_proposer_payload(
                 "geometry": "SELL requires stop_loss above entry and TP below entry. BUY requires stop_loss below entry and TP above entry.",
                 "execution": (
                     "Return candidate zones, not market orders. "
-                    "Cite reaction_evidence_id; copy anchor_level/expected_reaction; "
+                    "Cite reaction_evidence_id whose fact_ids and relationships resolve "
+                    "against technical_claim_facts; copy anchor_level/expected_reaction; "
                     "keep deduction to one short bind sentence — do not rewrite technical analysis."
                 ),
                 "risk": "Prefer TP1 risk/reward >= 1.0; avoid entries already far behind current price.",
@@ -559,13 +567,15 @@ def level_proposer_payload(
         "discussion_notes": debate.discussion_notes[-5:],
     }
     payload["technical_level_reactions"] = technical_level_reactions_payload(team)
+    payload["technical_claim_facts"] = technical_claim_fact_catalog(ctx)
     payload["rule_candidate_signals"] = [_signal_payload(s) for s in rule_signals[:5]]
     payload["level_constraints"] = {
         "scope": "Bind setups to technical_level_reactions; use structure levels only as fallback.",
         "geometry": "SELL requires stop_loss above entry and TP below entry. BUY requires stop_loss below entry and TP above entry.",
         "execution": (
             "Return candidate zones, not market orders. "
-            "Cite reaction_evidence_id; keep deduction to one short bind sentence."
+            "Cite reaction_evidence_id; the reaction must carry fact_ids and verified "
+            "relationships from technical_claim_facts; keep deduction to one short bind sentence."
         ),
         "risk": "Prefer TP1 risk/reward >= 1.0; avoid entries already far behind current price.",
     }

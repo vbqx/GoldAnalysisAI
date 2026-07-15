@@ -206,6 +206,51 @@ def _register_price_action(facts: dict[str, dict[str, Any]], report: dict[str, A
             )
 
 
+def _register_technical_claim_facts(
+    facts: dict[str, dict[str, Any]],
+    report: dict[str, Any],
+    *,
+    as_of: str | None,
+) -> None:
+    """Register the persisted claim-v2 catalog, including compact-panel omissions."""
+    for entity in report.get("technical_claim_facts") or []:
+        if not isinstance(entity, dict):
+            continue
+        fact_ids = entity.get("fact_ids") or []
+        if not isinstance(fact_ids, list):
+            continue
+        refs = {
+            "kind": entity.get("kind"),
+            "direction": entity.get("direction"),
+            "claim_catalog": True,
+            "low": entity.get("low"),
+            "high": entity.get("high"),
+        }
+        for fact_id in fact_ids:
+            fid = str(fact_id or "").strip()
+            if not fid:
+                continue
+            if fid.endswith(".low"):
+                value = entity.get("low")
+            elif fid.endswith(".high"):
+                value = entity.get("high")
+            else:
+                value = entity.get("price")
+                if value is None and entity.get("low") == entity.get("high"):
+                    value = entity.get("low")
+            _register_numeric(
+                facts,
+                fact_id=fid,
+                value=value,
+                source="dgt_price_action"
+                if str(entity.get("kind")) in ("poc", "vah", "val", "support", "resistance", "sr")
+                else "lux_smc",
+                timeframe=entity.get("timeframe"),
+                as_of=entity.get("as_of") or as_of,
+                refs=refs,
+            )
+
+
 def _register_freshness(facts: dict[str, dict[str, Any]], report: dict[str, Any], *, as_of: str | None, source: str) -> None:
     data_as_of = (report.get("meta") or {}).get("data_as_of") or {}
     _register_text(
@@ -365,6 +410,7 @@ def build_fact_registry(report: dict[str, Any]) -> dict[str, Any]:
 
     _register_timeframes(facts, report, as_of=as_of, source=source)
     _register_price_action(facts, report, as_of=as_of)
+    _register_technical_claim_facts(facts, report, as_of=as_of)
 
     for sig in report.get("signals") or []:
         sid = str(sig.get("signal_id") or sig.get("name") or "signal")

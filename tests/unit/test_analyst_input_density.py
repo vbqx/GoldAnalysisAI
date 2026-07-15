@@ -513,3 +513,42 @@ def test_parse_technical_level_reactions_merged_into_items() -> None:
     assert len(report.level_reactions) == 2
     assert report.level_reactions[0]["expected_reaction"] == "承压回落"
     assert any(i.category == "level_reaction" for i in report.items)
+
+
+def test_parse_technical_preserves_structured_claim_relationships() -> None:
+    report = parse_analyst_report(
+        {
+            "bias": "bearish",
+            "confidence": 0.7,
+            "summary": "structured facts",
+            "items": [
+                {"category": "structure", "summary": f"item {idx}", "strength": 0.7}
+                for idx in range(4)
+            ],
+            "level_reactions": [
+                {
+                    "id": f"tech_reaction:{idx}",
+                    "label": "FVG/OB",
+                    "price": 4068.0 + idx,
+                    "timeframe": "5m",
+                    "expected_reaction": "承压",
+                    "fact_ids": ["1h.fvg.0.low", "1h.fvg.0.high"],
+                    "relationships": [
+                        {
+                            "type": "near",
+                            "left_fact_ids": ["1h.fvg.0.low", "1h.fvg.0.high"],
+                            "right_fact_ids": ["5m.ob.0.low", "5m.ob.0.high"],
+                        }
+                    ],
+                }
+                for idx in range(2)
+            ],
+        },
+        agent="technical_analyst",
+    )
+
+    reaction = report.level_reactions[0]
+    assert reaction["fact_ids"] == ["1h.fvg.0.high", "1h.fvg.0.low"]
+    assert reaction["relationships"][0]["type"] == "near"
+    merged = next(item for item in report.items if item.category == "level_reaction")
+    assert merged.refs["fact_ids"] == reaction["fact_ids"]

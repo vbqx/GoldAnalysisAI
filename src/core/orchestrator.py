@@ -7,6 +7,7 @@ import time
 
 from src.agents import factory as agent_factory
 from src.analysis.ict_pa import analyze_timeframe
+from src.analysis.claim_eligibility import technical_claim_fact_catalog
 from src.analysis.level_validator import validate_llm_levels
 from src.analysis.audit_summary import build_audit_summary
 from src.analysis.fact_registry import build_fact_registry
@@ -248,6 +249,12 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     }
     report["llm_levels"] = [p.to_dict() for p in llm_level_proposals]
     report["validated_plans"] = level_validation
+    # Persist the exact fact catalog used by claim-v2 so archive replay can
+    # reproduce every reaction relationship, including 5m facts not shown in
+    # the report's compact timeframe panels.
+    report["technical_claim_facts"] = technical_claim_fact_catalog(
+        ctx, price_action=report.get("price_action") or {}
+    )
     drift_1d = compute_price_drift_1d(raw["5m"], raw["1d"])
     report["meta"]["price_drift_1d"] = drift_1d
     if abs(drift_1d) > 0.5:

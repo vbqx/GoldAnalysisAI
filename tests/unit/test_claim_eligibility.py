@@ -9,7 +9,7 @@ from src.analysis.claim_eligibility import (
     adjudicate_level_proposal_claim,
     claim_allows_execution_authorization,
 )
-from src.analysis.ict_pa import FairValueGap, TimeframeAnalysis
+from src.analysis.ict_pa import FairValueGap, OrderBlock, TimeframeAnalysis
 from src.analysis.level_validator import validate_llm_levels
 from src.analysis.report_engine import apply_manager_authorization, align_conclusion_with_manager_decision
 from src.analysis.report_invariants import validate_report_invariants
@@ -30,6 +30,33 @@ def _analysis_with_fvgs(
         atr=atr,
         fvgs=list(fvgs),
         active_fvgs=list(fvgs),
+    )
+
+
+def _wide_fvg_ctx(*, ob_low: float | None = None, ob_high: float | None = None) -> MarketContext:
+    ts = pd.Timestamp("2026-07-14 15:00", tz="UTC")
+    fvg = FairValueGap(high=4070.7, low=4067.3, direction="bearish", time=ts)
+    obs = []
+    if ob_low is not None and ob_high is not None:
+        obs.append(OrderBlock(high=ob_high, low=ob_low, direction="bearish", time=ts))
+    analyses = {
+        "1h": _analysis_with_fvgs("1h", atr=4.8, fvgs=[fvg]),
+        "5m": TimeframeAnalysis(
+            timeframe="5m",
+            trend="bearish",
+            bos="",
+            choch="",
+            atr=3.0,
+            order_blocks=obs,
+        ),
+    }
+    return MarketContext(
+        enriched={},
+        analyses=analyses,
+        metrics={"current_price": 4065.0},
+        price=4065.0,
+        external=ExternalFactors(),
+        source_label="issue36-relationship-fixture",
     )
 
 
@@ -110,6 +137,138 @@ def test_missing_reaction_id_is_uncitable() -> None:
     )
     claim = adjudicate_level_proposal_claim(proposal, ctx, level_reactions=[])
     assert claim.eligibility == "uncitable"
+
+
+def test_free_text_confluence_without_fact_ids_is_not_core_execution() -> None:
+    ctx = _wide_fvg_ctx(ob_low=4050.0, ob_high=4054.0)
+    proposal = LevelProposal(
+        direction="SELL",
+        entry_low=4067.3,
+        entry_high=4070.7,
+        stop_loss=4074.0,
+        take_profits=[4055.0],
+        setup_type="llm_fvg",
+        reason="1h FVG 与远离入场区的 5m OB 共振",
+        confidence=0.8,
+        path_id="A",
+        reaction_evidence_id="tech_reaction:0",
+    )
+    reactions = [{"id": "tech_reaction:0", "rationale": proposal.reason}]
+
+    claim = adjudicate_level_proposal_claim(proposal, ctx, level_reactions=reactions)
+
+    assert claim.eligibility != "core_execution"
+    assert claim.quality["structured_fact_bind"] is False
+    assert any(c["kind"] == "missing_structured_fact_bind" for c in claim.counterevidence)
+
+
+def test_single_bound_fvg_with_free_text_confluence_still_needs_relationship() -> None:
+    ctx = _wide_fvg_ctx(ob_low=4050.0, ob_high=4054.0)
+    proposal = LevelProposal(
+        direction="SELL",
+        entry_low=4067.3,
+        entry_high=4070.7,
+        stop_loss=4074.0,
+        take_profits=[4055.0],
+        setup_type="llm_fvg",
+        reason="FVG 与未绑定的 OB 共振",
+        confidence=0.8,
+        path_id="A",
+        reaction_evidence_id="tech_reaction:0",
+    )
+    reactions = [
+        {
+            "id": "tech_reaction:0",
+            "fact_ids": ["1h.fvg.0.low", "1h.fvg.0.high"],
+            "rationale": proposal.reason,
+        }
+    ]
+
+    claim = adjudicate_level_proposal_claim(proposal, ctx, level_reactions=reactions)
+
+    assert claim.eligibility != "core_execution"
+    assert any(c["kind"] == "missing_fact_relationships" for c in claim.counterevidence)
+
+
+def test_false_ob_overlap_relationship_is_observation_only() -> None:
+    ctx = _wide_fvg_ctx(ob_low=4061.04, ob_high=4065.32)
+    proposal = LevelProposal(
+        direction="SELL",
+        entry_low=4067.31,
+        entry_high=4070.71,
+        stop_loss=4073.5,
+        take_profits=[4055.0],
+        setup_type="llm_fvg",
+        reason="FVG 与 OB 共振",
+        confidence=0.8,
+        path_id="A",
+        reaction_evidence_id="tech_reaction:0",
+    )
+    reactions = [
+        {
+            "id": "tech_reaction:0",
+            "fact_ids": [
+                "1h.fvg.0.low",
+                "1h.fvg.0.high",
+                "5m.ob.0.low",
+                "5m.ob.0.high",
+            ],
+            "relationships": [
+                {
+                    "type": "overlap",
+                    "left_fact_ids": ["1h.fvg.0.low", "1h.fvg.0.high"],
+                    "right_fact_ids": ["5m.ob.0.low", "5m.ob.0.high"],
+                }
+            ],
+        }
+    ]
+
+    claim = adjudicate_level_proposal_claim(proposal, ctx, level_reactions=reactions)
+
+    assert claim.eligibility == "observation_only"
+    assert any(c["kind"] == "invalid_claimed_relationship" for c in claim.counterevidence)
+    assert claim.quality["verified_relationship_count"] == 0
+
+
+def test_valid_traceable_fvg_ob_overlap_can_be_core_execution() -> None:
+    ctx = _wide_fvg_ctx(ob_low=4068.0, ob_high=4071.0)
+    proposal = LevelProposal(
+        direction="SELL",
+        entry_low=4067.31,
+        entry_high=4070.71,
+        stop_loss=4073.5,
+        take_profits=[4055.0],
+        setup_type="llm_fvg_ob",
+        reason="结构化 FVG/OB 重叠",
+        confidence=0.8,
+        path_id="A",
+        reaction_evidence_id="tech_reaction:0",
+    )
+    reactions = [
+        {
+            "id": "tech_reaction:0",
+            "fact_ids": [
+                "1h.fvg.0.low",
+                "1h.fvg.0.high",
+                "5m.ob.0.low",
+                "5m.ob.0.high",
+            ],
+            "relationships": [
+                {
+                    "type": "overlap",
+                    "left_fact_ids": ["1h.fvg.0.low", "1h.fvg.0.high"],
+                    "right_fact_ids": ["5m.ob.0.low", "5m.ob.0.high"],
+                }
+            ],
+        }
+    ]
+
+    claim = adjudicate_level_proposal_claim(proposal, ctx, level_reactions=reactions)
+
+    assert claim.eligibility == "core_execution"
+    assert claim.quality["structured_fact_bind"] is True
+    assert claim.quality["verified_relationship_count"] == 1
+    assert "5m.ob.0.low" in claim.fact_ids
 
 
 def test_validate_llm_levels_rejects_uncitable_and_tags_observation() -> None:

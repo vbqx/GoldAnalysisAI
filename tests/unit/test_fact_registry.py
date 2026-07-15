@@ -41,6 +41,27 @@ def test_session_pa_uses_canonical_fact_ids() -> None:
     assert registry["facts"]["pa.session.poc"]["as_of"] == report["meta"]["data_as_of"]["last_bar_time_utc"]
 
 
+def test_claim_catalog_registers_5m_zone_boundaries_for_replay() -> None:
+    report = _load("wait_observation.json")
+    report["technical_claim_facts"] = [
+        {
+            "fact_ids": ["5m.ob.0.low", "5m.ob.0.high"],
+            "kind": "order_block",
+            "timeframe": "5m",
+            "direction": "bearish",
+            "low": 4061.04,
+            "high": 4065.32,
+            "as_of": "2026-07-14T17:40:00Z",
+        }
+    ]
+
+    registry = build_fact_registry(report)
+
+    assert registry["facts"]["5m.ob.0.low"]["value"] == 4061.04
+    assert registry["facts"]["5m.ob.0.high"]["value"] == 4065.32
+    assert registry["facts"]["5m.ob.0.low"]["refs"]["claim_catalog"] is True
+
+
 def test_fact_registry_calendar_and_news() -> None:
     report = _load("wait_observation.json")
     report["external"] = {
