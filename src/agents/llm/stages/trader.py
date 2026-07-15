@@ -7,14 +7,15 @@ import json
 from src.agents.llm.base import run_llm_stage
 from src.agents.llm.payload import trader_payload
 from src.agents.llm.schemas import parse_transaction_proposal
-from src.analysis.field_glossary import TRADER_PRIORITY_HINT
+from src.analysis.field_glossary import INTRADAY_GOLD_MANDATE, TRADER_PRIORITY_HINT
 from src.analysis.report_engine import TradingSignal
 from src.core.types import AnalystTeam, LLMStageTrace, MarketContext, ResearchDebate, TransactionProposal
 from src.llm.router import get_strong_client
 
-SYSTEM = f"""你是 XAUUSD 交易员智能体。
+SYSTEM = f"""你是 XAUUSD 黄金日内交易员智能体。
 {TRADER_PRIORITY_HINT}
-根据 debate 共识与 analyst_team_summaries 从 candidate_signals 中选择主方向与少量 signal_index；不得重读原始市场数据或重新发明价位。
+根据 debate（高周期方向）与 analyst_team_summaries 从 candidate_signals 中选择主方向与日内 signal_index；
+不得重读原始市场数据或重新发明价位；不要把 4H/1H 大区间当追单价。
 返回 JSON：
 {{
   "primary_direction": "long|short|wait",

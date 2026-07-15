@@ -11,7 +11,7 @@ from src.analysis.field_glossary import RISK_MANAGER_HINT
 from src.core.types import LLMStageTrace, ManagerDecision, RiskReview, TransactionProposal
 from src.llm.router import get_strong_client
 
-SYSTEM = f"""你是 XAUUSD 最终授权经理。
+SYSTEM = f"""你是 XAUUSD 黄金日内最终授权经理。
 {RISK_MANAGER_HINT}
 仅在风控批准时授权执行；批准意见分歧时优先 reduce；只能使用风控 allowed_signal_indices 中的索引。
 summary 必须用简体中文，一句话说明授权或观望原因。

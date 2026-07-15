@@ -6,6 +6,7 @@ from typing import Any
 
 from src.agents.analysts.evidence_provenance import analyst_evidence_ids
 from src.analysis.ict_pa import TimeframeAnalysis, sentiment_score
+from src.analysis.field_glossary import INTRADAY_GOLD_MANDATE
 from src.analysis.narrative_combine import build_pa_llm_summary
 from src.analysis.technical_context import build_technical_context, fibonacci_context, timeframe_context
 from src.config import (
@@ -151,6 +152,7 @@ def _fibonacci_block(ctx: MarketContext) -> dict[str, Any]:
 def market_payload(ctx: MarketContext, team: AnalystTeam | None = None) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "symbol": "XAUUSD",
+        "trading_mandate": INTRADAY_GOLD_MANDATE,
         "price": ctx.price,
         "metrics": ctx.metrics,
         "external": ctx.external.to_dict(),
@@ -178,6 +180,7 @@ def research_payload(ctx: MarketContext, team: AnalystTeam, direction: str) -> d
         return payload
     return {
         "symbol": "XAUUSD",
+        "trading_mandate": INTRADAY_GOLD_MANDATE,
         "price": ctx.price,
         "direction": direction,
         "analyst_team": analyst_team_payload(team),
@@ -197,6 +200,7 @@ def technical_analyst_payload(ctx: MarketContext) -> dict[str, Any]:
     pa = base.get("price_action") or {}
     payload: dict[str, Any] = {
         "symbol": "XAUUSD",
+        "trading_mandate": INTRADAY_GOLD_MANDATE,
         "price": ctx.price,
         "price_action_summary": build_pa_llm_summary(pa, price=ctx.price),
         "support_resistance": base.get("support_resistance"),
@@ -298,6 +302,7 @@ def debate_payload(
     team: AnalystTeam | None = None,
 ) -> dict[str, Any]:
     payload: dict[str, Any] = {
+        "trading_mandate": INTRADAY_GOLD_MANDATE,
         "bullish": evidence_payload(bullish),
         "bearish": evidence_payload(bearish),
         "sentiment_vote": sentiment_score(analyses),
@@ -403,6 +408,8 @@ def trader_decision_payload(
     """Trader stage: debate consensus + analyst summaries + candidate signals (no raw market dump)."""
     notes_cap = TRADER_DEBATE_NOTES_MAX
     return {
+        "symbol": "XAUUSD",
+        "trading_mandate": INTRADAY_GOLD_MANDATE,
         "price": ctx.price,
         "debate": {
             "consensus_bias": debate.consensus_bias,
@@ -465,6 +472,7 @@ def risk_payload(
             row["distance_pct"] = round((entry_mid - float(current_price)) / float(current_price) * 100, 3)
         selected.append(row)
     return {
+        "trading_mandate": INTRADAY_GOLD_MANDATE,
         "proposal": proposal.to_dict(),
         "signal_count": signal_count,
         "selected_signals": selected,
@@ -476,6 +484,7 @@ def risk_payload(
             "allowed_signal_indices": "Use only proposal.signal_indices values below signal_count.",
             "position_scale": "0.0 to 1.0; conservative should normally be smaller than neutral.",
             "notes": "Only cite geometry and freshness fields present in selected_signals and data_as_of.",
+            "style": "XAUUSD intraday: reject HTF-zone market chase dressed as an entry.",
         },
     }
 
@@ -485,12 +494,14 @@ def manager_payload(
     reviews: list[RiskReview],
 ) -> dict[str, Any]:
     return {
+        "trading_mandate": INTRADAY_GOLD_MANDATE,
         "proposal": proposal.to_dict(),
         "risk_reviews": [r.to_dict() for r in reviews],
         "decision_constraints": {
             "action": "execute, reduce, or wait.",
             "selected_signal_indices": "Use only indexes approved by at least one risk profile.",
             "confidence": "0.0 to 1.0; lower confidence when only aggressive risk approves.",
+            "style": "Authorize intraday plans only; HTF for bias, 15m/5m for execution.",
         },
     }
 
@@ -505,6 +516,7 @@ def level_proposer_payload(
         structure = build_technical_context(ctx, event_limit=ANALYST_ICT_EVENTS_MAX)
         return {
             "symbol": "XAUUSD",
+            "trading_mandate": INTRADAY_GOLD_MANDATE,
             "price": ctx.price,
             "technical_level_reactions": technical_level_reactions_payload(team),
             "analyst_team": analyst_team_payload(team),
@@ -514,6 +526,10 @@ def level_proposer_payload(
                 "discussion_notes": debate.discussion_notes[-5:],
             },
             "structure_context": {
+                # Compact summary keeps Fixed-360 metadata; full dict for S/R lists.
+                "price_action_summary": build_pa_llm_summary(
+                    structure.get("price_action") or {}, price=ctx.price
+                ),
                 "price_action": structure.get("price_action"),
                 "support_resistance": structure.get("support_resistance"),
                 "lux_timeframe_panels": structure.get("lux_timeframe_panels"),
@@ -521,7 +537,12 @@ def level_proposer_payload(
             },
             "rule_candidate_signals": [_signal_payload(s) for s in rule_signals[:5]],
             "level_constraints": {
-                "scope": "Bind setups to technical_level_reactions; fall back to structure_context PA levels only if reactions empty.",
+                "scope": (
+                    "Intraday gold: HTF bias only; bind setups to 15m/5m "
+                    "technical_level_reactions. Fall back to "
+                    "structure_context.price_action_summary 15m/5m/session "
+                    "POC/VA/S/R only if reactions empty (never use 4h alone as entry)."
+                ),
                 "geometry": "SELL requires stop_loss above entry and TP below entry. BUY requires stop_loss below entry and TP above entry.",
                 "execution": (
                     "Return candidate zones, not market orders. "

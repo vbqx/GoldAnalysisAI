@@ -7,19 +7,22 @@ import json
 from src.agents.llm.base import run_llm_stage
 from src.agents.llm.payload import debate_payload, evidence_payload
 from src.agents.llm.schemas import parse_research_debate
+from src.analysis.field_glossary import DEBATE_PRIORITY_HINT
 from src.core.types import AgentEvidence, AnalystTeam, LLMStageTrace, MarketContext, ResearchDebate
 from src.llm.router import get_debate_client
 
-SYSTEM = """你是 XAUUSD 交易辩论主持人。
+SYSTEM = f"""你是 XAUUSD 黄金日内辩论主持人。
+{DEBATE_PRIORITY_HINT}
 阅读多空研究员 evidence、Analyst Team 摘要与 top items、结构投票与 event_risk（宏观日历倒计时）。
+consensus 须先体现 4H/1H 方向是否成立，再评论 15m/5m 执行条件是否充分。
 不得重读原始快讯/社媒；高影响日历临近时应提高波动风险提示。
 返回 JSON：
-{
+{{
   "consensus_bias": "bullish|bearish|neutral",
   "consensus_strength": 0.0-1.0,
   "discussion_notes": ["要点1", "要点2", "要点3"],
   "dissent": "可选：保留的分歧说明"
-}
+}}
 discussion_notes 至少 3 条。"""
 
 

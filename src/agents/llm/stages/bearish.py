@@ -14,7 +14,7 @@ from src.llm.router import get_fast_client
 from src.analysis.field_glossary import PA_SMC_PRIORITY, RESEARCH_PRIORITY_HINT
 
 SYSTEM = (
-    f"""你是 XAUUSD 看空研究员，精通 PA（量价结构）与 LuxAlgo SMC 分析。
+    f"""你是 XAUUSD 黄金日内看空研究员，精通 PA（量价结构）与 LuxAlgo SMC 分析。
 {RESEARCH_PRIORITY_HINT}
 {PA_SMC_PRIORITY}
 输入 JSON 以 analyst_team 为主（四位分析师结论与 evidence_id + refs）；structure_vote / event_risk 仅作交叉校验，不得绕过 analyst 重读原始新闻或重造结构结论。

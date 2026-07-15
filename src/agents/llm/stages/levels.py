@@ -7,19 +7,19 @@ import json
 from src.agents.llm.base import run_llm_stage
 from src.agents.llm.payload import level_proposer_payload
 from src.agents.llm.schemas import parse_level_proposals
-from src.analysis.field_glossary import LEVELS_PRIORITY_HINT, PA_SMC_PRIORITY
+from src.analysis.field_glossary import INTRADAY_GOLD_MANDATE, LEVELS_PRIORITY_HINT, PA_SMC_PRIORITY
 from src.core.types import AnalystTeam, LLMStageTrace, LevelProposal, MarketContext, ResearchDebate
 from src.llm.router import get_strong_client
 from src.log import get_logger
 
 log = get_logger(__name__)
 
-SYSTEM = f"""你是 XAUUSD 机构级价位提案员。
+SYSTEM = f"""你是 XAUUSD 黄金日内价位提案员。
 {LEVELS_PRIORITY_HINT}
 {PA_SMC_PRIORITY}
 
-输入优先用：technical_level_reactions（技术分析师反应假设）、debate 共识、structure_context、rule_signals。
-不得编造宏观事件；不得重写技术分析长推演。
+输入优先用：technical_level_reactions（须优先绑 15m/5m 反应）、debate 共识、structure_context、rule_signals。
+不得编造宏观事件；不得重写技术分析长推演；入场几何不得落在纯 4H/1H 大区间。
 
 返回 JSON：
 {{
@@ -47,11 +47,13 @@ SYSTEM = f"""你是 XAUUSD 机构级价位提案员。
 
 硬性约束：
 - 恰好 3 个 setup，path_id=A/B/C。
-- A 顺 debate；B 备选；C 对冲/失效备用。
-- 每条优先填 reaction_evidence_id；入场区贴近被引用反应的价位。
+- A 顺 debate 偏见主路径；B 同向备选（更优回踩/更紧止损）；
+  C 潜在反转或主路径失效后的对冲预案——invalidation/deduction 必须写清触发条件
+  （如收盘站回 VAL 外侧 + 15m CHoCH）；未触发时不得把 C 写成可立即执行的主单。
+- 每条优先填 reaction_evidence_id；入场区贴近被引用反应的价位（C 可绑反转/失效锚点）。
 - SELL：SL 在入场上方、TP1 在下方；入场在现价上方或含现价。
 - BUY：SL 在入场下方、TP1 在上方；入场在现价下方或含现价。
-- technical_level_reactions 为空时，仅可据 structure_context 的 POC/VA/S/R 定区，并仍写清 anchor/reaction/短 deduction。
+- technical_level_reactions 为空时，仅可据 structure_context 的 15m/5m/session POC/VA/S/R 定区，并仍写清 anchor/reaction/短 deduction。
 """
 
 
@@ -76,8 +78,9 @@ def run_llm_level_proposer(
         {
             "role": "user",
             "content": (
-                "请提案 A/B/C 入场区：绑定 technical_level_reactions 的锚点与预期反应，"
-                "只写一句下单绑定理由，不要重写技术分析。\n"
+                f"{INTRADAY_GOLD_MANDATE} "
+                "请提案 A/B/C：A/B 顺偏见日内入场，C 写潜在反转/失效对冲（含触发条件）。"
+                "优先绑定 15m/5m 的 technical_level_reactions；一句绑定理由，勿重写技术分析。\n"
                 f"{json.dumps(payload, ensure_ascii=False, indent=2)}"
             ),
         },

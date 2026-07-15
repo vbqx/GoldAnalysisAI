@@ -13,6 +13,7 @@ import json
 from typing import Any
 
 from src.analysis.fact_registry import compact_fact_index, fact_ids_for_signal
+from src.analysis.field_glossary import INTRADAY_GOLD_MANDATE
 from src.analysis.narrative_facts import (
     NARRATIVE_ICT_PER_TF,
     build_narrative_facts_for_llm,
@@ -108,6 +109,7 @@ def build_llm_context(
     technical_context = _slim_narrative_technical_context(ctx)
     payload: dict[str, Any] = {
         "symbol": report.get("meta", {}).get("symbol", "XAUUSD"),
+        "trading_mandate": INTRADAY_GOLD_MANDATE,
         "price_fact_id": "metrics.current_price",
         "metric_fact_ids": {
             "current_price": "metrics.current_price",
