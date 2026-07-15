@@ -54,6 +54,9 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 | **coherence_check** | `tests/tools/coherence_check.py` — 规则模式跑完整流水线，校验结论/辩论/信号几何一致性；P0 门禁 |
 | **主策略 / 逆势备选** | `signal_role`：`primary` 与结构主导方向一致；`alternate` 为逆势方案，UI 徽章区分 |
 | **risk_reward** | 风险收益比展示；> 1:8 时标注「远端限价」 |
+| **计划获准 / 执行就绪** | `plan_authorized` vs `execution_authorized`：前者可保留条件方案；后者须触发确认且主张资格为 `core_execution` |
+| **claim_eligibility** | 技术主张引用资格：`core_execution` / `supporting` / `observation_only` / `uncitable`（策略 `claim-v1`） |
+| **等待触发** | UI/叙事对 `trigger_confirmed=false` 的获准计划用语；仓位显示 0%，不得写作“执行” |
 
 ---
 
@@ -61,7 +64,7 @@ GoldAnalysisAI 文档与代码中的常见术语。算法细节见 [reverse-engi
 
 | 术语 | 含义 |
 |------|------|
-| **TradingView / tvdatafeed** | 非官方接口拉 OHLCV；2 次请求 + 本地聚合多周期 |
+| **TradingView / tvdatafeed** | 非官方接口拉 OHLCV；5m+15m/1h/4h（各≥360 Fixed）+1d；HTF 失败才 5m 聚合 |
 | **金十 MCP** | 官方接口：快讯、资讯、日历、报价、K 线 |
 | **DXY** | 美元指数；偏强通常利空黄金 |
 | **US10Y** | 美国 10 年期国债收益率，宏观参考 |

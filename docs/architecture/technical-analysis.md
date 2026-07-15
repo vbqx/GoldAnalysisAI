@@ -81,6 +81,23 @@
 - `technical_context.timeframes[]` = `timeframe_context()` → 同样基于 `build_tf_snapshot()`。
 - **禁止**在 UI/报告里再写一套平行的 BOS/OB 格式化逻辑；文案走 `narrative_sections.py`。
 
+### DGT Volume Profile 窗口（Fixed 360，非 Visible）
+
+与 dgtrd Pine「Volume Profile → Profile Lookback Range = **Fixed Range**，Length = **360**」对齐：
+
+| 项 | 取值 |
+|----|------|
+| 模式 | **Fixed Range**（禁止跟图表缩放/Visible Range） |
+| 根数 | 各周期各自最近 **360** 根该周期 K（数据不足则用全部，`lookback_bars` / `lookback_requested` 记录） |
+| 行数 / VA | 100 rows · 68% value area |
+| HTF 成交细分 | 同一时钟窗内的 **5m**（`profile_source=ltf_5m`）；若 5m 覆盖不足窗长 85%，回退该周期原生 K（`native_tf`） |
+| 拉取 | `tradingview.fetch_multi_timeframe` 对 15m/1h/4h **各自拉 ≥360 根**；失败才 5m 聚合 |
+| LLM | `price_action_summary` 每周期带 `lookback_*` / `profile_source` / 独立 POC；提示禁止混周期 |
+
+`session` 除外：仍按最新 1d open 锚定交易日（见下）。
+
+FVG 进入 fact registry 时附带 `width` / `width_atr_ratio` / `atr`，供 `claim_eligibility`（`claim-v1`）判断是否可作为核心执行依据；见 [report-trust.md](./report-trust.md) §5.2。
+
 ### Session 量价（OANDA 交易时段）
 
 `price_action_facts.build_session_price_action_block()`：

@@ -82,9 +82,13 @@ python scripts/export_sample_report.py
 | `context_stats` | 分析师输入密度，见 [analyst-context.md](../../architecture/analyst-context.md) |
 | `data_as_of` | K 线时效契约：`executable`、`data_age_hours`、`warnings` |
 | `observation_mode` | `true` 时为快照观察，禁止 LLM 覆盖可执行结论 |
-| `execution_authorized` | Manager 是否授权执行 |
-| `authorized_signal_ids` | 授权信号的 content-hash ID 列表 |
-| `authorized_position_scale` | 授权仓位系数（0–1，映射定性标签） |
+| `plan_authorized` | Manager 是否批准保留条件计划（可等待触发） |
+| `execution_ready` | 主计划是否同时满足触发、数据可执行、scale、主张资格 |
+| `execution_authorized` | 与 `execution_ready` 对齐：是否可被执行性叙事/UI 引用 |
+| `plan_signal_ids` | 获准计划 ID（含未触发候选） |
+| `authorized_signal_ids` | 仅执行就绪时非空的信号 ID 列表 |
+| `authorized_position_scale` | 授权仓位系数（未就绪时为 0） |
+| `primary_trigger_state` | 主计划触发与 `claim_eligibility` 快照 |
 | `manager_decision` | 经理决策快照 |
 | `audit_summary` | 每轮运行紧凑审计块（供 Codex / 回归比对） |
 | `fact_registry` | 统一事实注册表（`fr-v2`）：价位/宏观/日历/时效等，含 `fact_count`、`conflict_fact_ids` |
@@ -142,10 +146,19 @@ python scripts/export_sample_report.py
 | `status` | `candidate` / `watch` / `active` / `invalid` |
 | `trigger_confirmed` | 触发条件是否满足 |
 | `trigger_note` | 触发或降级说明 |
+| `claim_id` | 技术主张 ID（Levels 裁决，`claim-v1`） |
+| `claim_eligibility` | `core_execution` / `supporting` / `observation_only` / `uncitable`；空=规则兼容 |
+| `claim_fact_ids` | 主张绑定的 `fact_id` 列表 |
+| `claim_quality` | 可复算质量指标（如 FVG `width_atr_ratio`） |
+| `counterevidence` | 反证列表（重叠反向结构等） |
+| `claim_policy_version` | 资格策略版本，如 `claim-v1` |
+| `reaction_evidence_id` | 绑定的技术反应 ID |
 | `score_total` / `score_grade` | 信号质量评分与等级 |
 | `score_reasons` | 评分依据、触发缺口或降级原因 |
 
 经理可能按 `decision.selected_signal_indices` 重排顺序；orchestrator 会按结构主导方向写入 `signal_role`。`setup_type` 以 `llm_` 开头时表示来源为已通过 validator 的 LLM 点位建议。
+
+**执行语义**：`trigger_confirmed=false` 或 `claim_eligibility` 非 `core_execution`（且非空）时，不得将计划呈现为执行就绪；见 [report-trust.md](../../architecture/report-trust.md) §5.1–5.2。
 
 ---
 

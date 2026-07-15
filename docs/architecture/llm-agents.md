@@ -10,6 +10,7 @@
 
 | 原则 | 说明 |
 |------|------|
+| **黄金日内** | `INTRADAY_GOLD_MANDATE`：4H/1H 定方向，15m/5m 顺势入场；潜在反转单独标触发条件，确认前仅作 path C/观望；注入各阶段 system + JSON `trading_mandate` |
 | **双轨实现** | 每阶段保留规则版 + LLM 版，经 `agents/factory.py` 统一调度 |
 | **结构化输出** | LLM 返回 JSON（`response_format: json_object`），校验后进入流水线 |
 | **规则兜底** | LLM 传输/解析失败自动重试（整次 SSE 重打 + 指数退避）；仍失败则 hybrid 回退规则版 |

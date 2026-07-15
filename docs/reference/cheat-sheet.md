@@ -45,6 +45,8 @@
 | 调整报告流动性/周期汇总事实 | `analysis/report_facts.py` | `pytest tests/unit/test_report_facts.py` |
 | 改交易信号几何 | `analysis/report_engine.py` | `pytest tests/unit/test_financial_review.py` |
 | **Manager 授权 / 仓位映射** | `analysis/report_engine.py` (`apply_manager_authorization`) | `pytest tests/unit/test_manager_authorization.py` |
+| **触发门禁（#35）** | `report_engine` + `risk_gates` + `INV-TRIG-001` | `pytest tests/unit/test_risk_gates_trigger.py tests/unit/test_manager_authorization.py` |
+| **主张资格（#36）** | `analysis/claim_eligibility.py` + `level_validator` + `INV-CLAIM-001` | `pytest tests/unit/test_claim_eligibility.py` |
 | **确定性风控门控** | `analysis/risk_gates.py`, `agents/risk.py`, `agents/factory.py` | `pytest tests/unit/test_risk_gates.py tests/unit/test_rule_chain_stability.py` |
 | **信号几何 / 稳定 signal_id** | `analysis/signal_geometry.py`, `analysis/signal_identity.py` | `pytest tests/unit/test_signal_geometry.py tests/unit/test_signal_identity.py` |
 | **数据时效 / 观察模式** | `analysis/data_freshness.py`, `core/orchestrator.py` | `pytest tests/unit/test_data_freshness.py` |
