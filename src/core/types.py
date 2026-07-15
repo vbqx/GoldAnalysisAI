@@ -121,6 +121,13 @@ class LevelProposal:
     expected_reaction: str = ""
     deduction: str = ""
     reaction_evidence_id: str = ""
+    # Issue #36: claim → fact → quality → eligibility (filled at validation).
+    claim_id: str = ""
+    fact_ids: list[str] = field(default_factory=list)
+    claim_eligibility: str = ""
+    claim_quality: dict[str, Any] = field(default_factory=dict)
+    counterevidence: list[dict[str, Any]] = field(default_factory=list)
+    claim_policy_version: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

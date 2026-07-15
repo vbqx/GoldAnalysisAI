@@ -51,6 +51,8 @@ def test_geometry_ignores_rejected_candidate_inventory() -> None:
                 "take_profits": [4049.62, 4029.8],
                 "signal_id": "sig-a",
                 "signal_role": "primary",
+                "status": "active",
+                "trigger_confirmed": True,
             },
             {
                 "name": "右侧扫低做多",
@@ -93,6 +95,8 @@ def test_rule_mode_disabled_llm_skips_empty_top_level_auth() -> None:
                 "stop_loss": 4013.0,
                 "take_profits": [3988.0, 3974.0],
                 "signal_role": "primary",
+                "status": "active",
+                "trigger_confirmed": True,
             }
         ],
         "llm_analysis": {
@@ -127,6 +131,39 @@ def test_rule_mode_disabled_llm_skips_empty_top_level_auth() -> None:
     auth_codes = [v["code"] for v in result["violations"] if v["code"] == "INV-AUTH-001"]
     assert auth_codes == []
     assert result["passed"] is True
+
+
+def test_execution_authorized_without_trigger_fails_invariant() -> None:
+    report = {
+        "metrics": {"current_price": 4072.0},
+        "signals": [
+            {
+                "name": "cand short",
+                "direction": "SELL",
+                "entry_low": 4067.31,
+                "entry_high": 4070.71,
+                "stop_loss": 4073.50,
+                "take_profits": [4060.0, 4050.0],
+                "signal_id": "sig-cand",
+                "signal_role": "primary",
+                "status": "candidate",
+                "trigger_confirmed": False,
+            }
+        ],
+        "meta": {
+            "execution_authorized": True,
+            "authorized_signal_ids": ["sig-cand"],
+            "manager_decision": {"action": "reduce"},
+            "final_decision": {"action": "reduce", "execution_authorized": True},
+            "stage_sources": {},
+        },
+        "llm_analysis": {},
+        "conclusion": {},
+    }
+    result = validate_report_invariants(report)
+    codes = {v["code"] for v in result["violations"]}
+    assert "INV-TRIG-001" in codes
+    assert result["passed"] is False
 
 
 def test_enabled_llm_empty_top_level_still_flags_auth() -> None:

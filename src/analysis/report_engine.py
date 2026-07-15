@@ -65,6 +65,14 @@ class TradingSignal:
     score_total: float = 0.0
     score_grade: str = "C"
     score_reasons: list[str] = field(default_factory=list)
+    # Issue #36 claim eligibility (empty = rule/legacy; treated as executable-capable).
+    claim_id: str = ""
+    claim_eligibility: str = ""
+    claim_fact_ids: list[str] = field(default_factory=list)
+    claim_quality: dict[str, Any] = field(default_factory=dict)
+    counterevidence: list[dict[str, Any]] = field(default_factory=list)
+    claim_policy_version: str = ""
+    reaction_evidence_id: str = ""
 
 
 def _compute_risk_reward(
@@ -1260,6 +1268,15 @@ def _assign_signal_ids(sig_dicts: list[dict[str, Any]]) -> None:
         sig["signal_id"] = sig.get("signal_id") or stable_signal_id(sig)
 
 
+def _signal_execution_ready(sig: dict[str, Any] | None) -> bool:
+    """Plan may be authorized; execution requires a confirmed trigger."""
+    if not sig:
+        return False
+    if sig.get("status") == "invalid":
+        return False
+    return bool(sig.get("trigger_confirmed"))
+
+
 def apply_manager_authorization(
     report: dict,
     decision,
@@ -1320,6 +1337,16 @@ def apply_manager_authorization(
         sig["rejection_notes"] = notes
         sig["rejection_reason"] = "；".join(notes) if notes else "未选用"
 
+    def _clear_auth_meta(*, plan_authorized: bool = False) -> None:
+        meta["plan_authorized"] = plan_authorized
+        meta["execution_ready"] = False
+        meta["execution_authorized"] = False
+        meta["authorized_position_scale"] = 0.0
+        meta["manager_decision"] = decision.to_dict() if hasattr(decision, "to_dict") else dict(decision)
+        meta["authorized_signal_ids"] = []
+        meta["plan_signal_ids"] = []
+        meta["primary_trigger_state"] = None
+
     if decision.action == "wait" or not selected_set:
         for j, sig in enumerate(sig_dicts):
             _normalize_signal_dict_take_profits(sig)
@@ -1329,16 +1356,33 @@ def apply_manager_authorization(
             _attach_rejection(sig, idx=j)
         report["signals"] = sig_dicts
         report["strategy_plans"] = []
-        meta["execution_authorized"] = False
-        meta["authorized_position_scale"] = 0.0
-        meta["manager_decision"] = decision.to_dict() if hasattr(decision, "to_dict") else dict(decision)
-        meta["authorized_signal_ids"] = []
+        _clear_auth_meta(plan_authorized=False)
         return
 
     primary_idx = selected[0]
     primary_sig = sig_dicts[primary_idx] if primary_idx < len(sig_dicts) else None
     primary_name = str((primary_sig or {}).get("name") or f"#{primary_idx}")
-    pos_label = format_authorized_position_size(scale, decision.action)
+    as_of = meta.get("data_as_of") or {}
+    data_executable = bool(as_of.get("executable", True)) and not bool(meta.get("observation_mode"))
+    from src.analysis.claim_eligibility import claim_allows_execution_authorization
+
+    claim_ok = claim_allows_execution_authorization(primary_sig)
+    execution_ready = (
+        _signal_execution_ready(primary_sig)
+        and data_executable
+        and float(scale) > 0
+        and claim_ok
+    )
+    if execution_ready:
+        pos_label = format_authorized_position_size(scale, decision.action)
+        effective_scale = scale
+    elif not claim_ok:
+        pos_label = "0% 观察（证据资格不足）"
+        effective_scale = 0.0
+    else:
+        pos_label = "0% 等待触发"
+        effective_scale = 0.0
+
     for j, sig in enumerate(sig_dicts):
         _normalize_signal_dict_take_profits(sig)
         if j not in selected_set:
@@ -1349,13 +1393,13 @@ def apply_manager_authorization(
         elif j == primary_idx:
             sig["signal_role"] = "primary"
             sig["position_size"] = pos_label
-            sig["position_scale"] = scale
+            sig["position_scale"] = effective_scale
             sig.pop("rejection_reason", None)
             sig.pop("rejection_notes", None)
         else:
             sig["signal_role"] = "alternate"
             sig["position_size"] = pos_label
-            sig["position_scale"] = scale
+            sig["position_scale"] = effective_scale
             sig.pop("rejection_reason", None)
             sig.pop("rejection_notes", None)
 
@@ -1363,19 +1407,45 @@ def apply_manager_authorization(
     rest = [s for j, s in enumerate(sig_dicts) if j not in selected_set]
     report["signals"] = ordered + rest
     primary = [s for s in report["signals"] if s.get("signal_role") == "primary"]
+    # Keep conditional strategy plans visible even when waiting for trigger.
     report["strategy_plans"] = build_strategy_plans(primary)
-    meta["execution_authorized"] = True
-    meta["authorized_position_scale"] = scale
+
+    plan_ids = [sig_dicts[i].get("signal_id") for i in selected if i < len(sig_dicts)]
+    meta["plan_authorized"] = True
+    meta["execution_ready"] = execution_ready
+    meta["execution_authorized"] = execution_ready
+    meta["authorized_position_scale"] = effective_scale
     meta["manager_decision"] = decision.to_dict() if hasattr(decision, "to_dict") else dict(decision)
-    meta["authorized_signal_ids"] = [
-        sig_dicts[i].get("signal_id") for i in selected if i < len(sig_dicts)
-    ]
+    meta["plan_signal_ids"] = plan_ids
+    meta["authorized_signal_ids"] = plan_ids if execution_ready else []
+    meta["primary_trigger_state"] = {
+        "signal_id": (primary_sig or {}).get("signal_id"),
+        "status": (primary_sig or {}).get("status"),
+        "trigger_confirmed": bool((primary_sig or {}).get("trigger_confirmed")),
+        "trigger_note": (primary_sig or {}).get("trigger_note"),
+        "execution_ready": execution_ready,
+        "claim_eligibility": (primary_sig or {}).get("claim_eligibility") or "",
+        "claim_id": (primary_sig or {}).get("claim_id") or "",
+        "counterevidence_count": len((primary_sig or {}).get("counterevidence") or []),
+    }
+    if not execution_ready:
+        decision_dict = meta["manager_decision"]
+        if isinstance(decision_dict, dict):
+            if not claim_ok:
+                note = "技术主张未达执行引用资格（冲突/未校准），仅保留观察或条件计划"
+            else:
+                note = "条件计划保留，等待触发确认后再授权执行"
+            summary = str(decision_dict.get("summary") or "").strip()
+            if note not in summary:
+                decision_dict["summary"] = f"{summary}；{note}" if summary else note
+            decision_dict["position_scale"] = 0.0
 
 
 _MANAGER_ACTION_CN = {
     "execute": "执行",
     "reduce": "缩仓执行",
     "wait": "观望",
+    "await_trigger": "等待触发",
 }
 
 
@@ -1399,13 +1469,32 @@ def build_final_decision_meta(report: dict[str, Any]) -> dict[str, Any]:
     decision = meta.get("manager_decision") or {}
     action = str(decision.get("action") or "wait").lower()
     authorized = bool(meta.get("execution_authorized"))
+    plan_authorized = bool(meta.get("plan_authorized"))
     summary = str(decision.get("summary") or "").strip()
-    primary = _authorized_primary_signal(report) if authorized else None
+    primary = _authorized_primary_signal(report) if (authorized or plan_authorized) else None
+
+    if authorized:
+        verdict_cn = _MANAGER_ACTION_CN.get(action, action)
+        display_action = action
+    elif plan_authorized:
+        claim_elig = str((meta.get("primary_trigger_state") or {}).get("claim_eligibility") or "")
+        if claim_elig and claim_elig != "core_execution":
+            verdict_cn = "观察（证据不足）"
+            display_action = "await_trigger"
+        else:
+            verdict_cn = _MANAGER_ACTION_CN["await_trigger"]
+            display_action = "await_trigger"
+    else:
+        verdict_cn = _MANAGER_ACTION_CN.get("wait", "观望")
+        display_action = "wait"
 
     final: dict[str, Any] = {
-        "action": action,
-        "verdict_cn": _MANAGER_ACTION_CN.get(action, action),
+        "action": display_action,
+        "manager_action": action,
+        "verdict_cn": verdict_cn,
         "execution_authorized": authorized,
+        "plan_authorized": plan_authorized,
+        "execution_ready": bool(meta.get("execution_ready")),
         "summary": summary,
         "observation_mode": bool(meta.get("observation_mode")),
     }
@@ -1416,6 +1505,9 @@ def build_final_decision_meta(report: dict[str, Any]) -> dict[str, Any]:
             "zone": _format_entry_zone(primary),
             "position_size": primary.get("position_size"),
             "signal_id": primary.get("signal_id"),
+            "trigger_confirmed": bool(primary.get("trigger_confirmed")),
+            "status": primary.get("status"),
+            "trigger_note": primary.get("trigger_note"),
         }
     return final
 
@@ -1427,10 +1519,10 @@ def align_conclusion_with_manager_decision(report: dict[str, Any]) -> None:
     decision = meta.get("manager_decision") or {}
     action = str(decision.get("action") or "wait").lower()
     authorized = bool(meta.get("execution_authorized"))
+    plan_authorized = bool(meta.get("plan_authorized"))
     summary = str(decision.get("summary") or "").strip()
-    verdict_cn = _MANAGER_ACTION_CN.get(action, action)
-
     meta["final_decision"] = build_final_decision_meta(report)
+    verdict_cn = str((meta["final_decision"] or {}).get("verdict_cn") or _MANAGER_ACTION_CN.get(action, action))
 
     if authorized:
         primary = _authorized_primary_signal(report)
@@ -1452,6 +1544,27 @@ def align_conclusion_with_manager_decision(report: dict[str, Any]) -> None:
         conclusion["action"] = plan_line
         conclusion["header_conclusion"] = f"{thesis}。{plan_line}"
         return
+
+    if plan_authorized:
+        primary = _authorized_primary_signal(report)
+        if primary:
+            direction_cn = str(primary.get("direction_cn") or "—")
+            zone = _format_entry_zone(primary)
+            thesis = f"今日决策：等待触发 · {direction_cn}"
+            if zone:
+                thesis += f" · 条件计划入场 {zone}"
+            thesis += "（0% 等待触发）"
+            if summary:
+                thesis += f"。{summary[:160]}"
+            plan_line = str(
+                primary.get("trigger_note")
+                or "条件计划已选定，等待触发确认后再授权执行。"
+            )
+            conclusion["decision_thesis"] = thesis
+            conclusion["direction_summary"] = plan_line
+            conclusion["action"] = plan_line
+            conclusion["header_conclusion"] = f"{thesis}。{plan_line}"
+            return
 
     if "structure_direction_summary" not in conclusion:
         conclusion["structure_direction_summary"] = str(conclusion.get("direction_summary") or "")

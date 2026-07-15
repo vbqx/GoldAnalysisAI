@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict
 from typing import Any
 
+from src.analysis.claim_eligibility import adjudicate_level_proposal_claim
 from src.analysis.ict_pa import sentiment_score
 from src.analysis.report_engine import (
     TradingSignal,
@@ -82,7 +83,9 @@ def _geometry_error(proposal: LevelProposal) -> str | None:
     return None
 
 
-def _position_size(confidence: float, grade: str) -> str:
+def _position_size(confidence: float, grade: str, *, eligibility: str) -> str:
+    if eligibility in ("observation_only", "supporting"):
+        return "LLM建议 · 条件观察（证据未达执行资格）"
     if confidence >= 0.72 and grade in ("A", "B"):
         return "LLM建议 · 标准仓位"
     if confidence >= 0.55:
@@ -93,6 +96,8 @@ def _position_size(confidence: float, grade: str) -> str:
 def validate_llm_levels(
     ctx: MarketContext,
     proposals: list[LevelProposal],
+    *,
+    level_reactions: list[dict[str, Any]] | None = None,
 ) -> tuple[list[TradingSignal], list[dict[str, Any]]]:
     """Convert valid LLM level proposals into existing TradingSignal objects."""
     log.info("validating llm level proposals count=%d price=%.2f", len(proposals), ctx.price)
@@ -101,7 +106,36 @@ def validate_llm_levels(
     audit: list[dict[str, Any]] = []
 
     for idx, proposal in enumerate(proposals):
+        claim = adjudicate_level_proposal_claim(
+            proposal, ctx, level_reactions=level_reactions
+        )
+        proposal.claim_id = claim.claim_id
+        proposal.fact_ids = list(claim.fact_ids)
+        proposal.claim_eligibility = claim.eligibility
+        proposal.claim_quality = dict(claim.quality)
+        proposal.counterevidence = list(claim.counterevidence)
+        proposal.claim_policy_version = claim.policy_version
+
         base = proposal.to_dict()
+        if claim.eligibility == "uncitable":
+            reason = "; ".join(claim.reasons) or "uncitable technical claim"
+            log.info(
+                "llm level rejected idx=%d path=%s reason=uncitable claim %s",
+                idx,
+                proposal.path_id,
+                reason,
+            )
+            audit.append(
+                {
+                    "index": idx,
+                    "accepted": False,
+                    "reason": reason,
+                    "proposal": base,
+                    "claim": claim.to_dict(),
+                }
+            )
+            continue
+
         error = _geometry_error(proposal)
         if error is None and _stop_breached(
             price=ctx.price,
@@ -121,7 +155,15 @@ def validate_llm_levels(
                 proposal.stop_loss,
                 error,
             )
-            audit.append({"index": idx, "accepted": False, "reason": error, "proposal": base})
+            audit.append(
+                {
+                    "index": idx,
+                    "accepted": False,
+                    "reason": error,
+                    "proposal": base,
+                    "claim": claim.to_dict(),
+                }
+            )
             continue
 
         direction = proposal.direction
@@ -131,12 +173,18 @@ def validate_llm_levels(
         if not setup_type.startswith("llm_"):
             setup_type = f"llm_{setup_type}"
         note_parts = [p for p in (proposal.reason, proposal.deduction) if p]
-        # Prefer structured deduction once; avoid duplicating reason when identical.
         if proposal.deduction and proposal.reason and proposal.deduction in proposal.reason:
             note_parts = [proposal.reason]
-        note = "；".join(dict.fromkeys(note_parts))  # stable unique
+        note = "；".join(dict.fromkeys(note_parts))
         if proposal.invalidation:
             note = f"{note} 失效条件：{proposal.invalidation}" if note else f"失效条件：{proposal.invalidation}"
+        if claim.counterevidence:
+            note = (
+                f"{note}；反证：{len(claim.counterevidence)} 条重叠反向结构，"
+                f"引用资格={claim.eligibility}"
+                if note
+                else f"反证未裁决，引用资格={claim.eligibility}"
+            )
 
         signal_name = _llm_signal_name(proposal)
         status, trigger_confirmed, trigger_note, score, grade, reasons = _setup_status_and_score(
@@ -163,6 +211,16 @@ def validate_llm_levels(
             reasons.append(f"锚点 {proposal.anchor_level}")
         if proposal.expected_reaction:
             reasons.append(f"预期反应 {proposal.expected_reaction}")
+        reasons.append(f"引用资格 {claim.eligibility}（{claim.policy_version}）")
+        reasons.extend(claim.reasons[:3])
+
+        # Demote scores when claim is not core execution eligible.
+        if claim.eligibility == "supporting":
+            score = min(score, 58.0)
+            grade = _grade_force(score)
+        elif claim.eligibility == "observation_only":
+            score = min(score, 45.0)
+            grade = _grade_force(score)
 
         signal = TradingSignal(
             name=signal_name,
@@ -182,7 +240,9 @@ def validate_llm_levels(
             sentiment_bias_pct=(
                 f"{sentiment.get('bearish' if theme == 'short' else 'bullish', 0):.0f}%"
             ),
-            position_size=_position_size(proposal.confidence, grade),
+            position_size=_position_size(
+                proposal.confidence, grade, eligibility=claim.eligibility
+            ),
             note=note,
             theme=theme,
             setup_type=setup_type,
@@ -192,25 +252,51 @@ def validate_llm_levels(
             score_total=score,
             score_grade=grade,
             score_reasons=reasons,
+            claim_id=claim.claim_id,
+            claim_eligibility=claim.eligibility,
+            claim_fact_ids=list(claim.fact_ids),
+            claim_quality=dict(claim.quality),
+            counterevidence=list(claim.counterevidence),
+            claim_policy_version=claim.policy_version,
+            reaction_evidence_id=claim.reaction_evidence_id,
         )
         accepted.append(signal)
         log.info(
-            "llm level accepted idx=%d direction=%s entry=%.2f-%.2f sl=%.2f grade=%s score=%.1f",
+            "llm level accepted idx=%d direction=%s entry=%.2f-%.2f "
+            "eligibility=%s counters=%d grade=%s score=%.1f",
             idx,
             direction,
             proposal.entry_low,
             proposal.entry_high,
-            proposal.stop_loss,
+            claim.eligibility,
+            len(claim.counterevidence),
             grade,
             score,
         )
-        audit.append({
-            "index": idx,
-            "accepted": True,
-            "reason": "geometry and scoring passed",
-            "signal": asdict(signal),
-            "proposal": base,
-        })
+        audit.append(
+            {
+                "index": idx,
+                "accepted": True,
+                "reason": "geometry and claim adjudication passed",
+                "signal": asdict(signal),
+                "proposal": base,
+                "claim": claim.to_dict(),
+            }
+        )
 
-    log.info("llm level validation complete accepted=%d rejected=%d", len(accepted), len(audit) - len(accepted))
+    log.info(
+        "llm level validation complete accepted=%d rejected=%d",
+        len(accepted),
+        len(audit) - len(accepted),
+    )
     return accepted, audit
+
+
+def _grade_force(score: float) -> str:
+    if score >= 80:
+        return "A"
+    if score >= 65:
+        return "B"
+    if score >= 50:
+        return "C"
+    return "D"

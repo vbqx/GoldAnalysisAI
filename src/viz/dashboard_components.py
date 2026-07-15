@@ -813,8 +813,15 @@ def render_final_decision_banner(report: dict[str, Any]) -> str:
         return ""
 
     authorized = bool(final.get("execution_authorized"))
+    plan_authorized = bool(final.get("plan_authorized"))
     action = str(final.get("action") or "wait").lower()
-    css = "execute" if action == "execute" else "reduce" if action == "reduce" else "wait"
+    css = (
+        "execute"
+        if action == "execute"
+        else "reduce"
+        if action == "reduce"
+        else "wait"
+    )
     verdict = html.escape(str(final.get("verdict_cn") or label_action(action)))
 
     if authorized:
@@ -826,6 +833,15 @@ def render_final_decision_banner(report: dict[str, Any]) -> str:
         if pos:
             detail += f" · {html.escape(pos)}"
         sub = "以下为授权主方案；计划卡与叙述与之对应，可按触发条件执行。"
+    elif plan_authorized:
+        plan = final.get("primary_plan") or {}
+        direction = html.escape(str(plan.get("direction_cn") or "—"))
+        zone = html.escape(str(plan.get("zone") or "—"))
+        detail = f"{direction} · 条件入场 {zone} · 0% 等待触发"
+        note = str(plan.get("trigger_note") or "").strip()
+        sub = note or "条件计划已选定，等待触发确认；当前不可执行。"
+        if final.get("observation_mode"):
+            sub = f"快照观察模式 · {sub}"
     else:
         detail = "不执行交易"
         summary = str(final.get("summary") or "").strip()
@@ -848,10 +864,15 @@ def render_decision_summary(report: dict[str, Any]) -> str:
     meta = report.get("meta") or {}
     signals = report.get("signals") or []
     execution_authorized = bool(meta.get("execution_authorized"))
-    primary = _primary_signal(signals) if execution_authorized else None
+    plan_authorized = bool(meta.get("plan_authorized"))
+    primary = _primary_signal(signals) if (execution_authorized or plan_authorized) else None
     status = str((primary or {}).get("status") or "candidate")
     status_label, status_cls = _status_meta(status)
-    if not execution_authorized:
+    if execution_authorized:
+        pass
+    elif plan_authorized:
+        status_label, status_cls = "等待触发", "candidate"
+    else:
         status_label, status_cls = "未授权", "invalid"
     direction_cls = _direction_class(primary, conclusion)
     price = _fmt_price(metrics.get("current_price"))

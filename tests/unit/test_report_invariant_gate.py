@@ -24,6 +24,8 @@ def _contradictory_report() -> dict:
                 "stop_loss": 4170.0,
                 "take_profits": [4130.0],
                 "signal_role": "primary",
+                "status": "active",
+                "trigger_confirmed": True,
             }
         ],
         "llm_analysis": {
@@ -61,6 +63,8 @@ def test_rule_mode_empty_llm_does_not_degrade_or_revoke() -> None:
                 "take_profits": [3988.0],
                 "signal_role": "primary",
                 "position_scale": 0.4,
+                "status": "active",
+                "trigger_confirmed": True,
             }
         ],
         "llm_analysis": {

@@ -144,6 +144,25 @@ def _register_timeframes(facts: dict[str, dict[str, Any]], report: dict[str, Any
         for idx, fvg in enumerate(info.get("fvgs") or []):
             if not isinstance(fvg, dict):
                 continue
+            try:
+                low = float(fvg["low"])
+                high = float(fvg["high"])
+                width = abs(high - low)
+            except (KeyError, TypeError, ValueError):
+                low = high = width = None
+            atr_raw = info.get("atr")
+            try:
+                atr = float(atr_raw) if atr_raw is not None else None
+            except (TypeError, ValueError):
+                atr = None
+            width_atr = (width / atr) if (width is not None and atr and atr > 0) else None
+            fvg_refs = {
+                "direction": fvg.get("direction"),
+                "kind": "fvg",
+                "width": round(width, 4) if width is not None else None,
+                "width_atr_ratio": round(width_atr, 4) if width_atr is not None else None,
+                "atr": atr,
+            }
             for side in ("low", "high"):
                 _register_numeric(
                     facts,
@@ -152,13 +171,19 @@ def _register_timeframes(facts: dict[str, dict[str, Any]], report: dict[str, Any
                     source="lux_smc",
                     timeframe=tf,
                     as_of=as_of,
-                    refs={"direction": fvg.get("direction"), "kind": "fvg"},
+                    refs=fvg_refs,
                 )
 
 
 def _register_price_action(facts: dict[str, dict[str, Any]], report: dict[str, Any], *, as_of: str | None) -> None:
     for tf, block in (report.get("price_action") or {}).items():
         vp = (block or {}).get("volume_profile") or {}
+        pa_refs = {
+            "lookback_mode": (block or {}).get("lookback_mode"),
+            "lookback_bars": (block or {}).get("lookback_bars"),
+            "lookback_requested": (block or {}).get("lookback_requested"),
+            "profile_source": (block or {}).get("profile_source"),
+        }
         for key in ("poc", "vah", "val"):
             _register_numeric(
                 facts,
@@ -167,6 +192,7 @@ def _register_price_action(facts: dict[str, dict[str, Any]], report: dict[str, A
                 source="dgt_price_action",
                 timeframe=tf,
                 as_of=as_of,
+                refs=pa_refs,
             )
         for idx, lvl in enumerate((block or {}).get("sr_levels") or []):
             _register_numeric(

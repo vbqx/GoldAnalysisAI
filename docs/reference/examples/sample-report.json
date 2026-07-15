@@ -296,6 +296,8 @@
   "price_action": {
     "5m": {
       "timeframe": "5m",
+      "lookback_mode": "fixed",
+      "lookback_requested": 360,
       "lookback_bars": 120,
       "volume_ok": true,
       "volume_spike_count": 0,
@@ -330,10 +332,13 @@
           }
         ],
         "volume_ok": true
-      }
+      },
+      "profile_source": "native_tf"
     },
     "15m": {
       "timeframe": "15m",
+      "lookback_mode": "fixed",
+      "lookback_requested": 360,
       "lookback_bars": 120,
       "volume_ok": true,
       "volume_spike_count": 0,
@@ -368,10 +373,13 @@
           }
         ],
         "volume_ok": true
-      }
+      },
+      "profile_source": "ltf_5m"
     },
     "1h": {
       "timeframe": "1h",
+      "lookback_mode": "fixed",
+      "lookback_requested": 360,
       "lookback_bars": 120,
       "volume_ok": true,
       "volume_spike_count": 0,
@@ -406,10 +414,13 @@
           }
         ],
         "volume_ok": true
-      }
+      },
+      "profile_source": "ltf_5m"
     },
     "4h": {
       "timeframe": "4h",
+      "lookback_mode": "fixed",
+      "lookback_requested": 360,
       "lookback_bars": 120,
       "volume_ok": true,
       "volume_spike_count": 0,
@@ -444,10 +455,13 @@
           }
         ],
         "volume_ok": true
-      }
+      },
+      "profile_source": "ltf_5m"
     },
     "session": {
       "timeframe": "session",
+      "lookback_mode": "session",
+      "lookback_requested": 1,
       "lookback_bars": 1,
       "volume_ok": true,
       "volume_spike_count": 0,
@@ -558,6 +572,13 @@
         "SMC 无明确结构确认，仅作参考 (-3)",
         "SMC 结构区未对齐 PA 价位 (-4)"
       ],
+      "claim_id": "",
+      "claim_eligibility": "",
+      "claim_fact_ids": [],
+      "claim_quality": {},
+      "counterevidence": [],
+      "claim_policy_version": "",
+      "reaction_evidence_id": "",
       "signal_id": "sig-679d0dd4bd55"
     },
     {
@@ -594,6 +615,13 @@
         "SMC 无明确结构确认，仅作参考 (-3)",
         "SMC 结构区未对齐 PA 价位 (-4)"
       ],
+      "claim_id": "",
+      "claim_eligibility": "",
+      "claim_fact_ids": [],
+      "claim_quality": {},
+      "counterevidence": [],
+      "claim_policy_version": "",
+      "reaction_evidence_id": "",
       "signal_id": "sig-50f2872febbd"
     }
   ],
@@ -1358,7 +1386,8 @@
           }
         ],
         "confidence": 0.2288,
-        "summary": "技术：结构 bearish / EMA bullish / ICT区位 neutral / 指标 neutral / 支撑阻力 neutral / 多周期投票 多 0% 空 100%"
+        "summary": "技术：结构 bearish / EMA bullish / ICT区位 neutral / 指标 neutral / 支撑阻力 neutral / 多周期投票 多 0% 空 100%",
+        "level_reactions": []
       },
       "fundamentals": {
         "agent": "fundamentals_analyst",
@@ -1398,7 +1427,8 @@
           }
         ],
         "confidence": 0.475,
-        "summary": "基本面：DXY · 高影响日历 0 · 偏强 (104.2, 日 +0.35%) → 利空黄金"
+        "summary": "基本面：DXY · 高影响日历 0 · 偏强 (104.2, 日 +0.35%) → 利空黄金",
+        "level_reactions": []
       },
       "news": {
         "agent": "news_analyst",
@@ -1442,7 +1472,8 @@
           }
         ],
         "confidence": 0.3842,
-        "summary": "新闻：1 条（快讯 1 · 资讯 0） · 日历 0 · bias neutral"
+        "summary": "新闻：1 条（快讯 1 · 资讯 0） · 日历 0 · bias neutral",
+        "level_reactions": []
       },
       "sentiment": {
         "agent": "sentiment_analyst",
@@ -1472,7 +1503,8 @@
           }
         ],
         "confidence": 0.725,
-        "summary": "情绪：结构投票 多 0% / 空 100% · 社媒delta +0.0 · 偏多 58% / 偏空 42%（样例）"
+        "summary": "情绪：结构投票 多 0% / 空 100% · 社媒delta +0.0 · 偏多 58% / 偏空 42%（样例）",
+        "level_reactions": []
       }
     },
     "debate": {

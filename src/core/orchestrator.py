@@ -177,7 +177,12 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
             ctx, analyst_team, debate, pipeline_meta, signals
         )
         if llm_level_proposals:
-            llm_signals, level_validation = validate_llm_levels(ctx, llm_level_proposals)
+            reactions = list(getattr(analyst_team.technical, "level_reactions", None) or [])
+            llm_signals, level_validation = validate_llm_levels(
+                ctx,
+                llm_level_proposals,
+                level_reactions=reactions,
+            )
             signals = llm_signals + signals
     elif agent_mode() != "rule":
         pipeline_meta.record(

@@ -21,7 +21,13 @@ def _minimal_report(signals: list[dict]) -> dict:
 
 def test_manager_selection_is_only_primary_not_sentiment_theme() -> None:
     signals = [
-        {"name": "short A", "theme": "short", "status": "candidate", "position_size": "20%"},
+        {
+            "name": "short A",
+            "theme": "short",
+            "status": "active",
+            "trigger_confirmed": True,
+            "position_size": "20%",
+        },
         {"name": "long B", "theme": "long", "status": "candidate", "position_size": "30%"},
     ]
     report = _minimal_report(signals)
@@ -100,7 +106,8 @@ def test_execute_aligns_conclusion_with_primary_plan() -> None:
             "name": "short A",
             "theme": "short",
             "direction_cn": "做空",
-            "status": "candidate",
+            "status": "active",
+            "trigger_confirmed": True,
             "entry_low": 4130.0,
             "entry_high": 4132.0,
             "trigger_note": "反弹至阻力区触发",
@@ -206,3 +213,96 @@ def test_observation_mode_blocks_execution_despite_execute_decision() -> None:
     assert report["meta"]["execution_authorized"] is False
     assert report["signals"][0]["signal_role"] == "rejected"
     assert report["strategy_plans"] == []
+
+
+def test_untriggered_candidate_keeps_plan_but_not_execution_ready() -> None:
+    report = _minimal_report(
+        [
+            {
+                "name": "short A",
+                "theme": "short",
+                "direction": "SELL",
+                "direction_cn": "做空",
+                "status": "candidate",
+                "trigger_confirmed": False,
+                "entry_low": 4067.31,
+                "entry_high": 4070.71,
+                "stop_loss": 4073.50,
+                "take_profits": [4060.0, 4050.0],
+                "trigger_note": "需 15m/5m 承压确认",
+                "position_size": "30%",
+            }
+        ]
+    )
+    decision = ManagerDecision(
+        action="reduce",
+        primary_direction="short",
+        selected_signal_indices=[0],
+        confidence=0.7,
+        summary="风控同意缩仓",
+        position_scale=0.5,
+    )
+    reviews = [
+        RiskReview("aggressive", True, [0], 1.0, []),
+        RiskReview("neutral", True, [0], 0.7, []),
+        RiskReview("conservative", True, [0], 0.5, []),
+    ]
+
+    apply_manager_authorization(report, decision, reviews)
+    align_conclusion_with_manager_decision(report)
+
+    assert report["meta"]["plan_authorized"] is True
+    assert report["meta"]["execution_ready"] is False
+    assert report["meta"]["execution_authorized"] is False
+    assert report["meta"]["authorized_position_scale"] == 0.0
+    assert report["signals"][0]["signal_role"] == "primary"
+    assert report["signals"][0]["position_size"] == "0% 等待触发"
+    assert report["strategy_plans"]
+    assert report["meta"]["primary_trigger_state"]["trigger_confirmed"] is False
+    assert report["meta"]["final_decision"]["verdict_cn"] == "等待触发"
+    assert report["meta"]["final_decision"]["execution_authorized"] is False
+    assert "等待触发" in report["conclusion"]["header_conclusion"]
+    assert "今日决策：执行" not in report["conclusion"]["header_conclusion"]
+    assert "今日决策：缩仓执行" not in report["conclusion"]["header_conclusion"]
+
+
+def test_triggered_active_signal_remains_execution_authorized() -> None:
+    report = _minimal_report(
+        [
+            {
+                "name": "short A",
+                "theme": "short",
+                "direction": "SELL",
+                "direction_cn": "做空",
+                "status": "active",
+                "trigger_confirmed": True,
+                "entry_low": 4130.0,
+                "entry_high": 4132.0,
+                "stop_loss": 4136.0,
+                "take_profits": [4120.0, 4110.0],
+                "trigger_note": "已承压确认",
+                "position_size": "30%",
+            }
+        ]
+    )
+    decision = ManagerDecision(
+        action="reduce",
+        primary_direction="short",
+        selected_signal_indices=[0],
+        confidence=0.7,
+        summary="缩仓执行",
+        position_scale=0.5,
+    )
+    reviews = [
+        RiskReview("aggressive", True, [0], 1.0, []),
+        RiskReview("neutral", True, [0], 0.7, []),
+        RiskReview("conservative", True, [0], 0.5, []),
+    ]
+    apply_manager_authorization(report, decision, reviews)
+    align_conclusion_with_manager_decision(report)
+
+    assert report["meta"]["execution_authorized"] is True
+    assert report["meta"]["execution_ready"] is True
+    assert report["meta"]["plan_authorized"] is True
+    assert report["meta"]["authorized_position_scale"] == 0.5
+    assert report["meta"]["final_decision"]["verdict_cn"] == "缩仓执行"

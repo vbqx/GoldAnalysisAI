@@ -22,7 +22,10 @@ def _violation(code: str, field: str, message: str) -> dict[str, str]:
 
 def _manager_wait(meta: dict[str, Any]) -> bool:
     decision = meta.get("manager_decision") or (meta.get("final_decision") or {})
-    return str(decision.get("action") or "") == "wait" or not meta.get("execution_authorized")
+    action = str(decision.get("action") or "")
+    if action in ("wait", "await_trigger"):
+        return True
+    return not meta.get("execution_authorized")
 
 
 def _observation_mode(meta: dict[str, Any]) -> bool:
@@ -131,11 +134,33 @@ def _check_manager_alignment(report: dict[str, Any]) -> list[dict[str, str]]:
     final = meta.get("final_decision") or {}
     conclusion = report.get("conclusion") or {}
     action = str(final.get("action") or meta.get("manager_decision", {}).get("action") or "")
-    if action == "wait" and meta.get("execution_authorized"):
+    manager_action = str(
+        final.get("manager_action") or meta.get("manager_decision", {}).get("action") or ""
+    )
+    if (action == "wait" or manager_action == "wait") and meta.get("execution_authorized"):
         out.append(_violation("INV-MGR-001", "meta.execution_authorized", "wait but execution_authorized=true"))
     header = str(conclusion.get("header_conclusion") or "")
-    if action == "wait" and "今日决策：执行" in header:
+    if (action == "wait" or action == "await_trigger" or manager_action == "wait") and "今日决策：执行" in header:
         out.append(_violation("INV-MGR-002", "conclusion.header_conclusion", "wait contradicts execute headline"))
+    if meta.get("execution_authorized"):
+        for sig in _authorized_signals_for_geometry(report):
+            if not sig.get("trigger_confirmed"):
+                out.append(
+                    _violation(
+                        "INV-TRIG-001",
+                        str(sig.get("name") or sig.get("signal_id") or "signal"),
+                        "execution_authorized requires trigger_confirmed=true",
+                    )
+                )
+            elig = str(sig.get("claim_eligibility") or "").strip()
+            if elig and elig != "core_execution":
+                out.append(
+                    _violation(
+                        "INV-CLAIM-001",
+                        str(sig.get("name") or sig.get("signal_id") or "signal"),
+                        f"execution_authorized requires claim_eligibility=core_execution, got {elig}",
+                    )
+                )
     return out
 
 

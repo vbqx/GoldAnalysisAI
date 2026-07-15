@@ -47,6 +47,14 @@ def _risk_reward(sig: dict[str, Any]) -> float:
     return min(reward / risk, RISK_REWARD_DISPLAY_CAP)
 
 
+def signal_trigger_ready(sig: Any) -> bool:
+    """True when the setup has confirmed its trigger (not merely a candidate zone)."""
+    row = _signal_dict(sig)
+    if row.get("status") == "invalid":
+        return False
+    return bool(row.get("trigger_confirmed"))
+
+
 def validate_signal_geometry(sig: Any, *, current_price: float) -> list[str]:
     """Return blocking issues for one signal (empty = pass)."""
     row = _signal_dict(sig)
@@ -130,6 +138,7 @@ def apply_risk_gates(
         else:
             kept: list[int] = []
             seen: set[int] = set()
+            awaiting_trigger: list[int] = []
             for idx in allowed:
                 if not isinstance(idx, int) or idx < 0 or idx >= len(signals):
                     notes.append(f"signal index {idx} invalid")
@@ -143,12 +152,19 @@ def apply_risk_gates(
                     notes.append(f"signal {idx}: " + "; ".join(issues))
                     continue
                 kept.append(idx)
+                if not signal_trigger_ready(signals[idx]):
+                    awaiting_trigger.append(idx)
+                    notes.append(f"signal {idx}: trigger not confirmed — hold size at 0")
             allowed = kept
             if not allowed:
                 approved = False
                 scale = 0.0
                 notes.append("no signal passed geometry gates")
                 log.warning("risk gate [%s] no signal passed geometry", review.profile)
+            elif awaiting_trigger:
+                # Keep indices so manager can select a conditional plan, but never size.
+                scale = 0.0
+                notes.append("awaiting trigger confirmation — position scale forced to 0")
 
         from src.core.types import RiskReview
 

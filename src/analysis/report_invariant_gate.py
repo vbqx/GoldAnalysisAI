@@ -14,6 +14,8 @@ _AUTH_REVOCATION_CODES = frozenset(
         "INV-AUTH-003",
         "INV-MGR-001",
         "INV-MGR-002",
+        "INV-TRIG-001",
+        "INV-CLAIM-001",
         "INV-FRESH-001",
     }
 )
@@ -22,8 +24,12 @@ _AUTH_REVOCATION_CODES = frozenset(
 def _revoke_execution(report: dict[str, Any], remediations: list[str]) -> None:
     meta = report.setdefault("meta", {})
     meta["execution_authorized"] = False
+    meta["execution_ready"] = False
+    meta["plan_authorized"] = False
     meta["authorized_signal_ids"] = []
+    meta["plan_signal_ids"] = []
     meta["authorized_position_scale"] = 0.0
+    meta["primary_trigger_state"] = None
     meta["observation_mode"] = True
     for sig in report.get("signals") or []:
         sig["signal_role"] = "rejected"
