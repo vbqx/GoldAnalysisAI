@@ -111,12 +111,27 @@ class ModuleSyncProgressReporter(ProgressReporter):
             self._last_io_sync = now
             self._sync()
 
-    def llm_begin(self, stage: str, model: str, messages: list[dict[str, str]]) -> None:
-        super().llm_begin(stage, model, messages)
+    def llm_begin(
+        self,
+        stage: str,
+        model: str,
+        messages: list[dict[str, str]],
+        *,
+        telemetry: dict | None = None,
+    ) -> None:
+        super().llm_begin(stage, model, messages, telemetry=telemetry)
         self._sync()
 
-    def llm_end(self, stage: str, output: str, *, error: str | None = None, latency_ms: int | None = None) -> None:
-        super().llm_end(stage, output, error=error, latency_ms=latency_ms)
+    def llm_end(
+        self,
+        stage: str,
+        output: str,
+        *,
+        error: str | None = None,
+        latency_ms: int | None = None,
+        telemetry: dict | None = None,
+    ) -> None:
+        super().llm_end(stage, output, error=error, latency_ms=latency_ms, telemetry=telemetry)
         self._sync()
 
     def fail(self, step_id: str, detail: str = "") -> None:

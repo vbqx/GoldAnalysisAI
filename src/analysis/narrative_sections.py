@@ -332,6 +332,24 @@ def build_narrative_facts(
     if primary is None:
         eligible = [s for s in (report.get("signals") or []) if s.get("signal_role") != "rejected"]
         primary = eligible[0] if eligible else {}
+    cal_rows = report.get("calendar_events") or []
+    allowed_cal_times = {
+        str(row.get("time") or "").strip()
+        for row in cal_rows
+        if isinstance(row, dict) and str(row.get("time") or "").strip() not in ("", "—")
+    }
+    registry = (report.get("meta") or {}).get("fact_registry") or {}
+    reg_facts = registry.get("facts") or {}
+    cal_state = str((reg_facts.get("calendar.state") or {}).get("value") or "")
+    if not cal_state:
+        from src.analysis.fact_registry import calendar_state as resolve_calendar_state
+
+        cal_state = resolve_calendar_state(report)
+    for fid, fact in reg_facts.items():
+        if str(fid).startswith("calendar.event.") and str(fid).endswith(".time"):
+            val = str((fact or {}).get("value") or "").strip()
+            if val and val != "—":
+                allowed_cal_times.add(val)
     facts: dict[str, Any] = {
         "common": {
             "metrics": metrics,
@@ -344,6 +362,9 @@ def build_narrative_facts(
             "execution_authorized": bool((report.get("meta") or {}).get("execution_authorized")),
             "plan_authorized": bool((report.get("meta") or {}).get("plan_authorized")),
             "quality": quality or {"status": "unavailable", "warnings": ["technical quality unavailable"]},
+            "calendar_state": cal_state,
+            "allowed_calendar_times": sorted(allowed_cal_times),
+            "risk_events": str(((report.get("external") or {}).get("risk_events")) or "—"),
         },
         "liquidity": report.get("liquidity") or [],
         "timeframes": {tf: (report.get("timeframes") or {}).get(tf, {}) for tf in ("4h", "1h", "15m")},
@@ -383,10 +404,19 @@ def validate_and_merge_llm_sections(
     }
     expected_bias = _expected_bias(facts)
     supplied = raw_sections if isinstance(raw_sections, dict) else {}
+    common = facts.get("common") or {}
+    cal_state = str(common.get("calendar_state") or "")
+    allowed_cal = {str(t) for t in (common.get("allowed_calendar_times") or []) if str(t).strip()}
 
     for key in SECTION_KEYS:
         candidate = supplied.get(key)
-        reason = _validate_section(candidate, allowed=allowed, expected_bias=expected_bias)
+        reason = _validate_section(
+            candidate,
+            allowed=allowed,
+            expected_bias=expected_bias,
+            calendar_state=cal_state,
+            allowed_calendar_times=allowed_cal,
+        )
         confidence = _confidence(candidate)
         if reason is None and mode == "hybrid" and confidence < threshold:
             reason = f"confidence {confidence:.2f} < {threshold:.2f}"
@@ -473,7 +503,14 @@ def _normalize_llm_section(value: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _validate_section(value: Any, *, allowed: set[float], expected_bias: str) -> str | None:
+def _validate_section(
+    value: Any,
+    *,
+    allowed: set[float],
+    expected_bias: str,
+    calendar_state: str = "",
+    allowed_calendar_times: set[str] | None = None,
+) -> str | None:
     if not isinstance(value, dict):
         return "missing or invalid section"
     if str(value.get("source", "llm")) not in ("llm", ""):
@@ -509,6 +546,13 @@ def _validate_section(value: Any, *, allowed: set[float], expected_bias: str) ->
             for candidate in allowed
         ):
             return f"unapproved price {token}"
+    cal_hit = _unapproved_calendar_claims(
+        text,
+        calendar_state=calendar_state,
+        allowed_times=set(allowed_calendar_times or ()),
+    )
+    if cal_hit:
+        return cal_hit
     if expected_bias == "bearish" and any(word in text for word in ("主方向偏多", "以做多为主", "优先做多")):
         return "direction conflicts with manager/rule conclusion"
     if expected_bias == "bullish" and any(word in text for word in ("主方向偏空", "以做空为主", "优先做空")):
@@ -572,6 +616,39 @@ def _unapproved_prices(text: str, allowed: set[float]) -> str | None:
             for candidate in allowed
         ):
             return f"unapproved price {token}"
+    return None
+
+
+_CALENDAR_CLAIM_RE = re.compile(
+    r"(?P<time>\b\d{1,2}:\d{2}\b).{0,24}(?P<label>讲话|官员|ADP|EIA|非农|CPI|FOMC|库存|就业|利率决议|美联储)"
+    r"|(?P<label2>讲话|官员|ADP|EIA|非农|CPI|FOMC|库存|就业|利率决议|美联储).{0,24}(?P<time2>\b\d{1,2}:\d{2}\b)",
+    re.IGNORECASE,
+)
+
+
+def _unapproved_calendar_claims(
+    text: str,
+    *,
+    calendar_state: str,
+    allowed_times: set[str],
+) -> str | None:
+    """Reject concrete clock+event claims when calendar is empty or time unregistered (#38)."""
+    if not text.strip():
+        return None
+    for match in _CALENDAR_CLAIM_RE.finditer(text):
+        clock = (match.group("time") or match.group("time2") or "").strip()
+        label = (match.group("label") or match.group("label2") or "").strip()
+        if not clock:
+            continue
+        if calendar_state in ("confirmed_empty", "unknown", "fetch_failed", "") and not allowed_times:
+            return f"unregistered calendar claim {clock} {label}".strip()
+        if allowed_times and not any(
+            clock == t or t.endswith(clock) or clock.endswith(t) for t in allowed_times
+        ):
+            return f"unregistered calendar claim {clock} {label}".strip()
+        if not allowed_times and calendar_state == "has_events":
+            # Events exist but no times registered — still block free-form clocks.
+            return f"unregistered calendar claim {clock} {label}".strip()
     return None
 
 
@@ -656,6 +733,9 @@ def validate_llm_top_level_fields(
     expected_bias = _expected_bias(facts)
     decision = (facts.get("common") or {}).get("manager_decision") or {}
     manager_wait = str(decision.get("action") or "") == "wait" or not execution_ok
+    common = facts.get("common") or {}
+    cal_state = str(common.get("calendar_state") or "")
+    allowed_cal = {str(t) for t in (common.get("allowed_calendar_times") or []) if str(t).strip()}
 
     fields = {
         "market_summary": str(llm.get("market_summary") or ""),
@@ -685,6 +765,12 @@ def validate_llm_top_level_fields(
         if violation:
             prefix = "action_plan" if key == "action_plan" else "narrative"
             reasons[key] = f"{prefix}: {violation}"
+            continue
+        cal_hit = _unapproved_calendar_claims(
+            text, calendar_state=cal_state, allowed_times=allowed_cal
+        )
+        if cal_hit:
+            reasons[key] = cal_hit
             continue
         if key in ("trade_thesis", "action_plan"):
             conflict = _direction_conflict(text, expected_bias)

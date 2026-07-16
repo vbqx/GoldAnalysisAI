@@ -852,12 +852,48 @@ def parse_risk_events_calendar(risk_events: str) -> list[dict[str, str]]:
 
 
 def build_calendar_events() -> list[dict[str, str]]:
-    """Fallback placeholders when live calendar is unavailable."""
-    return [
-        {"time": "20:15", "flag": "🇺🇸", "event": "ADP 就业 / 制造业数据"},
-        {"time": "22:30", "flag": "🇺🇸", "event": "EIA 原油库存"},
-        {"time": "22:45", "flag": "🇺🇸", "event": "美联储官员讲话 (关注)"},
-    ]
+    """Legacy helper — returns empty; never inject example macro events.
+
+    Live calendar rows must come from ``ctx.external`` (Jin10) via
+    :func:`calendar_rows_from_external`. Placeholder ADP/EIA/Fed speech rows
+    previously here were treated as verified risk (Issue #38).
+    """
+    return []
+
+
+def calendar_rows_from_external(
+    *,
+    calendar_events: list[Any] | None = None,
+    risk_events: str = "—",
+) -> list[dict[str, str]]:
+    """Build report calendar rows from structured events or risk text.
+
+    Empty input yields ``[]`` (confirmed empty) — never demo placeholders.
+    """
+    rows: list[dict[str, str]] = []
+    for event in calendar_events or []:
+        if hasattr(event, "time") and hasattr(event, "event"):
+            time_s = str(getattr(event, "time", "") or "")
+            body = str(getattr(event, "event", "") or "")
+            region = str(getattr(event, "region", "") or "")
+        elif isinstance(event, dict):
+            time_s = str(event.get("time") or event.get("datetime") or "")
+            body = str(event.get("event") or event.get("title") or "")
+            region = str(event.get("region") or "")
+        else:
+            continue
+        if not body.strip():
+            continue
+        region_l = region.lower()
+        body_l = body.lower()
+        flag = "🇺🇸" if ("us" in region_l or "united states" in body_l or body.upper().startswith("US ")) else "🌍"
+        row = {"time": time_s or "—", "flag": flag, "event": body.strip()}
+        if region:
+            row["region"] = region
+        rows.append(row)
+    if rows:
+        return rows
+    return parse_risk_events_calendar(risk_events)
 
 
 def _build_context_levels(
@@ -1702,10 +1738,10 @@ def build_report(
         "support_levels": support,
         "strategy_plans": build_strategy_plans(signals),
         "path_summary": path_summary,
-        "calendar_events": build_calendar_events(),
+        "calendar_events": [],
         "external": {
-            "dxy_impact": "偏强 → 利空黄金",
-            "risk_events": "美盘数据/讲话 → 波动放大",
+            "dxy_impact": "—",
+            "risk_events": "—",
         },
         "risk_control": [
             f"最大风险区：{risk_zone} 上方不做空",

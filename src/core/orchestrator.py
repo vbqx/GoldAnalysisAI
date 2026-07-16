@@ -21,8 +21,8 @@ from src.analysis.report_engine import (
     apply_manager_authorization,
     build_final_decision_meta,
     build_report,
+    calendar_rows_from_external,
     compute_trading_signals,
-    parse_risk_events_calendar,
 )
 from src.core.parallel import run_parallel
 from src.core.progress import get_progress
@@ -282,9 +282,12 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     }
     report["meta"]["context_stats"] = ctx.context_stats
 
-    live_cal = parse_risk_events_calendar(ctx.external.risk_events)
-    if live_cal:
-        report["calendar_events"] = live_cal
+    # Always sync top-level calendar from live external (including confirmed empty).
+    # Never retain report_engine demo placeholders when risk_events == "—".
+    report["calendar_events"] = calendar_rows_from_external(
+        calendar_events=ctx.external.calendar_events,
+        risk_events=ctx.external.risk_events,
+    )
 
     report["meta"]["data_as_of"] = as_of
     report["meta"]["run_config_fingerprint"] = get_run_config().fingerprint()

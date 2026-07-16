@@ -88,20 +88,26 @@ def _pa_fact_id(tf: str, suffix: str) -> str:
     return f"pa.{tf}.{suffix}"
 
 
+def calendar_state(report: dict[str, Any]) -> str:
+    """Public alias for report calendar emptiness / fetch status (Issue #38)."""
+    return _calendar_state(report)
+
+
 def _calendar_state(report: dict[str, Any]) -> str:
     external = report.get("external") or {}
     fetch_errors = [str(e).lower() for e in (external.get("fetch_errors") or [])]
     if any("calendar" in err or "macro" in err for err in fetch_errors):
         return "fetch_failed"
+    count = external.get("calendar_count")
+    risk = str(external.get("risk_events") or "").strip()
+    # Healthy empty feed wins over any leftover placeholder rows (Issue #38).
+    if count == 0 and risk in ("", "—", "-", "none", "None"):
+        return "confirmed_empty"
     cal_rows = report.get("calendar_events") or external.get("calendar_events") or []
     if cal_rows:
         return "has_events"
-    risk = str(external.get("risk_events") or "").strip()
     if risk and risk not in ("—", "-", "none", "None"):
         return "has_events"
-    count = external.get("calendar_count")
-    if count == 0:
-        return "confirmed_empty"
     if count is None and not risk:
         return "unknown"
     return "confirmed_empty"

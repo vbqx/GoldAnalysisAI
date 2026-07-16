@@ -37,7 +37,12 @@ def external_snapshot_from_fetch(fetched: DataFetchResult) -> dict[str, Any]:
 
 def external_payload_from_report(report: dict, data: dict | None = None) -> dict[str, Any]:
     ext = dict(report.get("external") or {})
-    ext["calendar_events"] = report.get("calendar_events") or ext.get("calendar_events") or []
+    cal = report.get("calendar_events", None)
+    if cal is not None:
+        # Preserve confirmed-empty [] from the report; do not fall back to stale rows.
+        ext["calendar_events"] = list(cal)
+    else:
+        ext["calendar_events"] = list(ext.get("calendar_events") or [])
     if data:
         ext["bars"] = {tf: len(df) for tf, df in data.items()}
     ext.setdefault("bars", {})
@@ -61,7 +66,9 @@ def _render_headline_list(items: list[dict], *, empty: str) -> str:
 
 
 def _render_calendar_rows(payload: dict[str, Any]) -> str:
-    events = payload.get("calendar_events") or []
+    events = payload.get("calendar_events")
+    if events is None:
+        events = []
     if events:
         return "".join(
             f'<div class="cal-item">{html.escape(str(e.get("time", "")))} '
@@ -78,6 +85,9 @@ def _render_calendar_rows(payload: dict[str, Any]) -> str:
                 for e in parsed[:24]
             )
         return f'<div class="cal-item">{html.escape(risk)}</div>'
+    count = payload.get("calendar_count")
+    if count == 0 or risk in ("—", "", "-"):
+        return '<div class="cal-item">今日暂无已确认宏观日历事件</div>'
     return '<div class="cal-item">—</div>'
 
 

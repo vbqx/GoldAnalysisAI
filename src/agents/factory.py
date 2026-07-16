@@ -223,6 +223,17 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
         if stage in picked:
             continue
         if stage not in llm_results:
+            # Parallel/task failure omitted the stage — fall back to rules.
+            if rule_report is None:
+                if rule_fallback is None:
+                    rule_fallback = rule_analyst_team(ctx)
+                rule_report = getattr(rule_fallback, stage)
+            assert rule_report is not None
+            pipeline.record(
+                stage,
+                StageMeta(source="rule", fallback_reason="llm analyst task failed; used rule"),
+            )
+            picked[stage] = rule_report
             continue
         llm_report, trace = llm_results[stage]
         if rule_report is None and get_run_config().agent_mode == "llm" and _llm_stage_ok(llm_report, trace):
@@ -239,6 +250,17 @@ def run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta) -> Analyst
         picked[stage] = report
         if llm_report is not None and report is llm_report:
             llm_picked += 1
+
+    missing = [name for name in ("technical", "fundamentals", "news", "sentiment") if name not in picked]
+    if missing:
+        if rule_fallback is None:
+            rule_fallback = rule_analyst_team(ctx)
+        for name in missing:
+            picked[name] = getattr(rule_fallback, name)
+            pipeline.record(
+                name,
+                StageMeta(source="rule", fallback_reason="analyst slot missing after LLM dispatch"),
+            )
 
     team = AnalystTeam(
         technical=picked["technical"],
