@@ -2,7 +2,7 @@
 
 > **目标**：在 LLM 多智能体链与 Streamlit 展示之间，增加**确定性**的事实注册、证据溯源、一致性与可靠度门禁，避免「模型自说自话」与跨板块矛盾悄悄进入归档。
 >
-> 关联 GitHub daily-audit：**#21–#36**（Session PA、授权边界、时效门禁、证据链、事实注册表、不变量、可靠度、golden、触发执行就绪、主张资格）。
+> 关联 GitHub daily-audit：**#21–#38**（Session PA、授权边界、时效门禁、证据链、事实注册表、不变量、可靠度、golden、触发执行就绪、主张资格、LLM 阶段策略、空日历真实性）。
 
 文档索引：[architecture.md](./architecture.md) · [llm-agents.md](./llm-agents.md) · [analyst-context.md](./analyst-context.md) · [report-schema.md](../reference/examples/report-schema.md)
 
@@ -72,7 +72,7 @@
 | `liquidity.*` | 流动性池价位 | 报告 liquidity 表 |
 | `signal.{id}.*` | entry/SL/TP | 交易计划（primary/alternate = verified） |
 | `freshness.*` | `freshness.executable`, `bar.5m.count` | `data_as_of` + `context_stats` |
-| `calendar.*` | `calendar.state`, `calendar.event.0.time` | 金十 / risk_events |
+| `calendar.*` | `calendar.state`（`has_events` / `confirmed_empty` / `fetch_failed`）、`calendar.event.N.time` | 金十实时；**健康空日历不得注入示例事件**（#38） |
 | `news.*` | `news.0.published_at` | `external.headline_items` |
 | `macro.*` | `macro.DXY.close` | TradingView 宏观报价（PIT 对齐标记） |
 | `sentiment.*` | 结构情绪百分比 | `ict_pa.sentiment_score` |

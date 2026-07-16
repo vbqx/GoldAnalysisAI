@@ -25,7 +25,7 @@ python scripts/export_sample_report.py
 | `external` | 对象 | DXY/新闻/社媒面板 | 编排器注入 |
 | `agent_trace` | 对象 | LLM决策链页决策审计 | 编排器注入 |
 | `llm_analysis` | 对象 | LLM 深度文案（可选） | `llm/analyst.py` |
-| `calendar_events` | 数组 | 财经日历 | 金十实时或占位 |
+| `calendar_events` | 数组 | 财经日历 | 金十实时；健康空日历为 `[]`（`calendar.state=confirmed_empty`），**禁止**注入示例 ADP/EIA/讲话占位 |
 | `llm_levels` | 数组 | LLM 原始点位建议审计 | `LLM_STAGE_LEVELS` 开启时 |
 | `validated_plans` | 数组 | LLM 点位 validator 接受/拒绝记录 | `level_validator.py` |
 

@@ -166,23 +166,7 @@
       "summary": "当前(2659.52) → 直接下破(2634.0)"
     }
   ],
-  "calendar_events": [
-    {
-      "time": "20:15",
-      "flag": "🇺🇸",
-      "event": "ADP 就业 / 制造业数据"
-    },
-    {
-      "time": "22:30",
-      "flag": "🇺🇸",
-      "event": "EIA 原油库存"
-    },
-    {
-      "time": "22:45",
-      "flag": "🇺🇸",
-      "event": "美联储官员讲话 (关注)"
-    }
-  ],
+  "calendar_events": [],
   "external": {
     "dxy_impact": "偏强 (104.2, 日 +0.35%) → 利空黄金",
     "news_headlines": [
