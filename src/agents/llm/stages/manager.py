@@ -9,7 +9,7 @@ from src.agents.llm.payload import manager_payload
 from src.agents.llm.schemas import parse_manager_decision
 from src.analysis.field_glossary import RISK_MANAGER_HINT
 from src.core.types import LLMStageTrace, ManagerDecision, RiskReview, TransactionProposal
-from src.llm.router import get_strong_client
+from src.llm.router import client_for_stage
 
 SYSTEM = f"""你是 XAUUSD 黄金日内最终授权经理。
 {RISK_MANAGER_HINT}
@@ -28,7 +28,7 @@ def run_llm_manager(
     proposal: TransactionProposal,
     reviews: list[RiskReview],
 ) -> tuple[ManagerDecision | None, LLMStageTrace]:
-    client = get_strong_client()
+    client = client_for_stage("manager")
     payload = manager_payload(proposal, reviews)
     messages = [
         {"role": "system", "content": SYSTEM},

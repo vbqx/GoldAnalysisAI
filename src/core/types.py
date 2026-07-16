@@ -285,6 +285,16 @@ class LLMStageTrace:
     latency_ms: int = 0
     error: str | None = None
     confidence: float | None = None
+    tier: str = ""
+    attempts: int = 0
+    attempt_log: list[dict[str, Any]] = field(default_factory=list)
+    input_chars: int = 0
+    input_tokens_est: int = 0
+    output_chars: int = 0
+    output_tokens_est: int = 0
+    budget_action: str = "none"
+    usage: dict[str, Any] | None = None
+    same_model_strategy: bool | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

@@ -23,7 +23,7 @@ from src.core.types import LLMAnalysis, ManagerDecision, MarketContext, Research
 from src.llm.client import LLMClient, LLMClientError
 from src.llm.context import build_llm_context
 from src.llm.prompts import build_messages
-from src.llm.router import client_for_model, llm_configured
+from src.llm.router import client_for_stage, llm_configured
 from src.log import get_logger
 
 log = get_logger(__name__)
@@ -53,7 +53,7 @@ def _disabled_result(reason: str = "LLM 未启用") -> LLMAnalysis:
 def _client_from_config() -> LLMClient:
     if not llm_configured():
         raise LLMClientError("未配置 LLM_API_KEY")
-    return client_for_model(LLM_MODEL)
+    return client_for_stage("llm_narrative")
 
 
 def _parse_result(data: dict[str, Any], *, model: str, provider: str) -> LLMAnalysis:

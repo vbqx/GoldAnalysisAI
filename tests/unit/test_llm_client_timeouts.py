@@ -64,6 +64,7 @@ def test_connect_timeout_error_message() -> None:
 
 def test_max_retries_from_config(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("src.config.LLM_MAX_RETRIES", 4)
-    from src.agents.llm.base import _max_stage_retries
+    monkeypatch.setattr("src.llm.stage_policy.LLM_MAX_RETRIES", 4)
+    from src.llm.stage_policy import get_stage_policy
 
-    assert _max_stage_retries() == 4
+    assert get_stage_policy("bullish").max_attempts == 5  # 1 + LLM_MAX_RETRIES

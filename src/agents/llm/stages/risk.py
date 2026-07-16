@@ -9,7 +9,7 @@ from src.agents.llm.payload import risk_payload
 from src.agents.llm.schemas import parse_risk_reviews
 from src.analysis.field_glossary import RISK_MANAGER_HINT
 from src.core.types import LLMStageTrace, RiskReview, TransactionProposal
-from src.llm.router import get_strong_client
+from src.llm.router import client_for_stage
 
 SYSTEM = f"""你是 XAUUSD 黄金日内三档风控委员会（激进 / 中性 / 保守）。
 {RISK_MANAGER_HINT}
@@ -33,7 +33,7 @@ def run_llm_risk(
     current_price: float | None = None,
     data_as_of: dict[str, Any] | None = None,
 ) -> tuple[list[RiskReview] | None, LLMStageTrace]:
-    client = get_strong_client()
+    client = client_for_stage("risk")
     payload = risk_payload(
         proposal,
         signal_count,

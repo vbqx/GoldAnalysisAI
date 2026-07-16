@@ -372,6 +372,12 @@ def run_trade_agent_pipeline() -> tuple[dict, dict, dict]:
     report["agent_trace"] = trace.to_dict()
     report["meta"]["generation_steps"] = prog.snapshot()
     report["meta"]["llm_io"] = prog.llm_io_snapshot()
+    try:
+        from src.llm.router import routing_meta
+
+        report["meta"]["llm_routing"] = routing_meta()
+    except Exception:
+        report["meta"]["llm_routing"] = {}
     llm_latencies = [r.get("latency_ms") or 0 for r in report["meta"]["llm_io"] if r.get("kind") != "rule"]
     if llm_latencies:
         report["meta"]["llm_stages_wall_ms"] = max(llm_latencies)

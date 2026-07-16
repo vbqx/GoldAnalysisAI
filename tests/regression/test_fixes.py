@@ -90,11 +90,14 @@ def test_report_generation_requires_run_config_panel() -> None:
 
 @pytest.mark.regression
 def test_llm_json_retry_helpers_present() -> None:
-    """RG-06: LLM JSON parse + retry (#4)."""
+    """RG-06: LLM JSON parse + unified attempt budget (#4 / #37)."""
     base_src = (ROOT / "src" / "agents" / "llm" / "base.py").read_text(encoding="utf-8")
+    policy_src = (ROOT / "src" / "llm" / "stage_policy.py").read_text(encoding="utf-8")
     assert "_parse_llm_json" in base_src
-    assert "_max_stage_retries" in base_src
-    assert "LLM_MAX_RETRIES" in base_src
+    assert "get_stage_policy" in base_src
+    assert "max_attempts" in base_src
+    assert "LLM_MAX_RETRIES" in policy_src
+    assert "apply_input_budget" in policy_src
 
 
 @pytest.mark.regression

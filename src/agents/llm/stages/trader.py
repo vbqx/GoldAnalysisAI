@@ -10,7 +10,7 @@ from src.agents.llm.schemas import parse_transaction_proposal
 from src.analysis.field_glossary import INTRADAY_GOLD_MANDATE, TRADER_PRIORITY_HINT
 from src.analysis.report_engine import TradingSignal
 from src.core.types import AnalystTeam, LLMStageTrace, MarketContext, ResearchDebate, TransactionProposal
-from src.llm.router import get_strong_client
+from src.llm.router import client_for_stage
 
 SYSTEM = f"""你是 XAUUSD 黄金日内交易员智能体。
 {TRADER_PRIORITY_HINT}
@@ -31,7 +31,7 @@ def run_llm_trader(
     signals: list[TradingSignal],
     team: AnalystTeam | None = None,
 ) -> tuple[TransactionProposal | None, LLMStageTrace]:
-    client = get_strong_client()
+    client = client_for_stage("trader")
     payload = trader_payload(ctx, debate, signals, team=team)
     confidence_holder = {"value": None}
 

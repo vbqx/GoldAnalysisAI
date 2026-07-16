@@ -41,6 +41,14 @@ def compact_llm_io_for_live(records: list[dict]) -> list[dict]:
             "error": rec.get("error"),
             "latency_ms": rec.get("latency_ms"),
             "kind": rec.get("kind"),
+            "tier": rec.get("tier"),
+            "attempt": rec.get("attempt"),
+            "input_chars": rec.get("input_chars"),
+            "input_tokens_est": rec.get("input_tokens_est"),
+            "output_chars": rec.get("output_chars"),
+            "output_tokens_est": rec.get("output_tokens_est"),
+            "budget_action": rec.get("budget_action"),
+            "same_model_strategy": rec.get("same_model_strategy"),
         }
         if streaming:
             row["output"] = ""

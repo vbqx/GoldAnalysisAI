@@ -9,7 +9,7 @@ from src.agents.llm.payload import debate_payload, evidence_payload
 from src.agents.llm.schemas import parse_research_debate
 from src.analysis.field_glossary import DEBATE_PRIORITY_HINT
 from src.core.types import AgentEvidence, AnalystTeam, LLMStageTrace, MarketContext, ResearchDebate
-from src.llm.router import get_debate_client
+from src.llm.router import client_for_stage
 
 SYSTEM = f"""你是 XAUUSD 黄金日内辩论主持人。
 {DEBATE_PRIORITY_HINT}
@@ -34,7 +34,7 @@ def run_llm_debate(
     ctx: MarketContext | None = None,
     team: AnalystTeam | None = None,
 ) -> tuple[ResearchDebate | None, LLMStageTrace]:
-    client = get_debate_client()
+    client = client_for_stage("debate")
     payload = debate_payload(bullish, bearish, analyses, ctx=ctx, team=team)
     messages = [
         {"role": "system", "content": SYSTEM},

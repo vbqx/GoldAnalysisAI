@@ -34,7 +34,7 @@ def test_stream_llm_json_retries_transport(monkeypatch: pytest.MonkeyPatch) -> N
         return '{"items": [], "confidence": 0.5, "summary": "ok"}'
 
     sleeps: list[float] = []
-    monkeypatch.setattr("src.agents.llm.base._stream_json_response", lambda *a, **k: fake_stream())
+    monkeypatch.setattr("src.agents.llm.base._stream_once", lambda *a, **k: fake_stream())
     monkeypatch.setattr("src.agents.llm.base.time.sleep", lambda s: sleeps.append(s))
 
     reporter = ProgressReporter()
@@ -45,6 +45,7 @@ def test_stream_llm_json_retries_transport(monkeypatch: pytest.MonkeyPatch) -> N
             [{"role": "user", "content": "x"}],
             stage="bullish",
             temperature=0.2,
+            max_attempts=3,
         )
     finally:
         reset_progress(token)
@@ -60,7 +61,7 @@ def test_stream_llm_json_raises_after_exhausted_retries(monkeypatch: pytest.Monk
     def always_fail(*_args, **_kwargs):
         raise LLMClientError("LLM 流式读取失败: down")
 
-    monkeypatch.setattr("src.agents.llm.base._stream_json_response", always_fail)
+    monkeypatch.setattr("src.agents.llm.base._stream_once", always_fail)
     monkeypatch.setattr("src.agents.llm.base.time.sleep", lambda _s: None)
 
     reporter = ProgressReporter()
@@ -71,6 +72,7 @@ def test_stream_llm_json_raises_after_exhausted_retries(monkeypatch: pytest.Monk
                 client,
                 [{"role": "user", "content": "x"}],
                 stage="bearish",
+                max_attempts=3,
             )
     finally:
         reset_progress(token)

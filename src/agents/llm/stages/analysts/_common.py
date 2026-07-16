@@ -9,7 +9,7 @@ from typing import Any
 from src.agents.llm.base import run_llm_stage
 from src.agents.llm.schemas import parse_analyst_report
 from src.core.types import AnalystReport, LLMStageTrace, MarketContext
-from src.llm.router import get_fast_client
+from src.llm.router import client_for_stage
 
 ANALYST_JSON_SCHEMA = """{
   "bias": "bullish|bearish|neutral",
@@ -29,7 +29,7 @@ def run_specialist_llm(
     payload_fn: Callable[[MarketContext], dict[str, Any]],
     user_prefix: str,
 ) -> tuple[AnalystReport | None, LLMStageTrace]:
-    client = get_fast_client()
+    client = client_for_stage(stage)
     payload = payload_fn(ctx)
     messages = [
         {"role": "system", "content": system},

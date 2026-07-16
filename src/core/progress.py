@@ -49,6 +49,19 @@ class LLMIORecord:
     error: str | None = None
     latency_ms: int | None = None
     kind: Literal["llm", "rule"] = "llm"
+    # Issue #37 — auditable routing / budget / retry telemetry
+    tier: str = ""
+    attempt: int = 0
+    attempts: list[dict[str, Any]] = field(default_factory=list)
+    input_chars: int | None = None
+    input_tokens_est: int | None = None
+    output_chars: int | None = None
+    output_tokens_est: int | None = None
+    usage: dict[str, Any] | None = None
+    budget: dict[str, Any] | None = None
+    budget_action: str = "none"
+    same_model_strategy: bool | None = None
+    policy_version: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -60,6 +73,18 @@ class LLMIORecord:
             "error": self.error,
             "latency_ms": self.latency_ms,
             "kind": self.kind,
+            "tier": self.tier,
+            "attempt": self.attempt,
+            "attempts": list(self.attempts),
+            "input_chars": self.input_chars,
+            "input_tokens_est": self.input_tokens_est,
+            "output_chars": self.output_chars,
+            "output_tokens_est": self.output_tokens_est,
+            "usage": self.usage,
+            "budget": self.budget,
+            "budget_action": self.budget_action,
+            "same_model_strategy": self.same_model_strategy,
+            "policy_version": self.policy_version,
         }
 
 
@@ -173,17 +198,58 @@ class ProgressReporter:
                 )
             )
 
-    def llm_begin(self, stage: str, model: str, messages: list[dict[str, str]]) -> None:
+    def llm_begin(
+        self,
+        stage: str,
+        model: str,
+        messages: list[dict[str, str]],
+        *,
+        telemetry: dict[str, Any] | None = None,
+    ) -> None:
         label = STAGE_LABELS.get(stage, stage)
+        tel = telemetry or {}
         with self._lock:
             existing = self._find_llm(stage)
-            if existing is not None and not existing.output and existing.error is None:
+            reuse = bool(tel.get("reuse"))
+            open_slot = (
+                existing is not None
+                and existing.error is None
+                and existing.latency_ms is None
+            )
+            if existing is not None and (reuse or open_slot):
                 existing.model = model
                 existing.messages = list(messages)
                 existing.latency_ms = None
+                existing.error = None
+                if not tel.get("keep_output"):
+                    existing.output = ""
+                self._apply_telemetry(existing, tel)
             else:
-                self.llm_io.append(LLMIORecord(stage=stage, label=label, model=model, messages=messages))
+                self.llm_io.append(self._new_llm_record(stage, label, model, messages, tel))
         self._on_llm_begin(stage, model, messages, label)
+
+    def llm_note_attempt(
+        self,
+        stage: str,
+        *,
+        attempt: int,
+        reason: str,
+        error: str | None = None,
+        latency_ms: int | None = None,
+    ) -> None:
+        with self._lock:
+            rec = self._find_llm(stage)
+            if not rec:
+                return
+            rec.attempt = attempt
+            rec.attempts.append(
+                {
+                    "attempt": attempt,
+                    "reason": reason,
+                    "error": error,
+                    "latency_ms": latency_ms,
+                }
+            )
 
     def run_llm_stream(self, stage: str, chunk_iter) -> str:
         """Consume streamed chunks; Streamlit subclass uses st.write_stream."""
@@ -193,14 +259,68 @@ class ProgressReporter:
             self._on_llm_chunk(stage, chunk)
         return "".join(parts)
 
-    def llm_end(self, stage: str, output: str, *, error: str | None = None, latency_ms: int | None = None) -> None:
+    def llm_end(
+        self,
+        stage: str,
+        output: str,
+        *,
+        error: str | None = None,
+        latency_ms: int | None = None,
+        telemetry: dict[str, Any] | None = None,
+    ) -> None:
         with self._lock:
             rec = self._find_llm(stage)
             if rec:
                 rec.output = output
                 rec.error = error
                 rec.latency_ms = latency_ms
+                if telemetry:
+                    self._apply_telemetry(rec, telemetry)
+                    out_est = telemetry.get("output_chars")
+                    if out_est is None and output:
+                        from src.llm.stage_policy import estimate_text_size
+
+                        size = estimate_text_size(output)
+                        rec.output_chars = size["output_chars"]
+                        rec.output_tokens_est = size["output_tokens_est"]
         self._on_llm_end(stage, output, error=error)
+
+    def _new_llm_record(
+        self,
+        stage: str,
+        label: str,
+        model: str,
+        messages: list[dict[str, str]],
+        tel: dict[str, Any],
+    ) -> LLMIORecord:
+        rec = LLMIORecord(stage=stage, label=label, model=model, messages=list(messages))
+        self._apply_telemetry(rec, tel)
+        return rec
+
+    @staticmethod
+    def _apply_telemetry(rec: LLMIORecord, tel: dict[str, Any]) -> None:
+        if "tier" in tel and tel["tier"] is not None:
+            rec.tier = str(tel["tier"] or "")
+        if "attempt" in tel and tel["attempt"] is not None:
+            rec.attempt = int(tel["attempt"])
+        if "input_chars" in tel:
+            rec.input_chars = tel["input_chars"]
+        if "input_tokens_est" in tel:
+            rec.input_tokens_est = tel["input_tokens_est"]
+        if "output_chars" in tel:
+            rec.output_chars = tel["output_chars"]
+        if "output_tokens_est" in tel:
+            rec.output_tokens_est = tel["output_tokens_est"]
+        if "usage" in tel:
+            rec.usage = tel["usage"]
+        if "budget" in tel:
+            rec.budget = tel["budget"]
+        if "budget_action" in tel and tel["budget_action"] is not None:
+            rec.budget_action = str(tel["budget_action"])
+        if "same_model_strategy" in tel:
+            rec.same_model_strategy = tel["same_model_strategy"]
+        if "policy_version" in tel and tel["policy_version"] is not None:
+            rec.policy_version = str(tel["policy_version"])
 
     def _find_llm(self, stage: str) -> LLMIORecord | None:
         for rec in reversed(self.llm_io):

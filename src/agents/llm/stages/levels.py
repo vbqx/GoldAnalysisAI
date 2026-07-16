@@ -9,7 +9,7 @@ from src.agents.llm.payload import level_proposer_payload
 from src.agents.llm.schemas import parse_level_proposals
 from src.analysis.field_glossary import INTRADAY_GOLD_MANDATE, LEVELS_PRIORITY_HINT, PA_SMC_PRIORITY
 from src.core.types import AnalystTeam, LLMStageTrace, LevelProposal, MarketContext, ResearchDebate
-from src.llm.router import get_strong_client
+from src.llm.router import client_for_stage
 from src.log import get_logger
 
 log = get_logger(__name__)
@@ -64,7 +64,7 @@ def run_llm_level_proposer(
     debate: ResearchDebate,
     rule_signals: list[object],
 ) -> tuple[list[LevelProposal] | None, LLMStageTrace]:
-    client = get_strong_client()
+    client = client_for_stage("llm_levels")
     payload = level_proposer_payload(ctx, team, debate, rule_signals)
     log.info(
         "llm level proposer start model=%s price=%.2f debate=%s rule_signals=%d reactions=%d",

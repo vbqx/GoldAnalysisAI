@@ -12,6 +12,40 @@ def _hash_payload(payload: dict[str, Any]) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
 
 
+def _llm_usage_summary(llm_io: list[dict[str, Any]]) -> dict[str, Any]:
+    """Compact per-run LLM telemetry for Runtime Ledger (Issue #37)."""
+    rows = [r for r in llm_io if r.get("kind") != "rule"]
+    total_in = sum(int(r.get("input_chars") or 0) for r in rows)
+    total_out = sum(int(r.get("output_chars") or 0) for r in rows)
+    total_attempts = sum(int(r.get("attempt") or 0) for r in rows)
+    retry_reasons: list[dict[str, Any]] = []
+    for r in rows:
+        for a in r.get("attempts") or []:
+            if a.get("reason"):
+                retry_reasons.append(
+                    {
+                        "stage": r.get("stage"),
+                        "attempt": a.get("attempt"),
+                        "reason": a.get("reason"),
+                    }
+                )
+    return {
+        "stage_count": len(rows),
+        "input_chars": total_in,
+        "input_tokens_est": int(round(total_in / 1.8)) if total_in else 0,
+        "output_chars": total_out,
+        "output_tokens_est": int(round(total_out / 1.8)) if total_out else 0,
+        "total_attempts": total_attempts,
+        "budget_actions": {
+            r.get("stage"): r.get("budget_action")
+            for r in rows
+            if r.get("budget_action") and r.get("budget_action") != "none"
+        },
+        "retry_reasons": retry_reasons[:40],
+        "provider_usage_available": any(r.get("usage") for r in rows),
+    }
+
+
 def build_audit_summary(
     report: dict[str, Any],
     *,
@@ -61,6 +95,8 @@ def build_audit_summary(
         "narrative_fallbacks": fallbacks,
         "narrative_top_level_rejected": top_audit.get("fallback_reason"),
         "slow_llm_stages": slow_stages,
+        "llm_routing": meta.get("llm_routing") or {},
+        "llm_usage_summary": _llm_usage_summary(llm_io),
         "stage_sources_digest": _hash_payload(stage_meta or meta.get("stage_sources") or {}),
         "report_invariants_passed": (meta.get("report_invariants") or {}).get("passed"),
         "report_invariant_codes": [

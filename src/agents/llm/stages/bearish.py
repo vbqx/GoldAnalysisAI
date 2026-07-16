@@ -9,7 +9,7 @@ from src.agents.llm.base import run_llm_stage
 from src.agents.llm.payload import RESEARCH_ITEMS_SCHEMA, research_payload
 from src.agents.llm.schemas import parse_agent_evidence
 from src.core.types import AgentEvidence, AnalystTeam, LLMStageTrace, MarketContext
-from src.llm.router import get_fast_client
+from src.llm.router import client_for_stage
 
 from src.analysis.field_glossary import PA_SMC_PRIORITY, RESEARCH_PRIORITY_HINT
 
@@ -32,7 +32,7 @@ SYSTEM = (
 
 
 def run_llm_bearish(ctx: MarketContext, team: AnalystTeam | None = None) -> tuple[AgentEvidence | None, LLMStageTrace]:
-    client = get_fast_client()
+    client = client_for_stage("bearish")
     payload = research_payload(ctx, team, "bearish")
     messages = [
         {"role": "system", "content": SYSTEM},
