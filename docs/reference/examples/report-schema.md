@@ -78,7 +78,8 @@ python scripts/export_sample_report.py
 | `agent_mode` | 当前模式：`rule` / `llm` / `hybrid` |
 | `stage_sources` | 每阶段实际用规则还是 LLM，及回退原因 |
 | `generation_steps` | 与 [pipeline-steps.yaml](../pipeline-steps.yaml) 步骤 ID 对应 |
-| `llm_io` | 规则阶段输入输出 + LLM 消息与响应 |
+| `llm_io` | 规则阶段输入输出 + LLM 消息与响应；LLM 行含 `input_chars`、token 估算、`attempt(s)`、`budget_action`、`tier` |
+| `llm_routing` | `llm-stage-v1` 策略快照：`same_model_strategy`、FAST/STRONG/REPORT、每阶段预算 |
 | `context_stats` | 分析师输入密度，见 [analyst-context.md](../../architecture/analyst-context.md) |
 | `data_as_of` | K 线时效契约：`executable`、`data_age_hours`、`warnings` |
 | `observation_mode` | `true` 时为快照观察，禁止 LLM 覆盖可执行结论 |

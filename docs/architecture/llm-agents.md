@@ -71,15 +71,17 @@ TradingView → enrich → ict_pa.analyze (规则事实)
 
 Streamlit 启动后会先显示 **生成前配置** 面板；用户选择规则 / LLM / 混合后，`RunConfig` 会在后台 worker 开始前同步到 `agents/factory.py`、`orchestrator.py` 与报告文案层。`.env` 仍作为默认值与 API key/model 来源。
 
-### 3.2 模型路由
+### 3.2 模型路由与阶段策略（`llm-stage-v1`）
 
 | 变量 | 用途 | 调用点 |
 |------|------|--------|
-| `LLM_MODEL_FAST` | Analyst Team + 研究阶段（四位分析师 / 看多/看空） | `llm/router.get_fast_client()` |
-| `LLM_MODEL_STRONG` | 辩论 | `get_strong_client()` |
-| `LLM_MODEL` | 报告文案层 | `llm/analyst.py` |
+| `LLM_MODEL_FAST` | Analyst Team + 研究（技术/基本面/新闻/情绪、看多/看空） | `llm/router.client_for_stage()` → FAST |
+| `LLM_MODEL_STRONG` | 辩论、Levels、Trader、Risk、Manager | `client_for_stage()` → STRONG |
+| `LLM_MODEL` | 报告文案层 | `client_for_stage("llm_narrative")` → REPORT |
 
-三者可设为同一模型（如 `deepseek-ai/DeepSeek-V4-Pro`）。
+权威策略表在 `src/llm/stage_policy.py`：每阶段含 `tier`（`fast|strong|report`）、统一 `max_attempts`、输入软/硬字符预算、软延迟阈值。归档写入 `meta.llm_routing`；若 FAST/STRONG/REPORT 为同一模型，必须显式记录 `same_model_strategy=true` 及理由（成本分层未激活），不得假装已分层。
+
+**约束**：Risk/Manager 仍以确定性门禁为准；不得因「强模型」绕过触发/主张资格/不变量。默认关闭运行中自动升级到 STRONG；若要分层，先在每周受控样本比较 schema 通过率、主张资格、授权一致性、延迟与 token。
 
 ### 3.3 环境变量
 
@@ -96,6 +98,7 @@ LLM_MODEL_STRONG=deepseek-ai/DeepSeek-V4-Pro
 LLM_TIMEOUT=120
 LLM_CONNECT_TIMEOUT=30
 LLM_READ_TIMEOUT=120
+# 统一尝试预算：实际上游请求 ≤ 1 + LLM_MAX_RETRIES（传输+JSON 共享，禁止嵌套相乘）
 LLM_MAX_RETRIES=2
 LLM_RETRY_BACKOFF_BASE_S=1.0
 LLM_OVERRIDE_THRESHOLD=0.65
@@ -120,7 +123,7 @@ LLM_ENHANCE_CONCLUSION=true
 
 `LLM_ANALYST_ONLY` 仅在 `LLM_STAGE_ANALYSTS=true` 且 `AGENT_MODE=llm|hybrid` 时生效；未选中的 Analyst 使用规则输出补齐，避免完整流水线等待四个 LLM 分析师全部完成。
 
-### 3.4 传输重试与规则兜底
+### 3.4 传输重试、预算与遥测
 
 LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整次请求重打**。
 
@@ -129,18 +132,20 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | `LLM_TIMEOUT` | 60 | 遗留总超时；未单独设 connect/read 时 read 取此值 |
 | `LLM_CONNECT_TIMEOUT` | `min(30, LLM_TIMEOUT)` | TCP/ TLS 建连超时（秒） |
 | `LLM_READ_TIMEOUT` | `LLM_TIMEOUT` | 流式 **chunk 空闲**超时（秒）；长时间无 SSE 数据则失败 |
-| `LLM_MAX_RETRIES` | 2 | 每阶段最多重试次数（实际尝试 = 1 + 此值，上限 5） |
+| `LLM_MAX_RETRIES` | 2 | 统一重试次数；**总上游尝试 = 1 + 此值**（传输与 JSON/schema 共享同一计数器） |
 | `LLM_RETRY_BACKOFF_BASE_S` | 1.0 | 指数退避基数（1s → 2s → 4s …） |
 
 | 组件 | 行为 |
 |------|------|
 | `llm/client.py` | `requests.post(..., timeout=(connect, read))`；`ChunkedEncodingError`、连接/空闲超时 → `LLMClientError` |
-| `agents/llm/base.py` `stream_llm_json()` | 传输失败最多 `LLM_MAX_RETRIES + 1` 次，指数退避 |
-| `run_llm_stage()` | JSON 解析失败同样重试；传输与解析均失败 → 返回 `error` trace |
+| `llm/stage_policy.py` | 阶段策略表 + 输入软/硬预算；硬超限时可见 `[BUDGET_TRUNCATED]` 降级，不静默截断 |
+| `agents/llm/base.py` `run_llm_stage()` | **统一尝试预算**；每次失败写入 `reason=transport|json_schema`；单阶段一条 `llm_io` 记录 |
+| `core/progress.LLMIORecord` | `input_chars` / token 估算、`attempt(s)`、`budget_action`、`tier`、`same_model_strategy`；供应商 usage 可得时写入 `usage`（SSE 路径暂为 null） |
+| `audit_summary` | `llm_routing` + `llm_usage_summary`（总字符/尝试/重试原因/预算动作） |
 | `factory` hybrid | LLM 失败或置信度不足 → 采用规则版 `bullish`/`bearish`/`debate` |
-| `llm/analyst.py` | 文案层经 `run_llm_stage()`（含传输 + JSON 重试）；失败写入 `llm_analysis.error`，不中断 pipeline |
+| `llm/analyst.py` | 文案层经 `run_llm_stage()`；失败写入 `llm_analysis.error`，不中断 pipeline |
 
-单元测试：`tests/unit/test_llm_transport.py`、`tests/unit/test_llm_client_timeouts.py`。
+单元测试：`tests/unit/test_llm_transport.py`、`tests/unit/test_llm_client_timeouts.py`、`tests/unit/test_llm_stage_policy.py`。
 
 ### 3.5 规则智能体 — 金融 Review 三处改动（2026-06-20）
 

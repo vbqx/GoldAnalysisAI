@@ -67,6 +67,7 @@
 | 金十 MCP 参数 | `config.py` + `jin10_feed.py` | `python tests/run.py --external` |
 | 新增 LLM 阶段 | `agents/llm/stages/` + `factory.py` | `pytest tests/unit/test_analyst_team_llm.py tests/unit/test_llm_trade_stages.py` |
 | LLM 传输/重试/超时 | `llm/client.py`, `agents/llm/base.py` | `pytest tests/unit/test_llm_transport.py tests/unit/test_llm_client_timeouts.py` |
+| **LLM 阶段策略 / 预算 / 遥测（#37）** | `llm/stage_policy.py`, `llm/router.py`, `agents/llm/base.py` | `pytest tests/unit/test_llm_stage_policy.py` |
 | 改 Streamlit 布局 | `viz/report_views.py` + `viz/dashboard_components.py` | 手工界面 / 用例 catalog `UIL-*` |
 | 改外部数据页 | `viz/external_data_view.py` + `views/4_外部数据.py` | `pytest tests/unit/test_external_data_view.py` |
 | 改运行前配置/回放 UI | `viz/run_config_panel.py` + `core/run_config.py` | `pytest tests/unit/test_run_config.py tests/unit/test_streamlit_ensure_report.py` |
@@ -97,7 +98,7 @@
 | `LLM_TIMEOUT` | `120` | 遗留总超时；未单独设 read 时作为流式 chunk 空闲上限 |
 | `LLM_CONNECT_TIMEOUT` | `min(30, LLM_TIMEOUT)` | TCP/TLS 建连超时（秒） |
 | `LLM_READ_TIMEOUT` | `LLM_TIMEOUT` | SSE chunk 空闲超时（秒） |
-| `LLM_MAX_RETRIES` | `2` | 每阶段重试次数（实际尝试 = 1 + 此值） |
+| `LLM_MAX_RETRIES` | `2` | 统一重试次数；总上游尝试 = 1 + 此值（传输+JSON 共享） |
 | `LLM_RETRY_BACKOFF_BASE_S` | `1.0` | 重试指数退避基数（秒） |
 | `LLM_STAGE_WARN_MS` | `120000` | 单阶段 LLM 耗时超过此值写 warning 日志 |
 | `MT5_ENABLED` | `false` | 可选 MT5 provider，默认不影响 TradingView |
