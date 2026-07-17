@@ -18,7 +18,7 @@
 | SWE.1 | PASS | 26/26 发布软件需求属性完整；均有架构和验证链接 | `software-requirements.yaml`、`traceability-matrix.csv` |
 | SWE.2 | PASS | 11 个组件、4 个受控架构接口、6 个集成步骤；双向链接无悬挂 | `software-architecture.yaml`、`software-integration-plan.yaml` |
 | SWE.3 | PASS | 181/181 unit 和 1046/1046 function 有稳定 ID；逐函数设计字段 100% | `software-unit-catalog.csv`、`software-function-detailed-design.csv` |
-| SWE.4 | PASS | 181/181 unit 有选定措施；158 个高风险函数进入风险处置；阻断 unit 为 0 | `software-unit-verification-matrix.csv`、415 项 unit 结果 |
+| SWE.4 | PASS | 181/181 unit 有选定措施；157 个高风险函数进入风险处置；阻断 unit 为 0 | `software-unit-verification-matrix.csv`、417 项 unit 结果 |
 | SWE.5 | PASS | 6/6 集成项含顺序、接口、前置、桩、超时、资源、用例和结果；离线 integration 2 项、回测 9 项通过 | `software-integration-plan.yaml`、结构化结果 |
 | SWE.6 | PASS | 26/26 软件需求至少有一个接受结果；阻断需求为 0；25 项 regression 通过 | `software-requirement-verification-coverage.csv`、`verification-results/` |
 
@@ -28,13 +28,13 @@
 模型、调用依赖、分支数、长度、风险、需求/架构链接、测试引用和验证处置。该表是从受控源码
 生成的 as-built 详细设计；高风险关键模块另有人工专项设计。
 
-373 个函数存在直接符号测试引用；其余函数依据风险选择静态验证和所属组件/集成验证。直接
+392 个函数存在直接符号测试引用；其余函数依据风险选择静态验证和所属组件/集成验证。直接
 符号引用只作为追溯证据，不被夸大为语义覆盖率。选择矩阵自动阻断“高风险、无动态组件证据、
 无已记录处置”的软件单元；候选基线阻断项为 0。
 
 ## 3. 验证结果与选择说明
 
-- unit：415 passed；3 条 Pandas 未来弃用警告，已记录为非阻断偏差。
+- unit：417 passed；3 条 Pandas 未来弃用警告，已记录为非阻断偏差。
 - regression：25 passed。
 - deterministic integration：2 passed，冻结夹具、零网络、零付费 token。
 - point-in-time backtest：9 passed。

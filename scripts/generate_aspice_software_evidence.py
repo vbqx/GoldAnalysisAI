@@ -235,17 +235,7 @@ def expected_outputs() -> tuple[dict[Path, str], dict[str, int]]:
         refs = sorted(unit_test_refs[unit_id])
         high_count = sum(row["risk"] == "high" for row in functions)
         has_dynamic = bool(refs)
-        component_dynamic = component in {
-            "ARC-APP",
-            "ARC-CORE",
-            "ARC-ANALYSIS",
-            "ARC-AGENTS",
-            "ARC-LLM",
-            "ARC-RUN",
-            "ARC-BACKTEST",
-            "ARC-VIZ",
-        }
-        blocking = high_count > 0 and not has_dynamic and not component_dynamic and not path.startswith("scripts/")
+        blocking = high_count > 0 and not has_dynamic and not path.startswith("scripts/")
         if blocking:
             blocking_units += 1
         methods = ["VM-STATIC"]
@@ -272,8 +262,6 @@ def expected_outputs() -> tuple[dict[Path, str], dict[str, int]]:
                 "selection_rationale": (
                     "direct unit/component evidence"
                     if has_dynamic
-                    else "static plus controlled component/integration evidence"
-                    if component_dynamic
                     else "static analysis selected for low/medium-risk unit"
                 ),
                 "verification_status": "blocking-gap" if blocking else "selected",

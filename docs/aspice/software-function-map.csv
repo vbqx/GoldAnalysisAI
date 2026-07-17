@@ -55,7 +55,7 @@ FUN-DF98642ACC,UNIT-70EE096332,scripts/generate_aspice_software_evidence.py,109,
 FUN-966D638362,UNIT-70EE096332,scripts/generate_aspice_software_evidence.py,152,_risk,internal,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,unit/component verification selected by requirement and risk
 FUN-840DD814AD,UNIT-70EE096332,scripts/generate_aspice_software_evidence.py,162,_csv,internal,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,unit/component verification selected by requirement and risk
 FUN-6B5F339E4D,UNIT-70EE096332,scripts/generate_aspice_software_evidence.py,170,expected_outputs,public,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,unit/component verification selected by requirement and risk
-FUN-9C060DBC51,UNIT-70EE096332,scripts/generate_aspice_software_evidence.py,323,main,public,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,unit/component verification selected by requirement and risk
+FUN-9C060DBC51,UNIT-70EE096332,scripts/generate_aspice_software_evidence.py,311,main,public,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,unit/component verification selected by requirement and risk
 FUN-000D721083,UNIT-37E036C51B,scripts/inspect_archive.py,16,_cmd_list,internal,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,unit/component verification selected by requirement and risk
 FUN-747A7A71CA,UNIT-37E036C51B,scripts/inspect_archive.py,28,_cmd_inspect,internal,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,unit/component verification selected by requirement and risk
 FUN-63AE1E91D4,UNIT-37E036C51B,scripts/inspect_archive.py,44,_cmd_validate,internal,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,unit/component verification selected by requirement and risk

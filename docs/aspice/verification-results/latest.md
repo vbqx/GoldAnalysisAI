@@ -9,7 +9,7 @@
 
 | 措施 | 结果 | 证据 |
 |---|---|---|
-| VM-UNIT | 通过：415 | `python tests/run.py`，OpenBLAS/OMP 单线程 |
+| VM-UNIT | 通过：417 | `python tests/run.py`，OpenBLAS/OMP 单线程 |
 | VM-REGRESSION | 通过：25 | `python tests/run.py`，含软件域关闭门禁 |
 | VM-INTEGRATION-PIPELINE | 通过：2 | 冻结报告夹具、零网络 |
 | VM-BACKTEST | 通过：9 | point-in-time 回测测试；3 条非阻断弃用警告 |

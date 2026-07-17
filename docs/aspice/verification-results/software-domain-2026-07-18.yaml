@@ -3,7 +3,8 @@ result_id: ASPICE-SWE-VER-2026-07-18
 status: verified-local
 scope: SWE.1-SWE.6 software-domain closure candidate
 baseline_ref: refs/tags/aspice-software-domain-baseline-2026-07-18
-base_commit: c9660f1
+business_code_base_commit: c9660f1
+candidate_parent_commit: 8995cbc
 business_code_change: none
 environment:
   os: Windows
@@ -14,7 +15,7 @@ measures:
   - id: VM-UNIT
     outcome: pass
     selected: true
-    result: 415 passed; 3 non-blocking Pandas deprecation warnings
+    result: 417 passed; 3 non-blocking Pandas deprecation warnings
     command: python tests/run.py
   - id: VM-REGRESSION
     outcome: pass
