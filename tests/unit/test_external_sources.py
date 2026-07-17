@@ -75,6 +75,8 @@ def test_fundamentals_source_uses_dxy(mock_fetch) -> None:
         None,
     ),
 )
+@patch("src.data.sources.jin10_feed.JIN10_ENABLED", True)
+@patch("src.data.sources.jin10_feed.JIN10_API_TOKEN", "test-token")
 @patch(
     "src.data.sources.jin10_feed.fetch_jin10_articles",
     return_value=(
@@ -106,6 +108,8 @@ def test_jin10_bundle_flash_articles_calendar(_cal, _articles, _flash) -> None:
         None,
     ),
 )
+@patch("src.data.sources.jin10_feed.JIN10_ENABLED", True)
+@patch("src.data.sources.jin10_feed.JIN10_API_TOKEN", "test-token")
 @patch(
     "src.data.sources.jin10_feed.fetch_jin10_articles",
     return_value=(
@@ -255,6 +259,8 @@ def test_news_source_evidence(mock_bundle) -> None:
     "src.data.sources.jin10_feed.fetch_jin10_flash",
     return_value=([HeadlineItem(source="jin10_flash", text="flash headline")], None),
 )
+@patch("src.data.sources.jin10_feed.JIN10_ENABLED", True)
+@patch("src.data.sources.jin10_feed.JIN10_API_TOKEN", "test-token")
 @patch("src.data.sources.jin10_feed.fetch_jin10_articles", return_value=([], "jin10 articles empty"))
 @patch("src.data.sources.jin10_feed.fetch_jin10_calendar", return_value=([], None))
 def test_news_source_external(_cal, _articles, _flash) -> None:

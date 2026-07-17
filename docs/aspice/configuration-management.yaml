@@ -2,8 +2,8 @@ schema_version: 1
 baseline_id: ASPICE-CM-2026-07-17
 status: agreed
 owner_role: configuration-manager
-baseline_ref: refs/tags/aspice-software-domain-baseline-2026-07-18-v2
-baseline_resolution: git rev-parse refs/tags/aspice-software-domain-baseline-2026-07-18-v2
+baseline_ref: refs/tags/aspice-software-domain-baseline-2026-07-18-v3
+baseline_resolution: git rev-parse refs/tags/aspice-software-domain-baseline-2026-07-18-v3
 change_control:
   request_system: GitHub Issues and pull requests or reviewed direct commits
   impact_analysis: requirement, architecture, unit, verification and document register trace closure

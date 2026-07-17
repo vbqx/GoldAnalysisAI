@@ -3,7 +3,7 @@
 **项目**：GoldAnalysisAI
 **审核日期**：2026-07-18
 **范围**：SWE.1–SWE.6
-**候选基线**：`refs/tags/aspice-software-domain-baseline-2026-07-18-v2`
+**候选基线**：`refs/tags/aspice-software-domain-baseline-2026-07-18-v3`
 **变更边界**：文档、治理工具、测试与 CI；业务代码零修改
 **报告性质**：项目级软件工程证据关闭审核，不是正式 Automotive SPICE 能力等级评估
 
@@ -15,6 +15,8 @@
   3.12，所有生成输入按 POSIX 相对路径的 `casefold()` 结果确定性排序。
 - 发布标签触发被排除，避免同一提交因主分支与注释标签产生重复验证记录；拉取请求和
   `main` 推送门禁保持不变。
+- v2 的 Linux 离线门禁进一步发现 3 个 Jin10 mock 用例隐式依赖开发者 `.env`；用例已
+  显式注入假令牌，并在清空 Jin10 凭据的环境下完成全套离线验证。
 
 ## 1. 关闭结论
 
