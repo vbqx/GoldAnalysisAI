@@ -1,12 +1,13 @@
 # ASPICE 软件域验证结果
 
 **执行日期**：2026-07-18
-**状态**：本地验证通过，等待当前可读文档候选提交的远端双门禁
-**候选基线**：`refs/tags/aspice-software-domain-readable-baseline-2026-07-18`
+**状态**：`released`；可读文档候选的远端 Docs 与 Offline quality gate 均通过
+**发布基线**：`refs/tags/aspice-software-domain-release-2026-07-18`
+**已验证候选**：`08ddc89e9652f38fd4d27bd007cbf48f410fc240`（`refs/tags/aspice-software-domain-readable-baseline-2026-07-18`）
 **源代码基准**：`c9660f1`；本轮业务代码零修改
 **结构化记录**：[software-domain-2026-07-18.yaml](./software-domain-2026-07-18.yaml)
-**环境**：Windows、CPython 3.12；确定性离线门禁不调用付费 LLM、MT5 或 live supplier API。
-**此前候选证据**：v3 的 Docs [29607001817](https://github.com/vbqx/GoldAnalysisAI/actions/runs/29607001817) 与 Offline quality gate [29607001813](https://github.com/vbqx/GoldAnalysisAI/actions/runs/29607001813) 已通过；因本轮重构 Markdown 主文档，必须重新取得当前候选的 CI 证据。
+**环境**：Windows 本地与 Ubuntu GitHub Actions、CPython 3.12；确定性离线门禁不调用付费 LLM、MT5 或 live supplier API。
+**远端证据**：Docs [29608653351](https://github.com/vbqx/GoldAnalysisAI/actions/runs/29608653351)；Offline quality gate [29608653375](https://github.com/vbqx/GoldAnalysisAI/actions/runs/29608653375)，Linux 环境 445 项通过。
 
 | 措施 | 结果 | 证据 |
 |---|---|---|
@@ -21,5 +22,5 @@
 | VM-INTEGRATION-EXTERNAL | 本次未选择 | 供应商接口业务代码未变；HTTP 边界由确定性 mock 单元测试验证 |
 | VM-MANUAL-UI | 继承通过 | UI/业务代码未变；沿用受控 UI 验收证据并记录影响分析 |
 
-本地发布准入已经完成：三个 ASPICE `--check`、445 项完整离线套件和业务代码路径差异检查
-均通过。当前可读文档候选的远端双门禁通过前，不得改为 `released` 或关闭软件域问题单。
+发布准入已经完成：三个 ASPICE `--check`、445 项完整离线套件、业务代码路径差异检查和
+当前可读文档候选的远端双门禁均通过。最终发布记录提交通过同一双门禁后关闭软件域问题单。

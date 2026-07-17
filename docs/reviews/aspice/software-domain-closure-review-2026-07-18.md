@@ -3,7 +3,8 @@
 **项目**：GoldAnalysisAI
 **审核日期**：2026-07-18
 **范围**：SWE.1–SWE.6
-**候选基线**：`refs/tags/aspice-software-domain-readable-baseline-2026-07-18`
+**发布基线**：`refs/tags/aspice-software-domain-release-2026-07-18`
+**已验证候选**：`refs/tags/aspice-software-domain-readable-baseline-2026-07-18`（`08ddc89e9652f38fd4d27bd007cbf48f410fc240`）
 **变更边界**：文档、治理工具、测试与 CI；业务代码零修改
 **报告性质**：项目级软件工程证据关闭审核，不是正式 Automotive SPICE 能力等级评估
 
@@ -21,9 +22,9 @@
 ## 1. 关闭结论
 
 按 `docs/aspice/supporting/software-domain-scope-and-closure.md` 的项目关闭准则，SWE.1–SWE.6
-可读文档候选在本地判定为 **PASS / verified-local**：三个 ASPICE 一致性检查和 445 项离线
-测试通过，业务代码路径差异为空。v3 的远端门禁仅作为此前证据；当前 Markdown 重构候选
-必须重新通过远端 Docs 与 Offline quality gate，之后才转为 `released` 并关闭问题单。
+可读发布基线判定为 **PASS / released**：三个 ASPICE 一致性检查、445 项本地离线测试、
+Docs run `29608653351` 和 Offline quality gate run `29608653375` 均通过，业务代码路径差异
+为空。最终发布记录提交通过同一双门禁后关闭问题单。
 
 | 过程 | 结论 | 量化证据 | 关键工作产品 |
 |---|---|---|---|

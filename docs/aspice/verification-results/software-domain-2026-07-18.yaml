@@ -1,27 +1,27 @@
 schema_version: 1
 result_id: ASPICE-SWE-VER-2026-07-18
-status: verified-local
-scope: SWE.1-SWE.6 human-readable software-domain closure candidate
-baseline_ref: refs/tags/aspice-software-domain-readable-baseline-2026-07-18
+status: released
+scope: SWE.1-SWE.6 human-readable software-domain release closure
+baseline_ref: refs/tags/aspice-software-domain-release-2026-07-18
+verified_candidate_ref: refs/tags/aspice-software-domain-readable-baseline-2026-07-18
+verified_candidate_commit: 08ddc89e9652f38fd4d27bd007cbf48f410fc240
 business_code_base_commit: c9660f1
 business_code_change: none
 environment:
-  os: Windows local verification; Ubuntu GitHub Actions pending for this candidate
+  os: Windows local verification and Ubuntu GitHub Actions
   python: CPython 3.12
   network: disabled for deterministic gate
   controls: [OPENBLAS_NUM_THREADS=1, OMP_NUM_THREADS=1]
-previous_remote_verification:
-  candidate_ref: refs/tags/aspice-software-domain-baseline-2026-07-18-v3
-  candidate_commit: d55b179c6389d7f84328f320a6ca5bcda652d54c
+remote_verification:
   docs:
-    run_id: 29607001817
+    run_id: 29608653351
     outcome: success
-    url: https://github.com/vbqx/GoldAnalysisAI/actions/runs/29607001817
+    url: https://github.com/vbqx/GoldAnalysisAI/actions/runs/29608653351
   offline_quality_gate:
-    run_id: 29607001813
+    run_id: 29608653375
     outcome: success
-    result: 444 passed on Linux with no Jin10 secret configured
-    url: https://github.com/vbqx/GoldAnalysisAI/actions/runs/29607001813
+    result: 445 passed on Linux with no Jin10 secret configured
+    url: https://github.com/vbqx/GoldAnalysisAI/actions/runs/29608653375
 measures:
   - id: VM-UNIT
     outcome: pass
