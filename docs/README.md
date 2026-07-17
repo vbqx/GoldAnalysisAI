@@ -13,7 +13,7 @@
 | 回测和执行边界 | [architecture/backtesting.md](./architecture/backtesting.md) -> [architecture/review.md](./architecture/review.md) |
 | 日常怎么测 | [testing/strategy.md](./testing/strategy.md) |
 | 评审与验收（含完成状态） | [reviews/README.md](./reviews/README.md) -> [reviews/findings-status.md](./reviews/findings-status.md) |
-| ASPICE 软件工程基线与全部文档归类 | [aspice/README.md](./aspice/README.md) -> [aspice/process-document-index.md](./aspice/process-document-index.md) |
+| ASPICE 软件工程基线与全部文档归类 | [aspice/README.md](./aspice/README.md) → [SWE.1 需求](./aspice/SWE.1-software-requirements.md) → [SWE.2 架构](./aspice/SWE.2-software-architecture.md) → [SWE.3 详细设计](./aspice/SWE.3-software-detailed-design.md) → [UT](./aspice/SWE.4-unit-testing.md) → [IT](./aspice/SWE.5-integration-testing.md) → [VT](./aspice/SWE.6-validation-testing.md) |
 | 让我持续自动优化该怎么下目标 | [overview/codex-autonomy.md](./overview/codex-autonomy.md) |
 
 ## 权威分工

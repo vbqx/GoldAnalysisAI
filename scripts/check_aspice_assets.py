@@ -25,24 +25,25 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 ASPICE = ROOT / "docs" / "aspice"
-REQ_PATH = ASPICE / "software-requirements.yaml"
-ARCH_PATH = ASPICE / "software-architecture.yaml"
-VER_PATH = ASPICE / "verification-measures.yaml"
-CM_PATH = ASPICE / "configuration-management.yaml"
-PIP_REPORT_PATH = ASPICE / "pip-resolution.json"
+MACHINE = ASPICE / "_machine"
+REQ_PATH = MACHINE / "software-requirements.yaml"
+ARCH_PATH = MACHINE / "software-architecture.yaml"
+VER_PATH = MACHINE / "verification-measures.yaml"
+CM_PATH = MACHINE / "configuration-management.yaml"
+PIP_REPORT_PATH = MACHINE / "pip-resolution.json"
 PIP_REPORT_SOURCE = ROOT / "tests" / "reports" / "aspice-pip-resolution.json"
 
 GENERATED_PATHS = {
-    ASPICE / "document-register.csv",
-    ASPICE / "process-document-index.md",
-    ASPICE / "software-unit-catalog.csv",
-    ASPICE / "software-function-map.csv",
-    ASPICE / "software-function-detailed-design.csv",
-    ASPICE / "software-unit-verification-matrix.csv",
-    ASPICE / "software-requirement-verification-coverage.csv",
-    ASPICE / "traceability-matrix.csv",
-    ASPICE / "dependency-lock.txt",
-    ASPICE / "sbom.json",
+    MACHINE / "document-register.csv",
+    ASPICE / "supporting" / "process-document-index.md",
+    MACHINE / "software-unit-catalog.csv",
+    MACHINE / "software-function-map.csv",
+    MACHINE / "software-function-detailed-design.csv",
+    MACHINE / "software-unit-verification-matrix.csv",
+    MACHINE / "software-requirement-verification-coverage.csv",
+    MACHINE / "traceability-matrix.csv",
+    MACHINE / "dependency-lock.txt",
+    MACHINE / "sbom.json",
     PIP_REPORT_PATH,
 }
 
@@ -91,10 +92,24 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
     path_str = rel(path)
     if path_str.startswith("docs/aspice/"):
         name = path.name
+        readable_process_docs = {
+            "SWE.1-software-requirements.md": ("SWE.1", "17-00 Software Requirements", "agreed", "normative"),
+            "SWE.2-software-architecture.md": ("SWE.2", "04-04 Software Architecture", "agreed", "normative"),
+            "SWE.3-software-detailed-design.md": ("SWE.3", "04-05 Software Detailed Design", "agreed", "normative"),
+            "SWE.4-unit-testing.md": ("SWE.4", "08-50 Unit Verification", "agreed", "normative"),
+            "SWE.5-integration-testing.md": ("SWE.5", "08-52 Integration Verification", "agreed", "normative"),
+            "SWE.6-validation-testing.md": ("SWE.6", "08-54 Software Qualification Test", "agreed", "normative"),
+            "traceability.md": ("SWE.1-SWE.6", "13-51 Consistency Evidence", "agreed", "normative"),
+            "SUP.8-configuration-management.md": ("SUP.8", "Configuration Status/Baseline", "agreed", "normative"),
+        }
+        if name in readable_process_docs:
+            return readable_process_docs[name]
+        if name == "README.md":
+            return "SWE.1-SWE.6", "Software Domain Navigation", "agreed", "normative"
         if name == "software-requirements.yaml":
-            return "SWE.1", "17-00 Requirement", "agreed", "normative"
+            return "SWE.1", "Machine-readable Requirement Mirror", "generated", "generated"
         if name == "software-architecture.yaml":
-            return "SWE.2", "04-04 Software Architecture", "agreed", "normative"
+            return "SWE.2", "Machine-readable Architecture Mirror", "generated", "generated"
         if name in {
             "software-unit-catalog.csv",
             "software-function-map.csv",
@@ -230,7 +245,7 @@ def build_units(arch: dict[str, Any]) -> tuple[list[dict[str, str]], list[dict[s
                 "dynamic_behavior_basis": "software-architecture.yaml component behavior",
                 "requirement_ids": requirements,
                 "critical_unit": "yes" if critical else "no",
-                "detailed_design": "key-unit-detailed-designs.md" if critical else "inherited component profile",
+                "detailed_design": "supporting/key-unit-detailed-designs.md" if critical else "inherited component profile",
             }
         )
         parents = {child: parent for parent in ast.walk(tree) for child in ast.iter_child_nodes(parent)}
@@ -335,13 +350,18 @@ def process_index(rows: list[dict[str, str]]) -> str:
     lines = [
         "# ASPICE 过程文档索引",
         "",
-        "本文件由 `python scripts/check_aspice_assets.py --write` 生成。现有路径保持稳定；权威性与生命周期以 `document-register.csv` 为准。",
+        "本文件由 `python scripts/check_aspice_assets.py --write` 生成。人工评审以 `../README.md` 导航的 Markdown 主文档为准；完整机器注册表位于 `../_machine/document-register.csv`。",
         "",
     ]
     for process in sorted(grouped):
         lines.extend([f"## {process}", "", "| 文档 | 信息项 | 状态 | 权威性 |", "|---|---|---|---|"])
         for row in grouped[process]:
-            target = "../" + row["path"].removeprefix("docs/") if row["path"].startswith("docs/") else "../../" + row["path"]
+            if row["path"].startswith("docs/aspice/"):
+                target = "../" + row["path"].removeprefix("docs/aspice/")
+            elif row["path"].startswith("docs/"):
+                target = "../../" + row["path"].removeprefix("docs/")
+            else:
+                target = "../../../" + row["path"]
             lines.append(
                 f"| [{row['title']}]({target}) | {row['information_item']} | {row['lifecycle_status']} | {row['authority']} |"
             )
@@ -361,13 +381,13 @@ def expected_outputs() -> dict[Path, str]:
     pip_report = json.loads(report_path.read_text(encoding="utf-8"))
     lock, sbom = dependency_outputs(pip_report)
     outputs = {
-        ASPICE / "document-register.csv": csv_text(documents),
-        ASPICE / "process-document-index.md": process_index(documents),
-        ASPICE / "software-unit-catalog.csv": csv_text(units),
-        ASPICE / "software-function-map.csv": csv_text(functions),
-        ASPICE / "traceability-matrix.csv": csv_text(trace),
-        ASPICE / "dependency-lock.txt": lock,
-        ASPICE / "sbom.json": sbom,
+        MACHINE / "document-register.csv": csv_text(documents),
+        ASPICE / "supporting" / "process-document-index.md": process_index(documents),
+        MACHINE / "software-unit-catalog.csv": csv_text(units),
+        MACHINE / "software-function-map.csv": csv_text(functions),
+        MACHINE / "traceability-matrix.csv": csv_text(trace),
+        MACHINE / "dependency-lock.txt": lock,
+        MACHINE / "sbom.json": sbom,
     }
     if not PIP_REPORT_PATH.exists():
         outputs[PIP_REPORT_PATH] = json.dumps(pip_report, ensure_ascii=False, indent=2) + "\n"

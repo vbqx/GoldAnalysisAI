@@ -43,6 +43,7 @@ jobs:
         run: |
           python scripts/check_aspice_assets.py --check
           python scripts/generate_aspice_software_evidence.py --check
+          python scripts/generate_aspice_readable_docs.py --check
 
       - name: Compile Python
         run: python -m compileall -q src app.py run_app.py scripts

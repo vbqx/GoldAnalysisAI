@@ -21,7 +21,7 @@
 
 ## 变更规则
 
-1. 新增文档必须出现在 `document-register.csv`，并声明 primary process、information item、状态和权威性。
+1. 新增文档必须出现在 `_machine/document-register.csv`，并声明 primary process、information item、状态和权威性。
 2. 修改 normative 文档时必须更新受影响需求、架构、单元或验证追溯。
 3. 被替代文档不删除，转为 historical 并记录 `superseded_by`。
 4. 评审记录和验证结果绑定 Git SHA、环境和日期。
@@ -43,4 +43,4 @@
 | SUP.10 | 变更请求、影响分析和批准 |
 | MAN.3/MAN.5 | 计划、状态、风险和里程碑 |
 
-完整逐文档归类见 [document-register.csv](./document-register.csv)，按过程导航见 [process-document-index.md](./process-document-index.md)。
+完整逐文档归类见 [_machine/document-register.csv](../_machine/document-register.csv)，按过程导航见 [process-document-index.md](./process-document-index.md)。人工评审请从 [软件域入口](../README.md) 开始。

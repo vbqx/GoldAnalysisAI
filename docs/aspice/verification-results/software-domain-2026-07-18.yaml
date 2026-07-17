@@ -1,16 +1,27 @@
 schema_version: 1
 result_id: ASPICE-SWE-VER-2026-07-18
 status: verified-local
-scope: SWE.1-SWE.6 software-domain closure candidate
-baseline_ref: refs/tags/aspice-software-domain-baseline-2026-07-18-v3
+scope: SWE.1-SWE.6 human-readable software-domain closure candidate
+baseline_ref: refs/tags/aspice-software-domain-readable-baseline-2026-07-18
 business_code_base_commit: c9660f1
-candidate_parent_commit: 8995cbc
 business_code_change: none
 environment:
-  os: Windows
+  os: Windows local verification; Ubuntu GitHub Actions pending for this candidate
   python: CPython 3.12
   network: disabled for deterministic gate
   controls: [OPENBLAS_NUM_THREADS=1, OMP_NUM_THREADS=1]
+previous_remote_verification:
+  candidate_ref: refs/tags/aspice-software-domain-baseline-2026-07-18-v3
+  candidate_commit: d55b179c6389d7f84328f320a6ca5bcda652d54c
+  docs:
+    run_id: 29607001817
+    outcome: success
+    url: https://github.com/vbqx/GoldAnalysisAI/actions/runs/29607001817
+  offline_quality_gate:
+    run_id: 29607001813
+    outcome: success
+    result: 444 passed on Linux with no Jin10 secret configured
+    url: https://github.com/vbqx/GoldAnalysisAI/actions/runs/29607001813
 measures:
   - id: VM-UNIT
     outcome: pass
@@ -20,7 +31,7 @@ measures:
   - id: VM-REGRESSION
     outcome: pass
     selected: true
-    result: 25 passed
+    result: 26 passed
     command: python tests/run.py
   - id: VM-INTEGRATION-PIPELINE
     outcome: pass
@@ -40,12 +51,12 @@ measures:
   - id: VM-DOCS
     outcome: pass
     selected: true
-    result: 14 passed
+    result: 15 passed
     command: targeted documentation and ASPICE regression suite
   - id: VM-TRACE
     outcome: pass
     selected: true
-    result: 26 requirements; 181 units; 1046 functions; 71 documents; zero blocking gap
+    result: 26 requirements; 182 units; 1068 functions; 79 documents; zero blocking gap
     command: both ASPICE generators with --check
   - id: VM-STATIC
     outcome: pass

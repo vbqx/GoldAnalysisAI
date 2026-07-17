@@ -40,12 +40,24 @@ def test_aspice_assets_are_complete_and_current() -> None:
     )
     assert evidence.returncode == 0, evidence.stdout + evidence.stderr
 
+    readable = subprocess.run(
+        [sys.executable, "scripts/generate_aspice_readable_docs.py", "--check"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=60,
+        check=False,
+    )
+    assert readable.returncode == 0, readable.stdout + readable.stderr
+
 
 @pytest.mark.regression
 def test_every_function_and_document_has_an_aspice_mapping() -> None:
-    with (ROOT / "docs/aspice/software-function-map.csv").open(encoding="utf-8-sig", newline="") as handle:
+    with (ROOT / "docs/aspice/_machine/software-function-map.csv").open(encoding="utf-8-sig", newline="") as handle:
         functions = list(csv.DictReader(handle))
-    with (ROOT / "docs/aspice/document-register.csv").open(encoding="utf-8-sig", newline="") as handle:
+    with (ROOT / "docs/aspice/_machine/document-register.csv").open(encoding="utf-8-sig", newline="") as handle:
         documents = list(csv.DictReader(handle))
 
     assert functions
@@ -56,30 +68,30 @@ def test_every_function_and_document_has_an_aspice_mapping() -> None:
         "README.md",
         "AGENTS.md",
         "docs/README.md",
-        "docs/aspice/software-requirements.yaml",
-        "docs/aspice/software-architecture.yaml",
+        "docs/aspice/_machine/software-requirements.yaml",
+        "docs/aspice/_machine/software-architecture.yaml",
     }
 
 
 @pytest.mark.regression
 def test_software_domain_design_and_verification_are_closed() -> None:
-    with (ROOT / "docs/aspice/software-function-map.csv").open(encoding="utf-8-sig", newline="") as handle:
+    with (ROOT / "docs/aspice/_machine/software-function-map.csv").open(encoding="utf-8-sig", newline="") as handle:
         function_map = list(csv.DictReader(handle))
-    with (ROOT / "docs/aspice/software-function-detailed-design.csv").open(
+    with (ROOT / "docs/aspice/_machine/software-function-detailed-design.csv").open(
         encoding="utf-8-sig", newline=""
     ) as handle:
         designs = list(csv.DictReader(handle))
-    with (ROOT / "docs/aspice/software-unit-catalog.csv").open(encoding="utf-8-sig", newline="") as handle:
+    with (ROOT / "docs/aspice/_machine/software-unit-catalog.csv").open(encoding="utf-8-sig", newline="") as handle:
         units = list(csv.DictReader(handle))
-    with (ROOT / "docs/aspice/software-unit-verification-matrix.csv").open(
+    with (ROOT / "docs/aspice/_machine/software-unit-verification-matrix.csv").open(
         encoding="utf-8-sig", newline=""
     ) as handle:
         verification = list(csv.DictReader(handle))
-    with (ROOT / "docs/aspice/software-requirement-verification-coverage.csv").open(
+    with (ROOT / "docs/aspice/_machine/software-requirement-verification-coverage.csv").open(
         encoding="utf-8-sig", newline=""
     ) as handle:
         requirement_coverage = list(csv.DictReader(handle))
-    requirements = yaml.safe_load((ROOT / "docs/aspice/software-requirements.yaml").read_text(encoding="utf-8-sig"))
+    requirements = yaml.safe_load((ROOT / "docs/aspice/_machine/software-requirements.yaml").read_text(encoding="utf-8-sig"))
 
     assert {row["function_id"] for row in designs} == {row["function_id"] for row in function_map}
     assert {row["software_unit_id"] for row in verification} == {row["software_unit_id"] for row in units}
@@ -108,11 +120,38 @@ def test_software_domain_design_and_verification_are_closed() -> None:
 
 @pytest.mark.regression
 def test_swe5_plan_covers_every_architecture_interface() -> None:
-    architecture = yaml.safe_load((ROOT / "docs/aspice/software-architecture.yaml").read_text(encoding="utf-8-sig"))
-    plan = yaml.safe_load((ROOT / "docs/aspice/software-integration-plan.yaml").read_text(encoding="utf-8-sig"))
+    architecture = yaml.safe_load((ROOT / "docs/aspice/_machine/software-architecture.yaml").read_text(encoding="utf-8-sig"))
+    plan = yaml.safe_load((ROOT / "docs/aspice/_machine/software-integration-plan.yaml").read_text(encoding="utf-8-sig"))
     planned_interfaces = {value for item in plan["items"] for value in item["interfaces"]}
     architecture_interfaces = {item["id"] for item in architecture["interfaces"]}
 
     assert architecture_interfaces <= planned_interfaces
     assert plan["integration_order"] == [item["id"] for item in plan["items"]]
     assert all(item["tests"] and item["verification_measure_ids"] and item["result"] for item in plan["items"])
+
+
+@pytest.mark.regression
+def test_readable_aspice_navigation_covers_requirement_to_vt_chain() -> None:
+    names = [
+        "SWE.1-software-requirements.md",
+        "SWE.2-software-architecture.md",
+        "SWE.3-software-detailed-design.md",
+        "SWE.4-unit-testing.md",
+        "SWE.5-integration-testing.md",
+        "SWE.6-validation-testing.md",
+        "traceability.md",
+    ]
+    documents = {name: (ROOT / "docs/aspice" / name).read_text(encoding="utf-8-sig") for name in names}
+    requirements = yaml.safe_load((ROOT / "docs/aspice/_machine/software-requirements.yaml").read_text(encoding="utf-8-sig"))
+    architecture = yaml.safe_load((ROOT / "docs/aspice/_machine/software-architecture.yaml").read_text(encoding="utf-8-sig"))
+    with (ROOT / "docs/aspice/_machine/software-function-detailed-design.csv").open(encoding="utf-8-sig", newline="") as handle:
+        functions = list(csv.DictReader(handle))
+
+    assert all(f'id="{row["id"].lower().replace(".", "-")}"' in documents[names[0]] for row in requirements["requirements"])
+    assert all(f'id="{row["id"].lower()}"' in documents[names[1]] for row in architecture["components"])
+    assert all(f'id="{row["function_id"].lower()}"' in documents[names[2]] for row in functions)
+    assert "SWE.2-software-architecture.md" in documents[names[0]]
+    assert "SWE.3-software-detailed-design.md" in documents[names[1]]
+    assert "SWE.3-software-detailed-design.md" in documents[names[3]]
+    assert "SWE.1-software-requirements.md" in documents[names[4]]
+    assert "SWE.1-software-requirements.md" in documents[names[5]]

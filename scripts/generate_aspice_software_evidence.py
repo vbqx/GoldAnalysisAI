@@ -22,12 +22,13 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 ASPICE = ROOT / "docs" / "aspice"
-ARCH_PATH = ASPICE / "software-architecture.yaml"
-REQ_PATH = ASPICE / "software-requirements.yaml"
+MACHINE = ASPICE / "_machine"
+ARCH_PATH = MACHINE / "software-architecture.yaml"
+REQ_PATH = MACHINE / "software-requirements.yaml"
 RESULT_PATH = ASPICE / "verification-results" / "software-domain-2026-07-18.yaml"
-FUNCTION_PATH = ASPICE / "software-function-detailed-design.csv"
-UNIT_VERIFICATION_PATH = ASPICE / "software-unit-verification-matrix.csv"
-REQUIREMENT_COVERAGE_PATH = ASPICE / "software-requirement-verification-coverage.csv"
+FUNCTION_PATH = MACHINE / "software-function-detailed-design.csv"
+UNIT_VERIFICATION_PATH = MACHINE / "software-unit-verification-matrix.csv"
+REQUIREMENT_COVERAGE_PATH = MACHINE / "software-requirement-verification-coverage.csv"
 SOURCE_EXCLUDES = {".git", ".venv", ".cache", ".pytest_cache", "__pycache__", "tests"}
 CRITICAL_PATHS = {
     "src/core/orchestrator.py",

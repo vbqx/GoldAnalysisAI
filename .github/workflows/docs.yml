@@ -15,6 +15,7 @@ on:
       - 'tests/regression/test_aspice_assets.py'
       - 'scripts/check_aspice_assets.py'
       - 'scripts/generate_aspice_software_evidence.py'
+      - 'scripts/generate_aspice_readable_docs.py'
       - '.github/workflows/docs.yml'
   pull_request:
     paths:
@@ -29,6 +30,7 @@ on:
       - 'tests/regression/test_aspice_assets.py'
       - 'scripts/check_aspice_assets.py'
       - 'scripts/generate_aspice_software_evidence.py'
+      - 'scripts/generate_aspice_readable_docs.py'
       - '.github/workflows/docs.yml'
 
 jobs:

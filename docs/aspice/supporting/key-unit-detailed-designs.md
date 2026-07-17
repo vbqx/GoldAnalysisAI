@@ -1,6 +1,6 @@
 # 关键软件单元详细设计
 
-软件单元边界以模块语义为主，不等同于每个 Python 函数。全部模块/函数映射由 `software-unit-catalog.csv` 和 `software-function-map.csv` 生成；低风险 helper 继承所属组件设计，以下记录高风险单元的专门设计。
+软件单元边界以模块语义为主，不等同于每个 Python 函数。全部模块与函数的人工可读设计见 [SWE.3 软件详细设计](../SWE.3-software-detailed-design.md)；低风险 helper 继承所属组件设计，以下保留高风险单元的专项说明。
 
 ## UNIT `src/core/orchestrator.py`
 
@@ -45,4 +45,4 @@
 
 ## 继承式详细设计规则
 
-未在本文件单列的模块，其静态接口由 AST 生成的函数/类清单和类型注解定义，动态职责由 `software-unit-catalog.csv` 中的组件 profile 及 `software-architecture.yaml` 定义。若模块包含以下任一特征，必须新增专门章节：执行授权、外部副作用、归档写入、并发、超过 200 行的公开函数、关键算法或安全边界。
+未在本文件单列的模块，其静态接口由 [SWE.3 软件详细设计](../SWE.3-software-detailed-design.md) 的函数/类清单和类型注解定义，动态职责由 [SWE.2 软件架构](../SWE.2-software-architecture.md) 定义。若模块包含以下任一特征，必须新增专门章节：执行授权、外部副作用、归档写入、并发、超过 200 行的公开函数、关键算法或安全边界。

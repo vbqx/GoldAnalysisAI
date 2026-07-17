@@ -1,42 +1,67 @@
-# Automotive SPICE 软件工程工作产品
+# Automotive SPICE 软件域
 
-本目录是 GoldAnalysisAI 的 ASPICE 软件域控制入口。现有文档不批量移动；全部文档通过注册表按过程、信息项、状态和权威性重新归纳。
+这里是 GoldAnalysisAI 软件域的人工阅读、评审和变更入口。主文档全部采用 Markdown，
+并按 Automotive SPICE 软件工程过程排列；CSV、YAML、JSON 和依赖锁仅作为自动校验附录，
+集中存放在 [`_machine/`](./_machine/) 中。
 
-## 受控基线
+## 推荐阅读路径
 
-| 过程 | 工作产品 |
-|---|---|
-| SWE.1 | [软件需求基线](./software-requirements.yaml) |
-| SWE.2 | [软件架构基线](./software-architecture.yaml) |
-| SWE.3 | [软件单元目录](./software-unit-catalog.csv) · [函数映射](./software-function-map.csv) · [关键单元详细设计](./key-unit-detailed-designs.md) |
-| SWE.4–SWE.6 | [验证措施](./verification-measures.yaml) · [最新验证结果](./verification-results/latest.md) |
-| SWE.1–SWE.6 | [双向追溯矩阵](./traceability-matrix.csv) |
-| SWE.1–SWE.6 范围 | [软件域范围与关闭准则](./software-domain-scope-and-closure.md) |
-| SWE.3 | [逐函数 as-built 详细设计](./software-function-detailed-design.csv) |
-| SWE.4 | [软件单元验证选择矩阵](./software-unit-verification-matrix.csv) |
-| SWE.5 | [软件集成计划与结果矩阵](./software-integration-plan.yaml) |
-| SWE.6 | [软件需求验证覆盖矩阵](./software-requirement-verification-coverage.csv) |
-| SUP.8 | [配置管理基线](./configuration-management.yaml) · [依赖锁](./dependency-lock.txt) · [SBOM](./sbom.json) |
-| SUP.8 文档控制 | [控制规则](./document-control.md) · [全部文档注册表](./document-register.csv) · [过程文档索引](./process-document-index.md) |
+```text
+SWE.1 软件需求
+   ↓ requirement ID
+SWE.2 软件架构
+   ↓ architecture / interface ID
+SWE.3 函数与详细设计
+   ↓ software unit / function ID
+SWE.4 单元测试（UT）
+   ↓ integration item / test reference
+SWE.5 集成测试（IT）
+   ↓ verification measure / accepted result
+SWE.6 验证测试（VT）
+```
 
-## 生成与校验
+每个 ID 都是稳定链接锚点，可以从需求一路跳转到架构、模块、函数、详细设计和测试证据，
+也可以从 UT/IT/VT 反向返回需求与设计。
+
+## 软件域主文档
+
+| 顺序 | 过程域 | 文档 | 主要内容 |
+|---|---|---|---|
+| 1 | SWE.1 | [软件需求分析](./SWE.1-software-requirements.md) | 26 条需求、来源、优先级、接受准则、架构与验证链接 |
+| 2 | SWE.2 | [软件架构设计](./SWE.2-software-architecture.md) | 组件、运行模式、静态接口、动态行为和组件接口 |
+| 3 | SWE.3 | [软件详细设计](./SWE.3-software-detailed-design.md) | 按组件 → 模块 → 函数组织的完整详细设计 |
+| 4 | SWE.4 | [单元测试（UT）](./SWE.4-unit-testing.md) | 每个软件单元的风险、测试选择、动态测试和结果 |
+| 5 | SWE.5 | [集成测试（IT）](./SWE.5-integration-testing.md) | 集成顺序、接口、桩、资源、超时、用例和结果 |
+| 6 | SWE.6 | [验证测试（VT）](./SWE.6-validation-testing.md) | 验证策略、需求覆盖、接受结果和发布结论 |
+
+跨过程查看：[需求—架构—验证双向追溯](./traceability.md)。
+
+## 支撑与发布
+
+- [软件配置管理](./SUP.8-configuration-management.md)
+- [软件域范围与关闭准则](./supporting/software-domain-scope-and-closure.md)
+- [最新验证结果](./verification-results/latest.md)
+- [文档控制规则](./supporting/document-control.md)
+- [软件域关闭审核报告](../reviews/aspice/software-domain-closure-review-2026-07-18.md)
+
+## 维护规则
+
+- 人工评审以本目录的 Markdown 主文档为准。
+- `_machine/` 是同一证据的结构化镜像，用于 CI 一致性、双向追溯和数量校验。
+- 函数设计来自受控源码 AST；修改业务函数后必须重新生成 SWE.3 和相关 UT 选择证据。
+- `--write` 只更新 ASPICE 文档和机器附录，不修改 `src/`、`views/`、`app.py` 或 `run_app.py`。
 
 ```bash
 python scripts/check_aspice_assets.py --write
-python scripts/check_aspice_assets.py --check
 python scripts/generate_aspice_software_evidence.py --write
+python scripts/generate_aspice_readable_docs.py --write
+
+python scripts/check_aspice_assets.py --check
 python scripts/generate_aspice_software_evidence.py --check
+python scripts/generate_aspice_readable_docs.py --check
 ```
 
-`--write` 只更新生成型治理资产，不修改功能代码。`--check` 验证：
-
-- 每份现有文档均已注册并分类；
-- requirement、architecture、verification 双向链接无孤儿或悬挂；
-- 每个非测试 Python 模块和函数映射到稳定 software unit；
-- 配置项路径存在；dependency lock 与 SBOM 一致；
-- 生成文件与受控源同步。
-
-## 评估与改进记录
-
-- [2026-07-17 软件域文档审核报告](../reviews/aspice/software-domain-document-audit-2026-07-17.md)
-- GitHub Issues：[#39](https://github.com/vbqx/GoldAnalysisAI/issues/39)、[#40](https://github.com/vbqx/GoldAnalysisAI/issues/40)、[#41](https://github.com/vbqx/GoldAnalysisAI/issues/41)、[#42](https://github.com/vbqx/GoldAnalysisAI/issues/42)
+关联问题单：[#39](https://github.com/vbqx/GoldAnalysisAI/issues/39)、
+[#40](https://github.com/vbqx/GoldAnalysisAI/issues/40)、
+[#41](https://github.com/vbqx/GoldAnalysisAI/issues/41)、
+[#42](https://github.com/vbqx/GoldAnalysisAI/issues/42)。
