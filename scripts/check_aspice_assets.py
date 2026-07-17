@@ -37,6 +37,9 @@ GENERATED_PATHS = {
     ASPICE / "process-document-index.md",
     ASPICE / "software-unit-catalog.csv",
     ASPICE / "software-function-map.csv",
+    ASPICE / "software-function-detailed-design.csv",
+    ASPICE / "software-unit-verification-matrix.csv",
+    ASPICE / "software-requirement-verification-coverage.csv",
     ASPICE / "traceability-matrix.csv",
     ASPICE / "dependency-lock.txt",
     ASPICE / "sbom.json",
@@ -89,8 +92,21 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
             return "SWE.1", "17-00 Requirement", "agreed", "normative"
         if name == "software-architecture.yaml":
             return "SWE.2", "04-04 Software Architecture", "agreed", "normative"
-        if name in {"software-unit-catalog.csv", "software-function-map.csv", "key-unit-detailed-designs.md"}:
+        if name in {
+            "software-unit-catalog.csv",
+            "software-function-map.csv",
+            "software-function-detailed-design.csv",
+            "key-unit-detailed-designs.md",
+        }:
             return "SWE.3", "04-05 Software Detailed Design", "agreed", "normative"
+        if name == "software-unit-verification-matrix.csv":
+            return "SWE.4", "08-50 Verification Measure/Result", "agreed", "normative"
+        if name == "software-requirement-verification-coverage.csv":
+            return "SWE.6", "13-51 Consistency Evidence", "generated", "generated"
+        if name == "software-integration-plan.yaml":
+            return "SWE.5", "08-52 Integration Verification Measure", "agreed", "normative"
+        if name == "software-domain-scope-and-closure.md":
+            return "SWE.1-SWE.6", "15-52 Evaluation Results", "agreed", "normative"
         if name in {"verification-measures.yaml", "verification-results", "latest.md"} or "verification-results" in path_str:
             return "SWE.4-SWE.6", "08-60/15-52 Verification", "agreed", "normative"
         if name == "traceability-matrix.csv":

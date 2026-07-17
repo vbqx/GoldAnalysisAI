@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -26,6 +27,18 @@ def test_aspice_assets_are_complete_and_current() -> None:
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+    evidence = subprocess.run(
+        [sys.executable, "scripts/generate_aspice_software_evidence.py", "--check"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=60,
+        check=False,
+    )
+    assert evidence.returncode == 0, evidence.stdout + evidence.stderr
 
 
 @pytest.mark.regression
@@ -46,3 +59,60 @@ def test_every_function_and_document_has_an_aspice_mapping() -> None:
         "docs/aspice/software-requirements.yaml",
         "docs/aspice/software-architecture.yaml",
     }
+
+
+@pytest.mark.regression
+def test_software_domain_design_and_verification_are_closed() -> None:
+    with (ROOT / "docs/aspice/software-function-map.csv").open(encoding="utf-8-sig", newline="") as handle:
+        function_map = list(csv.DictReader(handle))
+    with (ROOT / "docs/aspice/software-function-detailed-design.csv").open(
+        encoding="utf-8-sig", newline=""
+    ) as handle:
+        designs = list(csv.DictReader(handle))
+    with (ROOT / "docs/aspice/software-unit-catalog.csv").open(encoding="utf-8-sig", newline="") as handle:
+        units = list(csv.DictReader(handle))
+    with (ROOT / "docs/aspice/software-unit-verification-matrix.csv").open(
+        encoding="utf-8-sig", newline=""
+    ) as handle:
+        verification = list(csv.DictReader(handle))
+    with (ROOT / "docs/aspice/software-requirement-verification-coverage.csv").open(
+        encoding="utf-8-sig", newline=""
+    ) as handle:
+        requirement_coverage = list(csv.DictReader(handle))
+    requirements = yaml.safe_load((ROOT / "docs/aspice/software-requirements.yaml").read_text(encoding="utf-8-sig"))
+
+    assert {row["function_id"] for row in designs} == {row["function_id"] for row in function_map}
+    assert {row["software_unit_id"] for row in verification} == {row["software_unit_id"] for row in units}
+    required_design = {
+        "signature",
+        "return_contract",
+        "responsibility",
+        "preconditions",
+        "postconditions",
+        "explicit_exceptions",
+        "side_effects",
+        "concurrency",
+        "risk",
+        "architecture_id",
+        "requirement_ids",
+        "verification_disposition",
+    }
+    assert all(all(row[field] for field in required_design) for row in designs)
+    assert all(row["verification_measure_ids"] for row in verification)
+    assert not [row for row in verification if row["verification_status"] == "blocking-gap"]
+    assert {row["requirement_id"] for row in requirement_coverage} == {
+        row["id"] for row in requirements["requirements"]
+    }
+    assert all(row["coverage_status"] == "closed" and row["accepted_result_ids"] for row in requirement_coverage)
+
+
+@pytest.mark.regression
+def test_swe5_plan_covers_every_architecture_interface() -> None:
+    architecture = yaml.safe_load((ROOT / "docs/aspice/software-architecture.yaml").read_text(encoding="utf-8-sig"))
+    plan = yaml.safe_load((ROOT / "docs/aspice/software-integration-plan.yaml").read_text(encoding="utf-8-sig"))
+    planned_interfaces = {value for item in plan["items"] for value in item["interfaces"]}
+    architecture_interfaces = {item["id"] for item in architecture["interfaces"]}
+
+    assert architecture_interfaces <= planned_interfaces
+    assert plan["integration_order"] == [item["id"] for item in plan["items"]]
+    assert all(item["tests"] and item["verification_measure_ids"] and item["result"] for item in plan["items"])

@@ -22,6 +22,18 @@ configuration_items:
   - id: CI-FUNCTION-MAP
     path: docs/aspice/software-function-map.csv
     process: SWE.3
+  - id: CI-FUNCTION-DESIGN
+    path: docs/aspice/software-function-detailed-design.csv
+    process: SWE.3
+  - id: CI-UNIT-VERIFICATION
+    path: docs/aspice/software-unit-verification-matrix.csv
+    process: SWE.4
+  - id: CI-REQUIREMENT-VERIFICATION
+    path: docs/aspice/software-requirement-verification-coverage.csv
+    process: SWE.6
+  - id: CI-INTEGRATION-PLAN
+    path: docs/aspice/software-integration-plan.yaml
+    process: SWE.5
   - id: CI-VERIFICATION
     path: docs/aspice/verification-measures.yaml
     process: SWE.4-SWE.6
@@ -55,6 +67,9 @@ configuration_items:
   - id: CI-VERIFICATION-RESULT
     path: docs/aspice/verification-results/latest.md
     process: SWE.4-SWE.6
+  - id: CI-SOFTWARE-CLOSURE
+    path: docs/aspice/software-domain-scope-and-closure.md
+    process: SWE.1-SWE.6
 dependency_baseline:
   resolution_source: docs/aspice/pip-resolution.json
   lock: docs/aspice/dependency-lock.txt

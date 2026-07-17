@@ -13,6 +13,7 @@
 
 | 文档 | 信息项 | 状态 | 权威性 |
 |---|---|---|---|
+| [Automotive SPICE 软件域关闭审核报告](../reviews/aspice/software-domain-closure-review-2026-07-18.md) | Review/Problem Analysis Evidence | reviewed | supporting |
 | [Automotive SPICE 4.0 软件域文档审核报告](../reviews/aspice/software-domain-document-audit-2026-07-17.md) | Review/Problem Analysis Evidence | reviewed | supporting |
 | [software function audit 2026 07 17](../reviews/aspice/software-function-audit-2026-07-17.csv) | Review/Problem Analysis Evidence | reviewed | supporting |
 | [software function audit summary 2026 07 17](../reviews/aspice/software-function-audit-summary-2026-07-17.json) | Review/Problem Analysis Evidence | reviewed | supporting |
@@ -66,6 +67,7 @@
 
 | 文档 | 信息项 | 状态 | 权威性 |
 |---|---|---|---|
+| [ASPICE 软件域范围与关闭准则](../aspice/software-domain-scope-and-closure.md) | 15-52 Evaluation Results | agreed | normative |
 | [traceability matrix](../aspice/traceability-matrix.csv) | 13-51 Consistency Evidence | generated | generated |
 
 ## SWE.2
@@ -88,6 +90,7 @@
 | 文档 | 信息项 | 状态 | 权威性 |
 |---|---|---|---|
 | [关键软件单元详细设计](../aspice/key-unit-detailed-designs.md) | 04-05 Software Detailed Design | agreed | normative |
+| [software function detailed design](../aspice/software-function-detailed-design.csv) | 04-05 Software Detailed Design | agreed | normative |
 | [software function map](../aspice/software-function-map.csv) | 04-05 Software Detailed Design | agreed | normative |
 | [software unit catalog](../aspice/software-unit-catalog.csv) | 04-05 Software Detailed Design | agreed | normative |
 | [开发者速查表](../reference/cheat-sheet.md) | Detailed Design/Interface Reference | reviewed | supporting |
@@ -98,15 +101,34 @@
 | [pipeline steps](../reference/pipeline-steps.yaml) | Detailed Design/Interface Reference | reviewed | supporting |
 | [Run archive replay contract](../reference/run-archive-schema.md) | Detailed Design/Interface Reference | reviewed | supporting |
 
+## SWE.4
+
+| 文档 | 信息项 | 状态 | 权威性 |
+|---|---|---|---|
+| [software unit verification matrix](../aspice/software-unit-verification-matrix.csv) | 08-50 Verification Measure/Result | agreed | normative |
+
 ## SWE.4-SWE.6
 
 | 文档 | 信息项 | 状态 | 权威性 |
 |---|---|---|---|
 | [verification measures](../aspice/verification-measures.yaml) | 08-60/15-52 Verification | agreed | normative |
 | [ASPICE 软件域验证结果](../aspice/verification-results/latest.md) | 08-60/15-52 Verification | agreed | normative |
+| [software domain 2026 07 18](../aspice/verification-results/software-domain-2026-07-18.yaml) | 08-60/15-52 Verification | agreed | normative |
 | [Testing Strategy](../testing/strategy.md) | Verification Strategy/Measure | reviewed | supporting |
 | [catalog](../../tests/cases/catalog.yaml) | Verification Strategy/Measure | reviewed | supporting |
 | [金融 Review 测试用例设计](../../tests/cases/financial-review-cases.md) | Verification Strategy/Measure | reviewed | supporting |
 | [测试用例目录](../../tests/cases/README.md) | Verification Strategy/Measure | reviewed | supporting |
 | [GoldAnalysisAI 测试用例设计](../../tests/cases/test-plan.md) | Verification Strategy/Measure | reviewed | supporting |
 | [GoldAnalysisAI 测试体系](../../tests/README.md) | Verification Strategy/Measure | reviewed | supporting |
+
+## SWE.5
+
+| 文档 | 信息项 | 状态 | 权威性 |
+|---|---|---|---|
+| [software integration plan](../aspice/software-integration-plan.yaml) | 08-52 Integration Verification Measure | agreed | normative |
+
+## SWE.6
+
+| 文档 | 信息项 | 状态 | 权威性 |
+|---|---|---|---|
+| [software requirement verification coverage](../aspice/software-requirement-verification-coverage.csv) | 13-51 Consistency Evidence | generated | generated |

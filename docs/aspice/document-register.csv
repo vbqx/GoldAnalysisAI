@@ -24,12 +24,18 @@ DOC-E31E3448B3,docs/aspice/process-document-index.md,ASPICE 过程文档索引,S
 DOC-25617018A5,docs/aspice/README.md,Automotive SPICE 软件工程工作产品,SUP.8,Document Control,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-DC73F605FF,docs/aspice/sbom.json,sbom,SUP.8,Configuration Item/Baseline,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-492BAD2DDF,docs/aspice/software-architecture.yaml,software architecture,SWE.2,04-04 Software Architecture,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-D6BB5813F9,docs/aspice/software-domain-scope-and-closure.md,ASPICE 软件域范围与关闭准则,SWE.1-SWE.6,15-52 Evaluation Results,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-247A614F31,docs/aspice/software-function-detailed-design.csv,software function detailed design,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-B4707624BD,docs/aspice/software-function-map.csv,software function map,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-5E420365FF,docs/aspice/software-integration-plan.yaml,software integration plan,SWE.5,08-52 Integration Verification Measure,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-FFB72FFA71,docs/aspice/software-requirement-verification-coverage.csv,software requirement verification coverage,SWE.6,13-51 Consistency Evidence,generated,generated,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-0B33B7CACF,docs/aspice/software-requirements.yaml,software requirements,SWE.1,17-00 Requirement,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-2D544941F8,docs/aspice/software-unit-catalog.csv,software unit catalog,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-5FFCD2E96A,docs/aspice/software-unit-verification-matrix.csv,software unit verification matrix,SWE.4,08-50 Verification Measure/Result,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-EC06D40890,docs/aspice/traceability-matrix.csv,traceability matrix,SWE.1-SWE.6,13-51 Consistency Evidence,generated,generated,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-89EC948D0E,docs/aspice/verification-measures.yaml,verification measures,SWE.4-SWE.6,08-60/15-52 Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-98401FA477,docs/aspice/verification-results/latest.md,ASPICE 软件域验证结果,SWE.4-SWE.6,08-60/15-52 Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-3FAAF1B598,docs/aspice/verification-results/software-domain-2026-07-18.yaml,software domain 2026 07 18,SWE.4-SWE.6,08-60/15-52 Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-0DA09CBB3D,docs/operations/integrations/cursor-mcp.json.example,cursor mcp.json,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-9DD7202019,docs/operations/integrations/jin10-mcp.md,金十数据 MCP 接入,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-F4C8F2402A,docs/operations/onboarding.md,开发者上手指南,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
@@ -48,6 +54,7 @@ DOC-13E6E65583,docs/reference/glossary.md,术语表,SWE.3,Detailed Design/Interf
 DOC-6C0165DDBF,docs/reference/handbook.md,GoldAnalysisAI 开发参考手册,SWE.3,Detailed Design/Interface Reference,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-B5E3EEEA7E,docs/reference/pipeline-steps.yaml,pipeline steps,SWE.3,Detailed Design/Interface Reference,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-BDFCA22663,docs/reference/run-archive-schema.md,Run archive replay contract,SWE.3,Detailed Design/Interface Reference,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-9FF51F2076,docs/reviews/aspice/software-domain-closure-review-2026-07-18.md,Automotive SPICE 软件域关闭审核报告,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-E6FEAD13F7,docs/reviews/aspice/software-domain-document-audit-2026-07-17.md,Automotive SPICE 4.0 软件域文档审核报告,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-EDF52D2216,docs/reviews/aspice/software-function-audit-2026-07-17.csv,software function audit 2026 07 17,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-CD42A97C38,docs/reviews/aspice/software-function-audit-summary-2026-07-17.json,software function audit summary 2026 07 17,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded

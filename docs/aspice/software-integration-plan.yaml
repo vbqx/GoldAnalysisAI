@@ -1,0 +1,92 @@
+schema_version: 1
+baseline_id: ASPICE-SWE5-2026-07-18
+status: agreed
+scope: deterministic software component and interface integration
+entry_criteria:
+  - linked software requirements and architecture interfaces are agreed
+  - unit verification selection has no blocking gap
+  - frozen fixtures are available and paid LLM, MT5, and live suppliers are disabled
+exit_criteria:
+  - every planned integration item has a verification measure and result disposition
+  - deterministic integration tests pass within the declared timeout
+  - supplier-unavailable results are recorded separately from software failures
+integration_order:
+  - INT-01-CONFIG-RUN
+  - INT-02-DATA-INDICATORS
+  - INT-03-ANALYSIS-AGENTS
+  - INT-04-AGENTS-REPORT-GATE
+  - INT-05-REPORT-ARCHIVE
+  - INT-06-REPORT-VIZ
+items:
+  - id: INT-01-CONFIG-RUN
+    providers: [ARC-APP, ARC-RUN]
+    consumers: [ARC-CORE]
+    interfaces: [RunConfig, RunContext, run manifest]
+    requirement_ids: [SWR-CORE-002, SWR-CFG-001, SWR-NFR-002]
+    prerequisites: frozen environment and temporary archive root
+    stubs: environment and archive filesystem are isolated by pytest fixtures
+    timeout_seconds: 30
+    resource_target: no network and no background service
+    tests: [tests/unit/test_orchestrator_hooks.py, tests/unit/test_run_archive.py]
+    verification_measure_ids: [VM-UNIT, VM-REGRESSION]
+    result: pass-in-latest-baseline
+  - id: INT-02-DATA-INDICATORS
+    providers: [ARC-DATA, ARC-INDICATORS]
+    consumers: [ARC-ANALYSIS]
+    interfaces: [IF-DATA-CONTEXT]
+    requirement_ids: [SWR-DATA-001, SWR-DATA-002, SWR-DATA-003, SWR-ANA-001]
+    prerequisites: frozen OHLCV and mocked HTTP responses
+    stubs: external HTTP is monkeypatched; live supplier health is a separate measure
+    timeout_seconds: 30
+    resource_target: no network; bounded fixture frames
+    tests: [tests/unit/test_http_helpers.py, tests/unit/test_indicators.py, tests/unit/test_data_freshness.py]
+    verification_measure_ids: [VM-UNIT, VM-INTEGRATION-EXTERNAL]
+    result: pass-deterministic;live-smoke-separate
+  - id: INT-03-ANALYSIS-AGENTS
+    providers: [ARC-ANALYSIS]
+    consumers: [ARC-AGENTS, ARC-LLM]
+    interfaces: [IF-ANALYSIS-AGENTS]
+    requirement_ids: [SWR-ANA-002, SWR-ANA-003, SWR-AGT-001, SWR-LLM-003]
+    prerequisites: fact registry and candidate plans use frozen fixtures
+    stubs: LLM transport is mocked or disabled
+    timeout_seconds: 30
+    resource_target: zero paid tokens and no network
+    tests: [tests/unit/test_agent_chain.py, tests/unit/test_llm_trade_stages.py, tests/unit/test_llm_context_fact_refs.py]
+    verification_measure_ids: [VM-UNIT, VM-REGRESSION]
+    result: pass-in-latest-baseline
+  - id: INT-04-AGENTS-REPORT-GATE
+    providers: [ARC-AGENTS, ARC-ANALYSIS]
+    consumers: [ARC-CORE]
+    interfaces: [IF-AGENTS-REPORT, FactRegistry, invariant result]
+    requirement_ids: [SWR-CORE-001, SWR-REP-001, SWR-REP-002, SWR-REP-003]
+    prerequisites: golden report fixtures include passing and failing invariants
+    stubs: no external dependency
+    timeout_seconds: 30
+    resource_target: deterministic and zero network
+    tests: [tests/integration/test_offline_report_contract.py]
+    verification_measure_ids: [VM-INTEGRATION-PIPELINE]
+    result: pass-in-latest-baseline
+  - id: INT-05-REPORT-ARCHIVE
+    providers: [ARC-ANALYSIS, ARC-CORE]
+    consumers: [ARC-RUN]
+    interfaces: [IF-REPORT-ARCHIVE, archive schema, compatibility loader]
+    requirement_ids: [SWR-ARC-001, SWR-ARC-002, SWR-NFR-002]
+    prerequisites: temporary archive root and frozen report payload
+    stubs: filesystem redirected to pytest temporary directory
+    timeout_seconds: 30
+    resource_target: atomic local writes; no network
+    tests: [tests/unit/test_archive_compat.py, tests/unit/test_archive_optimizations.py, tests/unit/test_archive_transfer.py]
+    verification_measure_ids: [VM-UNIT, VM-REGRESSION]
+    result: pass-in-latest-baseline
+  - id: INT-06-REPORT-VIZ
+    providers: [ARC-ANALYSIS, ARC-RUN]
+    consumers: [ARC-VIZ, ARC-APP]
+    interfaces: [IF-REPORT-ARCHIVE, report dict, chart HTML]
+    requirement_ids: [SWR-REP-004, SWR-UI-001, SWR-UI-002]
+    prerequisites: frozen report and chart fixtures
+    stubs: Streamlit rendering uses test doubles where automated; visual acceptance remains controlled manual evidence
+    timeout_seconds: 60
+    resource_target: no supplier network
+    tests: [tests/unit/test_streamlit_ensure_report.py, tests/regression/test_export_sample_report.py]
+    verification_measure_ids: [VM-UNIT, VM-REGRESSION, VM-MANUAL-UI]
+    result: pass-automated;manual-evidence-referenced

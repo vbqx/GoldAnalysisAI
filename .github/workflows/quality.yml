@@ -39,7 +39,9 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Validate ASPICE assets
-        run: python scripts/check_aspice_assets.py --check
+        run: |
+          python scripts/check_aspice_assets.py --check
+          python scripts/generate_aspice_software_evidence.py --check
 
       - name: Compile Python
         run: python -m compileall -q src app.py run_app.py scripts

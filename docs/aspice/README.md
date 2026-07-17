@@ -11,6 +11,11 @@
 | SWE.3 | [软件单元目录](./software-unit-catalog.csv) · [函数映射](./software-function-map.csv) · [关键单元详细设计](./key-unit-detailed-designs.md) |
 | SWE.4–SWE.6 | [验证措施](./verification-measures.yaml) · [最新验证结果](./verification-results/latest.md) |
 | SWE.1–SWE.6 | [双向追溯矩阵](./traceability-matrix.csv) |
+| SWE.1–SWE.6 范围 | [软件域范围与关闭准则](./software-domain-scope-and-closure.md) |
+| SWE.3 | [逐函数 as-built 详细设计](./software-function-detailed-design.csv) |
+| SWE.4 | [软件单元验证选择矩阵](./software-unit-verification-matrix.csv) |
+| SWE.5 | [软件集成计划与结果矩阵](./software-integration-plan.yaml) |
+| SWE.6 | [软件需求验证覆盖矩阵](./software-requirement-verification-coverage.csv) |
 | SUP.8 | [配置管理基线](./configuration-management.yaml) · [依赖锁](./dependency-lock.txt) · [SBOM](./sbom.json) |
 | SUP.8 文档控制 | [控制规则](./document-control.md) · [全部文档注册表](./document-register.csv) · [过程文档索引](./process-document-index.md) |
 
@@ -19,6 +24,8 @@
 ```bash
 python scripts/check_aspice_assets.py --write
 python scripts/check_aspice_assets.py --check
+python scripts/generate_aspice_software_evidence.py --write
+python scripts/generate_aspice_software_evidence.py --check
 ```
 
 `--write` 只更新生成型治理资产，不修改功能代码。`--check` 验证：

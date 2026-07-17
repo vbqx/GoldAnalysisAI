@@ -1,0 +1,70 @@
+schema_version: 1
+result_id: ASPICE-SWE-VER-2026-07-18
+status: verified-local
+scope: SWE.1-SWE.6 software-domain closure candidate
+baseline_ref: refs/tags/aspice-software-domain-baseline-2026-07-18
+base_commit: c9660f1
+business_code_change: none
+environment:
+  os: Windows
+  python: CPython 3.12
+  network: disabled for deterministic gate
+  controls: [OPENBLAS_NUM_THREADS=1, OMP_NUM_THREADS=1]
+measures:
+  - id: VM-UNIT
+    outcome: pass
+    selected: true
+    result: 415 passed; 3 non-blocking Pandas deprecation warnings
+    command: python tests/run.py
+  - id: VM-REGRESSION
+    outcome: pass
+    selected: true
+    result: 25 passed
+    command: python tests/run.py
+  - id: VM-INTEGRATION-PIPELINE
+    outcome: pass
+    selected: true
+    result: 2 passed
+    command: python -m pytest tests/integration/test_offline_report_contract.py -m integration
+  - id: VM-INTEGRATION-EXTERNAL
+    outcome: not-selected
+    selected: false
+    result: No supplier-facing business code changed; live availability is outside the deterministic software gate.
+    command: python tests/run.py --external
+  - id: VM-BACKTEST
+    outcome: pass
+    selected: true
+    result: 9 passed; 3 non-blocking Pandas deprecation warnings
+    command: python -m pytest tests/unit/test_backtest_*.py
+  - id: VM-DOCS
+    outcome: pass
+    selected: true
+    result: 14 passed
+    command: targeted documentation and ASPICE regression suite
+  - id: VM-TRACE
+    outcome: pass
+    selected: true
+    result: 26 requirements; 181 units; 1046 functions; 71 documents; zero blocking gap
+    command: both ASPICE generators with --check
+  - id: VM-STATIC
+    outcome: pass
+    selected: true
+    result: compileall and patch hygiene passed
+    command: python -m compileall -q src app.py run_app.py scripts; git diff --check
+  - id: VM-MANUAL-UI
+    outcome: inherited-pass
+    selected: false
+    result: No UI/business code changed; prior controlled acceptance remains applicable by impact analysis.
+    command: docs/reviews/gui/streamlit-acceptance-2026-07-08.md
+  - id: VM-CONFIG
+    outcome: pass
+    selected: true
+    result: configuration items, dependency resolution, lock and SBOM are consistent
+    command: python scripts/check_aspice_assets.py --check
+deviations:
+  - id: DEV-PANDAS-DEPRECATION
+    disposition: accepted-non-blocking
+    rationale: Warning concerns a future pandas alias removal and does not change current verification results.
+  - id: DEV-LIVE-SUPPLIER-NOT-SELECTED
+    disposition: accepted-by-impact-analysis
+    rationale: This baseline changes only documentation, governance tests, and CI; supplier adapters are verified by deterministic mocks.
