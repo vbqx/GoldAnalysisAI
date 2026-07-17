@@ -69,7 +69,7 @@ MT5 不在这条行情/回测链路中。MT5 只作为账号检查和后续 `sha
 | `src/analysis/` | ICT/PA 结构、报告 schema、信号几何、LLM 点位 validator | `ict_pa.py`, `report_engine.py`, `level_validator.py` |
 | `src/agents/` | 规则/LLM/hybrid 智能体调度 | `factory.py`, `analysts/*`, `llm/stages/*` |
 | `src/llm/` | LLM 客户端、路由、文案层、I/O 格式化 | `client.py`, `router.py`, `analyst.py`, `format_io.py` |
-| `src/backtest/` | 历史回放基础设施和规则 baseline | `engine.py`, `replay.py` |
+| `src/backtest/` | 历史回放基础设施和规则 baseline | `engine.py`, `simulator.py` |
 | `src/viz/` | Streamlit 页面组件、图表、审计面板 | `report_views.py`, `decision_page.py`, `pipeline_progress.py` |
 | `tests/` | 自动化测试、测试 UI、用例 catalog | `run.py`, `dashboard.py`, `cases/catalog.yaml` |
 

@@ -51,6 +51,7 @@ python run_app.py
 | [docs/operations/setup.md](docs/operations/setup.md) | 本地 / VPS / MT5 / 环境变量运行手册 |
 | [docs/architecture/architecture.md](docs/architecture/architecture.md) | 系统架构与 TradingAgents 对照 |
 | [docs/architecture/review.md](docs/architecture/review.md) | 架构体检：保留、合并、延后边界 |
+| [docs/aspice/README.md](docs/aspice/README.md) | ASPICE 软件需求、架构、详细设计、验证、配置基线与全部文档索引 |
 | [docs/testing/strategy.md](docs/testing/strategy.md) | fast / scenario / release 测试策略 |
 | [docs/reference/handbook.md](docs/reference/handbook.md) | 开发参考手册（调用链速查） |
 

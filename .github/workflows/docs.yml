@@ -11,6 +11,8 @@ on:
       - 'tests/regression/test_doc_pipeline_sync.py'
       - 'tests/regression/test_docs_structure.py'
       - 'tests/regression/test_export_sample_report.py'
+      - 'tests/regression/test_aspice_assets.py'
+      - 'scripts/check_aspice_assets.py'
       - '.github/workflows/docs.yml'
   pull_request:
     paths:
@@ -22,6 +24,8 @@ on:
       - 'tests/regression/test_doc_pipeline_sync.py'
       - 'tests/regression/test_docs_structure.py'
       - 'tests/regression/test_export_sample_report.py'
+      - 'tests/regression/test_aspice_assets.py'
+      - 'scripts/check_aspice_assets.py'
       - '.github/workflows/docs.yml'
 
 jobs:
@@ -43,4 +47,5 @@ jobs:
           tests/regression/test_doc_pipeline_sync.py
           tests/regression/test_docs_structure.py
           tests/regression/test_export_sample_report.py
+          tests/regression/test_aspice_assets.py
           -v

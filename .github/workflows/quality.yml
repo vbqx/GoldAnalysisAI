@@ -1,0 +1,62 @@
+name: Offline quality gate
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'views/**'
+      - 'scripts/**'
+      - 'docs/**'
+      - 'tests/**'
+      - 'app.py'
+      - 'run_app.py'
+      - 'requirements*.txt'
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'views/**'
+      - 'scripts/**'
+      - 'docs/**'
+      - 'tests/**'
+      - 'app.py'
+      - 'run_app.py'
+      - 'requirements*.txt'
+      - '.github/workflows/**'
+
+jobs:
+  offline-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Validate ASPICE assets
+        run: python scripts/check_aspice_assets.py --check
+
+      - name: Compile Python
+        run: python -m compileall -q src app.py run_app.py scripts
+
+      - name: Unit and regression verification
+        run: >-
+          python -m pytest
+          tests/unit
+          tests/regression
+          tests/integration/test_offline_report_contract.py
+          --tb=short
+          --junitxml=tests/reports/junit-offline.xml
+
+      - name: Upload verification result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offline-verification-result
+          path: tests/reports/junit-offline.xml
+          if-no-files-found: warn

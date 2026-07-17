@@ -1,0 +1,26 @@
+{
+  "snapshot_head": "6da1e0c2e1ea0f4b43bba85a19db0576a88a37fa",
+  "scope": "All non-test Python functions, excluding auditor/test tooling and virtual environments",
+  "source_files": 179,
+  "functions": 1013,
+  "functions_with_docstrings": 247,
+  "functions_with_complete_annotations": 860,
+  "functions_with_document_symbol_references": 177,
+  "functions_with_same_name_test_references": 367,
+  "verdicts": {
+    "P-证据不足": 452,
+    "N-未满足": 518,
+    "P-部分满足": 43
+  },
+  "linked_findings": {
+    "ASPICE-SWE-TRACE": 836,
+    "ASPICE-SWE4-UV": 646,
+    "ASPICE-SWE3-DD": 766,
+    "ASPICE-SWE3-IF": 153
+  },
+  "method_limitations": [
+    "Document and test links are conservative lexical symbol matches, not proof of semantic coverage.",
+    "Indirect tests may exist even when no same-name test reference is found.",
+    "A docstring or type annotation is supporting evidence, not a replacement for an agreed detailed design."
+  ]
+}

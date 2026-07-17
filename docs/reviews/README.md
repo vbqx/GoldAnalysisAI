@@ -20,6 +20,7 @@
 | ✅ 已完成 | 金融 · 静态代码 | [financial/static-code-review.md](./financial/static-code-review.md) | 2026-06-14 | Phase 1 MVP 全模块 | F-001～F-014 发现与修复路径；FIN-* 用例追溯 |
 | ✅ 已完成 | 金融 · 实跑 | [financial/runtime-review-2026-06-20.md](./financial/runtime-review-2026-06-20.md) | 2026-06-20 | 规则模式实跑 | 基于 `financial_review_run.py` 快照；P0/P1 修复验收 |
 | ✅ 已完成 | GUI · 验收 | [gui/streamlit-acceptance-2026-07-08.md](./gui/streamlit-acceptance-2026-07-08.md) | 2026-07-08 | Streamlit 四页 | 桌面/移动宽度布局与组件审计 |
+| ✅ 已完成 | ASPICE · 软件域文档审核 | [aspice/software-domain-document-audit-2026-07-17.md](./aspice/software-domain-document-audit-2026-07-17.md) | 2026-07-17 | SWE.1–SWE.6 + 支持过程 | 1,013 个函数逐项证据附录；过程差距与整改提单 |
 | 🔄 持续维护 | 架构 · 健康检查 | [architecture/review.md](../architecture/review.md) | — | 全栈边界 | 非历史流水账；评估模块是否臃肿、边界是否清晰 |
 
 ### 状态图例
@@ -42,6 +43,7 @@
 | 规则模式一致性 | `python tests/tools/coherence_check.py` |
 | 金融实跑快照 | `python tests/tools/financial_review_run.py` → `tests/reports/financial_review_snapshot.json` |
 | 金融单测 | `pytest tests/unit/test_financial_review.py -m financial` |
+| ASPICE 函数级附录 | [aspice/software-function-audit-2026-07-17.csv](./aspice/software-function-audit-2026-07-17.csv) |
 
 ---
 

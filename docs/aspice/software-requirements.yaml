@@ -1,0 +1,299 @@
+schema_version: 1
+baseline_id: ASPICE-SWR-2026-07-17
+status: agreed
+owner_role: product-owner
+change_control: SUP.10
+agreement_evidence:
+  - Git review and merge of the baseline
+  - Closure of GitHub issue 39 by the project owner
+attribute_definitions:
+  priority: [P0, P1, P2, P3]
+  type: [functional, performance, reliability, security, maintainability, compatibility]
+  status: [draft, reviewed, agreed, retired]
+requirements:
+  - id: SWR-CORE-001
+    title: 交易分析流水线
+    text: 系统应从受控运行配置启动数据获取、分析、Agent 决策、报告组装和归档，并返回结构化报告、行情数据和分析结果。
+    type: functional
+    priority: P0
+    status: agreed
+    source: docs/overview/project.md
+    verification_criteria: 离线集成测试证明主流水线按顺序完成且输出满足报告契约。
+    operating_environment_impact: Python 3.11/3.12；Windows 为主要开发环境，CI 使用 Linux。
+    architecture_ids: [ARC-CORE, ARC-DATA, ARC-ANALYSIS, ARC-AGENTS, ARC-RUN]
+    verification_ids: [VM-UNIT, VM-REGRESSION, VM-INTEGRATION-PIPELINE]
+  - id: SWR-CORE-002
+    title: 运行模式配置
+    text: 系统应在 rule、llm、hybrid 和 replay 模式间使用冻结的运行配置，并将有效配置写入审计记录。
+    type: functional
+    priority: P1
+    status: agreed
+    source: docs/architecture/architecture.md
+    verification_criteria: 配置单元测试覆盖合法值、默认值、环境变量和归档回放。
+    operating_environment_impact: 环境变量来自 .env 或宿主环境；不得在报告中泄露密钥。
+    architecture_ids: [ARC-APP, ARC-CORE, ARC-RUN]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-DATA-001
+    title: 多周期 XAUUSD 行情
+    text: 系统应获取并标准化 XAUUSD 的 5m、15m、1h、4h 和 1d OHLCV，并保留来源、时间框架和时间戳。
+    type: functional
+    priority: P0
+    status: agreed
+    source: docs/architecture/technical-analysis.md
+    verification_criteria: 数据层测试验证列、索引、周期、排序、空值和降级行为。
+    operating_environment_impact: 依赖 TradingView/OANDA 网络接口和 UTC 时间语义。
+    architecture_ids: [ARC-DATA]
+    verification_ids: [VM-UNIT, VM-INTEGRATION-EXTERNAL]
+  - id: SWR-DATA-002
+    title: 外部证据源
+    text: 系统应获取或明确降级 DXY、收益率、新闻、日历和社交数据，并保存来源与失败原因。
+    type: reliability
+    priority: P1
+    status: agreed
+    source: docs/architecture/analyst-context.md
+    verification_criteria: 单元测试覆盖成功、确认空、超时、不可用和占位数据禁止升级为事实。
+    operating_environment_impact: 外部供应商可用性不由软件控制；live smoke 与发布门禁分离。
+    architecture_ids: [ARC-DATA, ARC-ANALYSIS]
+    verification_ids: [VM-UNIT, VM-INTEGRATION-EXTERNAL]
+  - id: SWR-DATA-003
+    title: 数据时效与 as-of
+    text: 系统应为关键市场与外部事实计算 data-as-of、年龄和 observation mode，并阻止未来数据进入决策。
+    type: reliability
+    priority: P0
+    status: agreed
+    source: docs/architecture/report-trust.md
+    verification_criteria: 固定时间夹具覆盖新鲜、陈旧、闭市、未来事件和跨时区边界。
+    operating_environment_impact: 所有内部比较使用带时区 UTC 时间。
+    architecture_ids: [ARC-DATA, ARC-ANALYSIS, ARC-RUN]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-ANA-001
+    title: 技术与价格行为事实
+    text: 系统应从 point-in-time 行情计算技术指标、PA/ICT、FVG、OB、流动性和多周期结构，并保留可复算来源。
+    type: functional
+    priority: P0
+    status: agreed
+    source: docs/architecture/technical-analysis.md
+    verification_criteria: 确定性夹具覆盖正例、反例、边界、相同高低点和禁止未来数据。
+    operating_environment_impact: pandas/numpy 版本和重采样语义属于配置基线。
+    architecture_ids: [ARC-INDICATORS, ARC-ANALYSIS]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-ANA-002
+    title: 交易计划几何
+    text: 系统应验证方向、入场区、止损、目标顺序和风险收益几何，并拒绝不一致计划。
+    type: functional
+    priority: P0
+    status: agreed
+    source: docs/reviews/financial/static-code-review.md
+    verification_criteria: 边界测试覆盖 BUY/SELL、目标乱序、止损穿越、零风险和舍入。
+    operating_environment_impact: 所有价格采用 XAUUSD 报价单位，显示精度不改变验证数值。
+    architecture_ids: [ARC-ANALYSIS, ARC-AGENTS]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-ANA-003
+    title: 确定性风险和触发门禁
+    text: 系统应在 Manager 授权前检查几何、时效、触发状态、观察模式和执行资格。
+    type: reliability
+    priority: P0
+    status: agreed
+    source: docs/planning/audit-plan.md
+    verification_criteria: 未触发、陈旧、未授权和冲突证据场景必须降级为等待或观察。
+    operating_environment_impact: 门禁不得依赖外部 LLM 可用性。
+    architecture_ids: [ARC-ANALYSIS, ARC-AGENTS]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-AGT-001
+    title: 规则 Agent 决策链
+    text: 系统应在无 LLM 时完成 Analyst、Research、Debate、Trader、Risk 和 Manager 规则链并记录阶段结果。
+    type: functional
+    priority: P1
+    status: agreed
+    source: docs/architecture/llm-agents.md
+    verification_criteria: Agent chain 测试验证阶段顺序、输入输出和 Manager 决定。
+    operating_environment_impact: 规则链必须可离线执行。
+    architecture_ids: [ARC-AGENTS, ARC-ANALYSIS]
+    verification_ids: [VM-UNIT, VM-INTEGRATION-PIPELINE]
+  - id: SWR-LLM-001
+    title: 分阶段 LLM 决策链
+    text: 启用 LLM 时，系统应按配置执行结构化阶段，并记录模型、输入、输出、耗时、重试和来源。
+    type: functional
+    priority: P1
+    status: agreed
+    source: docs/architecture/llm-agents.md
+    verification_criteria: 假客户端测试覆盖阶段成功、解析失败、schema 失败和回退。
+    operating_environment_impact: 依赖 OpenAI-compatible 第三方 API；真实调用不是离线发布门禁。
+    architecture_ids: [ARC-LLM, ARC-AGENTS, ARC-CORE]
+    verification_ids: [VM-UNIT, VM-INTEGRATION-PIPELINE]
+  - id: SWR-LLM-002
+    title: LLM schema 与回退
+    text: LLM 输出只有在 JSON/schema/置信度策略通过时方可覆盖规则结果，失败时应保存原因并按模式回退。
+    type: reliability
+    priority: P0
+    status: agreed
+    source: docs/architecture/llm-agents.md
+    verification_criteria: 解析、schema、阈值和重试测试证明错误输出不能进入授权链。
+    operating_environment_impact: hybrid 允许规则回退；llm 模式必须明确失败语义。
+    architecture_ids: [ARC-LLM, ARC-AGENTS]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-LLM-003
+    title: LLM 主张证据资格
+    text: 核心技术主张应引用结构化 fact_ids、关系和反证裁决，未通过资格验证的主张不得成为执行依据。
+    type: reliability
+    priority: P0
+    status: agreed
+    source: docs/architecture/report-trust.md
+    verification_criteria: claim-v2 测试覆盖完整、部分、未知、冲突和不连通事实关系。
+    operating_environment_impact: 资格由确定性代码判定，不使用模型自评替代。
+    architecture_ids: [ARC-LLM, ARC-ANALYSIS, ARC-AGENTS]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-REP-001
+    title: 报告结构契约
+    text: 系统应生成符合版本化 schema 的报告，并保持关键字段、类型和审计元数据完整。
+    type: functional
+    priority: P0
+    status: agreed
+    source: docs/reference/examples/report-schema.md
+    verification_criteria: 样例导出和 schema 回归测试比较关键字段与类型。
+    operating_environment_impact: 新字段保持向后兼容或提升 schema 版本。
+    architecture_ids: [ARC-ANALYSIS, ARC-CORE, ARC-RUN]
+    verification_ids: [VM-UNIT, VM-DOCS, VM-REGRESSION]
+  - id: SWR-REP-002
+    title: 事实注册与来源
+    text: 报告中的关键数值和外部事实应进入唯一事实注册表，包含 fact_id、value、as_of、source 和 quality。
+    type: reliability
+    priority: P0
+    status: agreed
+    source: docs/architecture/report-trust.md
+    verification_criteria: 事实注册测试覆盖价格、PA、时效、日历、外部源和技术主张。
+    operating_environment_impact: 缺来源事实不得标为 verified。
+    architecture_ids: [ARC-ANALYSIS, ARC-RUN]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-REP-003
+    title: 最终报告不变量门禁
+    text: 报告归档和展示前应验证授权、几何、事实价格、时效、Manager 对齐和审计元数据。
+    type: reliability
+    priority: P0
+    status: agreed
+    source: docs/architecture/report-trust.md
+    verification_criteria: 违规夹具必须使报告降级并撤销执行资格；合法夹具保持通过。
+    operating_environment_impact: 门禁为离线确定性组件。
+    architecture_ids: [ARC-ANALYSIS, ARC-CORE, ARC-RUN]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-REP-004
+    title: 报告可靠度
+    text: 系统应使用可解释的确定性分项计算报告可靠度，并与模型 confidence 分离展示。
+    type: reliability
+    priority: P1
+    status: agreed
+    source: docs/architecture/report-trust.md
+    verification_criteria: 可靠度测试覆盖缺失、陈旧、来源多样性、schema 和不变量状态。
+    operating_environment_impact: 公式版本随报告保存。
+    architecture_ids: [ARC-ANALYSIS, ARC-VIZ]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-ARC-001
+    title: 运行归档
+    text: 系统应归档运行配置、manifest、报告、分析、数据摘要和状态，并可列举、加载和验证。
+    type: functional
+    priority: P1
+    status: agreed
+    source: docs/reference/run-archive-schema.md
+    verification_criteria: 归档测试覆盖成功、失败、原子写入、索引、传输和裁剪。
+    operating_environment_impact: 文件系统需支持项目数据目录写入。
+    architecture_ids: [ARC-RUN]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-ARC-002
+    title: 归档兼容与回放
+    text: 系统应检测归档 schema 兼容性，并在不重新调用外部数据或 LLM 的情况下加载可兼容历史报告。
+    type: compatibility
+    priority: P1
+    status: agreed
+    source: docs/reference/run-archive-schema.md
+    verification_criteria: 兼容夹具测试覆盖旧版本、缺失字段、不可兼容和完整回放。
+    operating_environment_impact: 历史归档可能来自不同 Git SHA 和依赖版本。
+    architecture_ids: [ARC-RUN, ARC-VIZ]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-BT-001
+    title: Point-in-time 规则回测
+    text: 系统应按时间截点运行规则 baseline、宏观 overlay 和执行仿真，不使用截点后的数据。
+    type: functional
+    priority: P1
+    status: agreed
+    source: docs/architecture/backtesting.md
+    verification_criteria: 固定 OHLCV 和 DXY 夹具验证截点、交易顺序、成本和指标。
+    operating_environment_impact: 当前结果只代表规则 baseline，不代表完整 LLM 表现。
+    architecture_ids: [ARC-BACKTEST, ARC-ANALYSIS]
+    verification_ids: [VM-UNIT, VM-BACKTEST]
+  - id: SWR-UI-001
+    title: Streamlit 报告界面
+    text: 系统应展示机构报告、短线策略、决策链和回测/配置页面，并复用同一会话报告。
+    type: functional
+    priority: P1
+    status: agreed
+    source: docs/reviews/gui/streamlit-acceptance-2026-07-08.md
+    verification_criteria: UI helper 测试与人工验收覆盖导航、缓存、等待和主要组件。
+    operating_environment_impact: 应用必须使用 run_app.py 启动。
+    architecture_ids: [ARC-APP, ARC-VIZ]
+    verification_ids: [VM-UNIT, VM-MANUAL-UI]
+  - id: SWR-UI-002
+    title: 决策审计展示
+    text: 界面应展示 agent_trace、stage source、LLM I/O、可靠度、不变量和未授权原因，不得把观察计划标为执行。
+    type: reliability
+    priority: P0
+    status: agreed
+    source: docs/architecture/report-trust.md
+    verification_criteria: UI helper 和人工场景验证授权状态、来源、拒绝原因和观察措辞。
+    operating_environment_impact: UI 只消费已通过门禁的报告状态。
+    architecture_ids: [ARC-VIZ, ARC-ANALYSIS]
+    verification_ids: [VM-UNIT, VM-MANUAL-UI]
+  - id: SWR-CFG-001
+    title: 配置与密钥边界
+    text: 系统应从环境加载配置，不将密钥写入源码、日志、报告、归档或版本库。
+    type: security
+    priority: P0
+    status: agreed
+    source: docs/operations/setup.md
+    verification_criteria: 配置测试和秘密扫描验证默认禁用、URL 脱敏和受控示例。
+    operating_environment_impact: .env 为本地非配置项，.env.example 为受控模板。
+    architecture_ids: [ARC-APP, ARC-CORE, ARC-DATA, ARC-LLM]
+    verification_ids: [VM-UNIT, VM-CONFIG]
+  - id: SWR-NFR-001
+    title: 外部失败可恢复
+    text: 外部数据或 LLM 失败时，系统应给出明确失败/降级状态，不得伪造事实或静默提升占位数据。
+    type: reliability
+    priority: P0
+    status: agreed
+    source: docs/planning/audit-plan.md
+    verification_criteria: 故障注入覆盖超时、空结果、无效 JSON、HTTP 错误和部分数据。
+    operating_environment_impact: 网络和供应商健康不作为软件本身通过的唯一依据。
+    architecture_ids: [ARC-DATA, ARC-LLM, ARC-CORE]
+    verification_ids: [VM-UNIT, VM-INTEGRATION-EXTERNAL]
+  - id: SWR-NFR-002
+    title: 可观测与可审计
+    text: 系统应记录运行 ID、配置、阶段、来源、耗时、错误、模型 I/O 摘要、数据 as-of 和验证状态。
+    type: maintainability
+    priority: P1
+    status: agreed
+    source: docs/planning/audit-plan.md
+    verification_criteria: 审计摘要和进度测试验证字段完整、稳定和可归档。
+    operating_environment_impact: 日志不得包含密钥或未脱敏 URL。
+    architecture_ids: [ARC-CORE, ARC-RUN, ARC-VIZ]
+    verification_ids: [VM-UNIT, VM-REGRESSION]
+  - id: SWR-NFR-003
+    title: 离线发布门禁
+    text: 每个相关变更应执行 unit、regression、文档/追溯一致性和静态编译检查，并保存结果。
+    type: maintainability
+    priority: P1
+    status: agreed
+    source: docs/testing/strategy.md
+    verification_criteria: GitHub Actions 对源码、文档、测试和配置变更运行质量工作流。
+    operating_environment_impact: 离线门禁不调用付费 LLM、MT5 或 live external API。
+    architecture_ids: [ARC-TOOLS]
+    verification_ids: [VM-UNIT, VM-REGRESSION, VM-DOCS, VM-TRACE, VM-STATIC]
+  - id: SWR-NFR-004
+    title: 可复现配置基线
+    text: 发布基线应标识源码引用、直接与传递依赖、配置模板、schema、测试选择和验证结果。
+    type: compatibility
+    priority: P1
+    status: agreed
+    source: docs/aspice/configuration-management.md
+    verification_criteria: 配置校验确认清单路径存在、锁文件精确固定且 SBOM 与锁一致。
+    operating_environment_impact: 不同平台的可选依赖应显式标注。
+    architecture_ids: [ARC-TOOLS, ARC-RUN]
+    verification_ids: [VM-CONFIG, VM-TRACE]

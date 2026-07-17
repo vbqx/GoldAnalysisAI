@@ -1,0 +1,105 @@
+schema_version: 1
+baseline_id: ASPICE-SAD-2026-07-17
+status: agreed
+owner_role: software-architect
+analysis_criteria:
+  - requirements_coverage
+  - interface_completeness
+  - deterministic_testability
+  - failure_isolation
+  - data_freshness
+  - auditability
+  - configuration_reproducibility
+modes:
+  - id: MODE-RULE
+    behavior: 规则 Agent 和确定性门禁，不调用 LLM。
+  - id: MODE-LLM
+    behavior: 配置的 LLM 阶段提供结构化结果，失败显式记录。
+  - id: MODE-HYBRID
+    behavior: 规则 baseline 先运行，合格 LLM 结果才可覆盖。
+  - id: MODE-REPLAY
+    behavior: 加载兼容归档，不执行 fetch 或新的 LLM 调用。
+components:
+  - id: ARC-APP
+    name: 应用入口与运行配置
+    source_globs: [app.py, run_app.py, views/**]
+    static_interfaces: [run_app.py CLI, Streamlit session, RunConfig]
+    dynamic_behavior: 解析配置，启动 Streamlit，页面复用会话报告。
+    requirements: [SWR-CORE-002, SWR-UI-001, SWR-CFG-001]
+  - id: ARC-CORE
+    name: 主编排与进度
+    source_globs: [src/core/**, src/pipeline.py]
+    static_interfaces: [run_trade_agent_pipeline, ProgressReporter, core dataclasses]
+    dynamic_behavior: 按配置驱动 fetch、analysis、agents、report、archive，并发布阶段状态。
+    requirements: [SWR-CORE-001, SWR-CORE-002, SWR-LLM-001, SWR-REP-001, SWR-REP-003, SWR-CFG-001, SWR-NFR-001, SWR-NFR-002]
+  - id: ARC-DATA
+    name: 行情与外部数据
+    source_globs: [src/data/**]
+    static_interfaces: [DataFetchResult, MarketContext, DataSource, archive payload]
+    dynamic_behavior: 拉取、标准化、合并、标记来源与失败，并计算 as-of。
+    requirements: [SWR-CORE-001, SWR-DATA-001, SWR-DATA-002, SWR-DATA-003, SWR-CFG-001, SWR-NFR-001]
+  - id: ARC-INDICATORS
+    name: 指标计算
+    source_globs: [src/indicators/**]
+    static_interfaces: [enriched OHLCV, indicator snapshot]
+    dynamic_behavior: 从冻结 OHLCV 计算技术指标并报告输入质量。
+    requirements: [SWR-ANA-001]
+  - id: ARC-ANALYSIS
+    name: 事实、结构、信号与报告门禁
+    source_globs: [src/analysis/**]
+    static_interfaces: [TimeframeAnalysis, TradingSignal, FactRegistry, invariant result]
+    dynamic_behavior: 计算 point-in-time 事实、计划、授权门禁、叙事和可靠度。
+    requirements: [SWR-CORE-001, SWR-DATA-002, SWR-DATA-003, SWR-ANA-001, SWR-ANA-002, SWR-ANA-003, SWR-AGT-001, SWR-LLM-003, SWR-REP-001, SWR-REP-002, SWR-REP-003, SWR-REP-004, SWR-BT-001, SWR-UI-002]
+  - id: ARC-AGENTS
+    name: 规则/LLM Agent 编排
+    source_globs: [src/agents/**]
+    static_interfaces: [AnalystTeam, AgentEvidence, TransactionProposal, RiskReview, ManagerDecision]
+    dynamic_behavior: 运行 Analyst、Research、Debate、Levels、Trader、Risk、Manager 并保留来源。
+    requirements: [SWR-CORE-001, SWR-ANA-002, SWR-ANA-003, SWR-AGT-001, SWR-LLM-001, SWR-LLM-002, SWR-LLM-003]
+  - id: ARC-LLM
+    name: LLM 传输、上下文和策略
+    source_globs: [src/llm/**]
+    static_interfaces: [LLMClient, stage payload, JSON schema parser]
+    dynamic_behavior: 路由模型、构造上下文、传输/重试、解析并记录 I/O。
+    requirements: [SWR-LLM-001, SWR-LLM-002, SWR-LLM-003, SWR-CFG-001, SWR-NFR-001]
+  - id: ARC-RUN
+    name: 运行上下文与归档
+    source_globs: [src/run/**]
+    static_interfaces: [RunContext, manifest, archive schema/index]
+    dynamic_behavior: 建立运行 ID，原子保存成功/失败归档，验证兼容并加载回放。
+    requirements: [SWR-CORE-001, SWR-CORE-002, SWR-DATA-003, SWR-REP-001, SWR-REP-002, SWR-REP-003, SWR-ARC-001, SWR-ARC-002, SWR-NFR-002, SWR-NFR-004]
+  - id: ARC-BACKTEST
+    name: Point-in-time 回测
+    source_globs: [src/backtest/**]
+    static_interfaces: [BacktestConfig, BacktestResult, TradeResult]
+    dynamic_behavior: 截取历史数据、生成规则信号、应用宏观状态、模拟成交并汇总指标。
+    requirements: [SWR-BT-001]
+  - id: ARC-VIZ
+    name: Streamlit 展示
+    source_globs: [src/viz/**]
+    static_interfaces: [report dict, chart HTML, Streamlit widgets/session]
+    dynamic_behavior: 展示报告、图表、外部数据、决策链、拒绝原因、回放和配置。
+    requirements: [SWR-REP-004, SWR-ARC-002, SWR-UI-001, SWR-UI-002, SWR-NFR-002]
+  - id: ARC-TOOLS
+    name: 开发、审核与运维工具
+    source_globs: [scripts/**]
+    static_interfaces: [CLI commands, audit artifacts]
+    dynamic_behavior: 校验连接、检查归档、生成样例和执行 ASPICE 一致性检查。
+    requirements: [SWR-NFR-003, SWR-NFR-004]
+interfaces:
+  - id: IF-DATA-CONTEXT
+    providers: [ARC-DATA, ARC-INDICATORS]
+    consumers: [ARC-ANALYSIS, ARC-AGENTS]
+    contract: MarketContext + enriched timeframe DataFrames；时间索引必须带 UTC 语义。
+  - id: IF-ANALYSIS-AGENTS
+    providers: [ARC-ANALYSIS]
+    consumers: [ARC-AGENTS, ARC-LLM]
+    contract: 结构化事实、稳定 evidence/fact IDs 和候选计划；自由文本不得替代核心关系。
+  - id: IF-AGENTS-REPORT
+    providers: [ARC-AGENTS]
+    consumers: [ARC-ANALYSIS, ARC-CORE]
+    contract: AgentTrace、ManagerDecision 和授权 signal IDs。
+  - id: IF-REPORT-ARCHIVE
+    providers: [ARC-ANALYSIS, ARC-CORE]
+    consumers: [ARC-RUN, ARC-VIZ]
+    contract: 版本化 report schema；归档和 UI 消费同一门禁后快照。

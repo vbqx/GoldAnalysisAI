@@ -1,0 +1,68 @@
+schema_version: 1
+baseline_id: ASPICE-CM-2026-07-17
+status: agreed
+owner_role: configuration-manager
+baseline_ref: refs/tags/aspice-doc-baseline-2026-07-17
+baseline_resolution: git rev-parse refs/tags/aspice-doc-baseline-2026-07-17
+change_control:
+  request_system: GitHub Issues and pull requests or reviewed direct commits
+  impact_analysis: requirement, architecture, unit, verification and document register trace closure
+  approval: project owner or delegated reviewer
+  status_accounting: Git history, GitHub Issue state, verification result record
+configuration_items:
+  - id: CI-SWR
+    path: docs/aspice/software-requirements.yaml
+    process: SWE.1
+  - id: CI-SAD
+    path: docs/aspice/software-architecture.yaml
+    process: SWE.2
+  - id: CI-SDD
+    path: docs/aspice/software-unit-catalog.csv
+    process: SWE.3
+  - id: CI-FUNCTION-MAP
+    path: docs/aspice/software-function-map.csv
+    process: SWE.3
+  - id: CI-VERIFICATION
+    path: docs/aspice/verification-measures.yaml
+    process: SWE.4-SWE.6
+  - id: CI-TRACE
+    path: docs/aspice/traceability-matrix.csv
+    process: SWE.1-SWE.6
+  - id: CI-DOC-REGISTER
+    path: docs/aspice/document-register.csv
+    process: SUP.8
+  - id: CI-SOURCE
+    path: src
+    process: SWE.3
+  - id: CI-TESTS
+    path: tests
+    process: SWE.4-SWE.6
+  - id: CI-RUNTIME-DEPS
+    path: docs/aspice/dependency-lock.txt
+    process: SUP.8
+  - id: CI-SBOM
+    path: docs/aspice/sbom.json
+    process: SUP.8
+  - id: CI-CONFIG-TEMPLATE
+    path: .env.example
+    process: SUP.8
+  - id: CI-ARCHIVE-SCHEMA
+    path: docs/reference/run-archive-schema.md
+    process: SWE.2
+  - id: CI-REPORT-SCHEMA
+    path: docs/reference/examples/report-schema.md
+    process: SWE.2
+  - id: CI-VERIFICATION-RESULT
+    path: docs/aspice/verification-results/latest.md
+    process: SWE.4-SWE.6
+dependency_baseline:
+  resolution_source: docs/aspice/pip-resolution.json
+  lock: docs/aspice/dependency-lock.txt
+  sbom: docs/aspice/sbom.json
+  policy: Exact resolved versions and artifact hashes are generated from pip dry-run report; root requirements remain human-maintained compatibility ranges.
+  platform: CPython 3.12, Windows x86_64 resolution; Linux CI must use the same versions and platform-appropriate wheels.
+retention:
+  baselines: permanent
+  verification_results: retain at least through the next superseding baseline
+  audit_reports: permanent
+  generated_indexes: regenerate and compare in CI

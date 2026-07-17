@@ -13,6 +13,7 @@
 | 回测和执行边界 | [architecture/backtesting.md](./architecture/backtesting.md) -> [architecture/review.md](./architecture/review.md) |
 | 日常怎么测 | [testing/strategy.md](./testing/strategy.md) |
 | 评审与验收（含完成状态） | [reviews/README.md](./reviews/README.md) -> [reviews/findings-status.md](./reviews/findings-status.md) |
+| ASPICE 软件工程基线与全部文档归类 | [aspice/README.md](./aspice/README.md) -> [aspice/process-document-index.md](./aspice/process-document-index.md) |
 | 让我持续自动优化该怎么下目标 | [overview/codex-autonomy.md](./overview/codex-autonomy.md) |
 
 ## 权威分工
@@ -27,10 +28,12 @@
 | `reference/` | 字段、术语、速查、样例 JSON、机器同步清单 | 计划和历史复盘 |
 | `planning/` | 后续计划、优先级、验收标准 | 已完成 GUI 验收细节 |
 | `archive/` | 算法反推、旧笔记；评审见 `reviews/` | 当前架构事实 |
+| `aspice/` | 软件需求、架构、单元、验证、配置基线及全量文档注册 | 手工编辑生成型 CSV/索引 |
 
 ## 维护规则
 
 1. 架构事实更新 `architecture/`，未来计划更新 `planning/roadmap.md`，评审结论更新 `reviews/` 并同步 [findings-status.md](./reviews/findings-status.md)。
+2. 所有文档同时受 [ASPICE 文档控制规则](./aspice/document-control.md) 管理；新增或移动文档后运行 `python scripts/check_aspice_assets.py --write` 并提交生成的注册表与过程索引。
 2. 报告字段变化更新 `reference/examples/report-schema.md`，必要时重生成 `reference/examples/sample-report.json`。
 3. 流水线阶段变化同步 `reference/pipeline-steps.yaml`，并跑 `pytest tests/regression/test_doc_pipeline_sync.py`。
 4. 测试策略变化更新 `testing/strategy.md` 和 `tests/cases/catalog.yaml`。
