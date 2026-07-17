@@ -6,7 +6,7 @@
 
 ## 1. 依赖
 
-- Python 3.10+
+- CPython 3.12（当前受控与 CI 验证基线；其他版本未纳入本基线）
 - Git
 - 可访问 TradingView WebSocket（国内常需代理）
 - 可选：MetaTrader 5 Windows 终端 + `MetaTrader5` Python 包（仅账号检查/下单执行接口需要）

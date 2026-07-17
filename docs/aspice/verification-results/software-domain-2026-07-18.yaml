@@ -2,7 +2,7 @@ schema_version: 1
 result_id: ASPICE-SWE-VER-2026-07-18
 status: verified-local
 scope: SWE.1-SWE.6 software-domain closure candidate
-baseline_ref: refs/tags/aspice-software-domain-baseline-2026-07-18
+baseline_ref: refs/tags/aspice-software-domain-baseline-2026-07-18-v2
 business_code_base_commit: c9660f1
 candidate_parent_commit: 8995cbc
 business_code_change: none

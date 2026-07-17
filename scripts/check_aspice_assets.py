@@ -69,9 +69,12 @@ def rel(path: Path) -> str:
 
 def source_files() -> list[Path]:
     return sorted(
-        path
-        for path in ROOT.rglob("*.py")
-        if not any(part in SOURCE_EXCLUDES for part in path.relative_to(ROOT).parts)
+        (
+            path
+            for path in ROOT.rglob("*.py")
+            if not any(part in SOURCE_EXCLUDES for part in path.relative_to(ROOT).parts)
+        ),
+        key=lambda path: rel(path).casefold(),
     )
 
 
@@ -81,7 +84,7 @@ def document_files() -> list[Path]:
     for pattern in DOC_EXTRA_GLOBS:
         paths.update(path for path in ROOT.glob(pattern) if path.is_file())
     paths.update(GENERATED_PATHS)
-    return sorted(paths)
+    return sorted(paths, key=lambda path: rel(path).casefold())
 
 
 def document_classification(path: Path) -> tuple[str, str, str, str]:

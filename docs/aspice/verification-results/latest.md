@@ -2,7 +2,7 @@
 
 **执行日期**：2026-07-18
 **状态**：本地验证通过，等待发布提交及远端 CI
-**发布基线**：`refs/tags/aspice-software-domain-baseline-2026-07-18`
+**发布基线**：`refs/tags/aspice-software-domain-baseline-2026-07-18-v2`
 **源代码基准**：`c9660f1`；本轮业务代码零修改
 **结构化记录**：[software-domain-2026-07-18.yaml](./software-domain-2026-07-18.yaml)
 **环境**：Windows、CPython 3.12；确定性离线门禁不调用付费 LLM、MT5 或 live supplier API。

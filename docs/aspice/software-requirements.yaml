@@ -19,7 +19,7 @@ requirements:
     status: agreed
     source: docs/overview/project.md
     verification_criteria: 离线集成测试证明主流水线按顺序完成且输出满足报告契约。
-    operating_environment_impact: Python 3.11/3.12；Windows 为主要开发环境，CI 使用 Linux。
+    operating_environment_impact: CPython 3.12；Windows 为主要开发环境，CI 使用 Linux。
     architecture_ids: [ARC-CORE, ARC-DATA, ARC-ANALYSIS, ARC-AGENTS, ARC-RUN]
     verification_ids: [VM-UNIT, VM-REGRESSION, VM-INTEGRATION-PIPELINE]
   - id: SWR-CORE-002

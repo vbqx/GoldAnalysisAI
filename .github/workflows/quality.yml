@@ -2,6 +2,7 @@ name: Offline quality gate
 
 on:
   push:
+    branches: [main]
     paths:
       - 'src/**'
       - 'views/**'

@@ -48,16 +48,22 @@ def _stable_id(prefix: str, value: str) -> str:
 
 def _source_files() -> list[Path]:
     return sorted(
-        path
-        for path in ROOT.rglob("*.py")
-        if not any(part in SOURCE_EXCLUDES for part in path.relative_to(ROOT).parts)
+        (
+            path
+            for path in ROOT.rglob("*.py")
+            if not any(part in SOURCE_EXCLUDES for part in path.relative_to(ROOT).parts)
+        ),
+        key=lambda path: _rel(path).casefold(),
     )
 
 
 def _test_corpus() -> dict[str, str]:
     return {
         _rel(path): path.read_text(encoding="utf-8-sig", errors="replace")
-        for path in sorted((ROOT / "tests").rglob("test_*.py"))
+        for path in sorted(
+            (ROOT / "tests").rglob("test_*.py"),
+            key=lambda item: _rel(item).casefold(),
+        )
     }
 
 

@@ -13,14 +13,14 @@ measures:
     technique: automated unit testing
     command: python tests/run.py --unit
     pass_fail: pytest exit code 0
-    environment: Python 3.11/3.12, no network
+    environment: CPython 3.12, no network
     result_record: docs/aspice/verification-results/latest.md
   - id: VM-REGRESSION
     level: SWE.6
     technique: automated regression testing
     command: python tests/run.py --regression
     pass_fail: pytest exit code 0
-    environment: Python 3.11/3.12, no network
+    environment: CPython 3.12, no network
     result_record: docs/aspice/verification-results/latest.md
   - id: VM-INTEGRATION-PIPELINE
     level: SWE.5
