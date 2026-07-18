@@ -26078,7 +26078,7 @@
 | [scripts/create_system_test_issues.py](#unit-eefb367071) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) | selected |
 | [scripts/estimate_llm_tokens.py](#unit-3fa67ae3bf) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
 | [scripts/export_sample_report.py](#unit-2781538ff5) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/generate_aspice_readable_docs.py](#unit-44da65110b) | 22 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/generate_aspice_readable_docs.py](#unit-44da65110b) | 23 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
 | [scripts/generate_aspice_software_evidence.py](#unit-70ee096332) | 23 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
 | [scripts/inspect_archive.py](#unit-37e036c51b) | 6 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
 | [scripts/regression_test.py](#unit-ebde8e6443) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) | selected |
@@ -26971,14 +26971,14 @@
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/generate_aspice_readable_docs.py` 的职责，通过 `expected_outputs`、`main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
-| 函数 / 高风险函数 | 22 / 0 |
+| 函数 / 高风险函数 | 23 / 0 |
 | 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/regression/test_aspice_assets.py](../../tests/regression/test_aspice_assets.py)、[tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
 #### 函数导航
 
-[_yaml](#fun-8e0ae30e6f) · [_csv](#fun-b8135ddcb1) · [_cell](#fun-211336c6ae) · [_list](#fun-36e6a8909a) · [_anchor](#fun-0ad419ab09) · [_req_links](#fun-2631f769a2) · [_arch_links](#fun-532ec35635) · [_measure_links](#fun-a9d2621b2a) · [_test_links](#fun-0aee39f96b) · [_table](#fun-84d7ee0257) · [_front](#fun-6a04465af3) · [_requirements_doc](#fun-1839614189) · [_architecture_doc](#fun-73cd1d7b70) · [_design_doc](#fun-aa8fad0df6) · [_unit_section](#fun-4e2eb68af0) · [_unit_verification_doc](#fun-34bbf83058) · [_integration_doc](#fun-be2fd65386) · [_qualification_doc](#fun-2336ffb14c) · [_configuration_doc](#fun-009efeb3d5) · [_traceability_doc](#fun-48fe08d05f) · [expected_outputs](#fun-a614f5b1a4) · [main](#fun-1ea9f2053e)
+[_yaml](#fun-8e0ae30e6f) · [_csv](#fun-b8135ddcb1) · [_cell](#fun-211336c6ae) · [_list](#fun-36e6a8909a) · [_anchor](#fun-0ad419ab09) · [_req_links](#fun-2631f769a2) · [_arch_links](#fun-532ec35635) · [_measure_links](#fun-a9d2621b2a) · [_test_links](#fun-0aee39f96b) · [_table](#fun-84d7ee0257) · [_front](#fun-6a04465af3) · [_requirements_doc](#fun-1839614189) · [_architecture_diagrams](#fun-c0e8b72578) · [_architecture_doc](#fun-73cd1d7b70) · [_design_doc](#fun-aa8fad0df6) · [_unit_section](#fun-4e2eb68af0) · [_unit_verification_doc](#fun-34bbf83058) · [_integration_doc](#fun-be2fd65386) · [_qualification_doc](#fun-2336ffb14c) · [_configuration_doc](#fun-009efeb3d5) · [_traceability_doc](#fun-48fe08d05f) · [expected_outputs](#fun-a614f5b1a4) · [main](#fun-1ea9f2053e)
 
 <a id="fun-8e0ae30e6f"></a>
 
@@ -27244,6 +27244,28 @@
 | 复杂度 / 风险 | 分支 2；跨度 42 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
+<a id="fun-c0e8b72578"></a>
+
+#### FUN-C0E8B72578
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_architecture_diagrams` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L151` |
+| 签名 | `_architecture_diagrams()` |
+| 参数 | 无显式输入参数 |
+| 返回 | 返回 `list[str]` 类型结果 |
+| 职责 | 构建`architecture_diagrams`；返回 `list[str]` 类型结果。 |
+| 处理逻辑 | 直接通过表达式、字段访问或常量完成处理；不包含显式控制分支。 |
+| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `list[str]` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | 无直接调用依赖 |
+| 复杂度 / 风险 | 分支 0；跨度 124 行；中 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
 <a id="fun-73cd1d7b70"></a>
 
 #### FUN-73CD1D7B70
@@ -27251,19 +27273,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_architecture_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L151` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L277` |
 | 签名 | `_architecture_doc(arch: dict[str, Any], units: list[dict[str, str]])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型<br>`units`（list[dict[str, str]]）：由 `units` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
 | 职责 | 生成`architecture_doc`文本；返回 `str` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `defaultdict` → `append` → `_front` → `_table` → `_anchor` → `join` → `enumerate` → `_req_links`；包含 5 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `defaultdict` → `append` → `_front` → `_table` → `_architecture_diagrams` → `_anchor` → `join` → `enumerate`；包含 5 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | defaultdict、append、_front、_table、len、_anchor、join、enumerate、_req_links、lower、interface_kind_names.get |
-| 复杂度 / 风险 | 分支 5；跨度 64 行；中 |
+| 调用依赖 | defaultdict、append、_front、_table、len、_architecture_diagrams、_anchor、join、enumerate、_req_links、lower、interface_kind_names.get |
+| 复杂度 / 风险 | 分支 5；跨度 65 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-aa8fad0df6"></a>
@@ -27273,7 +27295,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_design_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L217` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L344` |
 | 签名 | `_design_doc(arch: dict[str, Any], units: list[dict[str, str]], functions: list[dict[str, str]], verification: dict[str, dict[str, str]])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型<br>`units`（list[dict[str, str]]）：由 `units` 表示的输入集合<br>`functions`（list[dict[str, str]]）：由 `functions` 表示的输入集合<br>`verification`（dict[str, dict[str, str]]）：验证证据或验证配置 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27295,7 +27317,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_unit_section` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L275` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L402` |
 | 签名 | `_unit_section(unit: dict[str, str], functions: list[dict[str, str]], verification: dict[str, str], component_name: str)` |
 | 参数 | `unit`（dict[str, str]）：由 `unit` 表示的键值映射<br>`functions`（list[dict[str, str]]）：由 `functions` 表示的输入集合<br>`verification`（dict[str, str]）：验证证据或验证配置<br>`component_name`（str）：对象名称 |
 | 返回 | 返回 `list[str]` 类型结果 |
@@ -27317,7 +27339,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_unit_verification_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L359` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L486` |
 | 签名 | `_unit_verification_doc(arch: dict[str, Any], rows: list[dict[str, str]])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型<br>`rows`（list[dict[str, str]]）：记录行集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27339,7 +27361,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_integration_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L385` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L512` |
 | 签名 | `_integration_doc(plan: dict[str, Any])` |
 | 参数 | `plan`（dict[str, Any]）：由 `plan` 表示的键值映射 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27361,7 +27383,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_qualification_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L417` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L544` |
 | 签名 | `_qualification_doc(measures: dict[str, Any], coverage: list[dict[str, str]])` |
 | 参数 | `measures`（dict[str, Any]）：由 `measures` 表示的键值映射<br>`coverage`（list[dict[str, str]]）：由 `coverage` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27383,7 +27405,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_configuration_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L443` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L570` |
 | 签名 | `_configuration_doc(cm: dict[str, Any])` |
 | 参数 | `cm`（dict[str, Any]）：由 `cm` 表示的键值映射 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27405,7 +27427,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_traceability_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L461` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L588` |
 | 签名 | `_traceability_doc(reqs: dict[str, Any], coverage: list[dict[str, str]])` |
 | 参数 | `reqs`（dict[str, Any]）：由 `reqs` 表示的键值映射<br>`coverage`（list[dict[str, str]]）：由 `coverage` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27427,7 +27449,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `expected_outputs` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L471` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L598` |
 | 签名 | `expected_outputs()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[Path, str]` 类型结果 |
@@ -27449,7 +27471,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `main` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L495` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L622` |
 | 签名 | `main()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `int` 类型结果 |

@@ -25,6 +25,128 @@
 | ARC-VIZ | Streamlit 展示 | 21 | 展示报告、图表、外部数据、决策链、拒绝原因、回放和配置。 |
 | ARC-TOOLS | 开发、审核与运维工具 | 18 | 校验连接、检查归档、生成样例和执行 ASPICE 一致性检查。 |
 
+## 模块分层与依赖图
+
+箭头表示主要运行时依赖或数据流；虚线表示运维、审核或离线工具关系。组件 ID 可与后续组件章节直接对应。
+
+```mermaid
+flowchart LR
+  subgraph ENTRY["入口与展示层"]
+    APP["ARC-APP<br/>应用入口与运行配置"]
+    VIZ["ARC-VIZ<br/>Streamlit 展示"]
+  end
+  subgraph ORCH["编排与决策层"]
+    CORE["ARC-CORE<br/>主编排与进度"]
+    ANALYSIS["ARC-ANALYSIS<br/>事实、信号与报告门禁"]
+    AGENTS["ARC-AGENTS<br/>规则/LLM Agent 编排"]
+    LLM["ARC-LLM<br/>传输、上下文和策略"]
+  end
+  subgraph DATA_LAYER["数据与计算层"]
+    DATA["ARC-DATA<br/>行情与外部数据"]
+    IND["ARC-INDICATORS<br/>指标计算"]
+    BACKTEST["ARC-BACKTEST<br/>Point-in-time 回测"]
+  end
+  subgraph PERSIST["运行记录与工具层"]
+    RUN["ARC-RUN<br/>运行上下文与归档"]
+    TOOLS["ARC-TOOLS<br/>开发、审核与运维工具"]
+  end
+  APP -->|启动/配置| CORE
+  APP -->|页面交互| VIZ
+  CORE -->|获取请求| DATA
+  DATA -->|标准 OHLCV| IND
+  DATA -->|MarketContext| ANALYSIS
+  IND -->|指标快照| ANALYSIS
+  ANALYSIS -->|事实与候选计划| AGENTS
+  AGENTS -->|阶段载荷| LLM
+  LLM -->|结构化阶段结果| AGENTS
+  AGENTS -->|决策与授权结果| ANALYSIS
+  ANALYSIS -->|门禁后报告| CORE
+  CORE -->|运行快照| RUN
+  RUN -->|加载回放| VIZ
+  ANALYSIS -->|报告与审计| VIZ
+  APP -->|回测配置| BACKTEST
+  DATA -->|历史切片| BACKTEST
+  TOOLS -.->|检查/导入导出| RUN
+  TOOLS -.->|一致性校验| CORE
+```
+
+## 主流水线时序图
+
+```mermaid
+sequenceDiagram
+  actor User as 用户/页面
+  participant App as ARC-APP
+  participant Core as ARC-CORE
+  participant Data as ARC-DATA
+  participant Ind as ARC-INDICATORS
+  participant Ana as ARC-ANALYSIS
+  participant Agents as ARC-AGENTS
+  participant LLM as ARC-LLM
+  participant Run as ARC-RUN
+  participant Viz as ARC-VIZ
+  User->>App: 选择模式并启动分析
+  App->>Core: run_trade_agent_pipeline(config, progress)
+  Core->>Run: 建立 RunContext
+  Core->>Data: 获取行情与外部证据
+  Data-->>Core: MarketContext + 来源/时效状态
+  Core->>Ind: 计算多周期指标
+  Ind-->>Ana: enriched OHLCV + 指标快照
+  Core->>Ana: 构建事实、结构和候选计划
+  Ana->>Agents: 合格事实与候选计划
+  opt MODE-LLM 或 MODE-HYBRID
+    Agents->>LLM: 分阶段结构化载荷
+    LLM-->>Agents: schema 校验后的阶段结果
+  end
+  Agents-->>Ana: AgentTrace + ManagerDecision
+  Ana->>Ana: 执行事实资格与报告不变量门禁
+  Ana-->>Core: 门禁后的报告和审计结果
+  Core->>Run: 原子保存成功或失败归档
+  Core-->>App: report + enriched data + analyses
+  App->>Viz: 渲染同一报告快照
+  Viz-->>User: 报告、图表和决策审计
+```
+
+## 运行模式与回放边界图
+
+```mermaid
+flowchart TD
+  START["RunConfig.mode"] --> MODE{"运行模式"}
+  MODE -->|rule| RULE["规则 Agent + 确定性门禁"]
+  MODE -->|llm| LLM_MODE["LLM 分阶段决策"]
+  MODE -->|hybrid| HYBRID["规则基线 + 合格 LLM 覆盖"]
+  MODE -->|replay| REPLAY["从 ARC-RUN 加载归档"]
+  RULE --> LIVE_DATA["ARC-DATA 获取当前数据"]
+  LLM_MODE --> LIVE_DATA
+  HYBRID --> LIVE_DATA
+  LIVE_DATA --> PIPELINE["ARC-CORE 主流水线"]
+  PIPELINE --> GATE["ARC-ANALYSIS 报告门禁"]
+  GATE --> SAVE["ARC-RUN 保存不可变快照"]
+  REPLAY --> COMPAT{"schema/manifest 兼容校验"}
+  COMPAT -->|通过| SNAPSHOT["加载冻结报告和数据"]
+  COMPAT -->|失败| DIAG["返回明确诊断，不执行新分析"]
+  SNAPSHOT --> NO_IO["禁止 fetch 和新 LLM 调用"]
+  SAVE --> VIZ_OUT["ARC-VIZ 展示"]
+  NO_IO --> VIZ_OUT
+```
+
+## 跨组件接口流向图
+
+```mermaid
+flowchart LR
+  DATA["ARC-DATA"] -->|IF-DATA-CONTEXT| ANALYSIS["ARC-ANALYSIS"]
+  IND["ARC-INDICATORS"] -->|IF-DATA-CONTEXT| ANALYSIS
+  DATA -->|IF-DATA-CONTEXT| AGENTS["ARC-AGENTS"]
+  ANALYSIS -->|IF-ANALYSIS-AGENTS| AGENTS
+  ANALYSIS -->|IF-ANALYSIS-AGENTS| LLM["ARC-LLM"]
+  AGENTS -->|IF-AGENTS-REPORT| ANALYSIS
+  AGENTS -->|IF-AGENTS-REPORT| CORE["ARC-CORE"]
+  ANALYSIS -->|IF-REPORT-ARCHIVE| RUN["ARC-RUN"]
+  CORE -->|IF-REPORT-ARCHIVE| RUN
+  ANALYSIS -->|IF-REPORT-ARCHIVE| VIZ["ARC-VIZ"]
+  CORE -->|IF-REPORT-ARCHIVE| VIZ
+```
+
+
 ## 运行模式
 
 | 模式 | 行为 |
