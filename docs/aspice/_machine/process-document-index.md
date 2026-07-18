@@ -1,6 +1,6 @@
 # ASPICE 过程文档索引
 
-本文件由 `python scripts/check_aspice_assets.py --write` 生成。人工评审以 `../README.md` 导航的 Markdown 主文档为准；完整机器注册表位于 `../_machine/document-register.csv`。
+本文件由 `python scripts/check_aspice_assets.py --write` 生成。人工评审以 `../software-domain.md` 导航的 Markdown 主文档为准；完整机器注册表位于 `../_machine/document-register.csv`。
 
 ## MAN.3/MAN.5
 
@@ -8,8 +8,8 @@
 |---|---|---|---|
 | [交易分析系统持续审核蓝图](../../management/audit-plan.md) | Project/Risk Plan | reviewed | supporting |
 | [Codex 自动优化目标模板](../../management/codex-autonomy.md) | Project/Risk Plan | reviewed | supporting |
+| [项目管理文档](../../management/project-management.md) | Project/Risk Plan | reviewed | supporting |
 | [Project Overview](../../management/project.md) | Project/Risk Plan | reviewed | supporting |
-| [项目管理文档](../../management/README.md) | Project/Risk Plan | reviewed | supporting |
 | [GoldAnalysisAI 路线图](../../management/roadmap.md) | Project/Risk Plan | reviewed | supporting |
 | [Current Status](../../management/status.md) | Project/Risk Plan | reviewed | supporting |
 
@@ -25,18 +25,18 @@
 | [GoldAnalysisAI 金融实现 Review 报告](../records/reviews/financial/static-code-review.md) | Review/Problem Analysis Evidence | reviewed | supporting |
 | [评审发现项 · 完成状态登记](../records/reviews/findings-status.md) | Review/Problem Analysis Evidence | reviewed | supporting |
 | [GUI 验收快照：2026-07-08](../records/reviews/gui/streamlit-acceptance-2026-07-08.md) | Review/Problem Analysis Evidence | reviewed | supporting |
-| [评审文档索引](../records/reviews/README.md) | Review/Problem Analysis Evidence | reviewed | supporting |
+| [评审文档索引](../records/reviews/review-index.md) | Review/Problem Analysis Evidence | reviewed | supporting |
 
 ## SUP.8
 
 | 文档 | 信息项 | 状态 | 权威性 |
 |---|---|---|---|
 | [Instructions for AI Agents & Automation](../../../AGENTS.md) | Document/Automation Guidance | reviewed | supporting |
+| [历史归档说明](../../archive/archive-policy.md) | Historical Record | historical | historical |
 | [已迁移](../../archive/domain/financial-review-run-2026-06-20.md) | Historical Record | historical | historical |
 | [已迁移](../../archive/domain/financial-review.md) | Historical Record | historical | historical |
 | [群友黄金分析报告 — 实现反推](../../archive/domain/reverse-engineering.md) | Historical Record | historical | historical |
 | [已迁移](../../archive/gui-acceptance-2026-07-08.md) | Historical Record | historical | historical |
-| [Archive](../../archive/README.md) | Historical Record | historical | historical |
 | [configuration management](../_machine/configuration-management.yaml) | Configuration Item/Baseline | agreed | normative |
 | [dependency lock](../_machine/dependency-lock.txt) | Configuration Item/Baseline | agreed | normative |
 | [document register](../_machine/document-register.csv) | Configuration Status Record | generated | generated |
@@ -47,7 +47,7 @@
 | [ASPICE 软件域范围与关闭准则](../governance/scope-and-closure.md) | Document Control | agreed | normative |
 | [Testing Strategy](../governance/verification-strategy.md) | Document Control | agreed | normative |
 | [SUP.8 软件配置管理](../SUP.8-configuration-management.md) | Configuration Status/Baseline | agreed | normative |
-| [GoldAnalysisAI 文档中心](../../README.md) | Document/Automation Guidance | reviewed | supporting |
+| [GoldAnalysisAI 文档中心](../../documentation-center.md) | Document/Automation Guidance | reviewed | supporting |
 
 ## SUP.8/MAN.3
 
@@ -56,7 +56,7 @@
 | [cursor mcp.json](../../operations/integrations/cursor-mcp.json.example) | Operation/Configuration Guidance | reviewed | supporting |
 | [金十数据 MCP 接入](../../operations/integrations/jin10-mcp.md) | Operation/Configuration Guidance | reviewed | supporting |
 | [开发者上手指南](../../operations/onboarding.md) | Operation/Configuration Guidance | reviewed | supporting |
-| [运维与使用文档](../../operations/README.md) | Operation/Configuration Guidance | reviewed | supporting |
+| [运维与使用文档](../../operations/operations-guide.md) | Operation/Configuration Guidance | reviewed | supporting |
 | [环境搭建与运行](../../operations/setup.md) | Operation/Configuration Guidance | reviewed | supporting |
 | [界面操作动线](../../operations/walkthrough.md) | Operation/Configuration Guidance | reviewed | supporting |
 
@@ -73,7 +73,7 @@
 | 文档 | 信息项 | 状态 | 权威性 |
 |---|---|---|---|
 | [traceability matrix](../_machine/traceability-matrix.csv) | 13-51 Consistency Evidence | generated | generated |
-| [Automotive SPICE 软件域](../README.md) | Software Domain Navigation | agreed | normative |
+| [Automotive SPICE 软件域](../software-domain.md) | Software Domain Navigation | agreed | normative |
 | [软件双向追溯](../traceability.md) | 13-51 Consistency Evidence | agreed | normative |
 
 ## SWE.2
@@ -86,9 +86,9 @@
 | [主图与多周期决策分层](../SWE.2-architecture/chart-layers.md) | 04-04 Software Architecture | reviewed | supporting |
 | [架构健康评审](../SWE.2-architecture/health-review.md) | 04-04 Software Architecture | reviewed | supporting |
 | [LLM 多智能体架构](../SWE.2-architecture/llm-agents.md) | 04-04 Software Architecture | reviewed | supporting |
-| [SWE.2 软件架构设计](../SWE.2-architecture/README.md) | 04-04 Software Architecture | agreed | normative |
 | [报告可信度层（Report Trust）](../SWE.2-architecture/report-trust.md) | 04-04 Software Architecture | reviewed | supporting |
 | [SMC + PA 叙事组合](../SWE.2-architecture/smc-pa-narrative.md) | 04-04 Software Architecture | reviewed | supporting |
+| [SWE.2 软件架构设计](../SWE.2-architecture/software-architecture.md) | 04-04 Software Architecture | agreed | normative |
 | [GoldAnalysisAI 架构设计（TradingAgents 参考）](../SWE.2-architecture/system-overview.md) | 04-04 Software Architecture | reviewed | supporting |
 | [技术分析模块架构](../SWE.2-architecture/technical-analysis.md) | 04-04 Software Architecture | reviewed | supporting |
 
@@ -111,15 +111,15 @@
 | [ARC-TOOLS — 开发、审核与运维工具](../SWE.3-detailed-design/ARC-TOOLS.md) | 04-05 Software Detailed Design | agreed | normative |
 | [ARC-VIZ — Streamlit 展示](../SWE.3-detailed-design/ARC-VIZ.md) | 04-05 Software Detailed Design | agreed | normative |
 | [关键软件单元详细设计](../SWE.3-detailed-design/critical-units.md) | 04-05 Software Detailed Design | agreed | normative |
-| [SWE.3 软件详细设计](../SWE.3-detailed-design/README.md) | 04-05 Software Detailed Design | agreed | normative |
 | [开发者速查表](../SWE.3-detailed-design/reference/cheat-sheet.md) | 04-05 Software Detailed Design | agreed | normative |
+| [详细设计参考](../SWE.3-detailed-design/reference/design-reference.md) | 04-05 Software Detailed Design | agreed | normative |
 | [报告 JSON 结构说明](../SWE.3-detailed-design/reference/examples/report-schema.md) | 04-05 Software Detailed Design | agreed | normative |
 | [sample report](../SWE.3-detailed-design/reference/examples/sample-report.json) | 04-05 Software Detailed Design | agreed | normative |
 | [术语表](../SWE.3-detailed-design/reference/glossary.md) | 04-05 Software Detailed Design | agreed | normative |
 | [GoldAnalysisAI 开发参考手册](../SWE.3-detailed-design/reference/handbook.md) | 04-05 Software Detailed Design | agreed | normative |
 | [pipeline steps](../SWE.3-detailed-design/reference/pipeline-steps.yaml) | 04-05 Software Detailed Design | agreed | normative |
-| [详细设计参考](../SWE.3-detailed-design/reference/README.md) | 04-05 Software Detailed Design | agreed | normative |
 | [Run archive replay contract](../SWE.3-detailed-design/reference/run-archive-schema.md) | 04-05 Software Detailed Design | agreed | normative |
+| [SWE.3 软件详细设计](../SWE.3-detailed-design/software-detailed-design.md) | 04-05 Software Detailed Design | agreed | normative |
 
 ## SWE.4
 
@@ -137,9 +137,9 @@
 | [software domain 2026 07 18](../records/verification/software-domain-2026-07-18.yaml) | 08-60/15-52 Verification | agreed | normative |
 | [catalog](../../../tests/cases/catalog.yaml) | Verification Strategy/Measure | reviewed | supporting |
 | [金融 Review 测试用例设计](../../../tests/cases/financial-review-cases.md) | Verification Strategy/Measure | reviewed | supporting |
-| [测试用例目录](../../../tests/cases/README.md) | Verification Strategy/Measure | reviewed | supporting |
+| [测试用例目录](../../../tests/cases/test-case-guide.md) | Verification Strategy/Measure | reviewed | supporting |
 | [GoldAnalysisAI 测试用例设计](../../../tests/cases/test-plan.md) | Verification Strategy/Measure | reviewed | supporting |
-| [GoldAnalysisAI 测试体系](../../../tests/README.md) | Verification Strategy/Measure | reviewed | supporting |
+| [GoldAnalysisAI 测试体系](../../../tests/testing-system.md) | Verification Strategy/Measure | reviewed | supporting |
 
 ## SWE.5
 

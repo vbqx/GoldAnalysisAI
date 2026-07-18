@@ -6,10 +6,10 @@
 
 | 目标 | 入口 | 内容边界 |
 |---|---|---|
-| 理解并评审软件 | [ASPICE 软件域](./aspice/README.md) | 需求、架构、详细设计、UT、IT、VT 与追溯 |
-| 安装、运行和排障 | [运维与使用](./operations/README.md) | 环境、启动、数据源接入和操作流程 |
-| 查看状态和后续计划 | [项目管理](./management/README.md) | 项目状态、路线图、审核计划和自动化工作方式 |
-| 查阅已替代材料 | [历史归档](./archive/README.md) | 不再代表当前设计的历史资料 |
+| 理解并评审软件 | [ASPICE 软件域](./aspice/software-domain.md) | 需求、架构、详细设计、UT、IT、VT 与追溯 |
+| 安装、运行和排障 | [运维与使用](./operations/operations-guide.md) | 环境、启动、数据源接入和操作流程 |
+| 查看状态和后续计划 | [项目管理](./management/project-management.md) | 项目状态、路线图、审核计划和自动化工作方式 |
+| 查阅已替代材料 | [历史归档](./archive/archive-policy.md) | 不再代表当前设计的历史资料 |
 
 ## 权威规则
 

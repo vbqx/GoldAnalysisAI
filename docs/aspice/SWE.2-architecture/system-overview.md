@@ -2,7 +2,7 @@
 
 > **原则**：前端 Streamlit 不变；`run_analysis()` 仍返回 `(report, data, analyses)`。
 > 内部分层按 [TradingAgents](https://github.com/TauricResearch/TradingAgents) 多智能体流水线重构。
-> 文档索引见 [docs/README.md](../README.md)。
+> 软件域索引见 [software-domain.md](../software-domain.md)。
 
 ---
 

@@ -68,7 +68,7 @@ def test_every_function_and_document_has_an_aspice_mapping() -> None:
     assert {row["path"] for row in documents} >= {
         "README.md",
         "AGENTS.md",
-        "docs/README.md",
+        "docs/documentation-center.md",
         "docs/aspice/_machine/software-requirements.yaml",
         "docs/aspice/_machine/software-architecture.yaml",
     }
@@ -150,7 +150,7 @@ def test_architecture_interfaces_are_reviewable() -> None:
     required = {"kind", "purpose", "parameters", "returns", "failures"}
     assert all(all(item.get(field) for field in required) for item in specifications)
     assert all(all(item.get(field) for field in required - {"kind"}) for item in architecture["interfaces"])
-    readable = (ROOT / "docs/aspice/SWE.2-architecture/README.md").read_text(encoding="utf-8-sig")
+    readable = (ROOT / "docs/aspice/SWE.2-architecture/software-architecture.md").read_text(encoding="utf-8-sig")
     assert all(f"### {component['id']}-IF-01" in readable for component in architecture["components"])
     assert "| 输入参数 |" in readable and "| 失败 / 异常行为 |" in readable
     assert readable.count("```mermaid") == 5
@@ -168,7 +168,7 @@ def test_readable_aspice_navigation_covers_requirement_to_vt_chain() -> None:
     aspice = ROOT / "docs" / "aspice"
     documents = {
         "requirements": (aspice / "SWE.1-software-requirements.md").read_text(encoding="utf-8-sig"),
-        "architecture": (aspice / "SWE.2-architecture" / "README.md").read_text(encoding="utf-8-sig"),
+        "architecture": (aspice / "SWE.2-architecture" / "software-architecture.md").read_text(encoding="utf-8-sig"),
         "unit_test": (aspice / "SWE.4-unit-testing.md").read_text(encoding="utf-8-sig"),
         "integration_test": (aspice / "SWE.5-integration-testing.md").read_text(encoding="utf-8-sig"),
         "validation_test": (aspice / "SWE.6-validation-testing.md").read_text(encoding="utf-8-sig"),
@@ -192,7 +192,7 @@ def test_readable_aspice_navigation_covers_requirement_to_vt_chain() -> None:
     assert "| 设计项 | 说明 |" in design
     assert "| 参数 |" in design and "| 处理逻辑 |" in design
     assert "[SWR-CORE-001](#swr-core-001)" in documents["requirements"]
-    assert "SWE.2-architecture/README.md" in documents["requirements"]
+    assert "SWE.2-architecture/software-architecture.md" in documents["requirements"]
     assert "SWE.3-detailed-design/" in documents["architecture"]
     assert "SWE.3-detailed-design/" in documents["unit_test"]
     assert "SWE.1-software-requirements.md" in documents["integration_test"]

@@ -9,7 +9,7 @@
 > 本文是人工阅读、评审和变更讨论的正式入口。结构化校验数据位于
 > `_machine/`，普通评审无需直接阅读机器文件。
 
-[返回 SWE.3 组件导航](./README.md) · [返回 SWE.2 架构组件](../SWE.2-architecture/README.md#arc-llm)
+[返回 SWE.3 组件导航](./software-detailed-design.md) · [返回 SWE.2 架构组件](../SWE.2-architecture/software-architecture.md#arc-llm)
 
 ## 组件概览
 

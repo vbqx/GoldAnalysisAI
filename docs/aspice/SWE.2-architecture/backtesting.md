@@ -252,8 +252,8 @@ Datetime,Open,High,Low,Close,Volume
 
 ## 9. 相关文档
 
-- [架构专题导航](./README.md)
+- [架构专题导航](./software-architecture.md)
 - [系统架构总览](./system-overview.md)
 - [LLM 多智能体架构](./llm-agents.md)
 - [架构健康评审](./health-review.md)
-- [ASPICE SWE.2 软件架构设计](./README.md)
+- [ASPICE SWE.2 软件架构设计](./software-architecture.md)

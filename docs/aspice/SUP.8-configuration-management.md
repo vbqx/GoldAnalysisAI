@@ -32,8 +32,8 @@
 | ID | 路径 | 过程 |
 |---|---|---|
 | CI-SWR | docs/aspice/SWE.1-software-requirements.md | SWE.1 |
-| CI-SAD | docs/aspice/SWE.2-architecture/README.md | SWE.2 |
-| CI-SDD | docs/aspice/SWE.3-detailed-design/README.md | SWE.3 |
+| CI-SAD | docs/aspice/SWE.2-architecture/software-architecture.md | SWE.2 |
+| CI-SDD | docs/aspice/SWE.3-detailed-design/software-detailed-design.md | SWE.3 |
 | CI-FUNCTION-MAP | docs/aspice/_machine/software-function-map.csv | SWE.3 |
 | CI-FUNCTION-DESIGN | docs/aspice/_machine/software-function-detailed-design.csv | SWE.3 |
 | CI-UNIT-VERIFICATION | docs/aspice/SWE.4-unit-testing.md | SWE.4 |

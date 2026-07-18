@@ -14,10 +14,10 @@ configuration_items:
     path: docs/aspice/SWE.1-software-requirements.md
     process: SWE.1
   - id: CI-SAD
-    path: docs/aspice/SWE.2-architecture/README.md
+    path: docs/aspice/SWE.2-architecture/software-architecture.md
     process: SWE.2
   - id: CI-SDD
-    path: docs/aspice/SWE.3-detailed-design/README.md
+    path: docs/aspice/SWE.3-detailed-design/software-detailed-design.md
     process: SWE.3
   - id: CI-FUNCTION-MAP
     path: docs/aspice/_machine/software-function-map.csv

@@ -1,6 +1,6 @@
 # GoldAnalysisAI 开发参考手册
 
-本文件只保留代码级参考：调用链、模块职责、扩展点和调试入口。项目定位读 [project.md](../../../management/project.md)，架构边界读 [architecture.md](../../SWE.2-architecture/system-overview.md)、[report-trust.md](../../SWE.2-architecture/report-trust.md) 与 [review.md](../../SWE.2-architecture/health-review.md)（评审索引见 [reviews/README.md](../../records/reviews/README.md)），测试策略读 [strategy.md](../../governance/verification-strategy.md)。
+本文件只保留代码级参考：调用链、模块职责、扩展点和调试入口。项目定位读 [project.md](../../../management/project.md)，架构边界读 [architecture.md](../../SWE.2-architecture/system-overview.md)、[report-trust.md](../../SWE.2-architecture/report-trust.md) 与 [review.md](../../SWE.2-architecture/health-review.md)（评审索引见 [review-index.md](../../records/reviews/review-index.md)），测试策略读 [strategy.md](../../governance/verification-strategy.md)。
 
 ## 入口
 
@@ -181,7 +181,7 @@ LOG_FILE=logs/goldanalysisai.log
 
 | 文档 | 用途 |
 |------|------|
-| [docs/README.md](../README.md) | 文档中心 |
+| [docs/documentation-center.md](../../../documentation-center.md) | 文档中心 |
 | [onboarding.md](../../../operations/onboarding.md) | 首次读项目 |
 | [cheat-sheet.md](./cheat-sheet.md) | 改功能速查 |
 | [glossary.md](./glossary.md) | 术语表 |

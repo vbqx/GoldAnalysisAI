@@ -14,8 +14,9 @@
 
 ## 3. 单一入口
 
-- 全项目入口：`docs/README.md`。
-- 软件域入口：`docs/aspice/README.md`。
+- 全项目入口：`docs/documentation-center.md`。
+- 软件域入口：`docs/aspice/software-domain.md`。
+- 仓库根目录 `README.md` 是唯一保留的 README；其他文档必须按实际职责使用语义化文件名。
 - 每个 ASPICE 过程只有一个主入口；专题和组件文件必须从主入口可达。
 - SWE.3 的“一个域一个文档”解释为一个过程入口，而不是把全部函数堆进一个超大文件。
 

@@ -7,7 +7,7 @@
 **不包含**：VaR/Sharpe/回测等未规划能力
 **评审日期**：2026-06-14（静态代码评审）· **实跑补充**：2026-06-20
 **分发对象**：开发团队、测试团队、产品/UI
-**相关文档**：[docs/README.md](../../../../README.md) · [operations/setup.md](../../../../operations/setup.md) · [reverse-engineering.md](../../../../archive/domain/reverse-engineering.md) · [architecture.md](../../../SWE.2-architecture/system-overview.md) · [tests/cases/catalog.yaml](../../../../../tests/cases/catalog.yaml) · **[runtime-review-2026-06-20.md](./runtime-review-2026-06-20.md)**（实跑评审） · [findings-status.md](../findings-status.md)
+**相关文档**：[docs/documentation-center.md](../../../../documentation-center.md) · [operations/setup.md](../../../../operations/setup.md) · [reverse-engineering.md](../../../../archive/domain/reverse-engineering.md) · [architecture.md](../../../SWE.2-architecture/system-overview.md) · [tests/cases/catalog.yaml](../../../../../tests/cases/catalog.yaml) · **[runtime-review-2026-06-20.md](./runtime-review-2026-06-20.md)**（实跑评审） · [findings-status.md](../findings-status.md)
 
 ---
 

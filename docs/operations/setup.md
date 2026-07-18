@@ -108,7 +108,7 @@ python tests/run.py --financial    # 金融 Review FIN-*
 python tests/run.py --full         # 含完整流水线
 ```
 
-详见 [tests/README.md](../../tests/README.md)。
+详见 [tests/testing-system.md](../../tests/testing-system.md)。
 
 ---
 
@@ -137,7 +137,7 @@ report, data, analyses = run_analysis()
 | [onboarding.md](./onboarding.md) | 15 分钟开发者入门 |
 | [handbook.md](../aspice/SWE.3-detailed-design/reference/handbook.md) | 完整数据流与模块参考 |
 | [cheat-sheet.md](../aspice/SWE.3-detailed-design/reference/cheat-sheet.md) | 改功能速查 |
-| [../README.md](../README.md) | 文档中心索引 |
+| [../documentation-center.md](../documentation-center.md) | 文档中心索引 |
 
 ---
 

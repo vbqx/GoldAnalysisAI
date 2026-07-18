@@ -21,8 +21,8 @@ SWE.4、SWE.5 和 SWE.6。SUP、MAN、ACQ、SPL、SYS、HWE、MLE、PIM 与 REU 
 | 过程 | 关闭条件 | 主要证据 |
 |---|---|---|
 | SWE.1 | 发布需求属性完整，均有架构和验证正向链接，反向无孤儿 | [软件需求](../SWE.1-software-requirements.md)、[双向追溯](../traceability.md) |
-| SWE.2 | 组件、接口、模式和动态行为受控，并与需求双向一致 | [软件架构](../SWE.2-architecture/README.md)、[IT](../SWE.5-integration-testing.md) |
-| SWE.3 | 所有 unit/function 有稳定 ID；全部函数有 as-built 设计字段；公开/高风险设计可审查 | [软件详细设计](../SWE.3-detailed-design/README.md) |
+| SWE.2 | 组件、接口、模式和动态行为受控，并与需求双向一致 | [软件架构](../SWE.2-architecture/software-architecture.md)、[IT](../SWE.5-integration-testing.md) |
+| SWE.3 | 所有 unit/function 有稳定 ID；全部函数有 as-built 设计字段；公开/高风险设计可审查 | [软件详细设计](../SWE.3-detailed-design/software-detailed-design.md) |
 | SWE.4 | 每个 unit 有选定验证措施；高风险 unit 有直接或受控组件级动态证据；无未处置阻断项 | [UT](../SWE.4-unit-testing.md)、JUnit 结果 |
 | SWE.5 | 集成顺序、接口、前置条件、桩、超时、资源、用例和结果均受控 | [IT](../SWE.5-integration-testing.md)、离线 integration JUnit |
 | SWE.6 | 每条软件需求均有验证措施和结果；发布验证绑定 Git、配置、环境和用例版本 | [VT](../SWE.6-validation-testing.md)、[最新结果](../records/verification/latest.md) |

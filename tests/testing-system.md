@@ -6,14 +6,14 @@
 
 ```
 tests/
-├── README.md                 # 本文件
+├── testing-system.md         # 测试体系、分层与执行说明
 ├── run.py                    # 统一入口：自动测试脚本
 ├── dashboard.py              # Streamlit 测试面板 UI
 ├── runner.py                 # 测试运行引擎（CLI + UI 共用）
 ├── conftest.py               # pytest 配置
 ├── _bootstrap.py             # 路径 / .env 引导
 ├── cases/
-│   ├── README.md             # 用例维护说明
+│   ├── test-case-guide.md    # 用例维护说明
 │   ├── test-plan.md          # 分层测试设计（UI→指标→功能→性能）
 │   └── catalog.yaml          # 用例目录（ID、优先级、是否自动化）
 ├── unit/                     # 单元测试（无网络，秒级）

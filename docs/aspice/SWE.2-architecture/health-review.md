@@ -1,7 +1,7 @@
 # 架构健康评审
 
 > **文档类型**：架构健康检查（持续维护，非一次性验收）  
-> **索引**：[reviews/README.md](../records/reviews/README.md) · 发现项状态见 [findings-status.md](../records/reviews/findings-status.md)（仅 F-* 金融项） · [持续审核蓝图](../../management/audit-plan.md)
+> **索引**：[review-index.md](../records/reviews/review-index.md) · 发现项状态见 [findings-status.md](../records/reviews/findings-status.md)（仅 F-* 金融项） · [持续审核蓝图](../../management/audit-plan.md)
 
 本文从可读性、边界和臃肿度审视当前项目。它不是 roadmap；只记录“现在的结构是否健康”。
 

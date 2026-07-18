@@ -16,8 +16,8 @@ flowchart LR
 | 顺序 | 过程 | 唯一入口 | 主要内容 |
 |---|---|---|---|
 | 1 | SWE.1 | [软件需求分析](SWE.1-software-requirements.md) | 需求、来源、优先级、接受准则、架构与验证链接 |
-| 2 | SWE.2 | [软件架构设计](SWE.2-architecture/README.md) | 组件、接口、数据流、运行模式和架构专题 |
-| 3 | SWE.3 | [软件详细设计](SWE.3-detailed-design/README.md) | 按组件拆分的软件单元和逐函数设计 |
+| 2 | SWE.2 | [软件架构设计](SWE.2-architecture/software-architecture.md) | 组件、接口、数据流、运行模式和架构专题 |
+| 3 | SWE.3 | [软件详细设计](SWE.3-detailed-design/software-detailed-design.md) | 按组件拆分的软件单元和逐函数设计 |
 | 4 | SWE.4 | [单元测试](SWE.4-unit-testing.md) | 单元风险、测试选择、动态测试和结果 |
 | 5 | SWE.5 | [集成测试](SWE.5-integration-testing.md) | 集成顺序、接口、桩、资源、用例和结果 |
 | 6 | SWE.6 | [验证测试](SWE.6-validation-testing.md) | 需求覆盖、接受结果和发布结论 |
@@ -33,7 +33,7 @@ flowchart LR
 | 软件域范围和关闭条件 | [范围与关闭准则](governance/scope-and-closure.md) |
 | 验证策略 | [验证策略](governance/verification-strategy.md) |
 | 最新验证结果 | [当前验证基线](records/verification/latest.md) |
-| 历史审核记录 | [审核记录](records/reviews/README.md) |
+| 历史审核记录 | [审核记录](records/reviews/review-index.md) |
 
 ## 目录边界
 

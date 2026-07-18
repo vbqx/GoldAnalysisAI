@@ -190,7 +190,7 @@ LOG_LEVEL=DEBUG
 
 ### 完整大模型体验
 
-见根目录 [README.md](../../README.md) 或 [llm-agents.md](../aspice/SWE.2-architecture/llm-agents.md) 中的环境变量说明。
+见 [文档中心](../documentation-center.md) 或 [llm-agents.md](../aspice/SWE.2-architecture/llm-agents.md) 中的环境变量说明。
 
 ### 启动 Streamlit（官方方式）
 
@@ -266,7 +266,7 @@ llm-agents.md（启用大模型时）
 
 | 文档 | 何时读 |
 |------|--------|
-| [README.md](../README.md) | 文档索引 |
+| [documentation-center.md](../documentation-center.md) | 文档索引 |
 | [cheat-sheet.md](../aspice/SWE.3-detailed-design/reference/cheat-sheet.md) | 改功能速查 |
 | [glossary.md](../aspice/SWE.3-detailed-design/reference/glossary.md) | 不懂术语 |
 | [setup.md](./setup.md) | 环境搭建入口 |

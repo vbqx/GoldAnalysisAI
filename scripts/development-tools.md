@@ -1,6 +1,6 @@
 # 开发脚本
 
-本目录**不再存放测试用例**。测试相关代码已迁移至 [`tests/`](../tests/README.md)。项目文档见 [`docs/README.md`](../docs/README.md)。
+本目录**不再存放测试用例**。测试相关代码已迁移至 [`tests/`](../tests/testing-system.md)。项目文档见 [`docs/documentation-center.md`](../docs/documentation-center.md)。
 
 ## 启动 Streamlit 应用
 

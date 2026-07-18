@@ -41,7 +41,7 @@ python run_app.py
 
 ## 文档
 
-完整索引见 **[docs/README.md](docs/README.md)**。
+完整索引见 **[docs/documentation-center.md](docs/documentation-center.md)**。
 
 | 文档 | 说明 |
 |------|------|
@@ -51,7 +51,7 @@ python run_app.py
 | [docs/operations/setup.md](docs/operations/setup.md) | 本地 / VPS / MT5 / 环境变量运行手册 |
 | [docs/aspice/SWE.2-architecture/system-overview.md](docs/aspice/SWE.2-architecture/system-overview.md) | 系统架构与 TradingAgents 对照 |
 | [docs/aspice/SWE.2-architecture/health-review.md](docs/aspice/SWE.2-architecture/health-review.md) | 架构体检：保留、合并、延后边界 |
-| [docs/aspice/README.md](docs/aspice/README.md) | ASPICE 软件需求、架构、详细设计、验证、配置基线与全部文档索引 |
+| [docs/aspice/software-domain.md](docs/aspice/software-domain.md) | ASPICE 软件需求、架构、详细设计、验证、配置基线与全部文档索引 |
 | [docs/aspice/governance/verification-strategy.md](docs/aspice/governance/verification-strategy.md) | fast / scenario / release 测试策略 |
 | [docs/aspice/SWE.3-detailed-design/reference/handbook.md](docs/aspice/SWE.3-detailed-design/reference/handbook.md) | 开发参考手册（调用链速查） |
 
@@ -178,7 +178,7 @@ $env:AGENT_MODE="rule"; $env:LLM_ENABLED="false"; python tests/tools/coherence_c
 python scripts/inspect_archive.py list
 ```
 
-测试分层、用例目录与维护说明见 [docs/aspice/governance/verification-strategy.md](docs/aspice/governance/verification-strategy.md)、[tests/README.md](tests/README.md)、[tests/cases/catalog.yaml](tests/cases/catalog.yaml)。
+测试分层、用例目录与维护说明见 [docs/aspice/governance/verification-strategy.md](docs/aspice/governance/verification-strategy.md)、[tests/testing-system.md](tests/testing-system.md)、[tests/cases/catalog.yaml](tests/cases/catalog.yaml)。
 
 **主图说明**：机构报告主图为 **5 分钟 K 线**（K 线 + 成交量 + Lux SMC：近位 5 个 Internal OB + 可见范围 active FVG）。远位多周期结构（如 4H 需求区）进入决策参考（关键流动性、市场总览、`context_levels`），**不画在主图**。详见 [docs/aspice/SWE.2-architecture/chart-layers.md](docs/aspice/SWE.2-architecture/chart-layers.md)。
 

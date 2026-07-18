@@ -60,7 +60,7 @@ def _req_links(values: list[str] | str, prefix: str = "") -> str:
 
 def _arch_links(values: list[str] | str, prefix: str = "") -> str:
     items = values.split(";") if isinstance(values, str) else values
-    return "、".join(f"[{item}]({prefix}SWE.2-architecture/README.md#{_anchor(item)})" for item in items if item) or "—"
+    return "、".join(f"[{item}]({prefix}SWE.2-architecture/software-architecture.md#{_anchor(item)})" for item in items if item) or "—"
 
 
 def _measure_links(values: list[str] | str, prefix: str = "") -> str:
@@ -372,7 +372,7 @@ def _design_outputs(
         "",
         f"当前覆盖 **{len(units)} 个软件单元**、**{len(functions)} 个函数或方法**。函数卡片由受控源码和验证映射生成，不在生成文件中手工修改。",
         "",
-        "人工维护的关键单元补充设计见 [关键单元设计](./critical-units.md)，接口与 schema 参考见 [详细设计参考](./reference/README.md)。",
+        "人工维护的关键单元补充设计见 [关键单元设计](./critical-units.md)，接口与 schema 参考见 [详细设计参考](./reference/design-reference.md)。",
         "",
         "## 组件导航",
         "",
@@ -398,7 +398,7 @@ def _design_outputs(
             "阅读该架构组件的软件单元、函数职责、契约、风险与验证引用",
         )
         lines += [
-            f"[返回 SWE.3 组件导航](./README.md) · [返回 SWE.2 架构组件](../SWE.2-architecture/README.md#{_anchor(component_id)})",
+            f"[返回 SWE.3 组件导航](./software-detailed-design.md) · [返回 SWE.2 架构组件](../SWE.2-architecture/software-architecture.md#{_anchor(component_id)})",
             "",
             "## 组件概览",
             "",
@@ -439,7 +439,7 @@ def _design_outputs(
         "- 后置条件：正常返回满足返回契约；副作用不得超出函数卡片记录的类别。",
         "- 静态扫描未发现显式异常或副作用，不代表底层依赖绝不会产生间接行为。",
     ]
-    outputs[ASPICE / "SWE.3-detailed-design" / "README.md"] = "\n".join(index) + "\n"
+    outputs[ASPICE / "SWE.3-detailed-design" / "software-detailed-design.md"] = "\n".join(index) + "\n"
     return outputs
 
 

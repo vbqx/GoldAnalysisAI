@@ -34,7 +34,7 @@
 
 ## 适合长期目标的写法
 
-- “持续优化文档，直到新人能按 docs/README 跑通项目。”
+- “持续优化文档，直到新人能按 docs/documentation-center.md 跑通项目。”
 - “持续降低测试噪音，直到 git status 不再出现生成物。”
 - “持续推进 LLM replay，直到能区分规则 baseline 与 LLM 决策表现。”
 - “持续整理执行链，直到 shadow -> paper_mt5 -> live_mt5 的边界可审计。”

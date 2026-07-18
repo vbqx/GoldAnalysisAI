@@ -48,7 +48,7 @@ GENERATED_PATHS = {
     PIP_REPORT_PATH,
 }
 
-DOC_ROOT_FILES = [ROOT / "README.md", ROOT / "AGENTS.md", ROOT / "tests" / "README.md"]
+DOC_ROOT_FILES = [ROOT / "README.md", ROOT / "AGENTS.md", ROOT / "tests" / "testing-system.md"]
 DOC_EXTRA_GLOBS = ["tests/cases/*.md", "tests/cases/*.yaml"]
 SOURCE_EXCLUDES = {".git", ".venv", ".cache", ".pytest_cache", "__pycache__", "tests"}
 MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
@@ -110,7 +110,7 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
         if path_str.startswith("docs/aspice/records/verification/"):
             return "SWE.4-SWE.6", "08-60/15-52 Verification", "agreed", "normative"
         if path_str.startswith("docs/aspice/SWE.2-architecture/"):
-            authority = "normative" if name == "README.md" else "supporting"
+            authority = "normative" if name == "software-architecture.md" else "supporting"
             status = "agreed" if authority == "normative" else "reviewed"
             return "SWE.2", "04-04 Software Architecture", status, authority
         if path_str.startswith("docs/aspice/SWE.3-detailed-design/"):
@@ -128,7 +128,7 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
         }
         if name in readable_process_docs:
             return readable_process_docs[name]
-        if name == "README.md":
+        if name == "software-domain.md":
             return "SWE.1-SWE.6", "Software Domain Navigation", "agreed", "normative"
         if name == "software-requirements.yaml":
             return "SWE.1", "Machine-readable Requirement Mirror", "generated", "generated"
@@ -161,7 +161,7 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
         return "SUP.1/SUP.9", "Review/Problem Analysis Evidence", "reviewed", "supporting"
     if path_str.startswith("docs/management/"):
         return "MAN.3/MAN.5", "Project/Risk Plan", "reviewed", "supporting"
-    if path_str.startswith("tests/cases/") or path_str == "tests/README.md":
+    if path_str.startswith("tests/cases/") or path_str == "tests/testing-system.md":
         return "SWE.4-SWE.6", "Verification Strategy/Measure", "reviewed", "supporting"
     if path_str.startswith("docs/operations/"):
         return "SUP.8/MAN.3", "Operation/Configuration Guidance", "reviewed", "supporting"
@@ -169,7 +169,7 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
         return "SWE.1", "Stakeholder/Software Context", "reviewed", "supporting"
     if path_str.startswith("docs/archive/"):
         return "SUP.8", "Historical Record", "historical", "historical"
-    if path_str in {"docs/README.md", "AGENTS.md"}:
+    if path_str in {"docs/documentation-center.md", "AGENTS.md"}:
         return "SUP.8", "Document/Automation Guidance", "reviewed", "supporting"
     return "SUP.8", "Registered Supporting Document", "informative", "supporting"
 
@@ -433,7 +433,7 @@ def process_index(rows: list[dict[str, str]]) -> str:
     lines = [
         "# ASPICE 过程文档索引",
         "",
-        "本文件由 `python scripts/check_aspice_assets.py --write` 生成。人工评审以 `../README.md` 导航的 Markdown 主文档为准；完整机器注册表位于 `../_machine/document-register.csv`。",
+        "本文件由 `python scripts/check_aspice_assets.py --write` 生成。人工评审以 `../software-domain.md` 导航的 Markdown 主文档为准；完整机器注册表位于 `../_machine/document-register.csv`。",
         "",
     ]
     for process in sorted(grouped):

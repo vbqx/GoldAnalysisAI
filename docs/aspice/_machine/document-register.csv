@@ -1,10 +1,10 @@
 document_id,path,title,primary_process,information_item,lifecycle_status,authority,owner_role,baseline,superseded_by,retention
 DOC-37DD68363F,AGENTS.md,Instructions for AI Agents & Automation,SUP.8,Document/Automation Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-237B1646B3,docs/archive/archive-policy.md,历史归档说明,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-17A7063327,docs/archive/domain/financial-review-run-2026-06-20.md,已迁移,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-E275804A75,docs/archive/domain/financial-review.md,已迁移,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-820037D420,docs/archive/domain/reverse-engineering.md,群友黄金分析报告 — 实现反推,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-6507C6E001,docs/archive/gui-acceptance-2026-07-08.md,已迁移,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
-DOC-98F9F271FB,docs/archive/README.md,Archive,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-A4A3CE2992,docs/aspice/_machine/configuration-management.yaml,configuration management,SUP.8,Configuration Item/Baseline,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-A1E3BF1987,docs/aspice/_machine/dependency-lock.txt,dependency lock,SUP.8,Configuration Item/Baseline,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-3C11367771,docs/aspice/_machine/document-register.csv,document register,SUP.8,Configuration Status Record,generated,generated,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
@@ -24,7 +24,6 @@ DOC-74AB022BB4,docs/aspice/_machine/verification-measures.yaml,verification meas
 DOC-594264BD9F,docs/aspice/governance/document-policy.md,文档治理策略,SUP.8,Document Control,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-FB7287D517,docs/aspice/governance/scope-and-closure.md,ASPICE 软件域范围与关闭准则,SUP.8,Document Control,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-0434C12A11,docs/aspice/governance/verification-strategy.md,Testing Strategy,SUP.8,Document Control,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
-DOC-25617018A5,docs/aspice/README.md,Automotive SPICE 软件域,SWE.1-SWE.6,Software Domain Navigation,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-CBA69B75B7,docs/aspice/records/reviews/aspice/software-domain-closure-review-2026-07-18.md,Automotive SPICE 软件域关闭审核报告,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-B84525E5C0,docs/aspice/records/reviews/aspice/software-domain-document-audit-2026-07-17.md,Automotive SPICE 4.0 软件域文档审核报告,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-BE00393FF2,docs/aspice/records/reviews/aspice/software-function-audit-2026-07-17.csv,software function audit 2026 07 17,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
@@ -33,9 +32,10 @@ DOC-BEBF7CC25A,docs/aspice/records/reviews/financial/runtime-review-2026-06-20.m
 DOC-2616A27F3A,docs/aspice/records/reviews/financial/static-code-review.md,GoldAnalysisAI 金融实现 Review 报告,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-FDBDBF49E1,docs/aspice/records/reviews/findings-status.md,评审发现项 · 完成状态登记,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-77B13CCA5D,docs/aspice/records/reviews/gui/streamlit-acceptance-2026-07-08.md,GUI 验收快照：2026-07-08,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-D7052F9F87,docs/aspice/records/reviews/README.md,评审文档索引,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-7431A9B605,docs/aspice/records/reviews/review-index.md,评审文档索引,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-DB5AC2C9EA,docs/aspice/records/verification/latest.md,ASPICE 软件域验证结果,SWE.4-SWE.6,08-60/15-52 Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-2EB7BE3117,docs/aspice/records/verification/software-domain-2026-07-18.yaml,software domain 2026 07 18,SWE.4-SWE.6,08-60/15-52 Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-5F81938F62,docs/aspice/software-domain.md,Automotive SPICE 软件域,SWE.1-SWE.6,Software Domain Navigation,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-A03BEC2965,docs/aspice/SUP.8-configuration-management.md,SUP.8 软件配置管理,SUP.8,Configuration Status/Baseline,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-E30A256C95,docs/aspice/SWE.1-software-requirements.md,SWE.1 软件需求分析,SWE.1,17-00 Software Requirements,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-070C737D9A,docs/aspice/SWE.2-architecture/analyst-context.md,Analyst Team 输入密度,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
@@ -43,9 +43,9 @@ DOC-D53C5B7724,docs/aspice/SWE.2-architecture/backtesting.md,回测与历史重�
 DOC-DCD7CE1109,docs/aspice/SWE.2-architecture/chart-layers.md,主图与多周期决策分层,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-97C4229E7A,docs/aspice/SWE.2-architecture/health-review.md,架构健康评审,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-3E6D0F50F6,docs/aspice/SWE.2-architecture/llm-agents.md,LLM 多智能体架构,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-43CBE0BB3A,docs/aspice/SWE.2-architecture/README.md,SWE.2 软件架构设计,SWE.2,04-04 Software Architecture,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-8CFF78C0BA,docs/aspice/SWE.2-architecture/report-trust.md,报告可信度层（Report Trust）,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-9565C4D7A2,docs/aspice/SWE.2-architecture/smc-pa-narrative.md,SMC + PA 叙事组合,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-6A369EDD95,docs/aspice/SWE.2-architecture/software-architecture.md,SWE.2 软件架构设计,SWE.2,04-04 Software Architecture,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-D6CBF52F71,docs/aspice/SWE.2-architecture/system-overview.md,GoldAnalysisAI 架构设计（TradingAgents 参考）,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-86BF88DB58,docs/aspice/SWE.2-architecture/technical-analysis.md,技术分析模块架构,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-0EB9026AEB,docs/aspice/SWE.3-detailed-design/ARC-AGENTS.md,ARC-AGENTS — 规则/LLM Agent 编排,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
@@ -60,35 +60,35 @@ DOC-B90BF0B307,docs/aspice/SWE.3-detailed-design/ARC-RUN.md,ARC-RUN — 运行�
 DOC-29BEE56EEE,docs/aspice/SWE.3-detailed-design/ARC-TOOLS.md,ARC-TOOLS — 开发、审核与运维工具,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-6BFF71204B,docs/aspice/SWE.3-detailed-design/ARC-VIZ.md,ARC-VIZ — Streamlit 展示,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-F64C2E05C5,docs/aspice/SWE.3-detailed-design/critical-units.md,关键软件单元详细设计,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
-DOC-5A976D402B,docs/aspice/SWE.3-detailed-design/README.md,SWE.3 软件详细设计,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-C8EFCFAF68,docs/aspice/SWE.3-detailed-design/reference/cheat-sheet.md,开发者速查表,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-F821B6B02E,docs/aspice/SWE.3-detailed-design/reference/design-reference.md,详细设计参考,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-09EED75D26,docs/aspice/SWE.3-detailed-design/reference/examples/report-schema.md,报告 JSON 结构说明,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-7ECB97BE5C,docs/aspice/SWE.3-detailed-design/reference/examples/sample-report.json,sample report,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-8C5182A0D2,docs/aspice/SWE.3-detailed-design/reference/glossary.md,术语表,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-B4A193F58B,docs/aspice/SWE.3-detailed-design/reference/handbook.md,GoldAnalysisAI 开发参考手册,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-B0CE8E4F87,docs/aspice/SWE.3-detailed-design/reference/pipeline-steps.yaml,pipeline steps,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
-DOC-FE5BA616BD,docs/aspice/SWE.3-detailed-design/reference/README.md,详细设计参考,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-BDA1CBB8FD,docs/aspice/SWE.3-detailed-design/reference/run-archive-schema.md,Run archive replay contract,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-04392A770C,docs/aspice/SWE.3-detailed-design/software-detailed-design.md,SWE.3 软件详细设计,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-D0D6B75AB7,docs/aspice/SWE.4-unit-testing.md,SWE.4 单元测试（UT）,SWE.4,08-50 Unit Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-35AA23F884,docs/aspice/SWE.5-integration-testing.md,SWE.5 集成测试（IT）,SWE.5,08-52 Integration Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-30221D3FBB,docs/aspice/SWE.6-validation-testing.md,SWE.6 验证测试（VT）,SWE.6,08-54 Software Qualification Test,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-F2090EA4FF,docs/aspice/traceability.md,软件双向追溯,SWE.1-SWE.6,13-51 Consistency Evidence,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-E559F6E673,docs/documentation-center.md,GoldAnalysisAI 文档中心,SUP.8,Document/Automation Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-7A19800C94,docs/management/audit-plan.md,交易分析系统持续审核蓝图,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-54C8B14687,docs/management/codex-autonomy.md,Codex 自动优化目标模板,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-A2C443DD18,docs/management/project-management.md,项目管理文档,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-A24A543637,docs/management/project.md,Project Overview,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-1FD2479A7D,docs/management/README.md,项目管理文档,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-255C5ED038,docs/management/roadmap.md,GoldAnalysisAI 路线图,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-F4A1FAB263,docs/management/status.md,Current Status,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-0DA09CBB3D,docs/operations/integrations/cursor-mcp.json.example,cursor mcp.json,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-9DD7202019,docs/operations/integrations/jin10-mcp.md,金十数据 MCP 接入,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-F4C8F2402A,docs/operations/onboarding.md,开发者上手指南,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-8B00F8CACA,docs/operations/README.md,运维与使用文档,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-6D4D5479F1,docs/operations/operations-guide.md,运维与使用文档,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-24A8C86FF5,docs/operations/setup.md,环境搭建与运行,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-6696D88CD5,docs/operations/walkthrough.md,界面操作动线,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-9F7CBCE127,docs/README.md,GoldAnalysisAI 文档中心,SUP.8,Document/Automation Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-8EC9A00BFD,README.md,GoldAnalysisAI — XAUUSD PA+ICT 分析报告,SWE.1,Stakeholder/Software Context,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-7A21C54D5C,tests/cases/catalog.yaml,catalog,SWE.4-SWE.6,Verification Strategy/Measure,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-3D3733A540,tests/cases/financial-review-cases.md,金融 Review 测试用例设计,SWE.4-SWE.6,Verification Strategy/Measure,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-FDD1CF1A43,tests/cases/README.md,测试用例目录,SWE.4-SWE.6,Verification Strategy/Measure,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-9BD7D93CC6,tests/cases/test-case-guide.md,测试用例目录,SWE.4-SWE.6,Verification Strategy/Measure,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-43BD0229AB,tests/cases/test-plan.md,GoldAnalysisAI 测试用例设计,SWE.4-SWE.6,Verification Strategy/Measure,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-D4754804F8,tests/README.md,GoldAnalysisAI 测试体系,SWE.4-SWE.6,Verification Strategy/Measure,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-631CFA3830,tests/testing-system.md,GoldAnalysisAI 测试体系,SWE.4-SWE.6,Verification Strategy/Measure,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded

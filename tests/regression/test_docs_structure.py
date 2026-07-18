@@ -10,20 +10,20 @@ pytestmark = pytest.mark.regression
 ROOT = Path(__file__).resolve().parents[2]
 
 KEY_DOCS = [
-    "docs/README.md",
-    "docs/aspice/README.md",
+    "docs/documentation-center.md",
+    "docs/aspice/software-domain.md",
     "docs/aspice/SWE.1-software-requirements.md",
-    "docs/aspice/SWE.2-architecture/README.md",
-    "docs/aspice/SWE.3-detailed-design/README.md",
+    "docs/aspice/SWE.2-architecture/software-architecture.md",
+    "docs/aspice/SWE.3-detailed-design/software-detailed-design.md",
     "docs/aspice/SWE.4-unit-testing.md",
     "docs/aspice/SWE.5-integration-testing.md",
     "docs/aspice/SWE.6-validation-testing.md",
-    "docs/operations/README.md",
-    "docs/management/README.md",
+    "docs/operations/operations-guide.md",
+    "docs/management/project-management.md",
     "docs/aspice/governance/verification-strategy.md",
     "docs/aspice/SWE.3-detailed-design/reference/handbook.md",
-    "docs/aspice/records/reviews/README.md",
-    "docs/archive/README.md",
+    "docs/aspice/records/reviews/review-index.md",
+    "docs/archive/archive-policy.md",
 ]
 
 OLD_DOC_FRAGMENTS = [
@@ -46,11 +46,21 @@ def test_docs_information_architecture_entrypoints_exist() -> None:
     assert not missing, "Missing docs entrypoints:\n" + "\n".join(missing)
 
 
+def test_repository_root_is_the_only_readme() -> None:
+    readmes = [
+        path.relative_to(ROOT).as_posix()
+        for path in ROOT.rglob("README.md")
+        if not any(part in {".git", ".venv", ".cache", ".pytest_cache"} for part in path.relative_to(ROOT).parts)
+        and path.relative_to(ROOT).parts[:2] != ("tests", "reports")
+    ]
+    assert readmes == ["README.md"]
+
+
 def test_top_level_docs_do_not_link_to_old_doc_paths() -> None:
     checked = [
         ROOT / "README.md",
-        ROOT / "docs" / "README.md",
-        ROOT / "tests" / "README.md",
+        ROOT / "docs" / "documentation-center.md",
+        ROOT / "tests" / "testing-system.md",
     ]
     offenders: list[str] = []
     for path in checked:
@@ -103,7 +113,7 @@ def test_cases_catalog_points_to_existing_test_files() -> None:
 
 def test_architecture_docs_keep_human_readable_visual_flows() -> None:
     required_mermaid_counts = {
-        "README.md": 5,
+        "software-architecture.md": 5,
         "system-overview.md": 2,
         "analyst-context.md": 1,
         "backtesting.md": 3,

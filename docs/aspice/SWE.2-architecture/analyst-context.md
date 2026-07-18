@@ -1,6 +1,6 @@
 # Analyst Team 输入密度
 
-Analyst Team（技术 / 基本面 / 新闻 / 情绪）共享三层信息架构。文档索引见 [README.md](../README.md)。
+Analyst Team（技术 / 基本面 / 新闻 / 情绪）共享三层信息架构。软件域索引见 [software-domain.md](../software-domain.md)。
 
 | 层级 | 模块 | 内容 |
 |------|------|------|
@@ -160,4 +160,3 @@ Analyst Team 每条 `EvidenceItem` 带稳定 **`evidence_id`**（`{agent}:{index
 ## 专项边界
 
 流动性质量专项不在本文重复维护。实现边界见 [architecture.md §8.2](./system-overview.md#82-流动性质量层)，后续计划见 [roadmap.md](../../management/roadmap.md#流动性质量专项)，金融验收见 [financial-review.md](../records/reviews/financial/static-code-review.md#2026-06-21-流动性可靠性验收口径)。
-

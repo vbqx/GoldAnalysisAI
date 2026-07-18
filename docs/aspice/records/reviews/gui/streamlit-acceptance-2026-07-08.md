@@ -4,7 +4,7 @@
 
 本文件保存 2026-07-08 的 Streamlit GUI 验收记录。当前 UI 事实以 `src/viz/`、[docs/operations/walkthrough.md](../../../../operations/walkthrough.md) 和 [docs/aspice/governance/verification-strategy.md](../../../governance/verification-strategy.md) 为准。
 
-索引：[reviews/README.md](../README.md) · [findings-status.md](../findings-status.md)
+索引：[review-index.md](../review-index.md) · [findings-status.md](../findings-status.md)
 
 ## 已执行
 
