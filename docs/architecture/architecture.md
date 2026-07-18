@@ -30,80 +30,56 @@
 
 ## 2. 数据流
 
+下图把主链路拆成“配置、事实生产、决策、交付”四层。箭头表示数据或领域对象的传递，不表示模块可以绕过后续门禁。
+
+```mermaid
+flowchart TB
+    subgraph C[配置与触发]
+        CFG["Streamlit 运行配置门禁<br/>规则 / LLM / 混合模式"] -->|用户开始生成| FETCH["fetch_pipeline.py<br/>并行拉取并合并外部数据"]
+    end
+
+    subgraph D[事实生产]
+        TV["TradingView<br/>K 线与报价"] --> FETCH
+        J10["金十 MCP<br/>快讯 / 资讯 / 日历"] --> FETCH
+        MACRO["宏观与社媒<br/>DXY / US10Y / TV Ideas"] --> FETCH
+        FETCH --> CTX["context_builder + aggregator<br/>MarketContext"]
+        CTX --> IND["technical.enrich<br/>确定性指标"]
+        CTX --> PA["ict_pa.analyze<br/>ICT / PA / SMC 事实"]
+        CTX --> EXT["外部证据与质量元数据"]
+    end
+
+    subgraph A[分析与决策]
+        IND --> TEAM["Analyst Team<br/>技术 / 基本面 / 新闻 / 情绪"]
+        PA --> TEAM
+        EXT --> TEAM
+        TEAM --> BULL["看多研究"]
+        TEAM --> BEAR["看空研究"]
+        BULL --> DEBATE["辩论与反证<br/>consensus_bias"]
+        BEAR --> DEBATE
+        DEBATE --> TRADER["交易员<br/>候选区 / 触发 / 评分"]
+        TRADER --> RISK["三档风控 + 确定性风险门禁"]
+        RISK --> MANAGER["经理授权<br/>绑定 signal_id"]
+    end
+
+    subgraph O[报告与交付]
+        MANAGER --> REPORT["报告组装<br/>规则叙事 + 可选 LLM 文案"]
+        REPORT --> TRUST["可信度门禁<br/>事实注册 / 不变量 / 可靠度"]
+        TRUST --> ARCHIVE["运行归档<br/>manifest / report / analyses"]
+        TRUST --> UI["Streamlit 页面与图表"]
+    end
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 RUN CONFIG GATE (Streamlit session)              │
-│  生成前配置：规则 / LLM / 混合 · LLM 文案 · 单 Analyst 调试        │
-│  用户点击「开始生成报告」后才进入 fetch                           │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     FETCH (fetch_pipeline.py)                    │
-│  TradingView bars → News + Fundamentals + Social 并行 → merge_external │
-│  finalize_market_context → derived (topics, countdown, spot/kline check) │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                        DATA LAYER                                │
-│  market(TV) │ jin10_mcp (快讯/资讯/日历/quote/kline) │ macro(DXY+US10Y) │ tv_social │
-│  context_builder.py → derived + context_stats                         │
-│  calendar_utils.py / external_format.py → 过滤 upcoming 日历 + risk_events │
-│  jin10_mcp_client → jin10_feed → news.py (NewsDataSource)       │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-                    data/aggregator.py
-                    → MarketContext
-                             │
-         ┌───────────────────┼───────────────────┐
-         ▼                   ▼                   ▼
-   indicators/          analysis/          (external evidence)
-   technical.enrich      ict_pa.analyze
-         │                   │
-         └─────────┬─────────┘
-                   ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     ANALYST TEAM  ← TradingAgents 对齐           │
-│   Technical │ Fundamentals │ News │ Sentiment → AnalystReport[]  │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     RESEARCHER TEAM                              │
-│   Bullish Agent ──┐   （引用 Analyst Team 同向证据 + ICT 结构）    │
-│                   ├──► Debate ──► consensus_bias                 │
-│   Bearish Agent ──┘                                              │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     TRADER AGENT                                 │
-│   compute_trading_signals(ctx) → 候选区/触发状态/评分 → Proposal │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                   RISK MANAGEMENT TEAM                           │
-│   Aggressive │ Neutral │ Conservative → RiskReview[]             │
-│   + analysis/risk_gates.py（几何 / 时效 / 观察模式确定性门控）      │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                       MANAGER                                    │
-│   ManagerDecision → apply_manager_authorization → 授权 signal_id │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                   REPORT BUILDER                                 │
-│   build_report → 规则 narrative_sections                         │
-│   apply_manager_authorization（在 LLM 叙事之前）                    │
-│   llm/analyst.py → 五块 + 顶层文案（action_plan 仅授权执行价）       │
-│   fact_registry → report_invariants → report_reliability（归档前）   │
-│   meta.audit_summary / data_as_of / observation_mode             │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                   RUN ARCHIVE (run_archive.py)                   │
-│   manifest + report + enriched + analyses + fetch → index.json   │
-└────────────────────────────┬────────────────────────────────────┘
-                             ▼
-                      app.py + views/* + viz/*
+
+关键对象在主链路中的变化如下：
+
+```mermaid
+flowchart LR
+    RAW["原始行情与外部事件"] --> MC["MarketContext"]
+    MC --> AR["AnalystReport[]"]
+    AR --> RD["ResearchDebate"]
+    RD --> TP["TransactionProposal"]
+    TP --> RR["RiskReview[]"]
+    RR --> MD["ManagerDecision"]
+    MD --> REP["可信 report"]
 ```
 
 **回放**（配置页选「历史回放」）：`load_replay_bundle()` 直接读归档，**不经过**上方 fetch → LLM 链路。

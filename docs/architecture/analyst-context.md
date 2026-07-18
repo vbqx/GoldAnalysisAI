@@ -52,13 +52,15 @@ LLM_STAGE_WARN_MS=120000
 
 ## 数据流
 
+```mermaid
+flowchart LR
+    FETCH["fetch_all_data()<br/>行情与外部数据"] --> MERGE["merge_external()<br/>新闻 / 基本面 / 社媒"]
+    MERGE --> ASSEMBLE["assemble_market_context()<br/>组装原始上下文"]
+    ASSEMBLE --> FINAL["finalize_market_context()<br/>派生字段 + context_stats"]
+    FINAL --> TEAM["run_analyst_team(ctx)<br/>四类分析师并行消费"]
 ```
-fetch_all_data()
-  → merge_external(news, fundamentals, social)
-  → assemble_market_context()
-  → finalize_market_context()   # derived + context_stats
-  → agent_factory.run_analyst_team(ctx)
-```
+
+`MarketContext` 是数据层与 Analyst Team 之间唯一的聚合边界；分析师不得绕过它直接重新抓取数据。
 
 ## LLM Payload（`agents/llm/payload.py`）
 
@@ -148,7 +150,7 @@ Analyst Team 每条 `EvidenceItem` 带稳定 **`evidence_id`**（`{agent}:{index
 | news | headline/calendar evidence、新闻主题、渠道密度、Jin10 live/fallback 状态 | 区分快讯、资讯和日历，不把 fallback 当实时事实 |
 | sentiment | 结构投票、社媒帖子、样本质量、bias_delta、长短周期结构分歧 | 社媒仅作轻量辅助，不能覆盖结构主导方向 |
 
-## 架构边界与 Review 结论
+## 架构边界与评审结论
 
 - `context_builder.finalize_market_context()` 是唯一写入 `derived` 与 `context_stats` 的入口；规则分析师只消费 `MarketContext`，不重新 fetch 外部源。
 - `context_stats.technical_inputs` / `context_stats.analyst_inputs` 是可观测性与质量审计字段，不直接等同于交易信号。

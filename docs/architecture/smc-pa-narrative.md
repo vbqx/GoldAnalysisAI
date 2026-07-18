@@ -84,26 +84,28 @@ RESONANCE_TOLERANCE = 8.0  # XAUUSD 点
 
 ## 4. 数据流
 
-```
-build_report()
-  ├─ timeframes      ← Lux SMC
-  ├─ liquidity       ← Lux Swing
-  ├─ price_action    ← DGT 全量计算
-  ├─ signals         ← PA 主计划 + SMC 过滤评分
-  └─ narrative_sections ← build_rule_narrative_sections()  # SMC+PA 组合
+```mermaid
+flowchart TB
+    SMC["Lux SMC 检测"] --> TF["timeframes"]
+    SMC --> LIQ["liquidity"]
+    DGT["DGT 量价分析"] --> PA["price_action"]
+    TF --> PLAN["PA 主计划 + SMC 过滤评分"]
+    LIQ --> PLAN
+    PA --> PLAN
 
-build_technical_context()
-  └─ price_action    ← 分析师 / 技术 LLM
+    TF --> RULE["build_rule_narrative_sections()"]
+    LIQ --> RULE
+    PA --> RULE
+    PLAN --> REPORT["build_report()<br/>signals + narrative_sections"]
+    RULE --> REPORT
 
-build_llm_context()
-  ├─ technical_context（含 price_action）
-  ├─ price_action（报告副本）
-  └─ narrative_facts
-        ├─ price_action（完整）
-        ├─ price_action_summary（紧凑）
-        ├─ combination_rules
-        └─ allowed_levels（SMC + PA 价位白名单）
+    PA --> TECH["build_technical_context()<br/>分析师 / 技术 LLM 输入"]
+    TECH --> LLM["build_llm_context()"]
+    REPORT --> LLM
+    LLM --> FACTS["narrative_facts<br/>完整 PA / 紧凑摘要 / 组合规则 / 允许价位"]
 ```
+
+图中三条消费路径分别服务交易计划、技术分析师和报告叙事，但都复用同一份 SMC/PA 事实，避免平行计算产生冲突。
 
 ---
 

@@ -1,4 +1,4 @@
-# Architecture Review
+# 架构健康评审
 
 > **文档类型**：架构健康检查（持续维护，非一次性验收）  
 > **索引**：[reviews/README.md](../reviews/README.md) · 发现项状态见 [findings-status.md](../reviews/findings-status.md)（仅 F-* 金融项） · [持续审核蓝图](../planning/audit-plan.md)
@@ -32,10 +32,16 @@
 
 ## 关键边界
 
-- 回测：历史 point-in-time 输入 -> 决策链 -> 撮合模拟，不连接 MT5。
-- Shadow：实时输入 -> 决策链 -> 纸面订单记录，不调用 MT5 下单。
-- Paper MT5：实时决策通过 -> `order_check` -> 模拟账户 `order_send`。
-- Live MT5：在 paper 稳定后启用，并必须有 kill switch、每日亏损、订单数、手数和重复开仓限制。
+四种运行模式是逐级放开的安全边界，而不是可以任意切换的同级选项：
+
+```mermaid
+flowchart LR
+    BT["回测<br/>时点一致输入 + 撮合模拟<br/>不连接 MT5"] -->|回放证据充分| SHADOW["影子模式<br/>实时决策 + 纸面订单<br/>不调用下单"]
+    SHADOW -->|稳定性与审计通过| PAPER["MT5 模拟盘<br/>order_check + 模拟账户 order_send"]
+    PAPER -->|发布门禁通过| LIVE["MT5 实盘<br/>kill switch + 损失/订单/手数限制"]
+```
+
+任一级证据不足都必须停留在当前级；实盘不能绕过影子模式和模拟盘验证。
 
 ## 结论
 

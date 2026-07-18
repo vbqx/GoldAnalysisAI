@@ -2,6 +2,17 @@
 
 机构报告把 **全周期 Lux 分析** 与 **5m 主图绘制** 分开处理。模块分层见 [technical-analysis.md](./technical-analysis.md)。
 
+```mermaid
+flowchart LR
+    FULL["全量多周期检测结果"] --> DECISION["决策事实<br/>1d / 4h / 1h / 15m / 5m"]
+    FULL --> CUT["5m 可见窗口裁剪<br/>最近 360 根 K 线价格范围"]
+    DECISION --> REPORT["报告文案 / 情绪 / 关键价位"]
+    CUT --> ZONES["最多 8 个 FVG<br/>最近 5 个 Internal OB"]
+    ZONES --> CHART["5m 主图叠加"]
+```
+
+决策事实保留完整周期信息；主图只裁剪显示对象，不反向改变分析和交易判断。
+
 ## 两层职责
 
 | 层级 | 内容 | 展示位置 |

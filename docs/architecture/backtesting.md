@@ -1,194 +1,151 @@
-# Backtesting Design
+# 回测与历史重放架构
 
-This document separates the current replay infrastructure from the target LLM full-pipeline replay. The distinction matters:
+本文区分已经落地的重放基础设施与目标中的 LLM 全流水线重放。这一边界非常重要：
 
-- The current implementation is a point-in-time replay harness plus a rule baseline.
-- The target implementation is a full historical replay of how the project would have run at that time: LLM analysis, LLM debate, LLM trading decision, risk review, manager decision, then execution simulation.
+- 当前实现是“时点一致的历史重放框架 + 规则基线”。
+- 目标实现是在历史时点完整重放当时会发生的 LLM 分析、研究辩论、交易决策、风险复核、经理授权和执行模拟。
 
-Rule backtest results must not be presented as the final performance of the LLM decision system.
+因此，规则回测结果只能说明规则候选与确定性决策链的表现，不能表述为 LLM 决策系统的最终绩效。
 
-## Backtest Layers
+## 1. 回测分层
 
-### Layer 1: Replay Infrastructure
-
-Keep this layer. It is required by every serious backtest mode, including LLM replay.
-
-Responsibilities:
-
-- Slice historical 5m OHLCV at each replay timestamp.
-- Rebuild 15m, 1h, 4h, and 1d bars from the visible history.
-- Recompute indicators and ICT/PA structure only from data available at that timestamp.
-- Align historical macro inputs such as DXY without using future bars.
-- Simulate entry, stop, TP, timeout, fees, slippage, and same-bar ambiguity.
-- Produce R-multiple statistics, drawdown, setup grouping, and direction grouping.
-
-### Layer 2: Rule Baseline Backtest
-
-Keep this layer as a baseline. It answers:
-
-```text
-How do the deterministic rule candidates and rule decision chain behave without LLM judgment?
+```mermaid
+flowchart TB
+    L1["第 1 层：重放基础设施<br/>时点切片 / 多周期重建 / 撮合模拟"] --> L2["第 2 层：规则基线<br/>确定性候选 + 规则决策链"]
+    L1 --> L3["第 3 层：LLM 全流水线重放<br/>目标能力，尚未落地"]
+    L2 --> L4["第 4 层：A/B 归因<br/>比较规则、宏观叠加与 LLM 模式"]
+    L3 --> L4
 ```
 
-This layer currently uses:
+### 1.1 第 1 层：重放基础设施
+
+该层是所有严肃回测模式的公共底座，必须保留。职责包括：
+
+- 在每个重放时点切分历史 5m OHLCV。
+- 仅用该时点可见历史重建 15m、1h、4h、1d K 线。
+- 仅用当时可见数据重算指标与 ICT/PA 结构。
+- 对齐历史 DXY 等宏观输入，禁止读取未来 K 线。
+- 模拟入场、止损、止盈、超时、费用、滑点和同一根 K 线内的歧义。
+- 输出 R 倍数、回撤、形态分组和方向分组统计。
+
+### 1.2 第 2 层：规则基线
+
+该层回答：“没有 LLM 判断时，确定性规则候选和规则决策链如何表现？”
+
+当前复用：
 
 - `compute_trading_signals`
-- structure-only debate
-- optional historical DXY weighting
-- rule trader
-- rule risk team
-- rule manager
-- execution simulator
+- 仅结构辩论
+- 可选历史 DXY 加权
+- 规则交易员
+- 规则风险团队
+- 规则经理
+- 执行模拟器
 
-Interpretation boundary:
+解释边界：规则基线适合调试形态质量，但不等于完整 LLM 系统绩效。例如 `fvg_retest_short` 表现弱，只说明规则生成的 FVG 做空候选可疑，不能证明 LLM 会选择相同交易。
 
-```text
-Rule baseline results are useful for debugging setup quality, but they are not the performance of the full LLM system.
+### 1.3 第 3 层：LLM 全流水线重放
+
+这是目标能力。每个历史时点都应使用时点一致输入运行与实时应用相同的逻辑链：
+
+```mermaid
+flowchart LR
+    MC["历史 MarketContext<br/>只含 t 时点及以前信息"] --> AT["LLM Analyst Team"]
+    AT --> RES["看多 / 看空研究"]
+    RES --> DEBATE["LLM 辩论"]
+    DEBATE --> LEVEL["LLM 价位提议"]
+    LEVEL --> TRADER["交易员决策"]
+    TRADER --> RISK["风险复核"]
+    RISK --> MANAGER["经理授权"]
+    MANAGER --> SIM["未来 5m K 线<br/>仅用于执行模拟与结果评估"]
 ```
 
-For example, weak performance in `fvg_retest_short` means the rule-generated FVG short candidate is suspicious. It does not prove the LLM system would have selected the same trade.
+该层回答：“如果项目在这个历史时刻运行，LLM 会形成什么分析和最终交易决策，之后结果如何？”
 
-### Layer 3: LLM Full Pipeline Replay
+### 1.4 第 4 层：A/B 归因
 
-This is the target requested capability.
+第 3 层落地后，应比较模式而不是孤立阅读一次结果：
 
-At each replay timestamp, the system should run the same logical pipeline the live app runs, but with point-in-time inputs:
+| 对照模式 | 目的 |
+|----------|------|
+| 规则基线 | 建立确定性下限 |
+| 规则 + 历史 DXY | 识别宏观加权贡献 |
+| 仅 LLM 分析 | 识别分析层贡献 |
+| LLM 全流水线 | 评估完整决策贡献 |
+| LLM 全流水线 + 历史 DXY | 评估宏观事实增益 |
 
-```text
-Historical MarketContext
--> LLM Analyst Team
--> LLM Bull/Bear Research
--> LLM Debate
--> LLM Level Proposal
--> LLM Trader / Risk / Manager decision
--> Execution simulation on future 5m bars
+只有这种对照才能判断 LLM 是否真正改善筛选、风险或回撤。
+
+## 2. 机构级验证层
+
+1. **连续重放**：覆盖固定历史区间，用于观察市场状态级表现、回撤形态与形态衰减。
+2. **随机窗口重放**：使用确定性随机种子抽取多个历史窗口，报告中位数、坏窗口表现和窗口 R 的 p10。XAUUSD 具有日内时段性和宏观周期聚集，一个干净区间可能误导。
+3. **滚动样本外验证**：计划能力；在训练窗口调参或选参，只在下一段未见窗口评估，是可调策略参数的主要过拟合门禁。
+4. **市场状态拆分**：计划能力；比较高波动、低波动、趋势、震荡和事件邻近区间。事件标签至少覆盖 CPI、NFP、FOMC 和主要央行窗口。
+
+## 3. 当前 MVP 范围
+
+- 以 5m OHLCV 作为基础重放数据流。
+- 从历史 5m 切片重建 15m、1h、4h、1d K 线。
+- 只使用重放时点可见数据重算指标和结构。
+- 可选一次性拉取 DXY 日线，并把每个重放点对齐到当时或之前的最后一根 DXY K 线。
+- 复用规则基线栈：`compute_trading_signals`、结构辩论、规则交易员、风险团队、经理；历史 DXY 可选参与宏观加权。
+- 在后续 5m K 线上模拟入场、止损、止盈与超时。
+- 使用 R 倍数核算，不只看原始点数盈亏。
+- 采用保守的同 K 线规则：若止损和止盈在同一根 OHLC K 线内都可触达，按止损先发生处理。
+
+## 4. 历史 DXY 叠加
+
+当 `BacktestConfig.use_macro=True` 时，重放引擎：
+
+1. 一次性拉取 `TVC:DXY` 日线。
+2. 每个重放时点只使用 `DXY.index <= timestamp` 的记录。
+3. 计算 DXY 的 1 日、5 日、20 日变化。
+4. 将美元强弱转换为黄金宏观偏向：DXY 上涨偏空黄金，DXY 下跌偏多黄金，小幅混合变化保持中性。
+5. 使用 `macro_weight` 对评分和辩论做软调整。
+
+DXY 只作为权重输入而不是硬开关，因为压力市场中黄金与美元可能同时上涨。
+
+## 5. 目标：LLM 全流水线重放
+
+### 5.1 时点一致输入契约
+
+每个 LLM 重放点只能接收重放时点或之前已经存在的信息。
+
+| 允许 | 禁止 |
+|------|------|
+| 截止时点 `t` 的 OHLCV 及其派生指标 | 用当前 DXY/US10Y 替代历史宏观数据 |
+| 索引 `<= t` 的 DXY/US10Y | 在历史重放中读取当前新闻、日历、社媒 |
+| 时间戳 `<= t` 的历史新闻、日历、社媒 | 未来 OHLCV、摆动点、FVG 回补、TP/SL 结果进入提示词 |
+| 历史外部数据缺失时的明确 unavailable 标记 | 任何明示或暗示时点 `t` 之后结果的提示词 |
+
+数据边界如下；未来数据只能进入撮合与评价，不能回流到决策输入：
+
+```mermaid
+flowchart LR
+    PAST["t 时点及以前<br/>行情 / 宏观 / 新闻 / 日历"] --> CTX["时点一致 MarketContext"]
+    CTX --> DECISION["LLM 与确定性门禁<br/>冻结决策"]
+    FUTURE["t 时点以后 5m K 线"] --> SIM["撮合模拟与结果评价"]
+    DECISION --> SIM
+    SIM -. "严禁回流" .-> CTX
 ```
 
-This layer answers:
+### 5.2 LLM 阶段契约
 
-```text
-If the project had been run at this historical moment, what would the LLM analysis and final trading decision have been, and what happened afterward?
-```
+LLM 重放必须逐阶段可审计：
 
-### Layer 4: A/B Attribution
+| 阶段 | 必要输出与约束 |
+|------|----------------|
+| Analyst Team | 技术、基本面、新闻、情绪四类结构化报告 |
+| Research | 独立的看多与看空研究 |
+| Debate | 共识方向与共识强度 |
+| Level Proposal | 候选价位；几何不合理时明确拒绝 |
+| Trading Decision | `execute / reduce / wait`、具体候选信号索引或 LLM 价位，并说明拒绝其他候选的理由 |
+| Risk / Manager | 批准、缩减或取消；外部数据缺失或事件风险未知时必须更保守 |
 
-Once Layer 3 exists, compare modes rather than reading one result in isolation:
+### 5.3 建议的首个实现
 
-```text
-Rule baseline
-Rule + historical DXY
-LLM analysis only
-LLM full pipeline
-LLM full pipeline + historical DXY
-```
-
-This is how we determine whether LLM judgment actually improves selection, risk, or drawdown.
-
-## Institutional Validation Layers
-
-1. Continuous replay
-   - Runs through a fixed historical interval.
-   - Best for reading regime-level behavior, drawdown shape, and setup decay.
-
-2. Random window replay
-   - Samples many historical windows with a deterministic seed.
-   - Reports distribution-aware metrics such as median result, bad-window behavior, and p10 window R.
-   - This is important for XAUUSD because intraday sessionality and macro-cycle clustering can make one clean interval misleading.
-
-3. Walk-forward validation
-   - Planned next layer: tune or select parameters on a training window, then evaluate only on the next unseen window.
-   - This is the main overfitting guardrail once the system has tunable strategy parameters.
-
-4. Regime split
-   - Planned next layer: compare high-volatility, low-volatility, trend, range, and event-adjacent periods.
-   - Event tagging should include CPI, NFP, FOMC, and major central-bank windows.
-
-## Current MVP Scope
-
-- Uses 5m OHLCV as the base replay stream.
-- Rebuilds 15m, 1h, 4h, and 1d bars from the historical 5m slice.
-- Recomputes indicators and structure only from data visible at the replay timestamp.
-- Optionally fetches DXY daily history once and aligns each replay point to the last DXY bar at or before that timestamp.
-- Reuses the current rule baseline stack:
-  - `compute_trading_signals`
-  - structure-only debate, optionally macro-weighted by historical DXY
-  - trader
-  - risk team
-  - manager
-- Simulates entry, stop, TP, and timeout on future 5m bars.
-- Uses R-multiple accounting, not raw point profit alone.
-- Applies conservative same-bar logic: if stop and TP are both reachable in one OHLC bar, stop wins.
-
-## Historical DXY Overlay
-
-When `BacktestConfig.use_macro=True`, the replay engine:
-
-1. Fetches `TVC:DXY` daily bars once.
-2. At each replay timestamp, uses only `DXY.index <= timestamp`.
-3. Computes 1d, 5d, and 20d DXY changes.
-4. Converts DXY strength into a gold macro bias:
-   - DXY rising: bearish gold bias.
-   - DXY falling: bullish gold bias.
-   - Small mixed moves: neutral.
-5. Applies `macro_weight` as a soft score/debate adjustment.
-
-DXY is deliberately a weighting input, not a hard trading switch, because gold and USD can both rise during stress regimes.
-
-## Target LLM Full Pipeline Replay
-
-### Point-In-Time Input Contract
-
-Each LLM replay point must receive only information available at or before the replay timestamp.
-
-Allowed:
-
-- OHLCV bars ending at or before timestamp `t`.
-- Derived indicators computed from those bars.
-- DXY/US10Y bars with index `<= t`.
-- Historical news/calendar/social records only if their timestamp is `<= t`.
-- Explicit unavailable markers when historical external data is missing.
-
-Disallowed:
-
-- Current DXY/US10Y as a substitute for historical macro.
-- Current news/calendar/social feeds in a historical replay.
-- Future OHLCV, future swing points, future FVG fills, or future TP/SL outcomes inside LLM prompts.
-- Any prompt text that says or implies what happened after timestamp `t`.
-
-### LLM Stage Contract
-
-The LLM replay should be auditable stage by stage.
-
-Required stages:
-
-1. Analyst Team
-   - Technical analyst.
-   - Fundamentals analyst.
-   - News analyst.
-   - Sentiment analyst.
-
-2. Research
-   - Bullish researcher.
-   - Bearish researcher.
-
-3. Debate
-   - Produces consensus bias and consensus strength.
-
-4. Level Proposal
-   - Produces candidate levels, or rejects levels if geometry is poor.
-
-5. Trading Decision
-   - Selects execute / reduce / wait.
-   - Selects concrete candidate signal indices or LLM-proposed levels.
-   - Must explain why rejected candidates were rejected.
-
-6. Risk / Manager Decision
-   - Approves, reduces, or cancels execution.
-   - Must be more conservative when external data is missing or event risk is unknown.
-
-### Recommended First Implementation
-
-Do not run unlimited LLM calls across every 5m bar. Start with a controlled replay sample:
+不要对每根 5m K 线无限调用 LLM。先使用受控样本：
 
 ```python
 BacktestConfig(
@@ -200,42 +157,27 @@ BacktestConfig(
 )
 ```
 
-Recommended behavior:
+建议行为：
 
-- Evaluate only every `step_bars`.
-- Stop after `llm_sample_limit` LLM replay points.
-- Cache every LLM request and response by deterministic input hash.
-- Store the full prompt payload, parsed output, model name, latency, and parse errors.
-- Fall back to `wait` if a required LLM stage fails validation.
+- 每隔 `step_bars` 才评估一次。
+- 达到 `llm_sample_limit` 个 LLM 重放点后停止。
+- 按确定性输入哈希缓存每次 LLM 请求与响应。
+- 保存完整提示词负载、解析输出、模型名、延迟和解析错误。
+- 任一必要 LLM 阶段校验失败时回退为 `wait`。
 
-### LLM Cache
+### 5.4 LLM 缓存
 
-LLM replay must be reproducible enough for debugging. Store cache files under a dedicated directory such as:
+缓存目录建议独立设置，例如：
 
 ```text
 tests/reports/backtest_llm_cache/
 ```
 
-Cache key should include:
+缓存键应包含时间戳、模型、阶段、规范化输入负载哈希、提示词/schema 版本。缓存内容应包含输入负载、消息、原始响应、解析响应、错误和延迟，以满足复现与调试要求。
 
-- timestamp
-- model
-- stage
-- normalized input payload hash
-- prompt/schema version
+### 5.5 输出结构
 
-Cached content should include:
-
-- input payload
-- messages
-- raw response
-- parsed response
-- error, if any
-- latency
-
-### Output Schema
-
-Each LLM replay decision should produce a record similar to:
+每个 LLM 重放决策应形成类似记录：
 
 ```json
 {
@@ -268,40 +210,50 @@ Each LLM replay decision should produce a record similar to:
 }
 ```
 
-### Safety Defaults
+### 5.6 安全默认值
 
-- If LLM cannot produce valid JSON: `wait`.
-- If historical external data is missing: mark missing explicitly and reduce confidence.
-- If LLM selects a signal with invalid geometry: reject it.
-- If LLM proposes levels, deterministic validators must still check entry/SL/TP geometry.
-- If LLM and deterministic risk conflict, take the more conservative result.
+- LLM 无法输出合法 JSON：`wait`。
+- 历史外部数据缺失：明确标记缺失并降低置信度。
+- LLM 选择的信号几何无效：拒绝该信号。
+- LLM 提议价位仍必须通过确定性入场/SL/TP 几何校验。
+- LLM 与确定性风险判断冲突：采用更保守结果。
 
-## Metrics
+## 6. 指标
 
-- `trigger_rate`: triggered trades / generated signals.
-- `tp1_success_rate`: TP hit trades / triggered trades.
-- `win_rate`: profitable closed trades / closed trades.
-- `total_r`: total R across closed trades.
-- `avg_r`: average R per closed trade.
-- `profit_factor`: gross winning R / absolute gross losing R.
-- `expectancy_r`: win_rate * avg_win_R - loss_rate * avg_loss_R.
-- `max_drawdown_r`: max drawdown in cumulative R.
+| 指标 | 定义 |
+|------|------|
+| `trigger_rate` | 已触发交易数 / 生成信号数 |
+| `tp1_success_rate` | 命中 TP 的交易数 / 已触发交易数 |
+| `win_rate` | 盈利平仓数 / 已平仓数 |
+| `total_r` | 所有已平仓交易的 R 总和 |
+| `avg_r` | 每笔已平仓交易的平均 R |
+| `profit_factor` | 盈利 R 总和 / 亏损 R 总和绝对值 |
+| `expectancy_r` | `win_rate * avg_win_R - loss_rate * avg_loss_R` |
+| `max_drawdown_r` | 累计 R 曲线最大回撤 |
 
-## Data Requirements
+## 7. 数据要求
 
-CSV input should contain either a datetime column (`datetime`, `time`, or `timestamp`) or a datetime index, plus OHLC columns:
+CSV 输入需要 datetime 列（`datetime`、`time` 或 `timestamp`）或 datetime 索引，并包含 OHLC 列：
 
 ```text
 Datetime,Open,High,Low,Close,Volume
 ```
 
-Lowercase names are accepted. `Volume` is optional and defaults to zero.
+字段名可以小写；`Volume` 可选，缺失时默认为零。
 
-## Limitations
+## 8. 当前限制
 
-- Current implemented backtest is Layer 1 + Layer 2, not Layer 3.
-- LLM stages are intentionally excluded from the current rule baseline.
-- Historical DXY is point-in-time replayed; historical US10Y/news/calendar overlays are still planned.
-- Full LLM pipeline replay is planned and must use explicit point-in-time input contracts.
-- Intra-candle path is unknown for OHLC bars, so the MVP uses conservative stop-first assumptions.
-- Spread, commission, and slippage are modeled as configurable point costs, not broker-specific execution.
+- 已实现回测仅覆盖第 1 层和第 2 层，不含第 3 层。
+- 当前规则基线有意排除 LLM 阶段。
+- 历史 DXY 已按时点重放；历史 US10Y、新闻和日历叠加仍在规划中。
+- LLM 全流水线重放尚未实现，落地时必须遵守明确的时点一致输入契约。
+- OHLC K 线内的价格路径未知，MVP 使用保守的止损优先假设。
+- 点差、佣金和滑点以可配置点数成本建模，并非特定经纪商执行模型。
+
+## 9. 相关文档
+
+- [架构专题导航](./README.md)
+- [系统架构总览](./architecture.md)
+- [LLM 多智能体架构](./llm-agents.md)
+- [架构健康评审](./review.md)
+- [ASPICE SWE.2 软件架构设计](../aspice/SWE.2-software-architecture.md)

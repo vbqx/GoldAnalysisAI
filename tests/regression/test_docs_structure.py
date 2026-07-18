@@ -13,6 +13,7 @@ KEY_DOCS = [
     "docs/overview/project.md",
     "docs/overview/status.md",
     "docs/overview/codex-autonomy.md",
+    "docs/architecture/README.md",
     "docs/architecture/architecture.md",
     "docs/architecture/review.md",
     "docs/architecture/backtesting.md",
@@ -86,3 +87,42 @@ def test_cases_catalog_points_to_existing_test_files() -> None:
         if test_path and not (ROOT / test_path).exists():
             missing.append(f"{case.get('id')}: {test_path}")
     assert not missing, "Catalog test_path entries do not exist:\n" + "\n".join(missing)
+
+
+def test_architecture_docs_keep_human_readable_visual_flows() -> None:
+    required_mermaid_counts = {
+        "README.md": 1,
+        "architecture.md": 2,
+        "analyst-context.md": 1,
+        "backtesting.md": 3,
+        "chart-layers.md": 1,
+        "llm-agents.md": 2,
+        "report-trust.md": 1,
+        "review.md": 1,
+        "smc-pa-narrative.md": 1,
+        "technical-analysis.md": 1,
+    }
+    architecture_dir = ROOT / "docs" / "architecture"
+    problems: list[str] = []
+
+    for filename, minimum in required_mermaid_counts.items():
+        text = (architecture_dir / filename).read_text(encoding="utf-8")
+        actual = text.count("```mermaid")
+        if actual < minimum:
+            problems.append(f"{filename}: expected >= {minimum} Mermaid diagrams, got {actual}")
+
+    backtesting = (architecture_dir / "backtesting.md").read_text(encoding="utf-8")
+    stale_english_headings = [
+        "# Backtesting Design",
+        "## Backtest Layers",
+        "## Current MVP Scope",
+        "## Target LLM Full Pipeline Replay",
+        "## Limitations",
+    ]
+    problems.extend(
+        f"backtesting.md: untranslated heading {heading}"
+        for heading in stale_english_headings
+        if heading in backtesting
+    )
+
+    assert not problems, "Architecture readability regressions:\n" + "\n".join(problems)

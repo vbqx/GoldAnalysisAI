@@ -2,11 +2,12 @@ document_id,path,title,primary_process,information_item,lifecycle_status,authori
 DOC-37DD68363F,AGENTS.md,Instructions for AI Agents & Automation,SUP.8,Document/Automation Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-C5EE68FFDE,docs/architecture/analyst-context.md,Analyst Team 输入密度,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-C99FC33B90,docs/architecture/architecture.md,GoldAnalysisAI 架构设计（TradingAgents 参考）,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-7AAF59400A,docs/architecture/backtesting.md,Backtesting Design,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-7AAF59400A,docs/architecture/backtesting.md,回测与历史重放架构,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-276FA04D9E,docs/architecture/chart-layers.md,主图与多周期决策分层,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-C38F5E7212,docs/architecture/llm-agents.md,LLM 多智能体架构,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-26EE0B96B8,docs/architecture/README.md,架构专题导航,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-F0A68ABFCF,docs/architecture/report-trust.md,报告可信度层（Report Trust）,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-FADB6B568C,docs/architecture/review.md,Architecture Review,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-FADB6B568C,docs/architecture/review.md,架构健康评审,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-83995B79D8,docs/architecture/smc-pa-narrative.md,SMC + PA 叙事组合,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-8F95DB280F,docs/architecture/technical-analysis.md,技术分析模块架构,SWE.2,04-04 Software Architecture,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-17A7063327,docs/archive/domain/financial-review-run-2026-06-20.md,已迁移,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent

@@ -10,19 +10,21 @@
 
 ## 1. 在流水线中的位置
 
-```
-… → Manager → build_report → apply_manager_authorization
-         │
-         ├─ build_data_as_of → observation_mode（不可执行快照）
-         ├─ 跳过 LLM Levels / Trader / Risk（observation_mode 时）
-         │
-         ├─ build_fact_registry（叙事前，供 LLM context 引用）
-         ├─ llm/analyst.py（叙事层，消费 fact_registry + narrative_facts）
-         │
-         └─ validate_report_invariants → apply_report_invariant_gate（#30）
-              → build_fact_registry（二次）→ compute_report_reliability
-              → agent_trace 快照（与交付 report 一致）
-              → build_audit_summary → archive_run → return report（Streamlit UI）
+```mermaid
+flowchart TB
+    M["ManagerDecision"] --> R["build_report()"]
+    R --> AUTH["apply_manager_authorization()<br/>只允许已授权 signal_id"]
+    AUTH --> ASOF["build_data_as_of()<br/>判定 observation_mode"]
+    ASOF -->|观察模式| SKIP["跳过 Levels / Trader / Risk<br/>生成不可执行快照"]
+    ASOF -->|正常模式| PRE["build_fact_registry()<br/>叙事前事实白名单"]
+    SKIP --> PRE
+    PRE --> NARR["llm/analyst.py<br/>只消费允许事实"]
+    NARR --> INV["validate_report_invariants()<br/>确定性一致性检查"]
+    INV --> GATE["apply_report_invariant_gate()<br/>失败即降级最终交付物"]
+    GATE --> POST["二次事实注册 + 可靠度计算"]
+    POST --> TRACE["agent_trace 与 audit_summary<br/>冻结交付快照"]
+    TRACE --> ARCHIVE["archive_run()<br/>不可变归档"]
+    TRACE --> UI["return report<br/>Streamlit UI"]
 ```
 
 **交付路径**：gate 改写的 `report` dict **同时**进入归档与 UI（`generation_worker` 使用 `run_analysis()` 返回值），不是「只写磁盘」。gate 不拦截已完成的 Agent/LLM 调用，只修正**最终交付物**（授权、结论、叙事字段、`pipeline_status`）。

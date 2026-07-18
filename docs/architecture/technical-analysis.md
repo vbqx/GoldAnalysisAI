@@ -7,37 +7,36 @@
 
 ## 1. 分层总览
 
+```mermaid
+flowchart TB
+    subgraph DET[检测层：使用全量 K 线]
+        LUX["luxalgo_smc.py<br/>结构 / OB / FVG / 摆动点"]
+        DGT["dgt_price_action.py<br/>支撑阻力 / 量价 / Volume Profile"]
+        ICT["ict_pa.py<br/>统一周期分析接口"]
+        LUX --> ICT
+    end
+
+    subgraph FACT[事实层：不生成文案，不做图表裁剪]
+        SNAP["tf_snapshot.py<br/>单周期事实快照"]
+        RF["report_facts.py<br/>跨周期报告事实"]
+        LABEL["display_labels.py<br/>统一中文标签"]
+    end
+
+    ICT --> SNAP
+    DGT --> RF
+    SNAP --> RF
+    LABEL --> RF
+
+    RF --> MACHINE["机器上下文<br/>technical_context.py<br/>供规则分析师与 LLM 使用"]
+    RF --> COPY["人类文案<br/>narrative_sections.py<br/>生成报告五块"]
+    MACHINE --> ASSEMBLY["报告组装<br/>report_engine.py"]
+    COPY --> ASSEMBLY
+    ICT --> FILTER["图表裁剪<br/>chart_zone_filters.py<br/>只保留 5m 可见区对象"]
+    ASSEMBLY --> REPORT["机构报告与审计字段"]
+    FILTER --> CHART["5m 主图<br/>lightweight_chart.py"]
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  DETECTION  检测层（全量 K 线）                               │
-│  luxalgo_smc.py → ict_pa.py  |  dgt_price_action.py        │
-└────────────────────────────┬────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────┐
-│  FACTS  事实层（无文案、无图表裁剪）                           │
-│  tf_snapshot.py · report_facts.py · display_labels.py       │
-└────────────────────────────┬────────────────────────────────┘
-                             ▼
-          ┌──────────────────┴──────────────────┐
-          ▼                                         ▼
-┌──────────────────────┐              ┌──────────────────────────┐
-│  MACHINE CONTEXT      │              │  HUMAN COPY               │
-│  technical_context.py │              │  narrative_sections.py    │
-│  → LLM / 规则分析师    │              │  → 报告五块 UI + LLM 覆盖   │
-└──────────────────────┘              └──────────────────────────┘
-          │                                         │
-          └──────────────────┬──────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────┐
-│  ASSEMBLY  报告组装                                          │
-│  report_engine.py — 信号、结论、路径、schema 壳               │
-└────────────────────────────┬────────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────────┐
-│  CHART  主图可视层（仅 5m 主图 / 策略图）                      │
-│  chart_zone_filters.py → lightweight_chart.py               │
-└─────────────────────────────────────────────────────────────┘
-```
+
+事实层是唯一事实源；机器上下文、人类文案和图表只是三种不同消费方式，任何一条支路都不应重新检测市场结构。
 
 ---
 

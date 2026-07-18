@@ -80,11 +80,12 @@
 |---|---|---|---|
 | [Analyst Team 输入密度](../../architecture/analyst-context.md) | 04-04 Software Architecture | reviewed | supporting |
 | [GoldAnalysisAI 架构设计（TradingAgents 参考）](../../architecture/architecture.md) | 04-04 Software Architecture | reviewed | supporting |
-| [Backtesting Design](../../architecture/backtesting.md) | 04-04 Software Architecture | reviewed | supporting |
+| [回测与历史重放架构](../../architecture/backtesting.md) | 04-04 Software Architecture | reviewed | supporting |
 | [主图与多周期决策分层](../../architecture/chart-layers.md) | 04-04 Software Architecture | reviewed | supporting |
 | [LLM 多智能体架构](../../architecture/llm-agents.md) | 04-04 Software Architecture | reviewed | supporting |
+| [架构专题导航](../../architecture/README.md) | 04-04 Software Architecture | reviewed | supporting |
 | [报告可信度层（Report Trust）](../../architecture/report-trust.md) | 04-04 Software Architecture | reviewed | supporting |
-| [Architecture Review](../../architecture/review.md) | 04-04 Software Architecture | reviewed | supporting |
+| [架构健康评审](../../architecture/review.md) | 04-04 Software Architecture | reviewed | supporting |
 | [SMC + PA 叙事组合](../../architecture/smc-pa-narrative.md) | 04-04 Software Architecture | reviewed | supporting |
 | [技术分析模块架构](../../architecture/technical-analysis.md) | 04-04 Software Architecture | reviewed | supporting |
 | [software architecture](../_machine/software-architecture.yaml) | Machine-readable Architecture Mirror | generated | generated |
