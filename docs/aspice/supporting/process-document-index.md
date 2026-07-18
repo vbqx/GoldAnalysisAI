@@ -13,10 +13,10 @@
 
 | 文档 | 信息项 | 状态 | 权威性 |
 |---|---|---|---|
-| [Automotive SPICE 软件域关闭审核报告](../../reviews/aspice/software-domain-closure-review-2026-07-18.md) | Review/Problem Analysis Evidence | reviewed | supporting |
-| [Automotive SPICE 4.0 软件域文档审核报告](../../reviews/aspice/software-domain-document-audit-2026-07-17.md) | Review/Problem Analysis Evidence | reviewed | supporting |
-| [software function audit 2026 07 17](../../reviews/aspice/software-function-audit-2026-07-17.csv) | Review/Problem Analysis Evidence | reviewed | supporting |
-| [software function audit summary 2026 07 17](../../reviews/aspice/software-function-audit-summary-2026-07-17.json) | Review/Problem Analysis Evidence | reviewed | supporting |
+| [Automotive SPICE 软件域关闭审核报告](./reviews/software-domain-closure-review-2026-07-18.md) | Review/Problem Analysis Evidence | reviewed | supporting |
+| [Automotive SPICE 4.0 软件域文档审核报告](./reviews/software-domain-document-audit-2026-07-17.md) | Review/Problem Analysis Evidence | reviewed | supporting |
+| [software function audit 2026 07 17](./reviews/software-function-audit-2026-07-17.csv) | Review/Problem Analysis Evidence | reviewed | supporting |
+| [software function audit summary 2026 07 17](./reviews/software-function-audit-summary-2026-07-17.json) | Review/Problem Analysis Evidence | reviewed | supporting |
 | [金融评审 · 实跑结论（2026-06-20）](../../reviews/financial/runtime-review-2026-06-20.md) | Review/Problem Analysis Evidence | reviewed | supporting |
 | [GoldAnalysisAI 金融实现 Review 报告](../../reviews/financial/static-code-review.md) | Review/Problem Analysis Evidence | reviewed | supporting |
 | [评审发现项 · 完成状态登记](../../reviews/findings-status.md) | Review/Problem Analysis Evidence | reviewed | supporting |
@@ -39,8 +39,8 @@
 | [pip resolution](../_machine/pip-resolution.json) | Configuration Item/Baseline | agreed | normative |
 | [sbom](../_machine/sbom.json) | Configuration Item/Baseline | agreed | normative |
 | [SUP.8 软件配置管理](../SUP.8-configuration-management.md) | Configuration Status/Baseline | agreed | normative |
-| [ASPICE 文档控制与归类规则](../supporting/document-control.md) | Document Control | agreed | normative |
-| [ASPICE 过程文档索引](../supporting/process-document-index.md) | Configuration Status Record | generated | generated |
+| [ASPICE 文档控制与归类规则](./document-control.md) | Document Control | agreed | normative |
+| [ASPICE 过程文档索引](./process-document-index.md) | Configuration Status Record | generated | generated |
 | [GoldAnalysisAI 文档中心](../../README.md) | Document/Automation Guidance | reviewed | supporting |
 
 ## SUP.8/MAN.3
@@ -70,7 +70,7 @@
 |---|---|---|---|
 | [traceability matrix](../_machine/traceability-matrix.csv) | 13-51 Consistency Evidence | generated | generated |
 | [Automotive SPICE 软件域](../README.md) | Software Domain Navigation | agreed | normative |
-| [ASPICE 软件域范围与关闭准则](../supporting/software-domain-scope-and-closure.md) | 15-52 Evaluation Results | agreed | normative |
+| [ASPICE 软件域范围与关闭准则](./software-domain-scope-and-closure.md) | 15-52 Evaluation Results | agreed | normative |
 | [软件双向追溯](../traceability.md) | 13-51 Consistency Evidence | agreed | normative |
 
 ## SWE.2
@@ -96,7 +96,7 @@
 | [software function detailed design](../_machine/software-function-detailed-design.csv) | 04-05 Software Detailed Design | agreed | normative |
 | [software function map](../_machine/software-function-map.csv) | 04-05 Software Detailed Design | agreed | normative |
 | [software unit catalog](../_machine/software-unit-catalog.csv) | 04-05 Software Detailed Design | agreed | normative |
-| [关键软件单元详细设计](../supporting/key-unit-detailed-designs.md) | 04-05 Software Detailed Design | agreed | normative |
+| [关键软件单元详细设计](./key-unit-detailed-designs.md) | 04-05 Software Detailed Design | agreed | normative |
 | [SWE.3 软件详细设计](../SWE.3-software-detailed-design.md) | 04-05 Software Detailed Design | agreed | normative |
 | [开发者速查表](../../reference/cheat-sheet.md) | Detailed Design/Interface Reference | reviewed | supporting |
 | [报告 JSON 结构说明](../../reference/examples/report-schema.md) | Detailed Design/Interface Reference | reviewed | supporting |

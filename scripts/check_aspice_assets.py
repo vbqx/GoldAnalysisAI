@@ -92,6 +92,8 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
     path_str = rel(path)
     if path_str.startswith("docs/aspice/"):
         name = path.name
+        if path_str.startswith("docs/aspice/supporting/reviews/"):
+            return "SUP.1/SUP.9", "Review/Problem Analysis Evidence", "reviewed", "supporting"
         readable_process_docs = {
             "SWE.1-software-requirements.md": ("SWE.1", "17-00 Software Requirements", "agreed", "normative"),
             "SWE.2-software-architecture.md": ("SWE.2", "04-04 Software Architecture", "agreed", "normative"),
@@ -356,7 +358,9 @@ def process_index(rows: list[dict[str, str]]) -> str:
     for process in sorted(grouped):
         lines.extend([f"## {process}", "", "| 文档 | 信息项 | 状态 | 权威性 |", "|---|---|---|---|"])
         for row in grouped[process]:
-            if row["path"].startswith("docs/aspice/"):
+            if row["path"].startswith("docs/aspice/supporting/"):
+                target = "./" + row["path"].removeprefix("docs/aspice/supporting/")
+            elif row["path"].startswith("docs/aspice/"):
                 target = "../" + row["path"].removeprefix("docs/aspice/")
             elif row["path"].startswith("docs/"):
                 target = "../../" + row["path"].removeprefix("docs/")

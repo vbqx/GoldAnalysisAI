@@ -127,7 +127,9 @@ def _requirements_doc(reqs: dict[str, Any]) -> str:
             "",
             f"<a id=\"{_anchor(item['id'])}\"></a>",
             "",
-            f"## {item['id']} — {item['title']}",
+            f"## {item['id']}",
+            "",
+            f"**标题**：{item['title']}",
             "",
             item["text"],
             "",
@@ -159,7 +161,7 @@ def _architecture_doc(arch: dict[str, Any], units: list[dict[str, str]]) -> str:
     lines += ["", "## 运行模式", ""]
     lines += _table(["模式", "行为"], [[item["id"], item["behavior"]] for item in arch["modes"]])
     for item in arch["components"]:
-        lines += ["", f"<a id=\"{_anchor(item['id'])}\"></a>", "", f"## {item['id']} — {item['name']}", ""]
+        lines += ["", f"<a id=\"{_anchor(item['id'])}\"></a>", "", f"## {item['id']}", "", f"**名称**：{item['name']}", ""]
         lines += _table(
             ["属性", "内容"],
             [
@@ -209,7 +211,7 @@ def _design_doc(
     for component in arch["components"]:
         component_id = component["id"]
         rows = sorted(by_component[component_id], key=lambda item: item["source_path"].casefold())
-        lines += ["", f"<a id=\"{_anchor(component_id)}\"></a>", "", f"## {component_id} — {names[component_id]}", ""]
+        lines += ["", f"<a id=\"{_anchor(component_id)}\"></a>", "", f"## {component_id}", "", f"**名称**：{names[component_id]}", ""]
         lines += _table(
             ["模块", "函数", "高风险", "验证措施", "状态"],
             [
@@ -247,7 +249,9 @@ def _unit_section(
         "",
         f"<a id=\"{_anchor(unit['software_unit_id'])}\"></a>",
         "",
-        f"### {unit['source_path']} — 软件单元详细设计",
+        f"### {unit['software_unit_id']}",
+        "",
+        f"**模块**：`{unit['source_path']}`（软件单元详细设计）",
         "",
     ]
     lines += _table(
@@ -274,7 +278,9 @@ def _unit_section(
             "",
             f"<a id=\"{_anchor(item['function_id'])}\"></a>",
             "",
-            f"#### `{item['qualified_name']}`",
+            f"#### {item['function_id']}",
+            "",
+            f"**函数**：`{item['qualified_name']}`",
             "",
             f"- **ID / 行**：`{item['function_id']}` / `L{item['line']}`（源码见本单元概览）",
             f"- **签名 / 返回**：`{item['qualified_name']}{item['signature']}` → `{item['return_contract']}`",
@@ -304,8 +310,8 @@ def _unit_verification_doc(arch: dict[str, Any], rows: list[dict[str, str]]) -> 
     blocking = sum(row["verification_status"] == "blocking-gap" for row in rows)
     high = sum(int(row["high_risk_function_count"]) for row in rows)
     lines = _front("SWE.4 单元测试（UT）", "SWE.4", "评审每个软件单元的 UT 选择、风险与结果")
-    lines += ['<a id="vm-unit"></a>', ""]
-    lines += ["## 结论", "", f"共 **{len(rows)} 个单元**、**{high} 个高风险函数**；阻断单元 **{blocking}** 个。", ""]
+    lines += ['<a id="vm-unit"></a>', "", "## VM-UNIT", ""]
+    lines += ["### 结论", "", f"共 **{len(rows)} 个单元**、**{high} 个高风险函数**；阻断单元 **{blocking}** 个。", ""]
     for component_id in names:
         lines += ["", f"## {component_id} — {names[component_id]}", ""]
         lines += _table(
@@ -324,7 +330,13 @@ def _unit_verification_doc(arch: dict[str, Any], rows: list[dict[str, str]]) -> 
 
 def _integration_doc(plan: dict[str, Any]) -> str:
     lines = _front("SWE.5 集成测试（IT）", "SWE.5", "评审集成顺序、接口、桩、资源和 IT 结果")
-    lines += ['<a id="vm-integration-pipeline"></a>', '<a id="vm-integration-external"></a>', '<a id="vm-backtest"></a>', ""]
+    measure_items: dict[str, list[str]] = defaultdict(list)
+    for item in plan["items"]:
+        for measure_id in item["verification_measure_ids"]:
+            measure_items[measure_id].append(item["id"])
+    for measure_id, item_ids in measure_items.items():
+        links = "、".join(f"[{item_id}](#{_anchor(item_id)})" for item_id in item_ids)
+        lines += [f'<a id="{_anchor(measure_id)}"></a>', "", f"## {measure_id}", "", f"关联集成项：{links}", ""]
     lines += ["## 准入与退出", "", "### 准入条件", ""]
     lines += [f"- {item}" for item in plan["entry_criteria"]]
     lines += ["", "### 退出条件", ""] + [f"- {item}" for item in plan["exit_criteria"]]
@@ -354,13 +366,17 @@ def _qualification_doc(measures: dict[str, Any], coverage: list[dict[str, str]])
     policy = measures["selection_policy"]
     lines += ["## 选择策略", ""]
     lines += _table(["规则", "内容"], [[key, value] for key, value in policy.items()])
-    lines += ["", "## 验证措施", ""]
-    lines += [f'<a id="{_anchor(item["id"])}"></a>' for item in measures["measures"]]
-    lines += [""]
+    lines += ["", "## 验证措施目录", ""]
     lines += _table(
-        ["ID", "级别", "技术", "命令", "通过准则", "环境"],
-        [[item["id"], item["level"], item["technique"], item["command"], item["pass_fail"], item["environment"]] for item in measures["measures"]],
+        ["ID", "级别", "技术"],
+        [[f"[{item['id']}](#{_anchor(item['id'])})", item["level"], item["technique"]] for item in measures["measures"]],
     )
+    for item in measures["measures"]:
+        lines += ["", f'<a id="{_anchor(item["id"])}"></a>', "", f"## {item['id']}", ""]
+        lines += _table(
+            ["属性", "内容"],
+            [["级别", item["level"]], ["技术", item["technique"]], ["命令", item["command"]], ["通过准则", item["pass_fail"]], ["环境", item["environment"]]],
+        )
     lines += ["", "## 需求覆盖结论", "", f"共 **{len(coverage)} 条需求**；阻断覆盖缺口 **{blocking}** 条。", ""]
     lines += _table(
         ["需求", "架构", "验证措施", "接受结果", "状态"],

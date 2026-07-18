@@ -9,9 +9,35 @@
 > 本文是人工阅读、评审和变更讨论的正式入口。结构化校验数据位于
 > `_machine/`，普通评审无需直接阅读机器文件。
 
-<a id="vm-integration-pipeline"></a>
+<a id="vm-unit"></a>
+
+## VM-UNIT
+
+关联集成项：[INT-01-CONFIG-RUN](#int-01-config-run)、[INT-02-DATA-INDICATORS](#int-02-data-indicators)、[INT-03-ANALYSIS-AGENTS](#int-03-analysis-agents)、[INT-05-REPORT-ARCHIVE](#int-05-report-archive)、[INT-06-REPORT-VIZ](#int-06-report-viz)
+
+<a id="vm-regression"></a>
+
+## VM-REGRESSION
+
+关联集成项：[INT-01-CONFIG-RUN](#int-01-config-run)、[INT-03-ANALYSIS-AGENTS](#int-03-analysis-agents)、[INT-05-REPORT-ARCHIVE](#int-05-report-archive)、[INT-06-REPORT-VIZ](#int-06-report-viz)
+
 <a id="vm-integration-external"></a>
-<a id="vm-backtest"></a>
+
+## VM-INTEGRATION-EXTERNAL
+
+关联集成项：[INT-02-DATA-INDICATORS](#int-02-data-indicators)
+
+<a id="vm-integration-pipeline"></a>
+
+## VM-INTEGRATION-PIPELINE
+
+关联集成项：[INT-04-AGENTS-REPORT-GATE](#int-04-agents-report-gate)
+
+<a id="vm-manual-ui"></a>
+
+## VM-MANUAL-UI
+
+关联集成项：[INT-06-REPORT-VIZ](#int-06-report-viz)
 
 ## 准入与退出
 

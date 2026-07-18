@@ -36,7 +36,9 @@
 
 <a id="arc-app"></a>
 
-## ARC-APP — 应用入口与运行配置
+## ARC-APP
+
+**名称**：应用入口与运行配置
 
 | 属性 | 内容 |
 |---|---|
@@ -48,7 +50,9 @@
 
 <a id="arc-core"></a>
 
-## ARC-CORE — 主编排与进度
+## ARC-CORE
+
+**名称**：主编排与进度
 
 | 属性 | 内容 |
 |---|---|
@@ -60,7 +64,9 @@
 
 <a id="arc-data"></a>
 
-## ARC-DATA — 行情与外部数据
+## ARC-DATA
+
+**名称**：行情与外部数据
 
 | 属性 | 内容 |
 |---|---|
@@ -72,7 +78,9 @@
 
 <a id="arc-indicators"></a>
 
-## ARC-INDICATORS — 指标计算
+## ARC-INDICATORS
+
+**名称**：指标计算
 
 | 属性 | 内容 |
 |---|---|
@@ -84,7 +92,9 @@
 
 <a id="arc-analysis"></a>
 
-## ARC-ANALYSIS — 事实、结构、信号与报告门禁
+## ARC-ANALYSIS
+
+**名称**：事实、结构、信号与报告门禁
 
 | 属性 | 内容 |
 |---|---|
@@ -96,7 +106,9 @@
 
 <a id="arc-agents"></a>
 
-## ARC-AGENTS — 规则/LLM Agent 编排
+## ARC-AGENTS
+
+**名称**：规则/LLM Agent 编排
 
 | 属性 | 内容 |
 |---|---|
@@ -108,7 +120,9 @@
 
 <a id="arc-llm"></a>
 
-## ARC-LLM — LLM 传输、上下文和策略
+## ARC-LLM
+
+**名称**：LLM 传输、上下文和策略
 
 | 属性 | 内容 |
 |---|---|
@@ -120,7 +134,9 @@
 
 <a id="arc-run"></a>
 
-## ARC-RUN — 运行上下文与归档
+## ARC-RUN
+
+**名称**：运行上下文与归档
 
 | 属性 | 内容 |
 |---|---|
@@ -132,7 +148,9 @@
 
 <a id="arc-backtest"></a>
 
-## ARC-BACKTEST — Point-in-time 回测
+## ARC-BACKTEST
+
+**名称**：Point-in-time 回测
 
 | 属性 | 内容 |
 |---|---|
@@ -144,7 +162,9 @@
 
 <a id="arc-viz"></a>
 
-## ARC-VIZ — Streamlit 展示
+## ARC-VIZ
+
+**名称**：Streamlit 展示
 
 | 属性 | 内容 |
 |---|---|
@@ -156,7 +176,9 @@
 
 <a id="arc-tools"></a>
 
-## ARC-TOOLS — 开发、审核与运维工具
+## ARC-TOOLS
+
+**名称**：开发、审核与运维工具
 
 | 属性 | 内容 |
 |---|---|

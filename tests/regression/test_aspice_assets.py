@@ -150,6 +150,10 @@ def test_readable_aspice_navigation_covers_requirement_to_vt_chain() -> None:
     assert all(f'id="{row["id"].lower().replace(".", "-")}"' in documents[names[0]] for row in requirements["requirements"])
     assert all(f'id="{row["id"].lower()}"' in documents[names[1]] for row in architecture["components"])
     assert all(f'id="{row["function_id"].lower()}"' in documents[names[2]] for row in functions)
+    assert all(f'## {row["id"]}\n' in documents[names[0]] for row in requirements["requirements"])
+    assert all(f'## {row["id"]}\n' in documents[names[1]] for row in architecture["components"])
+    assert all(f'#### {row["function_id"]}\n' in documents[names[2]] for row in functions)
+    assert "[SWR-CORE-001](#swr-core-001)" in documents[names[0]]
     assert "SWE.2-software-architecture.md" in documents[names[0]]
     assert "SWE.3-software-detailed-design.md" in documents[names[1]]
     assert "SWE.3-software-detailed-design.md" in documents[names[3]]

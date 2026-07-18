@@ -18,31 +18,140 @@
 | entry_criteria | 依赖可用、工作区范围明确、追溯数据通过 schema 校验。 |
 | exit_criteria | 必选措施通过；失败已有 SUP.9 Issue；结果绑定 Git SHA、环境和用例版本。 |
 
-## 验证措施
+## 验证措施目录
+
+| ID | 级别 | 技术 |
+|---|---|---|
+| [VM-UNIT](#vm-unit) | SWE.4 | automated unit testing |
+| [VM-REGRESSION](#vm-regression) | SWE.6 | automated regression testing |
+| [VM-INTEGRATION-PIPELINE](#vm-integration-pipeline) | SWE.5 | deterministic cross-component report trust-chain integration |
+| [VM-INTEGRATION-EXTERNAL](#vm-integration-external) | SWE.5 | live supplier health smoke |
+| [VM-BACKTEST](#vm-backtest) | SWE.5 | point-in-time simulation with frozen fixtures |
+| [VM-DOCS](#vm-docs) | SWE.6 | document structure, link and sample synchronization tests |
+| [VM-TRACE](#vm-trace) | SWE.1-SWE.6 | bidirectional traceability and document register validation |
+| [VM-STATIC](#vm-static) | SWE.4 | compile and patch hygiene |
+| [VM-MANUAL-UI](#vm-manual-ui) | SWE.6 | Streamlit visual and interaction acceptance |
+| [VM-CONFIG](#vm-config) | SUP.8 | configuration item, lock and SBOM consistency |
 
 <a id="vm-unit"></a>
+
+## VM-UNIT
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SWE.4 |
+| 技术 | automated unit testing |
+| 命令 | python tests/run.py --unit |
+| 通过准则 | pytest exit code 0 |
+| 环境 | CPython 3.12, no network |
+
 <a id="vm-regression"></a>
+
+## VM-REGRESSION
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SWE.6 |
+| 技术 | automated regression testing |
+| 命令 | python tests/run.py --regression |
+| 通过准则 | pytest exit code 0 |
+| 环境 | CPython 3.12, no network |
+
 <a id="vm-integration-pipeline"></a>
+
+## VM-INTEGRATION-PIPELINE
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SWE.5 |
+| 技术 | deterministic cross-component report trust-chain integration |
+| 命令 | python -m pytest tests/integration/test_offline_report_contract.py -m integration |
+| 通过准则 | pytest exit code 0 within declared timeout |
+| 环境 | frozen fixtures; no network, paid LLM, or MT5 |
+
 <a id="vm-integration-external"></a>
+
+## VM-INTEGRATION-EXTERNAL
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SWE.5 |
+| 技术 | live supplier health smoke |
+| 命令 | python tests/run.py --external |
+| 通过准则 | result classified as pass, supplier unavailable, or software failure; only software failure blocks release |
+| 环境 | network required; not part of deterministic offline gate |
+
 <a id="vm-backtest"></a>
+
+## VM-BACKTEST
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SWE.5 |
+| 技术 | point-in-time simulation with frozen fixtures |
+| 命令 | python -m pytest tests/unit/test_backtest_*.py |
+| 通过准则 | pytest exit code 0 and no future-data assertion violation |
+| 环境 | no network |
+
 <a id="vm-docs"></a>
+
+## VM-DOCS
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SWE.6 |
+| 技术 | document structure, link and sample synchronization tests |
+| 命令 | python -m pytest tests/regression/test_doc_pipeline_sync.py tests/regression/test_docs_structure.py tests/regression/test_export_sample_report.py |
+| 通过准则 | pytest exit code 0 |
+| 环境 | no network |
+
 <a id="vm-trace"></a>
+
+## VM-TRACE
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SWE.1-SWE.6 |
+| 技术 | bidirectional traceability and document register validation |
+| 命令 | python scripts/check_aspice_assets.py --check and python scripts/generate_aspice_software_evidence.py --check |
+| 通过准则 | exit code 0, no orphan or dangling identifier |
+| 环境 | no network; PyYAML available |
+
 <a id="vm-static"></a>
+
+## VM-STATIC
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SWE.4 |
+| 技术 | compile and patch hygiene |
+| 命令 | python -m compileall -q src app.py run_app.py scripts && git diff --check |
+| 通过准则 | both commands exit code 0 |
+| 环境 | no network |
+
 <a id="vm-manual-ui"></a>
+
+## VM-MANUAL-UI
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SWE.6 |
+| 技术 | Streamlit visual and interaction acceptance |
+| 命令 | python run_app.py |
+| 通过准则 | applicable UI catalog cases pass with screenshots/notes |
+| 环境 | supported browser at desktop and mobile widths |
+
 <a id="vm-config"></a>
 
-| ID | 级别 | 技术 | 命令 | 通过准则 | 环境 |
-|---|---|---|---|---|---|
-| VM-UNIT | SWE.4 | automated unit testing | python tests/run.py --unit | pytest exit code 0 | CPython 3.12, no network |
-| VM-REGRESSION | SWE.6 | automated regression testing | python tests/run.py --regression | pytest exit code 0 | CPython 3.12, no network |
-| VM-INTEGRATION-PIPELINE | SWE.5 | deterministic cross-component report trust-chain integration | python -m pytest tests/integration/test_offline_report_contract.py -m integration | pytest exit code 0 within declared timeout | frozen fixtures; no network, paid LLM, or MT5 |
-| VM-INTEGRATION-EXTERNAL | SWE.5 | live supplier health smoke | python tests/run.py --external | result classified as pass, supplier unavailable, or software failure; only software failure blocks release | network required; not part of deterministic offline gate |
-| VM-BACKTEST | SWE.5 | point-in-time simulation with frozen fixtures | python -m pytest tests/unit/test_backtest_*.py | pytest exit code 0 and no future-data assertion violation | no network |
-| VM-DOCS | SWE.6 | document structure, link and sample synchronization tests | python -m pytest tests/regression/test_doc_pipeline_sync.py tests/regression/test_docs_structure.py tests/regression/test_export_sample_report.py | pytest exit code 0 | no network |
-| VM-TRACE | SWE.1-SWE.6 | bidirectional traceability and document register validation | python scripts/check_aspice_assets.py --check and python scripts/generate_aspice_software_evidence.py --check | exit code 0, no orphan or dangling identifier | no network; PyYAML available |
-| VM-STATIC | SWE.4 | compile and patch hygiene | python -m compileall -q src app.py run_app.py scripts && git diff --check | both commands exit code 0 | no network |
-| VM-MANUAL-UI | SWE.6 | Streamlit visual and interaction acceptance | python run_app.py | applicable UI catalog cases pass with screenshots/notes | supported browser at desktop and mobile widths |
-| VM-CONFIG | SUP.8 | configuration item, lock and SBOM consistency | python scripts/check_aspice_assets.py --check | all controlled paths exist and dependency lock equals SBOM component versions | no network |
+## VM-CONFIG
+
+| 属性 | 内容 |
+|---|---|
+| 级别 | SUP.8 |
+| 技术 | configuration item, lock and SBOM consistency |
+| 命令 | python scripts/check_aspice_assets.py --check |
+| 通过准则 | all controlled paths exist and dependency lock equals SBOM component versions |
+| 环境 | no network |
 
 ## 需求覆盖结论
 

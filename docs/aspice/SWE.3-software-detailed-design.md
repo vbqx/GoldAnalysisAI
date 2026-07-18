@@ -24,7 +24,9 @@
 
 <a id="arc-app"></a>
 
-## ARC-APP — 应用入口与运行配置
+## ARC-APP
+
+**名称**：应用入口与运行配置
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -37,7 +39,9 @@
 
 <a id="unit-13cce7fd07"></a>
 
-### app.py — 软件单元详细设计
+### UNIT-13CCE7FD07
+
+**模块**：`app.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -57,7 +61,9 @@
 
 <a id="fun-188c32a8d7"></a>
 
-#### `_ensure_streamlit_runtime`
+#### FUN-188C32A8D7
+
+**函数**：`_ensure_streamlit_runtime`
 
 - **ID / 行**：`FUN-188C32A8D7` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`_ensure_streamlit_runtime()` → `None`
@@ -69,7 +75,9 @@
 
 <a id="unit-b2a1584dad"></a>
 
-### run_app.py — 软件单元详细设计
+### UNIT-B2A1584DAD
+
+**模块**：`run_app.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -89,7 +97,9 @@
 
 <a id="fun-dccdace066"></a>
 
-#### `load_dotenv`
+#### FUN-DCCDACE066
+
+**函数**：`load_dotenv`
 
 - **ID / 行**：`FUN-DCCDACE066` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`load_dotenv(path: Path)` → `None`
@@ -100,7 +110,9 @@
 
 <a id="fun-79cfc89b7c"></a>
 
-#### `init_dev_env`
+#### FUN-79CFC89B7C
+
+**函数**：`init_dev_env`
 
 - **ID / 行**：`FUN-79CFC89B7C` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`init_dev_env()` → `None`
@@ -112,7 +124,9 @@
 
 <a id="fun-acd09c876b"></a>
 
-#### `ensure_streamlit_config`
+#### FUN-ACD09C876B
+
+**函数**：`ensure_streamlit_config`
 
 - **ID / 行**：`FUN-ACD09C876B` / `L51`（源码见本单元概览）
 - **签名 / 返回**：`ensure_streamlit_config()` → `None`
@@ -124,7 +138,9 @@
 
 <a id="fun-8991377fd4"></a>
 
-#### `_python_is_usable`
+#### FUN-8991377FD4
+
+**函数**：`_python_is_usable`
 
 - **ID / 行**：`FUN-8991377FD4` / `L68`（源码见本单元概览）
 - **签名 / 返回**：`_python_is_usable(candidate: Path)` → `bool`
@@ -135,7 +151,9 @@
 
 <a id="fun-50c4f81dd9"></a>
 
-#### `resolve_python`
+#### FUN-50C4F81DD9
+
+**函数**：`resolve_python`
 
 - **ID / 行**：`FUN-50C4F81DD9` / `L82`（源码见本单元概览）
 - **签名 / 返回**：`resolve_python()` → `Path | str`
@@ -146,7 +164,9 @@
 
 <a id="fun-40c14bb01b"></a>
 
-#### `_pids_listening_on_port`
+#### FUN-40C14BB01B
+
+**函数**：`_pids_listening_on_port`
 
 - **ID / 行**：`FUN-40C14BB01B` / `L90`（源码见本单元概览）
 - **签名 / 返回**：`_pids_listening_on_port(port: int)` → `list[int]`
@@ -157,7 +177,9 @@
 
 <a id="fun-efea1102a6"></a>
 
-#### `_command_line_for_pid`
+#### FUN-EFEA1102A6
+
+**函数**：`_command_line_for_pid`
 
 - **ID / 行**：`FUN-EFEA1102A6` / `L134`（源码见本单元概览）
 - **签名 / 返回**：`_command_line_for_pid(pid: int)` → `str`
@@ -168,7 +190,9 @@
 
 <a id="fun-5f95c44360"></a>
 
-#### `_is_project_streamlit_pid`
+#### FUN-5F95C44360
+
+**函数**：`_is_project_streamlit_pid`
 
 - **ID / 行**：`FUN-5F95C44360` / `L161`（源码见本单元概览）
 - **签名 / 返回**：`_is_project_streamlit_pid(pid: int, root: Path)` → `bool`
@@ -179,7 +203,9 @@
 
 <a id="fun-e5e889737f"></a>
 
-#### `_streamlit_pids`
+#### FUN-E5E889737F
+
+**函数**：`_streamlit_pids`
 
 - **ID / 行**：`FUN-E5E889737F` / `L169`（源码见本单元概览）
 - **签名 / 返回**：`_streamlit_pids(root: Path)` → `list[int]`
@@ -191,7 +217,9 @@
 
 <a id="fun-2f41b39115"></a>
 
-#### `_terminate_pid`
+#### FUN-2F41B39115
+
+**函数**：`_terminate_pid`
 
 - **ID / 行**：`FUN-2F41B39115` / `L217`（源码见本单元概览）
 - **签名 / 返回**：`_terminate_pid(pid: int)` → `None`
@@ -202,7 +230,9 @@
 
 <a id="fun-93afb64487"></a>
 
-#### `stop_stale_streamlit`
+#### FUN-93AFB64487
+
+**函数**：`stop_stale_streamlit`
 
 - **ID / 行**：`FUN-93AFB64487` / `L235`（源码见本单元概览）
 - **签名 / 返回**：`stop_stale_streamlit(port: int)` → `None`
@@ -213,7 +243,9 @@
 
 <a id="fun-5749848613"></a>
 
-#### `parse_args`
+#### FUN-5749848613
+
+**函数**：`parse_args`
 
 - **ID / 行**：`FUN-5749848613` / `L253`（源码见本单元概览）
 - **签名 / 返回**：`parse_args()` → `argparse.Namespace`
@@ -224,7 +256,9 @@
 
 <a id="fun-8c169563e6"></a>
 
-#### `main`
+#### FUN-8C169563E6
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-8C169563E6` / `L264`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
@@ -236,7 +270,9 @@
 
 <a id="unit-02d5d8e12e"></a>
 
-### views/1_机构级分析报告.py — 软件单元详细设计
+### UNIT-02D5D8E12E
+
+**模块**：`views/1_机构级分析报告.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -256,7 +292,9 @@
 
 <a id="unit-0e03ccecca"></a>
 
-### views/2_短线策略.py — 软件单元详细设计
+### UNIT-0E03CCECCA
+
+**模块**：`views/2_短线策略.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -276,7 +314,9 @@
 
 <a id="unit-74cd83898f"></a>
 
-### views/3_LLM决策链.py — 软件单元详细设计
+### UNIT-74CD83898F
+
+**模块**：`views/3_LLM决策链.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -296,7 +336,9 @@
 
 <a id="unit-1fe6319d7a"></a>
 
-### views/4_外部数据.py — 软件单元详细设计
+### UNIT-1FE6319D7A
+
+**模块**：`views/4_外部数据.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -316,7 +358,9 @@
 
 <a id="arc-core"></a>
 
-## ARC-CORE — 主编排与进度
+## ARC-CORE
+
+**名称**：主编排与进度
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -335,7 +379,9 @@
 
 <a id="unit-b141e8a708"></a>
 
-### src/__init__.py — 软件单元详细设计
+### UNIT-B141E8A708
+
+**模块**：`src/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -355,7 +401,9 @@
 
 <a id="unit-f43788fe2b"></a>
 
-### src/config.py — 软件单元详细设计
+### UNIT-F43788FE2B
+
+**模块**：`src/config.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -375,7 +423,9 @@
 
 <a id="fun-f4d8ffcbf2"></a>
 
-#### `_load_dotenv`
+#### FUN-F4D8FFCBF2
+
+**函数**：`_load_dotenv`
 
 - **ID / 行**：`FUN-F4D8FFCBF2` / `L9`（源码见本单元概览）
 - **签名 / 返回**：`_load_dotenv()` → `None`
@@ -387,7 +437,9 @@
 
 <a id="fun-9eb4bec26a"></a>
 
-#### `short_model_name`
+#### FUN-9EB4BEC26A
+
+**函数**：`short_model_name`
 
 - **ID / 行**：`FUN-9EB4BEC26A` / `L138`（源码见本单元概览）
 - **签名 / 返回**：`short_model_name(model: str)` → `str`
@@ -398,7 +450,9 @@
 
 <a id="fun-9f79e7b13e"></a>
 
-#### `llm_sidebar_models`
+#### FUN-9F79E7B13E
+
+**函数**：`llm_sidebar_models`
 
 - **ID / 行**：`FUN-9F79E7B13E` / `L142`（源码见本单元概览）
 - **签名 / 返回**：`llm_sidebar_models()` → `str`
@@ -409,7 +463,9 @@
 
 <a id="fun-d31153bd15"></a>
 
-#### `_stage_flag`
+#### FUN-D31153BD15
+
+**函数**：`_stage_flag`
 
 - **ID / 行**：`FUN-D31153BD15` / `L159`（源码见本单元概览）
 - **签名 / 返回**：`_stage_flag(name: str)` → `bool`
@@ -420,7 +476,9 @@
 
 <a id="fun-09dea713ba"></a>
 
-#### `_stage_flag_or`
+#### FUN-09DEA713BA
+
+**函数**：`_stage_flag_or`
 
 - **ID / 行**：`FUN-09DEA713BA` / `L174`（源码见本单元概览）
 - **签名 / 返回**：`_stage_flag_or(name: str, default: bool)` → `bool`
@@ -431,7 +489,9 @@
 
 <a id="unit-21570b9deb"></a>
 
-### src/core/__init__.py — 软件单元详细设计
+### UNIT-21570B9DEB
+
+**模块**：`src/core/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -451,7 +511,9 @@
 
 <a id="unit-aa59bf5421"></a>
 
-### src/core/orchestrator.py — 软件单元详细设计
+### UNIT-AA59BF5421
+
+**模块**：`src/core/orchestrator.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -471,7 +533,9 @@
 
 <a id="fun-67d665990e"></a>
 
-#### `run_trade_agent_pipeline`
+#### FUN-67D665990E
+
+**函数**：`run_trade_agent_pipeline`
 
 - **ID / 行**：`FUN-67D665990E` / `L46`（源码见本单元概览）
 - **签名 / 返回**：`run_trade_agent_pipeline()` → `tuple[dict, dict, dict]`
@@ -483,7 +547,9 @@
 
 <a id="unit-d0bec20560"></a>
 
-### src/core/orchestrator_hooks.py — 软件单元详细设计
+### UNIT-D0BEC20560
+
+**模块**：`src/core/orchestrator_hooks.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -503,7 +569,9 @@
 
 <a id="fun-dd1340f890"></a>
 
-#### `begin_pipeline_run`
+#### FUN-DD1340F890
+
+**函数**：`begin_pipeline_run`
 
 - **ID / 行**：`FUN-DD1340F890` / `L15`（源码见本单元概览）
 - **签名 / 返回**：`begin_pipeline_run()` → `tuple[str, float]`
@@ -514,7 +582,9 @@
 
 <a id="fun-06f77b71cb"></a>
 
-#### `fetch_market_data`
+#### FUN-06F77B71CB
+
+**函数**：`fetch_market_data`
 
 - **ID / 行**：`FUN-06F77B71CB` / `L24`（源码见本单元概览）
 - **签名 / 返回**：`fetch_market_data()` → `DataFetchResult`
@@ -526,7 +596,9 @@
 
 <a id="fun-d2656c49ea"></a>
 
-#### `publish_external_snapshot`
+#### FUN-D2656C49EA
+
+**函数**：`publish_external_snapshot`
 
 - **ID / 行**：`FUN-D2656C49EA` / `L28`（源码见本单元概览）
 - **签名 / 返回**：`publish_external_snapshot(fetched: DataFetchResult, prog: Any)` → `None`
@@ -537,7 +609,9 @@
 
 <a id="fun-e9ab4f388f"></a>
 
-#### `finalize_pipeline_archive`
+#### FUN-E9AB4F388F
+
+**函数**：`finalize_pipeline_archive`
 
 - **ID / 行**：`FUN-E9AB4F388F` / `L34`（源码见本单元概览）
 - **签名 / 返回**：`finalize_pipeline_archive(run_id: str, *, fetched: DataFetchResult, report: dict[str, Any], enriched: dict, analyses: dict, elapsed_s: float, run_config: RunConfig | None=None)` → `None`
@@ -548,7 +622,9 @@
 
 <a id="unit-d85010dca2"></a>
 
-### src/core/parallel.py — 软件单元详细设计
+### UNIT-D85010DCA2
+
+**模块**：`src/core/parallel.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -568,7 +644,9 @@
 
 <a id="fun-121ea3a282"></a>
 
-#### `ParallelTaskError.__init__`
+#### FUN-121EA3A282
+
+**函数**：`ParallelTaskError.__init__`
 
 - **ID / 行**：`FUN-121EA3A282` / `L20`（源码见本单元概览）
 - **签名 / 返回**：`ParallelTaskError.__init__(self, errors: dict[str, BaseException])` → `None`
@@ -579,7 +657,9 @@
 
 <a id="fun-f68413bb73"></a>
 
-#### `run_parallel`
+#### FUN-F68413BB73
+
+**函数**：`run_parallel`
 
 - **ID / 行**：`FUN-F68413BB73` / `L26`（源码见本单元概览）
 - **签名 / 返回**：`run_parallel(tasks: list[tuple[str, Callable[[], T]]], *, max_workers: int, label: str='', raise_on_error: bool=False)` → `dict[str, T]`
@@ -591,7 +671,9 @@
 
 <a id="fun-554230efc2"></a>
 
-#### `run_parallel._run`
+#### FUN-554230EFC2
+
+**函数**：`run_parallel._run`
 
 - **ID / 行**：`FUN-554230EFC2` / `L46`（源码见本单元概览）
 - **签名 / 返回**：`run_parallel._run(name: str, fn: Callable[[], T], worker_ctx: contextvars.Context)` → `tuple[str, T | None, BaseException | None]`
@@ -602,7 +684,9 @@
 
 <a id="unit-0dc607ab64"></a>
 
-### src/core/progress.py — 软件单元详细设计
+### UNIT-0DC607AB64
+
+**模块**：`src/core/progress.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -622,7 +706,9 @@
 
 <a id="fun-e6e1bb921a"></a>
 
-#### `PipelineProgressState.to_dict`
+#### FUN-E6E1BB921A
+
+**函数**：`PipelineProgressState.to_dict`
 
 - **ID / 行**：`FUN-E6E1BB921A` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`PipelineProgressState.to_dict(self)` → `list[dict[str, Any]]`
@@ -632,7 +718,9 @@
 
 <a id="fun-15a8181c39"></a>
 
-#### `LLMIORecord.to_dict`
+#### FUN-15A8181C39
+
+**函数**：`LLMIORecord.to_dict`
 
 - **ID / 行**：`FUN-15A8181C39` / `L66`（源码见本单元概览）
 - **签名 / 返回**：`LLMIORecord.to_dict(self)` → `dict[str, Any]`
@@ -643,7 +731,9 @@
 
 <a id="fun-cb609da8dc"></a>
 
-#### `ProgressReporter.__init__`
+#### FUN-CB609DA8DC
+
+**函数**：`ProgressReporter.__init__`
 
 - **ID / 行**：`FUN-CB609DA8DC` / `L109`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.__init__(self)` → `None`
@@ -655,7 +745,9 @@
 
 <a id="fun-71a259922f"></a>
 
-#### `ProgressReporter.set_external_snapshot`
+#### FUN-71A259922F
+
+**函数**：`ProgressReporter.set_external_snapshot`
 
 - **ID / 行**：`FUN-71A259922F` / `L115`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.set_external_snapshot(self, data: dict[str, Any])` → `None`
@@ -666,7 +758,9 @@
 
 <a id="fun-ef0ac17bf3"></a>
 
-#### `ProgressReporter.start`
+#### FUN-EF0AC17BF3
+
+**函数**：`ProgressReporter.start`
 
 - **ID / 行**：`FUN-EF0AC17BF3` / `L119`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.start(self, step_id: str, label: str, detail: str='')` → `None`
@@ -678,7 +772,9 @@
 
 <a id="fun-a57d337b7d"></a>
 
-#### `ProgressReporter.start_sibling`
+#### FUN-A57D337B7D
+
+**函数**：`ProgressReporter.start_sibling`
 
 - **ID / 行**：`FUN-A57D337B7D` / `L127`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.start_sibling(self, step_id: str, label: str, detail: str='')` → `None`
@@ -690,7 +786,9 @@
 
 <a id="fun-f4408a209b"></a>
 
-#### `ProgressReporter.update`
+#### FUN-F4408A209B
+
+**函数**：`ProgressReporter.update`
 
 - **ID / 行**：`FUN-F4408A209B` / `L135`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.update(self, step_id: str, *, detail: str | None=None, label: str | None=None)` → `None`
@@ -701,7 +799,9 @@
 
 <a id="fun-5e62a87f3a"></a>
 
-#### `ProgressReporter.done`
+#### FUN-5E62A87F3A
+
+**函数**：`ProgressReporter.done`
 
 - **ID / 行**：`FUN-5E62A87F3A` / `L145`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.done(self, step_id: str, detail: str='')` → `None`
@@ -712,7 +812,9 @@
 
 <a id="fun-59b596d460"></a>
 
-#### `ProgressReporter.fail`
+#### FUN-59B596D460
+
+**函数**：`ProgressReporter.fail`
 
 - **ID / 行**：`FUN-59B596D460` / `L155`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.fail(self, step_id: str, detail: str='')` → `None`
@@ -723,7 +825,9 @@
 
 <a id="fun-1f365c723b"></a>
 
-#### `ProgressReporter.skip`
+#### FUN-1F365C723B
+
+**函数**：`ProgressReporter.skip`
 
 - **ID / 行**：`FUN-1F365C723B` / `L164`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.skip(self, step_id: str, label: str, detail: str='')` → `None`
@@ -735,7 +839,9 @@
 
 <a id="fun-40fa2599e6"></a>
 
-#### `ProgressReporter.snapshot`
+#### FUN-40FA2599E6
+
+**函数**：`ProgressReporter.snapshot`
 
 - **ID / 行**：`FUN-40FA2599E6` / `L170`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.snapshot(self)` → `list[dict[str, Any]]`
@@ -746,7 +852,9 @@
 
 <a id="fun-0cb129ff59"></a>
 
-#### `ProgressReporter.llm_io_snapshot`
+#### FUN-0CB129FF59
+
+**函数**：`ProgressReporter.llm_io_snapshot`
 
 - **ID / 行**：`FUN-0CB129FF59` / `L173`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.llm_io_snapshot(self)` → `list[dict[str, Any]]`
@@ -757,7 +865,9 @@
 
 <a id="fun-2b8326fbcd"></a>
 
-#### `ProgressReporter.stage_io`
+#### FUN-2B8326FBCD
+
+**函数**：`ProgressReporter.stage_io`
 
 - **ID / 行**：`FUN-2B8326FBCD` / `L177`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.stage_io(self, stage: str, *, input_text: str, output_text: str, latency_ms: int | None=None, label: str | None=None)` → `None`
@@ -768,7 +878,9 @@
 
 <a id="fun-776ea31038"></a>
 
-#### `ProgressReporter.llm_begin`
+#### FUN-776EA31038
+
+**函数**：`ProgressReporter.llm_begin`
 
 - **ID / 行**：`FUN-776EA31038` / `L201`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.llm_begin(self, stage: str, model: str, messages: list[dict[str, str]], *, telemetry: dict[str, Any] | None=None)` → `None`
@@ -779,7 +891,9 @@
 
 <a id="fun-326c939089"></a>
 
-#### `ProgressReporter.llm_note_attempt`
+#### FUN-326C939089
+
+**函数**：`ProgressReporter.llm_note_attempt`
 
 - **ID / 行**：`FUN-326C939089` / `L231`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.llm_note_attempt(self, stage: str, *, attempt: int, reason: str, error: str | None=None, latency_ms: int | None=None)` → `None`
@@ -790,7 +904,9 @@
 
 <a id="fun-5665b88765"></a>
 
-#### `ProgressReporter.run_llm_stream`
+#### FUN-5665B88765
+
+**函数**：`ProgressReporter.run_llm_stream`
 
 - **ID / 行**：`FUN-5665B88765` / `L254`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.run_llm_stream(self, stage: str, chunk_iter)` → `str`
@@ -801,7 +917,9 @@
 
 <a id="fun-7ac82003df"></a>
 
-#### `ProgressReporter.llm_end`
+#### FUN-7AC82003DF
+
+**函数**：`ProgressReporter.llm_end`
 
 - **ID / 行**：`FUN-7AC82003DF` / `L262`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter.llm_end(self, stage: str, output: str, *, error: str | None=None, latency_ms: int | None=None, telemetry: dict[str, Any] | None=None)` → `None`
@@ -812,7 +930,9 @@
 
 <a id="fun-c39210a2c9"></a>
 
-#### `ProgressReporter._new_llm_record`
+#### FUN-C39210A2C9
+
+**函数**：`ProgressReporter._new_llm_record`
 
 - **ID / 行**：`FUN-C39210A2C9` / `L288`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._new_llm_record(self, stage: str, label: str, model: str, messages: list[dict[str, str]], tel: dict[str, Any])` → `LLMIORecord`
@@ -823,7 +943,9 @@
 
 <a id="fun-b1d16223b8"></a>
 
-#### `ProgressReporter._apply_telemetry`
+#### FUN-B1D16223B8
+
+**函数**：`ProgressReporter._apply_telemetry`
 
 - **ID / 行**：`FUN-B1D16223B8` / `L301`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._apply_telemetry(rec: LLMIORecord, tel: dict[str, Any])` → `None`
@@ -834,7 +956,9 @@
 
 <a id="fun-46d50ce2f3"></a>
 
-#### `ProgressReporter._find_llm`
+#### FUN-46D50CE2F3
+
+**函数**：`ProgressReporter._find_llm`
 
 - **ID / 行**：`FUN-46D50CE2F3` / `L325`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._find_llm(self, stage: str)` → `LLMIORecord | None`
@@ -845,7 +969,9 @@
 
 <a id="fun-e72e9180d4"></a>
 
-#### `ProgressReporter._on_llm_begin`
+#### FUN-E72E9180D4
+
+**函数**：`ProgressReporter._on_llm_begin`
 
 - **ID / 行**：`FUN-E72E9180D4` / `L331`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._on_llm_begin(self, stage: str, model: str, messages: list[dict[str, str]], label: str)` → `None`
@@ -855,7 +981,9 @@
 
 <a id="fun-f3e1b56237"></a>
 
-#### `ProgressReporter._on_llm_chunk`
+#### FUN-F3E1B56237
+
+**函数**：`ProgressReporter._on_llm_chunk`
 
 - **ID / 行**：`FUN-F3E1B56237` / `L334`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._on_llm_chunk(self, stage: str, chunk: str)` → `None`
@@ -866,7 +994,9 @@
 
 <a id="fun-2246070cd9"></a>
 
-#### `ProgressReporter._on_llm_end`
+#### FUN-2246070CD9
+
+**函数**：`ProgressReporter._on_llm_end`
 
 - **ID / 行**：`FUN-2246070CD9` / `L340`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._on_llm_end(self, stage: str, output: str, *, error: str | None=None)` → `None`
@@ -876,7 +1006,9 @@
 
 <a id="fun-56d0f4ca20"></a>
 
-#### `ProgressReporter._find`
+#### FUN-56D0F4CA20
+
+**函数**：`ProgressReporter._find`
 
 - **ID / 行**：`FUN-56D0F4CA20` / `L343`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._find(self, step_id: str)` → `PipelineProgressStep | None`
@@ -887,7 +1019,9 @@
 
 <a id="fun-473e5d3fd6"></a>
 
-#### `ProgressReporter._finish_all_running`
+#### FUN-473E5D3FD6
+
+**函数**：`ProgressReporter._finish_all_running`
 
 - **ID / 行**：`FUN-473E5D3FD6` / `L349`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._finish_all_running(self)` → `None`
@@ -898,7 +1032,9 @@
 
 <a id="fun-d1368ea00b"></a>
 
-#### `ProgressReporter._finish_running`
+#### FUN-D1368EA00B
+
+**函数**：`ProgressReporter._finish_running`
 
 - **ID / 行**：`FUN-D1368EA00B` / `L355`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._finish_running(self)` → `None`
@@ -909,7 +1045,9 @@
 
 <a id="fun-592ed31999"></a>
 
-#### `ProgressReporter._elapsed_since_step_start`
+#### FUN-592ED31999
+
+**函数**：`ProgressReporter._elapsed_since_step_start`
 
 - **ID / 行**：`FUN-592ED31999` / `L362`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._elapsed_since_step_start(self, step: PipelineProgressStep)` → `int | None`
@@ -920,7 +1058,9 @@
 
 <a id="fun-5a6a8e27cf"></a>
 
-#### `ProgressReporter._on_change`
+#### FUN-5A6A8E27CF
+
+**函数**：`ProgressReporter._on_change`
 
 - **ID / 行**：`FUN-5A6A8E27CF` / `L367`（源码见本单元概览）
 - **签名 / 返回**：`ProgressReporter._on_change(self)` → `None`
@@ -930,7 +1070,9 @@
 
 <a id="fun-ec9d010cf8"></a>
 
-#### `get_progress`
+#### FUN-EC9D010CF8
+
+**函数**：`get_progress`
 
 - **ID / 行**：`FUN-EC9D010CF8` / `L378`（源码见本单元概览）
 - **签名 / 返回**：`get_progress()` → `ProgressReporter`
@@ -942,7 +1084,9 @@
 
 <a id="fun-6b37902476"></a>
 
-#### `set_progress`
+#### FUN-6B37902476
+
+**函数**：`set_progress`
 
 - **ID / 行**：`FUN-6B37902476` / `L382`（源码见本单元概览）
 - **签名 / 返回**：`set_progress(reporter: ProgressReporter | None)` → `runtime/inferred`
@@ -954,7 +1098,9 @@
 
 <a id="fun-f2934a14dd"></a>
 
-#### `reset_progress`
+#### FUN-F2934A14DD
+
+**函数**：`reset_progress`
 
 - **ID / 行**：`FUN-F2934A14DD` / `L386`（源码见本单元概览）
 - **签名 / 返回**：`reset_progress(token)` → `None`
@@ -966,7 +1112,9 @@
 
 <a id="unit-4bd152d87b"></a>
 
-### src/core/run_config.py — 软件单元详细设计
+### UNIT-4BD152D87B
+
+**模块**：`src/core/run_config.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -986,7 +1134,9 @@
 
 <a id="unit-338f795d63"></a>
 
-### src/core/run_context.py — 软件单元详细设计
+### UNIT-338F795D63
+
+**模块**：`src/core/run_context.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1006,7 +1156,9 @@
 
 <a id="unit-d5eb6e2a98"></a>
 
-### src/core/types.py — 软件单元详细设计
+### UNIT-D5EB6E2A98
+
+**模块**：`src/core/types.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1026,7 +1178,9 @@
 
 <a id="fun-1a5c4973e8"></a>
 
-#### `AnalystReport.to_dict`
+#### FUN-1A5C4973E8
+
+**函数**：`AnalystReport.to_dict`
 
 - **ID / 行**：`FUN-1A5C4973E8` / `L41`（源码见本单元概览）
 - **签名 / 返回**：`AnalystReport.to_dict(self)` → `dict[str, Any]`
@@ -1037,7 +1191,9 @@
 
 <a id="fun-11d5edef39"></a>
 
-#### `AnalystTeam.reports`
+#### FUN-11D5EDEF39
+
+**函数**：`AnalystTeam.reports`
 
 - **ID / 行**：`FUN-11D5EDEF39` / `L57`（源码见本单元概览）
 - **签名 / 返回**：`AnalystTeam.reports(self)` → `list[AnalystReport]`
@@ -1047,7 +1203,9 @@
 
 <a id="fun-d1937786ae"></a>
 
-#### `AnalystTeam.to_dict`
+#### FUN-D1937786AE
+
+**函数**：`AnalystTeam.to_dict`
 
 - **ID / 行**：`FUN-D1937786AE` / `L60`（源码见本单元概览）
 - **签名 / 返回**：`AnalystTeam.to_dict(self)` → `dict[str, Any]`
@@ -1058,7 +1216,9 @@
 
 <a id="fun-3104427770"></a>
 
-#### `AgentEvidence.to_dict`
+#### FUN-3104427770
+
+**函数**：`AgentEvidence.to_dict`
 
 - **ID / 行**：`FUN-3104427770` / `L78`（源码见本单元概览）
 - **签名 / 返回**：`AgentEvidence.to_dict(self)` → `dict[str, Any]`
@@ -1069,7 +1229,9 @@
 
 <a id="fun-378c040696"></a>
 
-#### `ResearchDebate.to_dict`
+#### FUN-378C040696
+
+**函数**：`ResearchDebate.to_dict`
 
 - **ID / 行**：`FUN-378C040696` / `L93`（源码见本单元概览）
 - **签名 / 返回**：`ResearchDebate.to_dict(self)` → `dict[str, Any]`
@@ -1080,7 +1242,9 @@
 
 <a id="fun-78898fe309"></a>
 
-#### `LevelProposal.to_dict`
+#### FUN-78898FE309
+
+**函数**：`LevelProposal.to_dict`
 
 - **ID / 行**：`FUN-78898FE309` / `L132`（源码见本单元概览）
 - **签名 / 返回**：`LevelProposal.to_dict(self)` → `dict[str, Any]`
@@ -1091,7 +1255,9 @@
 
 <a id="fun-cbd371affe"></a>
 
-#### `TransactionProposal.to_dict`
+#### FUN-CBD371AFFE
+
+**函数**：`TransactionProposal.to_dict`
 
 - **ID / 行**：`FUN-CBD371AFFE` / `L143`（源码见本单元概览）
 - **签名 / 返回**：`TransactionProposal.to_dict(self)` → `dict[str, Any]`
@@ -1102,7 +1268,9 @@
 
 <a id="fun-1d042f655d"></a>
 
-#### `RiskReview.to_dict`
+#### FUN-1D042F655D
+
+**函数**：`RiskReview.to_dict`
 
 - **ID / 行**：`FUN-1D042F655D` / `L155`（源码见本单元概览）
 - **签名 / 返回**：`RiskReview.to_dict(self)` → `dict[str, Any]`
@@ -1113,7 +1281,9 @@
 
 <a id="fun-f763a5c226"></a>
 
-#### `ManagerDecision.to_dict`
+#### FUN-F763A5C226
+
+**函数**：`ManagerDecision.to_dict`
 
 - **ID / 行**：`FUN-F763A5C226` / `L168`（源码见本单元概览）
 - **签名 / 返回**：`ManagerDecision.to_dict(self)` → `dict[str, Any]`
@@ -1124,7 +1294,9 @@
 
 <a id="fun-1f2e0f588a"></a>
 
-#### `HeadlineItem.to_dict`
+#### FUN-1F2E0F588A
+
+**函数**：`HeadlineItem.to_dict`
 
 - **ID / 行**：`FUN-1F2E0F588A` / `L182`（源码见本单元概览）
 - **签名 / 返回**：`HeadlineItem.to_dict(self)` → `dict[str, Any]`
@@ -1135,7 +1307,9 @@
 
 <a id="fun-5a0e6a3977"></a>
 
-#### `CalendarEvent.to_dict`
+#### FUN-5A0E6A3977
+
+**函数**：`CalendarEvent.to_dict`
 
 - **ID / 行**：`FUN-5A0E6A3977` / `L195`（源码见本单元概览）
 - **签名 / 返回**：`CalendarEvent.to_dict(self)` → `dict[str, Any]`
@@ -1146,7 +1320,9 @@
 
 <a id="fun-4654e9b6a5"></a>
 
-#### `CalendarEvent.display`
+#### FUN-4654E9B6A5
+
+**函数**：`CalendarEvent.display`
 
 - **ID / 行**：`FUN-4654E9B6A5` / `L198`（源码见本单元概览）
 - **签名 / 返回**：`CalendarEvent.display(self)` → `str`
@@ -1157,7 +1333,9 @@
 
 <a id="fun-0b81375e45"></a>
 
-#### `MacroQuote.to_dict`
+#### FUN-0B81375E45
+
+**函数**：`MacroQuote.to_dict`
 
 - **ID / 行**：`FUN-0B81375E45` / `L214`（源码见本单元概览）
 - **签名 / 返回**：`MacroQuote.to_dict(self)` → `dict[str, Any]`
@@ -1168,7 +1346,9 @@
 
 <a id="fun-b52c340615"></a>
 
-#### `ExternalFactors.to_dict`
+#### FUN-B52C340615
+
+**函数**：`ExternalFactors.to_dict`
 
 - **ID / 行**：`FUN-B52C340615` / `L231`（源码见本单元概览）
 - **签名 / 返回**：`ExternalFactors.to_dict(self)` → `dict[str, Any]`
@@ -1179,7 +1359,9 @@
 
 <a id="fun-6449e7e08e"></a>
 
-#### `MarketContext.to_dict`
+#### FUN-6449E7E08E
+
+**函数**：`MarketContext.to_dict`
 
 - **ID / 行**：`FUN-6449E7E08E` / `L267`（源码见本单元概览）
 - **签名 / 返回**：`MarketContext.to_dict(self)` → `dict[str, Any]`
@@ -1190,7 +1372,9 @@
 
 <a id="fun-a2365082b2"></a>
 
-#### `LLMStageTrace.to_dict`
+#### FUN-A2365082B2
+
+**函数**：`LLMStageTrace.to_dict`
 
 - **ID / 行**：`FUN-A2365082B2` / `L299`（源码见本单元概览）
 - **签名 / 返回**：`LLMStageTrace.to_dict(self)` → `dict[str, Any]`
@@ -1201,7 +1385,9 @@
 
 <a id="fun-870ca31bac"></a>
 
-#### `StageMeta.to_dict`
+#### FUN-870CA31BAC
+
+**函数**：`StageMeta.to_dict`
 
 - **ID / 行**：`FUN-870CA31BAC` / `L311`（源码见本单元概览）
 - **签名 / 返回**：`StageMeta.to_dict(self)` → `dict[str, Any]`
@@ -1212,7 +1398,9 @@
 
 <a id="fun-9f425d9994"></a>
 
-#### `AgentPipelineMeta.record`
+#### FUN-9F425D9994
+
+**函数**：`AgentPipelineMeta.record`
 
 - **ID / 行**：`FUN-9F425D9994` / `L326`（源码见本单元概览）
 - **签名 / 返回**：`AgentPipelineMeta.record(self, name: str, meta: StageMeta)` → `None`
@@ -1222,7 +1410,9 @@
 
 <a id="fun-fc7d17553e"></a>
 
-#### `AgentPipelineMeta.to_dict`
+#### FUN-FC7D17553E
+
+**函数**：`AgentPipelineMeta.to_dict`
 
 - **ID / 行**：`FUN-FC7D17553E` / `L329`（源码见本单元概览）
 - **签名 / 返回**：`AgentPipelineMeta.to_dict(self)` → `dict[str, Any]`
@@ -1233,7 +1423,9 @@
 
 <a id="fun-e1230024c0"></a>
 
-#### `AgentTrace.to_dict`
+#### FUN-E1230024C0
+
+**函数**：`AgentTrace.to_dict`
 
 - **ID / 行**：`FUN-E1230024C0` / `L348`（源码见本单元概览）
 - **签名 / 返回**：`AgentTrace.to_dict(self)` → `dict[str, Any]`
@@ -1244,7 +1436,9 @@
 
 <a id="fun-0ed4ada825"></a>
 
-#### `LLMAnalysis.to_dict`
+#### FUN-0ED4ADA825
+
+**函数**：`LLMAnalysis.to_dict`
 
 - **ID / 行**：`FUN-0ED4ADA825` / `L371`（源码见本单元概览）
 - **签名 / 返回**：`LLMAnalysis.to_dict(self)` → `dict[str, Any]`
@@ -1255,7 +1449,9 @@
 
 <a id="unit-a91501b8ca"></a>
 
-### src/log.py — 软件单元详细设计
+### UNIT-A91501B8CA
+
+**模块**：`src/log.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1275,7 +1471,9 @@
 
 <a id="fun-286f9adbe7"></a>
 
-#### `setup_logging`
+#### FUN-286F9ADBE7
+
+**函数**：`setup_logging`
 
 - **ID / 行**：`FUN-286F9ADBE7` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`setup_logging(*, level: str | None=None, log_file: str | None=None)` → `None`
@@ -1287,7 +1485,9 @@
 
 <a id="fun-02cd3d28ec"></a>
 
-#### `get_logger`
+#### FUN-02CD3D28EC
+
+**函数**：`get_logger`
 
 - **ID / 行**：`FUN-02CD3D28EC` / `L62`（源码见本单元概览）
 - **签名 / 返回**：`get_logger(name: str)` → `logging.Logger`
@@ -1298,7 +1498,9 @@
 
 <a id="unit-ba3f06e87a"></a>
 
-### src/pipeline.py — 软件单元详细设计
+### UNIT-BA3F06E87A
+
+**模块**：`src/pipeline.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1318,7 +1520,9 @@
 
 <a id="fun-33aef245ba"></a>
 
-#### `run_analysis`
+#### FUN-33AEF245BA
+
+**函数**：`run_analysis`
 
 - **ID / 行**：`FUN-33AEF245BA` / `L11`（源码见本单元概览）
 - **签名 / 返回**：`run_analysis()` → `tuple[dict, dict, dict]`
@@ -1329,7 +1533,9 @@
 
 <a id="arc-data"></a>
 
-## ARC-DATA — 行情与外部数据
+## ARC-DATA
+
+**名称**：行情与外部数据
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -1366,7 +1572,9 @@
 
 <a id="unit-5c9ecc73e4"></a>
 
-### src/data/__init__.py — 软件单元详细设计
+### UNIT-5C9ECC73E4
+
+**模块**：`src/data/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1386,7 +1594,9 @@
 
 <a id="unit-d3b9beaac0"></a>
 
-### src/data/aggregator.py — 软件单元详细设计
+### UNIT-D3B9BEAAC0
+
+**模块**：`src/data/aggregator.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1406,7 +1616,9 @@
 
 <a id="fun-4e87068569"></a>
 
-#### `merge_external`
+#### FUN-4E87068569
+
+**函数**：`merge_external`
 
 - **ID / 行**：`FUN-4E87068569` / `L22`（源码见本单元概览）
 - **签名 / 返回**：`merge_external(*parts: ExternalFactors)` → `ExternalFactors`
@@ -1418,7 +1630,9 @@
 
 <a id="fun-8b8349b09e"></a>
 
-#### `collect_evidence`
+#### FUN-8B8349B09E
+
+**函数**：`collect_evidence`
 
 - **ID / 行**：`FUN-8B8349B09E` / `L46`（源码见本单元概览）
 - **签名 / 返回**：`collect_evidence(enriched: dict[str, pd.DataFrame])` → `list[EvidenceItem]`
@@ -1430,7 +1644,9 @@
 
 <a id="fun-ddf5efe045"></a>
 
-#### `assemble_market_context`
+#### FUN-DDF5EFE045
+
+**函数**：`assemble_market_context`
 
 - **ID / 行**：`FUN-DDF5EFE045` / `L55`（源码见本单元概览）
 - **签名 / 返回**：`assemble_market_context(enriched: dict[str, pd.DataFrame], analyses: dict[str, TimeframeAnalysis], external: ExternalFactors, source_label: str)` → `MarketContext`
@@ -1441,7 +1657,9 @@
 
 <a id="fun-e8cc53e6f4"></a>
 
-#### `build_market_context`
+#### FUN-E8CC53E6F4
+
+**函数**：`build_market_context`
 
 - **ID / 行**：`FUN-E8CC53E6F4` / `L76`（源码见本单元概览）
 - **签名 / 返回**：`build_market_context(enriched: dict[str, pd.DataFrame], analyses: dict[str, TimeframeAnalysis])` → `MarketContext`
@@ -1453,7 +1671,9 @@
 
 <a id="unit-f5d8bd410b"></a>
 
-### src/data/calendar_utils.py — 软件单元详细设计
+### UNIT-F5D8BD410B
+
+**模块**：`src/data/calendar_utils.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1473,7 +1693,9 @@
 
 <a id="fun-be22aae06a"></a>
 
-#### `parse_event_time`
+#### FUN-BE22AAE06A
+
+**函数**：`parse_event_time`
 
 - **ID / 行**：`FUN-BE22AAE06A` / `L11`（源码见本单元概览）
 - **签名 / 返回**：`parse_event_time(raw: str)` → `datetime | None`
@@ -1484,7 +1706,9 @@
 
 <a id="fun-07d2119d72"></a>
 
-#### `filter_upcoming_calendar_events`
+#### FUN-07D2119D72
+
+**函数**：`filter_upcoming_calendar_events`
 
 - **ID / 行**：`FUN-07D2119D72` / `L35`（源码见本单元概览）
 - **签名 / 返回**：`filter_upcoming_calendar_events(events: list[CalendarEvent])` → `list[CalendarEvent]`
@@ -1495,7 +1719,9 @@
 
 <a id="fun-d55bebcd6f"></a>
 
-#### `calendar_to_risk_text`
+#### FUN-D55BEBCD6F
+
+**函数**：`calendar_to_risk_text`
 
 - **ID / 行**：`FUN-D55BEBCD6F` / `L49`（源码见本单元概览）
 - **签名 / 返回**：`calendar_to_risk_text(events: list[CalendarEvent], *, limit: int=6)` → `str`
@@ -1506,7 +1732,9 @@
 
 <a id="unit-24843ac961"></a>
 
-### src/data/context_builder.py — 软件单元详细设计
+### UNIT-24843AC961
+
+**模块**：`src/data/context_builder.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1526,7 +1754,9 @@
 
 <a id="fun-750f9f2cf5"></a>
 
-#### `build_market_position`
+#### FUN-750F9F2CF5
+
+**函数**：`build_market_position`
 
 - **ID / 行**：`FUN-750F9F2CF5` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`build_market_position(enriched: dict[str, pd.DataFrame], price: float)` → `dict[str, Any]`
@@ -1537,7 +1767,9 @@
 
 <a id="fun-046ae84c1b"></a>
 
-#### `build_spot_cross_check`
+#### FUN-046AE84C1B
+
+**函数**：`build_spot_cross_check`
 
 - **ID / 行**：`FUN-046AE84C1B` / `L68`（源码见本单元概览）
 - **签名 / 返回**：`build_spot_cross_check(tv_price: float, quote: dict[str, Any] | None)` → `dict[str, Any]`
@@ -1548,7 +1780,9 @@
 
 <a id="fun-bc16d7a171"></a>
 
-#### `build_event_countdown`
+#### FUN-BC16D7A171
+
+**函数**：`build_event_countdown`
 
 - **ID / 行**：`FUN-BC16D7A171` / `L89`（源码见本单元概览）
 - **签名 / 返回**：`build_event_countdown(events: list[CalendarEvent])` → `dict[str, Any]`
@@ -1559,7 +1793,9 @@
 
 <a id="fun-94a1869676"></a>
 
-#### `build_jin10_kline_summary`
+#### FUN-94A1869676
+
+**函数**：`build_jin10_kline_summary`
 
 - **ID / 行**：`FUN-94A1869676` / `L117`（源码见本单元概览）
 - **签名 / 返回**：`build_jin10_kline_summary(bars: list[dict[str, Any]], tv_price: float)` → `dict[str, Any]`
@@ -1570,7 +1806,9 @@
 
 <a id="fun-21a4a84fe5"></a>
 
-#### `build_derived_context`
+#### FUN-21A4A84FE5
+
+**函数**：`build_derived_context`
 
 - **ID / 行**：`FUN-21A4A84FE5` / `L145`（源码见本单元概览）
 - **签名 / 返回**：`build_derived_context(ctx: MarketContext)` → `dict[str, Any]`
@@ -1582,7 +1820,9 @@
 
 <a id="fun-53864154eb"></a>
 
-#### `compute_context_stats`
+#### FUN-53864154EB
+
+**函数**：`compute_context_stats`
 
 - **ID / 行**：`FUN-53864154EB` / `L181`（源码见本单元概览）
 - **签名 / 返回**：`compute_context_stats(ctx: MarketContext)` → `dict[str, Any]`
@@ -1593,7 +1833,9 @@
 
 <a id="fun-309515b2c5"></a>
 
-#### `_technical_input_stats`
+#### FUN-309515B2C5
+
+**函数**：`_technical_input_stats`
 
 - **ID / 行**：`FUN-309515B2C5` / `L202`（源码见本单元概览）
 - **签名 / 返回**：`_technical_input_stats(ctx: MarketContext)` → `dict[str, Any]`
@@ -1604,7 +1846,9 @@
 
 <a id="fun-12577f43a5"></a>
 
-#### `_volume_nonzero_ratio`
+#### FUN-12577F43A5
+
+**函数**：`_volume_nonzero_ratio`
 
 - **ID / 行**：`FUN-12577F43A5` / `L256`（源码见本单元概览）
 - **签名 / 返回**：`_volume_nonzero_ratio(df: pd.DataFrame | None)` → `float`
@@ -1615,7 +1859,9 @@
 
 <a id="fun-14f86ea322"></a>
 
-#### `_analyst_input_stats`
+#### FUN-14F86EA322
+
+**函数**：`_analyst_input_stats`
 
 - **ID / 行**：`FUN-14F86EA322` / `L263`（源码见本单元概览）
 - **签名 / 返回**：`_analyst_input_stats(ctx: MarketContext)` → `dict[str, Any]`
@@ -1626,7 +1872,9 @@
 
 <a id="fun-260ff71074"></a>
 
-#### `finalize_market_context`
+#### FUN-260FF71074
+
+**函数**：`finalize_market_context`
 
 - **ID / 行**：`FUN-260FF71074` / `L317`（源码见本单元概览）
 - **签名 / 返回**：`finalize_market_context(ctx: MarketContext)` → `MarketContext`
@@ -1637,7 +1885,9 @@
 
 <a id="unit-05079ecc27"></a>
 
-### src/data/external_format.py — 软件单元详细设计
+### UNIT-05079ECC27
+
+**模块**：`src/data/external_format.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1657,7 +1907,9 @@
 
 <a id="fun-92f0ba6a2b"></a>
 
-#### `headlines_to_strings`
+#### FUN-92F0BA6A2B
+
+**函数**：`headlines_to_strings`
 
 - **ID / 行**：`FUN-92F0BA6A2B` / `L13`（源码见本单元概览）
 - **签名 / 返回**：`headlines_to_strings(items: list[HeadlineItem], *, limit: int | None=None)` → `list[str]`
@@ -1668,7 +1920,9 @@
 
 <a id="fun-361441992e"></a>
 
-#### `sync_external_legacy_fields`
+#### FUN-361441992E
+
+**函数**：`sync_external_legacy_fields`
 
 - **ID / 行**：`FUN-361441992E` / `L28`（源码见本单元概览）
 - **签名 / 返回**：`sync_external_legacy_fields(ext: ExternalFactors)` → `None`
@@ -1679,7 +1933,9 @@
 
 <a id="unit-2b33a302fc"></a>
 
-### src/data/fetch_pipeline.py — 软件单元详细设计
+### UNIT-2B33A302FC
+
+**模块**：`src/data/fetch_pipeline.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1699,7 +1955,9 @@
 
 <a id="fun-237e01db5b"></a>
 
-#### `DataFetchResult.bars_summary`
+#### FUN-237E01DB5B
+
+**函数**：`DataFetchResult.bars_summary`
 
 - **ID / 行**：`FUN-237E01DB5B` / `L34`（源码见本单元概览）
 - **签名 / 返回**：`DataFetchResult.bars_summary(self)` → `dict[str, int]`
@@ -1710,7 +1968,9 @@
 
 <a id="fun-debf2265ca"></a>
 
-#### `DataFetchResult.external_preview`
+#### FUN-DEBF2265CA
+
+**函数**：`DataFetchResult.external_preview`
 
 - **ID / 行**：`FUN-DEBF2265CA` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`DataFetchResult.external_preview(self)` → `dict`
@@ -1721,7 +1981,9 @@
 
 <a id="fun-112152936c"></a>
 
-#### `_fetch_news_external`
+#### FUN-112152936C
+
+**函数**：`_fetch_news_external`
 
 - **ID / 行**：`FUN-112152936C` / `L54`（源码见本单元概览）
 - **签名 / 返回**：`_fetch_news_external()` → `ExternalFactors`
@@ -1733,7 +1995,9 @@
 
 <a id="fun-da07c46547"></a>
 
-#### `_fetch_social_external`
+#### FUN-DA07C46547
+
+**函数**：`_fetch_social_external`
 
 - **ID / 行**：`FUN-DA07C46547` / `L58`（源码见本单元概览）
 - **签名 / 返回**：`_fetch_social_external()` → `ExternalFactors`
@@ -1745,7 +2009,9 @@
 
 <a id="fun-984c9019fc"></a>
 
-#### `_fetch_fundamentals_external`
+#### FUN-984C9019FC
+
+**函数**：`_fetch_fundamentals_external`
 
 - **ID / 行**：`FUN-984C9019FC` / `L62`（源码见本单元概览）
 - **签名 / 返回**：`_fetch_fundamentals_external()` → `ExternalFactors`
@@ -1757,7 +2023,9 @@
 
 <a id="fun-6df80aee05"></a>
 
-#### `fetch_external_bundle`
+#### FUN-6DF80AEE05
+
+**函数**：`fetch_external_bundle`
 
 - **ID / 行**：`FUN-6DF80AEE05` / `L66`（源码见本单元概览）
 - **签名 / 返回**：`fetch_external_bundle(*, parallel_http: bool=True)` → `ExternalFactors`
@@ -1769,7 +2037,9 @@
 
 <a id="fun-d6c382b005"></a>
 
-#### `fetch_all_data`
+#### FUN-D6C382B005
+
+**函数**：`fetch_all_data`
 
 - **ID / 行**：`FUN-D6C382B005` / `L83`（源码见本单元概览）
 - **签名 / 返回**：`fetch_all_data()` → `DataFetchResult`
@@ -1781,7 +2051,9 @@
 
 <a id="unit-5c3b60e30a"></a>
 
-### src/data/fetcher.py — 软件单元详细设计
+### UNIT-5C3B60E30A
+
+**模块**：`src/data/fetcher.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1801,7 +2073,9 @@
 
 <a id="fun-f5cfdcfe8d"></a>
 
-#### `clear_cache`
+#### FUN-F5CFDCFE8D
+
+**函数**：`clear_cache`
 
 - **ID / 行**：`FUN-F5CFDCFE8D` / `L18`（源码见本单元概览）
 - **签名 / 返回**：`clear_cache()` → `None`
@@ -1812,7 +2086,9 @@
 
 <a id="fun-e9ad7716d7"></a>
 
-#### `get_active_source`
+#### FUN-E9AD7716D7
+
+**函数**：`get_active_source`
 
 - **ID / 行**：`FUN-E9AD7716D7` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`get_active_source()` → `str`
@@ -1823,7 +2099,9 @@
 
 <a id="fun-d6fbd9beaa"></a>
 
-#### `fetch_multi_timeframe`
+#### FUN-D6FBD9BEAA
+
+**函数**：`fetch_multi_timeframe`
 
 - **ID / 行**：`FUN-D6FBD9BEAA` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`fetch_multi_timeframe()` → `dict[Timeframe, pd.DataFrame]`
@@ -1835,7 +2113,9 @@
 
 <a id="fun-1bb0e91f10"></a>
 
-#### `fetch_all`
+#### FUN-1BB0E91F10
+
+**函数**：`fetch_all`
 
 - **ID / 行**：`FUN-1BB0E91F10` / `L31`（源码见本单元概览）
 - **签名 / 返回**：`fetch_all()` → `'DataFetchResult'`
@@ -1847,7 +2127,9 @@
 
 <a id="fun-5a69f43861"></a>
 
-#### `daily_metrics`
+#### FUN-5A69F43861
+
+**函数**：`daily_metrics`
 
 - **ID / 行**：`FUN-5A69F43861` / `L38`（源码见本单元概览）
 - **签名 / 返回**：`daily_metrics(df_1d: pd.DataFrame)` → `dict`
@@ -1858,7 +2140,9 @@
 
 <a id="fun-f3d127c2a7"></a>
 
-#### `utc8_now`
+#### FUN-F3D127C2A7
+
+**函数**：`utc8_now`
 
 - **ID / 行**：`FUN-F3D127C2A7` / `L71`（源码见本单元概览）
 - **签名 / 返回**：`utc8_now()` → `datetime`
@@ -1869,7 +2153,9 @@
 
 <a id="fun-782624f6ed"></a>
 
-#### `format_utc8`
+#### FUN-782624F6ED
+
+**函数**：`format_utc8`
 
 - **ID / 行**：`FUN-782624F6ED` / `L75`（源码见本单元概览）
 - **签名 / 返回**：`format_utc8(iso_value: object, *, fmt: str='%Y-%m-%d %H:%M')` → `str`
@@ -1881,7 +2167,9 @@
 
 <a id="unit-52888d723d"></a>
 
-### src/data/mt5.py — 软件单元详细设计
+### UNIT-52888D723D
+
+**模块**：`src/data/mt5.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -1901,7 +2189,9 @@
 
 <a id="fun-a41f07faab"></a>
 
-#### `MT5Provider.is_available`
+#### FUN-A41F07FAAB
+
+**函数**：`MT5Provider.is_available`
 
 - **ID / 行**：`FUN-A41F07FAAB` / `L40`（源码见本单元概览）
 - **签名 / 返回**：`MT5Provider.is_available(self)` → `bool`
@@ -1911,7 +2201,9 @@
 
 <a id="fun-a1dfe3ce6d"></a>
 
-#### `MT5Provider.account_info`
+#### FUN-A1DFE3CE6D
+
+**函数**：`MT5Provider.account_info`
 
 - **ID / 行**：`FUN-A1DFE3CE6D` / `L43`（源码见本单元概览）
 - **签名 / 返回**：`MT5Provider.account_info(self)` → `dict[str, object]`
@@ -1921,7 +2213,9 @@
 
 <a id="fun-2ceb3ae7c8"></a>
 
-#### `MT5Provider.shutdown`
+#### FUN-2CEB3AE7C8
+
+**函数**：`MT5Provider.shutdown`
 
 - **ID / 行**：`FUN-2CEB3AE7C8` / `L46`（源码见本单元概览）
 - **签名 / 返回**：`MT5Provider.shutdown(self)` → `None`
@@ -1931,7 +2225,9 @@
 
 <a id="fun-eba1ab6898"></a>
 
-#### `DisabledMT5Provider.__init__`
+#### FUN-EBA1AB6898
+
+**函数**：`DisabledMT5Provider.__init__`
 
 - **ID / 行**：`FUN-EBA1AB6898` / `L57`（源码见本单元概览）
 - **签名 / 返回**：`DisabledMT5Provider.__init__(self, reason: str='MT5_ENABLED=false')` → `None`
@@ -1941,7 +2237,9 @@
 
 <a id="fun-142d9a85d4"></a>
 
-#### `DisabledMT5Provider.is_available`
+#### FUN-142D9A85D4
+
+**函数**：`DisabledMT5Provider.is_available`
 
 - **ID / 行**：`FUN-142D9A85D4` / `L60`（源码见本单元概览）
 - **签名 / 返回**：`DisabledMT5Provider.is_available(self)` → `bool`
@@ -1951,7 +2249,9 @@
 
 <a id="fun-a96d8007a3"></a>
 
-#### `DisabledMT5Provider.account_info`
+#### FUN-A96D8007A3
+
+**函数**：`DisabledMT5Provider.account_info`
 
 - **ID / 行**：`FUN-A96D8007A3` / `L63`（源码见本单元概览）
 - **签名 / 返回**：`DisabledMT5Provider.account_info(self)` → `dict[str, object]`
@@ -1963,7 +2263,9 @@
 
 <a id="fun-0f677dda5e"></a>
 
-#### `DisabledMT5Provider.shutdown`
+#### FUN-0F677DDA5E
+
+**函数**：`DisabledMT5Provider.shutdown`
 
 - **ID / 行**：`FUN-0F677DDA5E` / `L66`（源码见本单元概览）
 - **签名 / 返回**：`DisabledMT5Provider.shutdown(self)` → `None`
@@ -1973,7 +2275,9 @@
 
 <a id="fun-efaf091f3b"></a>
 
-#### `MetaTrader5Provider.__init__`
+#### FUN-EFAF091F3B
+
+**函数**：`MetaTrader5Provider.__init__`
 
 - **ID / 行**：`FUN-EFAF091F3B` / `L73`（源码见本单元概览）
 - **签名 / 返回**：`MetaTrader5Provider.__init__(self, config: MT5Config | None=None)` → `None`
@@ -1985,7 +2289,9 @@
 
 <a id="fun-d4e9736d8a"></a>
 
-#### `MetaTrader5Provider.is_available`
+#### FUN-D4E9736D8A
+
+**函数**：`MetaTrader5Provider.is_available`
 
 - **ID / 行**：`FUN-D4E9736D8A` / `L82`（源码见本单元概览）
 - **签名 / 返回**：`MetaTrader5Provider.is_available(self)` → `bool`
@@ -1996,7 +2302,9 @@
 
 <a id="fun-2c7542532d"></a>
 
-#### `MetaTrader5Provider.account_info`
+#### FUN-2C7542532D
+
+**函数**：`MetaTrader5Provider.account_info`
 
 - **ID / 行**：`FUN-2C7542532D` / `L89`（源码见本单元概览）
 - **签名 / 返回**：`MetaTrader5Provider.account_info(self)` → `dict[str, object]`
@@ -2008,7 +2316,9 @@
 
 <a id="fun-573d1aeba3"></a>
 
-#### `MetaTrader5Provider.shutdown`
+#### FUN-573D1AEBA3
+
+**函数**：`MetaTrader5Provider.shutdown`
 
 - **ID / 行**：`FUN-573D1AEBA3` / `L107`（源码见本单元概览）
 - **签名 / 返回**：`MetaTrader5Provider.shutdown(self)` → `None`
@@ -2019,7 +2329,9 @@
 
 <a id="fun-f8948e51cb"></a>
 
-#### `MetaTrader5Provider._ensure_initialized`
+#### FUN-F8948E51CB
+
+**函数**：`MetaTrader5Provider._ensure_initialized`
 
 - **ID / 行**：`FUN-F8948E51CB` / `L112`（源码见本单元概览）
 - **签名 / 返回**：`MetaTrader5Provider._ensure_initialized(self)` → `None`
@@ -2031,7 +2343,9 @@
 
 <a id="fun-28bba5cb4c"></a>
 
-#### `get_mt5_provider`
+#### FUN-28BBA5CB4C
+
+**函数**：`get_mt5_provider`
 
 - **ID / 行**：`FUN-28BBA5CB4C` / `L131`（源码见本单元概览）
 - **签名 / 返回**：`get_mt5_provider(config: MT5Config | None=None)` → `MT5Provider`
@@ -2042,7 +2356,9 @@
 
 <a id="unit-c335b8f5cf"></a>
 
-### src/data/news_topics.py — 软件单元详细设计
+### UNIT-C335B8F5CF
+
+**模块**：`src/data/news_topics.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2062,7 +2378,9 @@
 
 <a id="fun-1ed76ebfc7"></a>
 
-#### `cluster_headline_topics`
+#### FUN-1ED76EBFC7
+
+**函数**：`cluster_headline_topics`
 
 - **ID / 行**：`FUN-1ED76EBFC7` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`cluster_headline_topics(items: list[HeadlineItem], *, max_topics: int=3)` → `list[dict[str, object]]`
@@ -2073,7 +2391,9 @@
 
 <a id="unit-0f842b8ece"></a>
 
-### src/data/proxy_env.py — 软件单元详细设计
+### UNIT-0F842B8ECE
+
+**模块**：`src/data/proxy_env.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2093,7 +2413,9 @@
 
 <a id="fun-ce8b65f86a"></a>
 
-#### `read_system_proxy`
+#### FUN-CE8B65F86A
+
+**函数**：`read_system_proxy`
 
 - **ID / 行**：`FUN-CE8B65F86A` / `L8`（源码见本单元概览）
 - **签名 / 返回**：`read_system_proxy()` → `str | None`
@@ -2105,7 +2427,9 @@
 
 <a id="fun-2365b1ea92"></a>
 
-#### `apply_system_proxy`
+#### FUN-2365B1EA92
+
+**函数**：`apply_system_proxy`
 
 - **ID / 行**：`FUN-2365B1EA92` / `L34`（源码见本单元概览）
 - **签名 / 返回**：`apply_system_proxy()` → `str | None`
@@ -2117,7 +2441,9 @@
 
 <a id="unit-ea7e4f88fe"></a>
 
-### src/data/run_archive.py — 软件单元详细设计
+### UNIT-EA7E4F88FE
+
+**模块**：`src/data/run_archive.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2137,7 +2463,9 @@
 
 <a id="unit-023a37a1e9"></a>
 
-### src/data/run_archive_compat.py — 软件单元详细设计
+### UNIT-023A37A1E9
+
+**模块**：`src/data/run_archive_compat.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2157,7 +2485,9 @@
 
 <a id="unit-7bfc490988"></a>
 
-### src/data/run_archive_index.py — 软件单元详细设计
+### UNIT-7BFC490988
+
+**模块**：`src/data/run_archive_index.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2177,7 +2507,9 @@
 
 <a id="unit-dad8bc5b0f"></a>
 
-### src/data/run_archive_prune.py — 软件单元详细设计
+### UNIT-DAD8BC5B0F
+
+**模块**：`src/data/run_archive_prune.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2197,7 +2529,9 @@
 
 <a id="unit-767bf49f25"></a>
 
-### src/data/run_archive_schema.py — 软件单元详细设计
+### UNIT-767BF49F25
+
+**模块**：`src/data/run_archive_schema.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2217,7 +2551,9 @@
 
 <a id="unit-c3952c43cb"></a>
 
-### src/data/sources/__init__.py — 软件单元详细设计
+### UNIT-C3952C43CB
+
+**模块**：`src/data/sources/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2237,7 +2573,9 @@
 
 <a id="unit-c590fce576"></a>
 
-### src/data/sources/_http.py — 软件单元详细设计
+### UNIT-C590FCE576
+
+**模块**：`src/data/sources/_http.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2257,7 +2595,9 @@
 
 <a id="fun-fc8cbed92a"></a>
 
-#### `post_json`
+#### FUN-FC8CBED92A
+
+**函数**：`post_json`
 
 - **ID / 行**：`FUN-FC8CBED92A` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`post_json(url: str, *, body: dict[str, Any] | list[Any], params: dict[str, Any] | None=None, headers: dict[str, str] | None=None, timeout: int | None=None)` → `Any`
@@ -2269,7 +2609,9 @@
 
 <a id="fun-6afe1ec0a4"></a>
 
-#### `get_json`
+#### FUN-6AFE1EC0A4
+
+**函数**：`get_json`
 
 - **ID / 行**：`FUN-6AFE1EC0A4` / `L63`（源码见本单元概览）
 - **签名 / 返回**：`get_json(url: str, *, params: dict[str, Any] | None=None, headers: dict[str, str] | None=None, cookies: dict[str, str] | None=None)` → `Any`
@@ -2280,7 +2622,9 @@
 
 <a id="fun-299c0d3a32"></a>
 
-#### `get_text`
+#### FUN-299C0D3A32
+
+**函数**：`get_text`
 
 - **ID / 行**：`FUN-299C0D3A32` / `L73`（源码见本单元概览）
 - **签名 / 返回**：`get_text(url: str, *, params: dict[str, Any] | None=None, headers: dict[str, str] | None=None, cookies: dict[str, str] | None=None)` → `str`
@@ -2292,7 +2636,9 @@
 
 <a id="unit-0df4638d5e"></a>
 
-### src/data/sources/base.py — 软件单元详细设计
+### UNIT-0DF4638D5E
+
+**模块**：`src/data/sources/base.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2312,7 +2658,9 @@
 
 <a id="fun-600c64bcb0"></a>
 
-#### `DataSource.fetch`
+#### FUN-600C64BCB0
+
+**函数**：`DataSource.fetch`
 
 - **ID / 行**：`FUN-600C64BCB0` / `L14`（源码见本单元概览）
 - **签名 / 返回**：`DataSource.fetch(self)` → `list[EvidenceItem] | ExternalFactors`
@@ -2322,7 +2670,9 @@
 
 <a id="unit-1fa1bdf5ba"></a>
 
-### src/data/sources/dxy.py — 软件单元详细设计
+### UNIT-1FA1BDF5BA
+
+**模块**：`src/data/sources/dxy.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2342,7 +2692,9 @@
 
 <a id="fun-85282ddc4d"></a>
 
-#### `fetch_dxy_impact`
+#### FUN-85282DDC4D
+
+**函数**：`fetch_dxy_impact`
 
 - **ID / 行**：`FUN-85282DDC4D` / `L14`（源码见本单元概览）
 - **签名 / 返回**：`fetch_dxy_impact()` → `tuple[str, dict]`
@@ -2354,7 +2706,9 @@
 
 <a id="unit-ec9b21793d"></a>
 
-### src/data/sources/fundamentals.py — 软件单元详细设计
+### UNIT-EC9B21793D
+
+**模块**：`src/data/sources/fundamentals.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2374,7 +2728,9 @@
 
 <a id="fun-85ea252365"></a>
 
-#### `FundamentalsDataSource.fetch_external`
+#### FUN-85EA252365
+
+**函数**：`FundamentalsDataSource.fetch_external`
 
 - **ID / 行**：`FUN-85EA252365` / `L12`（源码见本单元概览）
 - **签名 / 返回**：`FundamentalsDataSource.fetch_external(self)` → `ExternalFactors`
@@ -2386,7 +2742,9 @@
 
 <a id="fun-6a23a66cff"></a>
 
-#### `FundamentalsDataSource.fetch_evidence`
+#### FUN-6A23A66CFF
+
+**函数**：`FundamentalsDataSource.fetch_evidence`
 
 - **ID / 行**：`FUN-6A23A66CFF` / `L25`（源码见本单元概览）
 - **签名 / 返回**：`FundamentalsDataSource.fetch_evidence(self)` → `list[EvidenceItem]`
@@ -2398,7 +2756,9 @@
 
 <a id="fun-ad52255426"></a>
 
-#### `macro_quotes_to_evidence`
+#### FUN-AD52255426
+
+**函数**：`macro_quotes_to_evidence`
 
 - **ID / 行**：`FUN-AD52255426` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`macro_quotes_to_evidence(quotes: list[MacroQuote])` → `list[EvidenceItem]`
@@ -2409,7 +2769,9 @@
 
 <a id="fun-683a4407dd"></a>
 
-#### `external_macro_evidence`
+#### FUN-683A4407DD
+
+**函数**：`external_macro_evidence`
 
 - **ID / 行**：`FUN-683A4407DD` / `L54`（源码见本单元概览）
 - **签名 / 返回**：`external_macro_evidence(ext: ExternalFactors)` → `list[EvidenceItem]`
@@ -2421,7 +2783,9 @@
 
 <a id="unit-4d4d8a02c7"></a>
 
-### src/data/sources/gold_relevance.py — 软件单元详细设计
+### UNIT-4D4D8A02C7
+
+**模块**：`src/data/sources/gold_relevance.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2441,7 +2805,9 @@
 
 <a id="fun-64da59ba88"></a>
 
-#### `matches_gold_headline`
+#### FUN-64DA59BA88
+
+**函数**：`matches_gold_headline`
 
 - **ID / 行**：`FUN-64DA59BA88` / `L121`（源码见本单元概览）
 - **签名 / 返回**：`matches_gold_headline(text: str)` → `bool`
@@ -2452,7 +2818,9 @@
 
 <a id="fun-30d61ef6f5"></a>
 
-#### `is_gold_macro_event`
+#### FUN-30D61EF6F5
+
+**函数**：`is_gold_macro_event`
 
 - **ID / 行**：`FUN-30D61EF6F5` / `L126`（源码见本单元概览）
 - **签名 / 返回**：`is_gold_macro_event(event: str, region: str='', *, importance: float | None=None)` → `bool`
@@ -2463,7 +2831,9 @@
 
 <a id="unit-7020937074"></a>
 
-### src/data/sources/jin10_feed.py — 软件单元详细设计
+### UNIT-7020937074
+
+**模块**：`src/data/sources/jin10_feed.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2483,7 +2853,9 @@
 
 <a id="fun-ad84260cd0"></a>
 
-#### `Jin10NewsBundle.headline_items`
+#### FUN-AD84260CD0
+
+**函数**：`Jin10NewsBundle.headline_items`
 
 - **ID / 行**：`FUN-AD84260CD0` / `L47`（源码见本单元概览）
 - **签名 / 返回**：`Jin10NewsBundle.headline_items(self)` → `list[HeadlineItem]`
@@ -2493,7 +2865,9 @@
 
 <a id="fun-0424648ecf"></a>
 
-#### `Jin10NewsBundle.headlines`
+#### FUN-0424648ECF
+
+**函数**：`Jin10NewsBundle.headlines`
 
 - **ID / 行**：`FUN-0424648ECF` / `L51`（源码见本单元概览）
 - **签名 / 返回**：`Jin10NewsBundle.headlines(self)` → `list[str]`
@@ -2504,7 +2878,9 @@
 
 <a id="fun-f87ac8a103"></a>
 
-#### `Jin10NewsBundle.is_live`
+#### FUN-F87AC8A103
+
+**函数**：`Jin10NewsBundle.is_live`
 
 - **ID / 行**：`FUN-F87AC8A103` / `L65`（源码见本单元概览）
 - **签名 / 返回**：`Jin10NewsBundle.is_live(self)` → `bool`
@@ -2515,7 +2891,9 @@
 
 <a id="fun-e4d9bf91ca"></a>
 
-#### `_cached`
+#### FUN-E4D9BF91CA
+
+**函数**：`_cached`
 
 - **ID / 行**：`FUN-E4D9BF91CA` / `L69`（源码见本单元概览）
 - **签名 / 返回**：`_cached(key: str, ttl: int, fn: Callable[[], Any])` → `tuple[Any, str | None]`
@@ -2527,7 +2905,9 @@
 
 <a id="fun-54e278ddf4"></a>
 
-#### `_iter_rows`
+#### FUN-54E278DDF4
+
+**函数**：`_iter_rows`
 
 - **ID / 行**：`FUN-54E278DDF4` / `L84`（源码见本单元概览）
 - **签名 / 返回**：`_iter_rows(data: Any)` → `list[dict[str, Any]]`
@@ -2538,7 +2918,9 @@
 
 <a id="fun-71917bcd45"></a>
 
-#### `_is_relevant`
+#### FUN-71917BCD45
+
+**函数**：`_is_relevant`
 
 - **ID / 行**：`FUN-71917BCD45` / `L100`（源码见本单元概览）
 - **签名 / 返回**：`_is_relevant(text: str, keyword: str)` → `bool`
@@ -2549,7 +2931,9 @@
 
 <a id="fun-81d80410a1"></a>
 
-#### `_parse_flash_item`
+#### FUN-81D80410A1
+
+**函数**：`_parse_flash_item`
 
 - **ID / 行**：`FUN-81D80410A1` / `L104`（源码见本单元概览）
 - **签名 / 返回**：`_parse_flash_item(row: dict[str, Any])` → `HeadlineItem`
@@ -2560,7 +2944,9 @@
 
 <a id="fun-99163599fb"></a>
 
-#### `_parse_article_item`
+#### FUN-99163599FB
+
+**函数**：`_parse_article_item`
 
 - **ID / 行**：`FUN-99163599FB` / `L118`（源码见本单元概览）
 - **签名 / 返回**：`_parse_article_item(row: dict[str, Any])` → `HeadlineItem`
@@ -2571,7 +2957,9 @@
 
 <a id="fun-6ac6fd360c"></a>
 
-#### `_parse_calendar_row`
+#### FUN-6AC6FD360C
+
+**函数**：`_parse_calendar_row`
 
 - **ID / 行**：`FUN-6AC6FD360C` / `L136`（源码见本单元概览）
 - **签名 / 返回**：`_parse_calendar_row(row: dict[str, Any])` → `CalendarEvent | None`
@@ -2582,7 +2970,9 @@
 
 <a id="fun-4ce9f1e780"></a>
 
-#### `_collect_items`
+#### FUN-4CE9F1E780
+
+**函数**：`_collect_items`
 
 - **ID / 行**：`FUN-4CE9F1E780` / `L162`（源码见本单元概览）
 - **签名 / 返回**：`_collect_items(rows: list[dict[str, Any]], *, parse_fn: Callable[[dict[str, Any]], HeadlineItem], keyword: str, limit: int, fallback: bool)` → `list[HeadlineItem]`
@@ -2593,7 +2983,9 @@
 
 <a id="fun-e38a05cb72"></a>
 
-#### `fetch_jin10_flash`
+#### FUN-E38A05CB72
+
+**函数**：`fetch_jin10_flash`
 
 - **ID / 行**：`FUN-E38A05CB72` / `L189`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_flash()` → `tuple[list[HeadlineItem], str | None]`
@@ -2605,7 +2997,9 @@
 
 <a id="fun-e26f91daa9"></a>
 
-#### `fetch_jin10_flash._pull`
+#### FUN-E26F91DAA9
+
+**函数**：`fetch_jin10_flash._pull`
 
 - **ID / 行**：`FUN-E26F91DAA9` / `L196`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_flash._pull()` → `Any`
@@ -2616,7 +3010,9 @@
 
 <a id="fun-fa951f8508"></a>
 
-#### `fetch_jin10_articles`
+#### FUN-FA951F8508
+
+**函数**：`fetch_jin10_articles`
 
 - **ID / 行**：`FUN-FA951F8508` / `L213`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_articles()` → `tuple[list[HeadlineItem], str | None]`
@@ -2628,7 +3024,9 @@
 
 <a id="fun-82911d6a6c"></a>
 
-#### `fetch_jin10_articles._pull`
+#### FUN-82911D6A6C
+
+**函数**：`fetch_jin10_articles._pull`
 
 - **ID / 行**：`FUN-82911D6A6C` / `L220`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_articles._pull()` → `Any`
@@ -2639,7 +3037,9 @@
 
 <a id="fun-8780d21897"></a>
 
-#### `fetch_jin10_calendar`
+#### FUN-8780D21897
+
+**函数**：`fetch_jin10_calendar`
 
 - **ID / 行**：`FUN-8780D21897` / `L239`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_calendar()` → `tuple[list[CalendarEvent], str | None]`
@@ -2651,7 +3051,9 @@
 
 <a id="fun-bd5c7672d7"></a>
 
-#### `fetch_jin10_calendar._pull`
+#### FUN-BD5C7672D7
+
+**函数**：`fetch_jin10_calendar._pull`
 
 - **ID / 行**：`FUN-BD5C7672D7` / `L243`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_calendar._pull()` → `Any`
@@ -2662,7 +3064,9 @@
 
 <a id="fun-051831ac48"></a>
 
-#### `fetch_jin10_risk_events`
+#### FUN-051831AC48
+
+**函数**：`fetch_jin10_risk_events`
 
 - **ID / 行**：`FUN-051831AC48` / `L269`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_risk_events()` → `tuple[str, str | None]`
@@ -2674,7 +3078,9 @@
 
 <a id="fun-bb6ef855aa"></a>
 
-#### `fetch_jin10_bundle`
+#### FUN-BB6EF855AA
+
+**函数**：`fetch_jin10_bundle`
 
 - **ID / 行**：`FUN-BB6EF855AA` / `L280`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_bundle()` → `Jin10NewsBundle`
@@ -2686,7 +3092,9 @@
 
 <a id="fun-b4ef16ee9f"></a>
 
-#### `fetch_jin10_quote`
+#### FUN-B4EF16EE9F
+
+**函数**：`fetch_jin10_quote`
 
 - **ID / 行**：`FUN-B4EF16EE9F` / `L321`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_quote(code: str | None=None)` → `tuple[dict[str, Any] | None, str | None]`
@@ -2698,7 +3106,9 @@
 
 <a id="fun-67ef031b31"></a>
 
-#### `fetch_jin10_quote._pull`
+#### FUN-67EF031B31
+
+**函数**：`fetch_jin10_quote._pull`
 
 - **ID / 行**：`FUN-67EF031B31` / `L329`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_quote._pull()` → `Any`
@@ -2709,7 +3119,9 @@
 
 <a id="fun-fbced9bbe7"></a>
 
-#### `_normalize_kline_bars`
+#### FUN-FBCED9BBE7
+
+**函数**：`_normalize_kline_bars`
 
 - **ID / 行**：`FUN-FBCED9BBE7` / `L343`（源码见本单元概览）
 - **签名 / 返回**：`_normalize_kline_bars(data: Any)` → `list[dict[str, Any]]`
@@ -2720,7 +3132,9 @@
 
 <a id="fun-759eaf2c78"></a>
 
-#### `fetch_jin10_kline`
+#### FUN-759EAF2C78
+
+**函数**：`fetch_jin10_kline`
 
 - **ID / 行**：`FUN-759EAF2C78` / `L367`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_kline(code: str | None=None, *, period: str | None=None, count: int | None=None)` → `tuple[list[dict[str, Any]], str | None]`
@@ -2732,7 +3146,9 @@
 
 <a id="fun-c4acab9575"></a>
 
-#### `fetch_jin10_kline._pull`
+#### FUN-C4ACAB9575
+
+**函数**：`fetch_jin10_kline._pull`
 
 - **ID / 行**：`FUN-C4ACAB9575` / `L386`（源码见本单元概览）
 - **签名 / 返回**：`fetch_jin10_kline._pull()` → `Any`
@@ -2743,7 +3159,9 @@
 
 <a id="unit-927bb1749d"></a>
 
-### src/data/sources/jin10_mcp_client.py — 软件单元详细设计
+### UNIT-927BB1749D
+
+**模块**：`src/data/sources/jin10_mcp_client.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2763,7 +3181,9 @@
 
 <a id="fun-a697c9be9d"></a>
 
-#### `_parse_sse`
+#### FUN-A697C9BE9D
+
+**函数**：`_parse_sse`
 
 - **ID / 行**：`FUN-A697C9BE9D` / `L25`（源码见本单元概览）
 - **签名 / 返回**：`_parse_sse(text: str)` → `list[dict[str, Any]]`
@@ -2775,7 +3195,9 @@
 
 <a id="fun-78f0060e7a"></a>
 
-#### `_pick_data`
+#### FUN-78F0060E7A
+
+**函数**：`_pick_data`
 
 - **ID / 行**：`FUN-78F0060E7A` / `L53`（源码见本单元概览）
 - **签名 / 返回**：`_pick_data(result: dict[str, Any] | None)` → `Any`
@@ -2786,7 +3208,9 @@
 
 <a id="fun-84897c5cce"></a>
 
-#### `Jin10McpClient.__init__`
+#### FUN-84897C5CCE
+
+**函数**：`Jin10McpClient.__init__`
 
 - **ID / 行**：`FUN-84897C5CCE` / `L72`（源码见本单元概览）
 - **签名 / 返回**：`Jin10McpClient.__init__(self, *, token: str, url: str=JIN10_MCP_URL, protocol: str=JIN10_MCP_PROTOCOL)` → `None`
@@ -2796,7 +3220,9 @@
 
 <a id="fun-45a198880a"></a>
 
-#### `Jin10McpClient._headers`
+#### FUN-45A198880A
+
+**函数**：`Jin10McpClient._headers`
 
 - **ID / 行**：`FUN-45A198880A` / `L79`（源码见本单元概览）
 - **签名 / 返回**：`Jin10McpClient._headers(self)` → `dict[str, str]`
@@ -2806,7 +3232,9 @@
 
 <a id="fun-9cb066a5e9"></a>
 
-#### `Jin10McpClient._next_id`
+#### FUN-9CB066A5E9
+
+**函数**：`Jin10McpClient._next_id`
 
 - **ID / 行**：`FUN-9CB066A5E9` / `L88`（源码见本单元概览）
 - **签名 / 返回**：`Jin10McpClient._next_id(self)` → `int`
@@ -2816,7 +3244,9 @@
 
 <a id="fun-48e026a8bb"></a>
 
-#### `Jin10McpClient._post`
+#### FUN-48E026A8BB
+
+**函数**：`Jin10McpClient._post`
 
 - **ID / 行**：`FUN-48E026A8BB` / `L92`（源码见本单元概览）
 - **签名 / 返回**：`Jin10McpClient._post(self, body: dict[str, Any], *, expect_response: bool=True)` → `Any`
@@ -2828,7 +3258,9 @@
 
 <a id="fun-72bb9b66ce"></a>
 
-#### `Jin10McpClient.connect`
+#### FUN-72BB9B66CE
+
+**函数**：`Jin10McpClient.connect`
 
 - **ID / 行**：`FUN-72BB9B66CE` / `L136`（源码见本单元概览）
 - **签名 / 返回**：`Jin10McpClient.connect(self)` → `None`
@@ -2839,7 +3271,9 @@
 
 <a id="fun-f9d2c12d6e"></a>
 
-#### `Jin10McpClient.call_tool`
+#### FUN-F9D2C12D6E
+
+**函数**：`Jin10McpClient.call_tool`
 
 - **ID / 行**：`FUN-F9D2C12D6E` / `L154`（源码见本单元概览）
 - **签名 / 返回**：`Jin10McpClient.call_tool(self, name: str, arguments: dict[str, Any] | None=None)` → `Any`
@@ -2851,7 +3285,9 @@
 
 <a id="fun-6b5241464f"></a>
 
-#### `get_jin10_client`
+#### FUN-6B5241464F
+
+**函数**：`get_jin10_client`
 
 - **ID / 行**：`FUN-6B5241464F` / `L168`（源码见本单元概览）
 - **签名 / 返回**：`get_jin10_client()` → `Jin10McpClient`
@@ -2863,7 +3299,9 @@
 
 <a id="fun-57be12ae7a"></a>
 
-#### `jin10_call_tool`
+#### FUN-57BE12AE7A
+
+**函数**：`jin10_call_tool`
 
 - **ID / 行**：`FUN-57BE12AE7A` / `L182`（源码见本单元概览）
 - **签名 / 返回**：`jin10_call_tool(name: str, arguments: dict[str, Any] | None=None)` → `Any`
@@ -2874,7 +3312,9 @@
 
 <a id="unit-fe5c27c113"></a>
 
-### src/data/sources/macro.py — 软件单元详细设计
+### UNIT-FE5C27C113
+
+**模块**：`src/data/sources/macro.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2894,7 +3334,9 @@
 
 <a id="fun-9a59422023"></a>
 
-#### `_daily_change`
+#### FUN-9A59422023
+
+**函数**：`_daily_change`
 
 - **ID / 行**：`FUN-9A59422023` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`_daily_change(df)` → `tuple[float, float, float]`
@@ -2905,7 +3347,9 @@
 
 <a id="fun-e016877e87"></a>
 
-#### `_gold_bias_from_change`
+#### FUN-E016877E87
+
+**函数**：`_gold_bias_from_change`
 
 - **ID / 行**：`FUN-E016877E87` / `L24`（源码见本单元概览）
 - **签名 / 返回**：`_gold_bias_from_change(change_pct: float, *, invert: bool)` → `tuple[str, str]`
@@ -2915,7 +3359,9 @@
 
 <a id="fun-708b026267"></a>
 
-#### `fetch_dxy_quote`
+#### FUN-708B026267
+
+**函数**：`fetch_dxy_quote`
 
 - **ID / 行**：`FUN-708B026267` / `L40`（源码见本单元概览）
 - **签名 / 返回**：`fetch_dxy_quote()` → `MacroQuote | None`
@@ -2927,7 +3373,9 @@
 
 <a id="fun-7bbbaadf8c"></a>
 
-#### `fetch_us10y_quote`
+#### FUN-7BBBAADF8C
+
+**函数**：`fetch_us10y_quote`
 
 - **ID / 行**：`FUN-7BBBAADF8C` / `L67`（源码见本单元概览）
 - **签名 / 返回**：`fetch_us10y_quote()` → `MacroQuote | None`
@@ -2939,7 +3387,9 @@
 
 <a id="fun-777bc4df7e"></a>
 
-#### `fetch_macro_quotes`
+#### FUN-777BC4DF7E
+
+**函数**：`fetch_macro_quotes`
 
 - **ID / 行**：`FUN-777BC4DF7E` / `L94`（源码见本单元概览）
 - **签名 / 返回**：`fetch_macro_quotes()` → `list[MacroQuote]`
@@ -2950,7 +3400,9 @@
 
 <a id="unit-603339624c"></a>
 
-### src/data/sources/market.py — 软件单元详细设计
+### UNIT-603339624C
+
+**模块**：`src/data/sources/market.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -2970,7 +3422,9 @@
 
 <a id="fun-55497ef40f"></a>
 
-#### `MarketDataSource.__init__`
+#### FUN-55497EF40F
+
+**函数**：`MarketDataSource.__init__`
 
 - **ID / 行**：`FUN-55497EF40F` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`MarketDataSource.__init__(self, enriched: dict[str, pd.DataFrame])` → `None`
@@ -2980,7 +3434,9 @@
 
 <a id="fun-eeff26c071"></a>
 
-#### `MarketDataSource.fetch_evidence`
+#### FUN-EEFF26C071
+
+**函数**：`MarketDataSource.fetch_evidence`
 
 - **ID / 行**：`FUN-EEFF26C071` / `L19`（源码见本单元概览）
 - **签名 / 返回**：`MarketDataSource.fetch_evidence(self)` → `list[EvidenceItem]`
@@ -2991,7 +3447,9 @@
 
 <a id="unit-58d6f95301"></a>
 
-### src/data/sources/news.py — 软件单元详细设计
+### UNIT-58D6F95301
+
+**模块**：`src/data/sources/news.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3011,7 +3469,9 @@
 
 <a id="fun-495f172db6"></a>
 
-#### `_bundle_to_external`
+#### FUN-495F172DB6
+
+**函数**：`_bundle_to_external`
 
 - **ID / 行**：`FUN-495F172DB6` / `L12`（源码见本单元概览）
 - **签名 / 返回**：`_bundle_to_external(bundle: Jin10NewsBundle)` → `ExternalFactors`
@@ -3022,7 +3482,9 @@
 
 <a id="fun-1e1d7d437a"></a>
 
-#### `external_to_evidence`
+#### FUN-1E1D7D437A
+
+**函数**：`external_to_evidence`
 
 - **ID / 行**：`FUN-1E1D7D437A` / `L32`（源码见本单元概览）
 - **签名 / 返回**：`external_to_evidence(ext: ExternalFactors, *, is_live: bool)` → `list[EvidenceItem]`
@@ -3033,7 +3495,9 @@
 
 <a id="fun-ad19eb744e"></a>
 
-#### `NewsDataSource.fetch_external`
+#### FUN-AD19EB744E
+
+**函数**：`NewsDataSource.fetch_external`
 
 - **ID / 行**：`FUN-AD19EB744E` / `L94`（源码见本单元概览）
 - **签名 / 返回**：`NewsDataSource.fetch_external(self)` → `ExternalFactors`
@@ -3045,7 +3509,9 @@
 
 <a id="fun-de57fb8e2a"></a>
 
-#### `NewsDataSource.fetch_evidence`
+#### FUN-DE57FB8E2A
+
+**函数**：`NewsDataSource.fetch_evidence`
 
 - **ID / 行**：`FUN-DE57FB8E2A` / `L97`（源码见本单元概览）
 - **签名 / 返回**：`NewsDataSource.fetch_evidence(self)` → `list[EvidenceItem]`
@@ -3057,7 +3523,9 @@
 
 <a id="unit-ba8df8a829"></a>
 
-### src/data/sources/social.py — 软件单元详细设计
+### UNIT-BA8DF8A829
+
+**模块**：`src/data/sources/social.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3077,7 +3545,9 @@
 
 <a id="fun-95201e57fd"></a>
 
-#### `SocialDataSource.fetch_external`
+#### FUN-95201E57FD
+
+**函数**：`SocialDataSource.fetch_external`
 
 - **ID / 行**：`FUN-95201E57FD` / `L14`（源码见本单元概览）
 - **签名 / 返回**：`SocialDataSource.fetch_external(self)` → `ExternalFactors`
@@ -3089,7 +3559,9 @@
 
 <a id="fun-99eafc0124"></a>
 
-#### `SocialDataSource.fetch_external_summary`
+#### FUN-99EAFC0124
+
+**函数**：`SocialDataSource.fetch_external_summary`
 
 - **ID / 行**：`FUN-99EAFC0124` / `L28`（源码见本单元概览）
 - **签名 / 返回**：`SocialDataSource.fetch_external_summary(self)` → `tuple[str, dict]`
@@ -3101,7 +3573,9 @@
 
 <a id="fun-aad92ec141"></a>
 
-#### `SocialDataSource.fetch_evidence`
+#### FUN-AAD92EC141
+
+**函数**：`SocialDataSource.fetch_evidence`
 
 - **ID / 行**：`FUN-AAD92EC141` / `L32`（源码见本单元概览）
 - **签名 / 返回**：`SocialDataSource.fetch_evidence(self)` → `list[EvidenceItem]`
@@ -3113,7 +3587,9 @@
 
 <a id="unit-b05f7affa4"></a>
 
-### src/data/sources/social_feed.py — 软件单元详细设计
+### UNIT-B05F7AFFA4
+
+**模块**：`src/data/sources/social_feed.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3133,7 +3609,9 @@
 
 <a id="fun-caabb05bc5"></a>
 
-#### `_tv_headers`
+#### FUN-CAABB05BC5
+
+**函数**：`_tv_headers`
 
 - **ID / 行**：`FUN-CAABB05BC5` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`_tv_headers(symbol: str)` → `dict[str, str]`
@@ -3143,7 +3621,9 @@
 
 <a id="fun-a3dfefa187"></a>
 
-#### `_score_text`
+#### FUN-A3DFEFA187
+
+**函数**：`_score_text`
 
 - **ID / 行**：`FUN-A3DFEFA187` / `L41`（源码见本单元概览）
 - **签名 / 返回**：`_score_text(text: str)` → `int`
@@ -3154,7 +3634,9 @@
 
 <a id="fun-90feed0db0"></a>
 
-#### `_flatten_ast`
+#### FUN-90FEED0DB0
+
+**函数**：`_flatten_ast`
 
 - **ID / 行**：`FUN-90FEED0DB0` / `L47`（源码见本单元概览）
 - **签名 / 返回**：`_flatten_ast(node: Any)` → `str`
@@ -3165,7 +3647,9 @@
 
 <a id="fun-73c783a893"></a>
 
-#### `_idea_bias`
+#### FUN-73C783A893
+
+**函数**：`_idea_bias`
 
 - **ID / 行**：`FUN-73C783A893` / `L64`（源码见本单元概览）
 - **签名 / 返回**：`_idea_bias(item: dict)` → `int`
@@ -3176,7 +3660,9 @@
 
 <a id="fun-b89e173f01"></a>
 
-#### `_mind_bias`
+#### FUN-B89E173F01
+
+**函数**：`_mind_bias`
 
 - **ID / 行**：`FUN-B89E173F01` / `L77`（源码见本单元概览）
 - **签名 / 返回**：`_mind_bias(item: dict)` → `int`
@@ -3187,7 +3673,9 @@
 
 <a id="fun-f4bb9ead13"></a>
 
-#### `parse_tv_ideas`
+#### FUN-F4BB9EAD13
+
+**函数**：`parse_tv_ideas`
 
 - **ID / 行**：`FUN-F4BB9EAD13` / `L81`（源码见本单元概览）
 - **签名 / 返回**：`parse_tv_ideas(payload: dict)` → `list[dict]`
@@ -3198,7 +3686,9 @@
 
 <a id="fun-b5dc3ce070"></a>
 
-#### `parse_tv_minds`
+#### FUN-B5DC3CE070
+
+**函数**：`parse_tv_minds`
 
 - **ID / 行**：`FUN-B5DC3CE070` / `L109`（源码见本单元概览）
 - **签名 / 返回**：`parse_tv_minds(payload: dict)` → `list[dict]`
@@ -3209,7 +3699,9 @@
 
 <a id="fun-cf2373671f"></a>
 
-#### `_fetch_tv_json`
+#### FUN-CF2373671F
+
+**函数**：`_fetch_tv_json`
 
 - **ID / 行**：`FUN-CF2373671F` / `L136`（源码见本单元概览）
 - **签名 / 返回**：`_fetch_tv_json(path: str, symbol: str)` → `dict`
@@ -3220,7 +3712,9 @@
 
 <a id="fun-b06d0a1526"></a>
 
-#### `_collect_posts`
+#### FUN-B06D0A1526
+
+**函数**：`_collect_posts`
 
 - **ID / 行**：`FUN-B06D0A1526` / `L142`（源码见本单元概览）
 - **签名 / 返回**：`_collect_posts(symbol: str)` → `list[dict]`
@@ -3232,7 +3726,9 @@
 
 <a id="fun-c35dff8bfe"></a>
 
-#### `_summarize`
+#### FUN-C35DFF8BFE
+
+**函数**：`_summarize`
 
 - **ID / 行**：`FUN-C35DFF8BFE` / `L149`（源码见本单元概览）
 - **签名 / 返回**：`_summarize(posts: list[dict])` → `tuple[str, str, int, int]`
@@ -3243,7 +3739,9 @@
 
 <a id="fun-e5da3d3910"></a>
 
-#### `fetch_social_sentiment`
+#### FUN-E5DA3D3910
+
+**函数**：`fetch_social_sentiment`
 
 - **ID / 行**：`FUN-E5DA3D3910` / `L194`（源码见本单元概览）
 - **签名 / 返回**：`fetch_social_sentiment()` → `tuple[str, list[dict], dict]`
@@ -3254,7 +3752,9 @@
 
 <a id="unit-c1711535ca"></a>
 
-### src/data/tradingview.py — 软件单元详细设计
+### UNIT-C1711535CA
+
+**模块**：`src/data/tradingview.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3274,7 +3774,9 @@
 
 <a id="fun-00fc6618ed"></a>
 
-#### `_read_system_proxy`
+#### FUN-00FC6618ED
+
+**函数**：`_read_system_proxy`
 
 - **ID / 行**：`FUN-00FC6618ED` / `L36`（源码见本单元概览）
 - **签名 / 返回**：`_read_system_proxy()` → `str | None`
@@ -3285,7 +3787,9 @@
 
 <a id="fun-39e0f0e515"></a>
 
-#### `_setup_proxy`
+#### FUN-39E0F0E515
+
+**函数**：`_setup_proxy`
 
 - **ID / 行**：`FUN-39E0F0E515` / `L40`（源码见本单元概览）
 - **签名 / 返回**：`_setup_proxy()` → `None`
@@ -3296,7 +3800,9 @@
 
 <a id="fun-147aba77bf"></a>
 
-#### `get_last_error`
+#### FUN-147ABA77BF
+
+**函数**：`get_last_error`
 
 - **ID / 行**：`FUN-147ABA77BF` / `L51`（源码见本单元概览）
 - **签名 / 返回**：`get_last_error()` → `str | None`
@@ -3306,7 +3812,9 @@
 
 <a id="fun-bb3555eebf"></a>
 
-#### `reset_client`
+#### FUN-BB3555EEBF
+
+**函数**：`reset_client`
 
 - **ID / 行**：`FUN-BB3555EEBF` / `L55`（源码见本单元概览）
 - **签名 / 返回**：`reset_client()` → `None`
@@ -3318,7 +3826,9 @@
 
 <a id="fun-cfbe891cfe"></a>
 
-#### `_report_fetch`
+#### FUN-CFBE891CFE
+
+**函数**：`_report_fetch`
 
 - **ID / 行**：`FUN-CFBE891CFE` / `L62`（源码见本单元概览）
 - **签名 / 返回**：`_report_fetch(detail: str)` → `None`
@@ -3330,7 +3840,9 @@
 
 <a id="fun-71eb929876"></a>
 
-#### `_get_client`
+#### FUN-71EB929876
+
+**函数**：`_get_client`
 
 - **ID / 行**：`FUN-71EB929876` / `L66`（源码见本单元概览）
 - **签名 / 返回**：`_get_client()` → `runtime/inferred`
@@ -3342,7 +3854,9 @@
 
 <a id="fun-e022026116"></a>
 
-#### `_normalize`
+#### FUN-E022026116
+
+**函数**：`_normalize`
 
 - **ID / 行**：`FUN-E022026116` / `L80`（源码见本单元概览）
 - **签名 / 返回**：`_normalize(df: pd.DataFrame | None)` → `pd.DataFrame`
@@ -3354,7 +3868,9 @@
 
 <a id="fun-e5a0c6906a"></a>
 
-#### `_resample`
+#### FUN-E5A0C6906A
+
+**函数**：`_resample`
 
 - **ID / 行**：`FUN-E5A0C6906A` / `L104`（源码见本单元概览）
 - **签名 / 返回**：`_resample(df: pd.DataFrame, rule: str)` → `pd.DataFrame`
@@ -3365,7 +3881,9 @@
 
 <a id="fun-ce47bd6ad9"></a>
 
-#### `compute_price_drift_1d`
+#### FUN-CE47BD6AD9
+
+**函数**：`compute_price_drift_1d`
 
 - **ID / 行**：`FUN-CE47BD6AD9` / `L111`（源码见本单元概览）
 - **签名 / 返回**：`compute_price_drift_1d(df_5m: pd.DataFrame, df_1d: pd.DataFrame)` → `float`
@@ -3376,7 +3894,9 @@
 
 <a id="fun-fc45e4816c"></a>
 
-#### `_fetch_bars`
+#### FUN-FC45E4816C
+
+**函数**：`_fetch_bars`
 
 - **ID / 行**：`FUN-FC45E4816C` / `L120`（源码见本单元概览）
 - **签名 / 返回**：`_fetch_bars(interval: 'Interval', n_bars: int, *, label: str, retries: int | None=None, exchange: str | None=None, symbol: str | None=None, report_progress: bool=True)` → `pd.DataFrame`
@@ -3388,7 +3908,9 @@
 
 <a id="fun-7ee0f590bb"></a>
 
-#### `fetch_symbol_daily`
+#### FUN-7EE0F590BB
+
+**函数**：`fetch_symbol_daily`
 
 - **ID / 行**：`FUN-7EE0F590BB` / `L194`（源码见本单元概览）
 - **签名 / 返回**：`fetch_symbol_daily(exchange: str, symbol: str, *, n_bars: int=5, label: str | None=None)` → `pd.DataFrame`
@@ -3400,7 +3922,9 @@
 
 <a id="fun-c4f6abf085"></a>
 
-#### `_fetch_htf_or_resample`
+#### FUN-C4F6ABF085
+
+**函数**：`_fetch_htf_or_resample`
 
 - **ID / 行**：`FUN-C4F6ABF085` / `L219`（源码见本单元概览）
 - **签名 / 返回**：`_fetch_htf_or_resample(interval: 'Interval', *, n_bars: int, label: str, df_5m: pd.DataFrame, resample_rule: str)` → `pd.DataFrame`
@@ -3412,7 +3936,9 @@
 
 <a id="fun-d99b48f1eb"></a>
 
-#### `_fetch_multi_timeframe_once`
+#### FUN-D99B48F1EB
+
+**函数**：`_fetch_multi_timeframe_once`
 
 - **ID / 行**：`FUN-D99B48F1EB` / `L237`（源码见本单元概览）
 - **签名 / 返回**：`_fetch_multi_timeframe_once()` → `dict[str, pd.DataFrame]`
@@ -3424,7 +3950,9 @@
 
 <a id="fun-440d380a28"></a>
 
-#### `fetch_multi_timeframe`
+#### FUN-440D380A28
+
+**函数**：`fetch_multi_timeframe`
 
 - **ID / 行**：`FUN-440D380A28` / `L285`（源码见本单元概览）
 - **签名 / 返回**：`fetch_multi_timeframe()` → `dict[str, pd.DataFrame]`
@@ -3436,7 +3964,9 @@
 
 <a id="fun-b1230c7d4a"></a>
 
-#### `source_label`
+#### FUN-B1230C7D4A
+
+**函数**：`source_label`
 
 - **ID / 行**：`FUN-B1230C7D4A` / `L312`（源码见本单元概览）
 - **签名 / 返回**：`source_label()` → `str`
@@ -3446,7 +3976,9 @@
 
 <a id="unit-62a1aff305"></a>
 
-### src/data/url_redact.py — 软件单元详细设计
+### UNIT-62A1AFF305
+
+**模块**：`src/data/url_redact.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3466,7 +3998,9 @@
 
 <a id="fun-5d2f35cb3b"></a>
 
-#### `redact_url`
+#### FUN-5D2F35CB3B
+
+**函数**：`redact_url`
 
 - **ID / 行**：`FUN-5D2F35CB3B` / `L8`（源码见本单元概览）
 - **签名 / 返回**：`redact_url(url: str)` → `str`
@@ -3477,7 +4011,9 @@
 
 <a id="arc-indicators"></a>
 
-## ARC-INDICATORS — 指标计算
+## ARC-INDICATORS
+
+**名称**：指标计算
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -3487,7 +4023,9 @@
 
 <a id="unit-7d2cf26834"></a>
 
-### src/indicators/__init__.py — 软件单元详细设计
+### UNIT-7D2CF26834
+
+**模块**：`src/indicators/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3507,7 +4045,9 @@
 
 <a id="unit-2f8c299c5b"></a>
 
-### src/indicators/technical.py — 软件单元详细设计
+### UNIT-2F8C299C5B
+
+**模块**：`src/indicators/technical.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3527,7 +4067,9 @@
 
 <a id="fun-8f7e8730d6"></a>
 
-#### `add_emas`
+#### FUN-8F7E8730D6
+
+**函数**：`add_emas`
 
 - **ID / 行**：`FUN-8F7E8730D6` / `L10`（源码见本单元概览）
 - **签名 / 返回**：`add_emas(df: pd.DataFrame, periods: tuple[int, ...]=(20, 50, 610))` → `pd.DataFrame`
@@ -3538,7 +4080,9 @@
 
 <a id="fun-c3db0f8450"></a>
 
-#### `add_vwap`
+#### FUN-C3DB0F8450
+
+**函数**：`add_vwap`
 
 - **ID / 行**：`FUN-C3DB0F8450` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`add_vwap(df: pd.DataFrame)` → `pd.DataFrame`
@@ -3550,7 +4094,9 @@
 
 <a id="fun-4d1a54987d"></a>
 
-#### `add_atr`
+#### FUN-4D1A54987D
+
+**函数**：`add_atr`
 
 - **ID / 行**：`FUN-4D1A54987D` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`add_atr(df: pd.DataFrame, period: int=14)` → `pd.DataFrame`
@@ -3561,7 +4107,9 @@
 
 <a id="fun-3901170d43"></a>
 
-#### `add_rsi`
+#### FUN-3901170D43
+
+**函数**：`add_rsi`
 
 - **ID / 行**：`FUN-3901170D43` / `L42`（源码见本单元概览）
 - **签名 / 返回**：`add_rsi(df: pd.DataFrame, period: int=14)` → `pd.DataFrame`
@@ -3573,7 +4121,9 @@
 
 <a id="fun-5299aa4622"></a>
 
-#### `add_macd`
+#### FUN-5299AA4622
+
+**函数**：`add_macd`
 
 - **ID / 行**：`FUN-5299AA4622` / `L55`（源码见本单元概览）
 - **签名 / 返回**：`add_macd(df: pd.DataFrame, *, fast: int=12, slow: int=26, signal: int=9)` → `pd.DataFrame`
@@ -3584,7 +4134,9 @@
 
 <a id="fun-a8f0fc0306"></a>
 
-#### `add_adx`
+#### FUN-A8F0FC0306
+
+**函数**：`add_adx`
 
 - **ID / 行**：`FUN-A8F0FC0306` / `L71`（源码见本单元概览）
 - **签名 / 返回**：`add_adx(df: pd.DataFrame, period: int=14)` → `pd.DataFrame`
@@ -3596,7 +4148,9 @@
 
 <a id="fun-3f2d66c862"></a>
 
-#### `enrich`
+#### FUN-3F2D66C862
+
+**函数**：`enrich`
 
 - **ID / 行**：`FUN-3F2D66C862` / `L95`（源码见本单元概览）
 - **签名 / 返回**：`enrich(df: pd.DataFrame)` → `pd.DataFrame`
@@ -3607,7 +4161,9 @@
 
 <a id="fun-d44171a8a2"></a>
 
-#### `indicator_values`
+#### FUN-D44171A8A2
+
+**函数**：`indicator_values`
 
 - **ID / 行**：`FUN-D44171A8A2` / `L99`（源码见本单元概览）
 - **签名 / 返回**：`indicator_values(row: pd.Series)` → `dict[str, float | None]`
@@ -3618,7 +4174,9 @@
 
 <a id="fun-1fcd39f6e9"></a>
 
-#### `ema_relation`
+#### FUN-1FCD39F6E9
+
+**函数**：`ema_relation`
 
 - **ID / 行**：`FUN-1FCD39F6E9` / `L109`（源码见本单元概览）
 - **签名 / 返回**：`ema_relation(price: float, row: pd.Series)` → `dict[str, str]`
@@ -3629,7 +4187,9 @@
 
 <a id="fun-6537a68fb4"></a>
 
-#### `fibonacci_levels`
+#### FUN-6537A68FB4
+
+**函数**：`fibonacci_levels`
 
 - **ID / 行**：`FUN-6537A68FB4` / `L125`（源码见本单元概览）
 - **签名 / 返回**：`fibonacci_levels(swing_high: float, swing_low: float)` → `list[dict]`
@@ -3640,7 +4200,9 @@
 
 <a id="unit-d35a8017fe"></a>
 
-### src/indicators/verify.py — 软件单元详细设计
+### UNIT-D35A8017FE
+
+**模块**：`src/indicators/verify.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3660,7 +4222,9 @@
 
 <a id="fun-c3ec67606c"></a>
 
-#### `indicator_snapshot`
+#### FUN-C3EC67606C
+
+**函数**：`indicator_snapshot`
 
 - **ID / 行**：`FUN-C3EC67606C` / `L10`（源码见本单元概览）
 - **签名 / 返回**：`indicator_snapshot(df: pd.DataFrame, timeframe: str)` → `dict`
@@ -3671,7 +4235,9 @@
 
 <a id="fun-44ba63c6e8"></a>
 
-#### `indicator_table_rows`
+#### FUN-44BA63C6E8
+
+**函数**：`indicator_table_rows`
 
 - **ID / 行**：`FUN-44BA63C6E8` / `L70`（源码见本单元概览）
 - **签名 / 返回**：`indicator_table_rows(snapshots: list[dict])` → `list[dict]`
@@ -3682,7 +4248,9 @@
 
 <a id="arc-analysis"></a>
 
-## ARC-ANALYSIS — 事实、结构、信号与报告门禁
+## ARC-ANALYSIS
+
+**名称**：事实、结构、信号与报告门禁
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -3718,7 +4286,9 @@
 
 <a id="unit-cf43fe46e5"></a>
 
-### src/analysis/__init__.py — 软件单元详细设计
+### UNIT-CF43FE46E5
+
+**模块**：`src/analysis/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3738,7 +4308,9 @@
 
 <a id="unit-9f95d55376"></a>
 
-### src/analysis/audit_summary.py — 软件单元详细设计
+### UNIT-9F95D55376
+
+**模块**：`src/analysis/audit_summary.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3758,7 +4330,9 @@
 
 <a id="fun-18bf7fc28a"></a>
 
-#### `_hash_payload`
+#### FUN-18BF7FC28A
+
+**函数**：`_hash_payload`
 
 - **ID / 行**：`FUN-18BF7FC28A` / `L10`（源码见本单元概览）
 - **签名 / 返回**：`_hash_payload(payload: dict[str, Any])` → `str`
@@ -3769,7 +4343,9 @@
 
 <a id="fun-3041827ff4"></a>
 
-#### `_llm_usage_summary`
+#### FUN-3041827FF4
+
+**函数**：`_llm_usage_summary`
 
 - **ID / 行**：`FUN-3041827FF4` / `L15`（源码见本单元概览）
 - **签名 / 返回**：`_llm_usage_summary(llm_io: list[dict[str, Any]])` → `dict[str, Any]`
@@ -3780,7 +4356,9 @@
 
 <a id="fun-5b705f2cac"></a>
 
-#### `build_audit_summary`
+#### FUN-5B705F2CAC
+
+**函数**：`build_audit_summary`
 
 - **ID / 行**：`FUN-5B705F2CAC` / `L49`（源码见本单元概览）
 - **签名 / 返回**：`build_audit_summary(report: dict[str, Any], *, decision: Any | None=None, stage_meta: dict[str, Any] | None=None)` → `dict[str, Any]`
@@ -3791,7 +4369,9 @@
 
 <a id="unit-271badecbe"></a>
 
-### src/analysis/chart_sr_filters.py — 软件单元详细设计
+### UNIT-271BADECBE
+
+**模块**：`src/analysis/chart_sr_filters.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3811,7 +4391,9 @@
 
 <a id="fun-615e3b9de5"></a>
 
-#### `_fmt_price`
+#### FUN-615E3B9DE5
+
+**函数**：`_fmt_price`
 
 - **ID / 行**：`FUN-615E3B9DE5` / `L22`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_price(price: float)` → `str`
@@ -3822,7 +4404,9 @@
 
 <a id="fun-cbd491e1bc"></a>
 
-#### `_short_chart_title`
+#### FUN-CBD491E1BC
+
+**函数**：`_short_chart_title`
 
 - **ID / 行**：`FUN-CBD491E1BC` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`_short_chart_title(lvl: SrLevel)` → `str`
@@ -3834,7 +4418,9 @@
 
 <a id="fun-fbc037e567"></a>
 
-#### `_merge_nearby`
+#### FUN-FBC037E567
+
+**函数**：`_merge_nearby`
 
 - **ID / 行**：`FUN-FBC037E567` / `L47`（源码见本单元概览）
 - **签名 / 返回**：`_merge_nearby(levels: list[SrLevel])` → `list[SrLevel]`
@@ -3845,7 +4431,9 @@
 
 <a id="fun-449394678b"></a>
 
-#### `visible_sr_price_lines`
+#### FUN-449394678B
+
+**函数**：`visible_sr_price_lines`
 
 - **ID / 行**：`FUN-449394678B` / `L69`（源码见本单元概览）
 - **签名 / 返回**：`visible_sr_price_lines(sr_levels: list[SrLevel] | list[dict[str, Any]], plot_df: pd.DataFrame, *, max_lines: int=_MAX_CHART_LINES, current_price: float | None=None)` → `list[dict[str, Any]]`
@@ -3856,7 +4444,9 @@
 
 <a id="unit-070aa8511c"></a>
 
-### src/analysis/chart_zone_filters.py — 软件单元详细设计
+### UNIT-070AA8511C
+
+**模块**：`src/analysis/chart_zone_filters.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3876,7 +4466,9 @@
 
 <a id="fun-5916a45360"></a>
 
-#### `chart_plot_df`
+#### FUN-5916A45360
+
+**函数**：`chart_plot_df`
 
 - **ID / 行**：`FUN-5916A45360` / `L18`（源码见本单元概览）
 - **签名 / 返回**：`chart_plot_df(df: pd.DataFrame, bars: int)` → `pd.DataFrame`
@@ -3887,7 +4479,9 @@
 
 <a id="fun-77a17f101c"></a>
 
-#### `chart_price_bounds`
+#### FUN-77A17F101C
+
+**函数**：`chart_price_bounds`
 
 - **ID / 行**：`FUN-77A17F101C` / `L22`（源码见本单元概览）
 - **签名 / 返回**：`chart_price_bounds(plot_df: pd.DataFrame)` → `tuple[float, float]`
@@ -3898,7 +4492,9 @@
 
 <a id="fun-2b036568fa"></a>
 
-#### `zone_overlaps_chart_range`
+#### FUN-2B036568FA
+
+**函数**：`zone_overlaps_chart_range`
 
 - **ID / 行**：`FUN-2B036568FA` / `L26`（源码见本单元概览）
 - **签名 / 返回**：`zone_overlaps_chart_range(low: float, high: float, plot_df: pd.DataFrame)` → `bool`
@@ -3909,7 +4505,9 @@
 
 <a id="fun-feca409ef6"></a>
 
-#### `_align_ts`
+#### FUN-FECA409EF6
+
+**函数**：`_align_ts`
 
 - **ID / 行**：`FUN-FECA409EF6` / `L33`（源码见本单元概览）
 - **签名 / 返回**：`_align_ts(ts: pd.Timestamp, ref_index: pd.DatetimeIndex)` → `pd.Timestamp`
@@ -3920,7 +4518,9 @@
 
 <a id="fun-f8e5f51975"></a>
 
-#### `visible_order_blocks`
+#### FUN-F8E5F51975
+
+**函数**：`visible_order_blocks`
 
 - **ID / 行**：`FUN-F8E5F51975` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`visible_order_blocks(analysis: TimeframeAnalysis, plot_df: pd.DataFrame, *, max_zones: int=MAX_OB_ZONES)` → `list[OrderBlock]`
@@ -3931,7 +4531,9 @@
 
 <a id="fun-52b596d6f3"></a>
 
-#### `visible_active_fvgs`
+#### FUN-52B596D6F3
+
+**函数**：`visible_active_fvgs`
 
 - **ID / 行**：`FUN-52B596D6F3` / `L61`（源码见本单元概览）
 - **签名 / 返回**：`visible_active_fvgs(analysis: TimeframeAnalysis, plot_df: pd.DataFrame, *, max_zones: int=MAX_FVG_ZONES)` → `list[FairValueGap]`
@@ -3942,7 +4544,9 @@
 
 <a id="fun-75356974bc"></a>
 
-#### `visible_zone_snapshots`
+#### FUN-75356974BC
+
+**函数**：`visible_zone_snapshots`
 
 - **ID / 行**：`FUN-75356974BC` / `L78`（源码见本单元概览）
 - **签名 / 返回**：`visible_zone_snapshots(analysis: TimeframeAnalysis, plot_df: pd.DataFrame, *, ob_limit: int=MAX_OB_ZONES, fvg_limit: int=MAX_FVG_ZONES)` → `tuple[list[dict[str, object]], list[dict[str, object]]]`
@@ -3953,7 +4557,9 @@
 
 <a id="fun-19453dd010"></a>
 
-#### `visible_zones_for_chart`
+#### FUN-19453DD010
+
+**函数**：`visible_zones_for_chart`
 
 - **ID / 行**：`FUN-19453DD010` / `L97`（源码见本单元概览）
 - **签名 / 返回**：`visible_zones_for_chart(analysis: TimeframeAnalysis, df: pd.DataFrame, *, bars: int, ob_limit: int=MAX_OB_ZONES, fvg_limit: int=MAX_FVG_ZONES)` → `tuple[list[dict[str, object]], list[dict[str, object]]]`
@@ -3964,7 +4570,9 @@
 
 <a id="unit-67d22a7c31"></a>
 
-### src/analysis/claim_eligibility.py — 软件单元详细设计
+### UNIT-67D22A7C31
+
+**模块**：`src/analysis/claim_eligibility.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -3984,7 +4592,9 @@
 
 <a id="fun-43c4b237b7"></a>
 
-#### `ClaimAudit.to_dict`
+#### FUN-43C4B237B7
+
+**函数**：`ClaimAudit.to_dict`
 
 - **ID / 行**：`FUN-43C4B237B7` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`ClaimAudit.to_dict(self)` → `dict[str, Any]`
@@ -3995,7 +4605,9 @@
 
 <a id="fun-039e702d1a"></a>
 
-#### `ClaimAudit.allows_execution_authorization`
+#### FUN-039E702D1A
+
+**函数**：`ClaimAudit.allows_execution_authorization`
 
 - **ID / 行**：`FUN-039E702D1A` / `L48`（源码见本单元概览）
 - **签名 / 返回**：`ClaimAudit.allows_execution_authorization(self)` → `bool`
@@ -4005,7 +4617,9 @@
 
 <a id="fun-103fa43ff4"></a>
 
-#### `_overlap_amount`
+#### FUN-103FA43FF4
+
+**函数**：`_overlap_amount`
 
 - **ID / 行**：`FUN-103FA43FF4` / `L52`（源码见本单元概览）
 - **签名 / 返回**：`_overlap_amount(a_lo: float, a_hi: float, b_lo: float, b_hi: float)` → `float`
@@ -4016,7 +4630,9 @@
 
 <a id="fun-49e61c75ae"></a>
 
-#### `_zones_near`
+#### FUN-49E61C75AE
+
+**函数**：`_zones_near`
 
 - **ID / 行**：`FUN-49E61C75AE` / `L58`（源码见本单元概览）
 - **签名 / 返回**：`_zones_near(a_lo: float, a_hi: float, b_lo: float, b_hi: float, *, tol: float)` → `bool`
@@ -4027,7 +4643,9 @@
 
 <a id="fun-ee4367894d"></a>
 
-#### `_reaction_index`
+#### FUN-EE4367894D
+
+**函数**：`_reaction_index`
 
 - **ID / 行**：`FUN-EE4367894D` / `L69`（源码见本单元概览）
 - **签名 / 返回**：`_reaction_index(reactions: list[dict[str, Any]] | None)` → `dict[str, dict[str, Any]]`
@@ -4038,7 +4656,9 @@
 
 <a id="fun-ead4b05709"></a>
 
-#### `_collect_fvgs`
+#### FUN-EAD4B05709
+
+**函数**：`_collect_fvgs`
 
 - **ID / 行**：`FUN-EAD4B05709` / `L78`（源码见本单元概览）
 - **签名 / 返回**：`_collect_fvgs(analyses: dict[str, TimeframeAnalysis])` → `list[dict[str, Any]]`
@@ -4049,7 +4669,9 @@
 
 <a id="fun-8edd654d1e"></a>
 
-#### `technical_claim_fact_catalog`
+#### FUN-8EDD654D1E
+
+**函数**：`technical_claim_fact_catalog`
 
 - **ID / 行**：`FUN-8EDD654D1E` / `L105`（源码见本单元概览）
 - **签名 / 返回**：`technical_claim_fact_catalog(ctx: MarketContext, *, price_action: dict[str, Any] | None=None)` → `list[dict[str, Any]]`
@@ -4060,7 +4682,9 @@
 
 <a id="fun-ae9b1e87f2"></a>
 
-#### `_fact_entity_for_ids`
+#### FUN-AE9B1E87F2
+
+**函数**：`_fact_entity_for_ids`
 
 - **ID / 行**：`FUN-AE9B1E87F2` / `L199`（源码见本单元概览）
 - **签名 / 返回**：`_fact_entity_for_ids(fact_ids: list[str], catalog: list[dict[str, Any]])` → `dict[str, Any] | None`
@@ -4071,7 +4695,9 @@
 
 <a id="fun-4fb8932cb6"></a>
 
-#### `_fact_direction_supports_trade`
+#### FUN-4FB8932CB6
+
+**函数**：`_fact_direction_supports_trade`
 
 - **ID / 行**：`FUN-4FB8932CB6` / `L212`（源码见本单元概览）
 - **签名 / 返回**：`_fact_direction_supports_trade(fact: dict[str, Any], direction: str)` → `bool`
@@ -4082,7 +4708,9 @@
 
 <a id="fun-a094dfd75f"></a>
 
-#### `_relationship_holds`
+#### FUN-A094DFD75F
+
+**函数**：`_relationship_holds`
 
 - **ID / 行**：`FUN-A094DFD75F` / `L218`（源码见本单元概览）
 - **签名 / 返回**：`_relationship_holds(relation_type: str, left: dict[str, Any], right: dict[str, Any])` → `bool`
@@ -4093,7 +4721,9 @@
 
 <a id="fun-582a749531"></a>
 
-#### `_aligned_fvgs`
+#### FUN-582A749531
+
+**函数**：`_aligned_fvgs`
 
 - **ID / 行**：`FUN-582A749531` / `L252`（源码见本单元概览）
 - **签名 / 返回**：`_aligned_fvgs(*, direction: str, entry_low: float, entry_high: float, zones: list[dict[str, Any]])` → `list[dict[str, Any]]`
@@ -4104,7 +4734,9 @@
 
 <a id="fun-aff197d9f4"></a>
 
-#### `_counter_fvgs`
+#### FUN-AFF197D9F4
+
+**函数**：`_counter_fvgs`
 
 - **ID / 行**：`FUN-AFF197D9F4` / `L268`（源码见本单元概览）
 - **签名 / 返回**：`_counter_fvgs(*, direction: str, entry_low: float, entry_high: float, zones: list[dict[str, Any]])` → `list[dict[str, Any]]`
@@ -4115,7 +4747,9 @@
 
 <a id="fun-d280cc6eb5"></a>
 
-#### `adjudicate_level_proposal_claim`
+#### FUN-D280CC6EB5
+
+**函数**：`adjudicate_level_proposal_claim`
 
 - **ID / 行**：`FUN-D280CC6EB5` / `L284`（源码见本单元概览）
 - **签名 / 返回**：`adjudicate_level_proposal_claim(proposal: LevelProposal, ctx: MarketContext, *, level_reactions: list[dict[str, Any]] | None=None)` → `ClaimAudit`
@@ -4126,7 +4760,9 @@
 
 <a id="fun-972700d46f"></a>
 
-#### `claim_allows_execution_authorization`
+#### FUN-972700D46F
+
+**函数**：`claim_allows_execution_authorization`
 
 - **ID / 行**：`FUN-972700D46F` / `L560`（源码见本单元概览）
 - **签名 / 返回**：`claim_allows_execution_authorization(signal_or_meta: dict[str, Any] | None)` → `bool`
@@ -4137,7 +4773,9 @@
 
 <a id="unit-3549e9d9b7"></a>
 
-### src/analysis/data_freshness.py — 软件单元详细设计
+### UNIT-3549E9D9B7
+
+**模块**：`src/analysis/data_freshness.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -4157,7 +4795,9 @@
 
 <a id="fun-2b7eb34519"></a>
 
-#### `_bar_timestamp`
+#### FUN-2B7EB34519
+
+**函数**：`_bar_timestamp`
 
 - **ID / 行**：`FUN-2B7EB34519` / `L18`（源码见本单元概览）
 - **签名 / 返回**：`_bar_timestamp(df: pd.DataFrame | None)` → `datetime | None`
@@ -4168,7 +4808,9 @@
 
 <a id="fun-4734af977b"></a>
 
-#### `build_data_as_of`
+#### FUN-4734AF977B
+
+**函数**：`build_data_as_of`
 
 - **ID / 行**：`FUN-4734AF977B` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`build_data_as_of(raw: dict[str, pd.DataFrame], *, now: datetime | None=None)` → `dict[str, Any]`
@@ -4180,7 +4822,9 @@
 
 <a id="unit-7dfc57faf9"></a>
 
-### src/analysis/dgt_price_action.py — 软件单元详细设计
+### UNIT-7DFC57FAF9
+
+**模块**：`src/analysis/dgt_price_action.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -4200,7 +4844,9 @@
 
 <a id="fun-a1eb4c5f6a"></a>
 
-#### `_nz_volume`
+#### FUN-A1EB4C5F6A
+
+**函数**：`_nz_volume`
 
 - **ID / 行**：`FUN-A1EB4C5F6A` / `L63`（源码见本单元概览）
 - **签名 / 返回**：`_nz_volume(series: pd.Series)` → `pd.Series`
@@ -4211,7 +4857,9 @@
 
 <a id="fun-8c5d73d5c1"></a>
 
-#### `_volume_usable`
+#### FUN-8C5D73D5C1
+
+**函数**：`_volume_usable`
 
 - **ID / 行**：`FUN-8C5D73D5C1` / `L67`（源码见本单元概览）
 - **签名 / 返回**：`_volume_usable(vol: pd.Series, *, min_ratio: float=0.05)` → `bool`
@@ -4222,7 +4870,9 @@
 
 <a id="fun-62894b9526"></a>
 
-#### `_atr`
+#### FUN-62894B9526
+
+**函数**：`_atr`
 
 - **ID / 行**：`FUN-62894B9526` / `L73`（源码见本单元概览）
 - **签名 / 返回**：`_atr(high: pd.Series, low: pd.Series, close: pd.Series, length: int)` → `pd.Series`
@@ -4233,7 +4883,9 @@
 
 <a id="fun-90d19bf962"></a>
 
-#### `_consecutive_sr`
+#### FUN-90D19BF962
+
+**函数**：`_consecutive_sr`
 
 - **ID / 行**：`FUN-90D19BF962` / `L82`（源码见本单元概览）
 - **签名 / 返回**：`_consecutive_sr(window: pd.DataFrame, vol_ma: pd.Series, *, use_volume: bool)` → `list[SrLevel]`
@@ -4244,7 +4896,9 @@
 
 <a id="fun-fbf2e7c9de"></a>
 
-#### `_spike_and_volatility_levels`
+#### FUN-FBF2E7C9DE
+
+**函数**：`_spike_and_volatility_levels`
 
 - **ID / 行**：`FUN-FBF2E7C9DE` / `L152`（源码见本单元概览）
 - **签名 / 返回**：`_spike_and_volatility_levels(window: pd.DataFrame, vol_ma: pd.Series)` → `tuple[list[SrLevel], int, int]`
@@ -4255,7 +4909,9 @@
 
 <a id="fun-16616bf5e6"></a>
 
-#### `_volume_portion`
+#### FUN-16616BF5E6
+
+**函数**：`_volume_portion`
 
 - **ID / 行**：`FUN-16616BF5E6` / `L210`（源码见本单元概览）
 - **签名 / 返回**：`_volume_portion(bar_low: float, bar_high: float, row_low: float, row_high: float)` → `float`
@@ -4266,7 +4922,9 @@
 
 <a id="fun-998848a755"></a>
 
-#### `build_volume_profile`
+#### FUN-998848A755
+
+**函数**：`build_volume_profile`
 
 - **ID / 行**：`FUN-998848A755` / `L226`（源码见本单元概览）
 - **签名 / 返回**：`build_volume_profile(bars: pd.DataFrame, *, num_rows: int=PROFILE_ROWS, value_area_pct: float=VALUE_AREA_PCT, sd_thresh: float=SUPPLY_DEMAND_THRESH)` → `VolumeProfileResult`
@@ -4277,7 +4935,9 @@
 
 <a id="fun-692ece3baf"></a>
 
-#### `_dedupe_sr_levels`
+#### FUN-692ECE3BAF
+
+**函数**：`_dedupe_sr_levels`
 
 - **ID / 行**：`FUN-692ECE3BAF` / `L320`（源码见本单元概览）
 - **签名 / 返回**：`_dedupe_sr_levels(levels: list[SrLevel], *, tolerance: float=0.35)` → `list[SrLevel]`
@@ -4288,7 +4948,9 @@
 
 <a id="fun-b29e79e520"></a>
 
-#### `analyze_dgt_price_action`
+#### FUN-B29E79E520
+
+**函数**：`analyze_dgt_price_action`
 
 - **ID / 行**：`FUN-B29E79E520` / `L342`（源码见本单元概览）
 - **签名 / 返回**：`analyze_dgt_price_action(df: pd.DataFrame, timeframe: str, *, lookback: int=DEFAULT_LOOKBACK, profile_bars: pd.DataFrame | None=None)` → `DgtPriceActionResult`
@@ -4299,7 +4961,9 @@
 
 <a id="fun-39cf1265fc"></a>
 
-#### `dgt_result_to_dict`
+#### FUN-39CF1265FC
+
+**函数**：`dgt_result_to_dict`
 
 - **ID / 行**：`FUN-39CF1265FC` / `L386`（源码见本单元概览）
 - **签名 / 返回**：`dgt_result_to_dict(result: DgtPriceActionResult, *, lookback_requested: int | None=None, lookback_mode: str | None=None)` → `dict[str, Any]`
@@ -4310,7 +4974,9 @@
 
 <a id="unit-3b1598dc1b"></a>
 
-### src/analysis/display_labels.py — 软件单元详细设计
+### UNIT-3B1598DC1B
+
+**模块**：`src/analysis/display_labels.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -4330,7 +4996,9 @@
 
 <a id="fun-f519f9a949"></a>
 
-#### `liquidity_label`
+#### FUN-F519F9A949
+
+**函数**：`liquidity_label`
 
 - **ID / 行**：`FUN-F519F9A949` / `L22`（源码见本单元概览）
 - **签名 / 返回**：`liquidity_label(zone: LiquidityZone)` → `str`
@@ -4340,7 +5008,9 @@
 
 <a id="unit-60e70e7439"></a>
 
-### src/analysis/fact_registry.py — 软件单元详细设计
+### UNIT-60E70E7439
+
+**模块**：`src/analysis/fact_registry.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -4360,7 +5030,9 @@
 
 <a id="fun-0574dfe158"></a>
 
-#### `_as_of_utc`
+#### FUN-0574DFE158
+
+**函数**：`_as_of_utc`
 
 - **ID / 行**：`FUN-0574DFE158` / `L11`（源码见本单元概览）
 - **签名 / 返回**：`_as_of_utc(report: dict[str, Any])` → `str | None`
@@ -4371,7 +5043,9 @@
 
 <a id="fun-0a56af7ead"></a>
 
-#### `_register_numeric`
+#### FUN-0A56AF7EAD
+
+**函数**：`_register_numeric`
 
 - **ID / 行**：`FUN-0A56AF7EAD` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`_register_numeric(facts: dict[str, dict[str, Any]], *, fact_id: str, value: Any, source: str, timeframe: str | None=None, quality: str='verified', as_of: str | None=None, refs: dict[str, Any] | None=None)` → `None`
@@ -4382,7 +5056,9 @@
 
 <a id="fun-9127544e40"></a>
 
-#### `_register_text`
+#### FUN-9127544E40
+
+**函数**：`_register_text`
 
 - **ID / 行**：`FUN-9127544E40` / `L52`（源码见本单元概览）
 - **签名 / 返回**：`_register_text(facts: dict[str, dict[str, Any]], *, fact_id: str, value: Any, source: str, timeframe: str | None=None, quality: str='verified', as_of: str | None=None, refs: dict[str, Any] | None=None)` → `None`
@@ -4393,7 +5069,9 @@
 
 <a id="fun-760701887e"></a>
 
-#### `_pa_fact_id`
+#### FUN-760701887E
+
+**函数**：`_pa_fact_id`
 
 - **ID / 行**：`FUN-760701887E` / `L85`（源码见本单元概览）
 - **签名 / 返回**：`_pa_fact_id(tf: str, suffix: str)` → `str`
@@ -4403,7 +5081,9 @@
 
 <a id="fun-7a197e3612"></a>
 
-#### `calendar_state`
+#### FUN-7A197E3612
+
+**函数**：`calendar_state`
 
 - **ID / 行**：`FUN-7A197E3612` / `L91`（源码见本单元概览）
 - **签名 / 返回**：`calendar_state(report: dict[str, Any])` → `str`
@@ -4414,7 +5094,9 @@
 
 <a id="fun-b21844f1e5"></a>
 
-#### `_calendar_state`
+#### FUN-B21844F1E5
+
+**函数**：`_calendar_state`
 
 - **ID / 行**：`FUN-B21844F1E5` / `L96`（源码见本单元概览）
 - **签名 / 返回**：`_calendar_state(report: dict[str, Any])` → `str`
@@ -4425,7 +5107,9 @@
 
 <a id="fun-98305ca234"></a>
 
-#### `_register_timeframes`
+#### FUN-98305CA234
+
+**函数**：`_register_timeframes`
 
 - **ID / 行**：`FUN-98305CA234` / `L116`（源码见本单元概览）
 - **签名 / 返回**：`_register_timeframes(facts: dict[str, dict[str, Any]], report: dict[str, Any], *, as_of: str | None, source: str)` → `None`
@@ -4436,7 +5120,9 @@
 
 <a id="fun-87b173149d"></a>
 
-#### `_register_price_action`
+#### FUN-87B173149D
+
+**函数**：`_register_price_action`
 
 - **ID / 行**：`FUN-87B173149D` / `L184`（源码见本单元概览）
 - **签名 / 返回**：`_register_price_action(facts: dict[str, dict[str, Any]], report: dict[str, Any], *, as_of: str | None)` → `None`
@@ -4447,7 +5133,9 @@
 
 <a id="fun-0da621fc3d"></a>
 
-#### `_register_technical_claim_facts`
+#### FUN-0DA621FC3D
+
+**函数**：`_register_technical_claim_facts`
 
 - **ID / 行**：`FUN-0DA621FC3D` / `L215`（源码见本单元概览）
 - **签名 / 返回**：`_register_technical_claim_facts(facts: dict[str, dict[str, Any]], report: dict[str, Any], *, as_of: str | None)` → `None`
@@ -4458,7 +5146,9 @@
 
 <a id="fun-e744014446"></a>
 
-#### `_register_freshness`
+#### FUN-E744014446
+
+**函数**：`_register_freshness`
 
 - **ID / 行**：`FUN-E744014446` / `L260`（源码见本单元概览）
 - **签名 / 返回**：`_register_freshness(facts: dict[str, dict[str, Any]], report: dict[str, Any], *, as_of: str | None, source: str)` → `None`
@@ -4469,7 +5159,9 @@
 
 <a id="fun-0d88ff54f8"></a>
 
-#### `_register_external`
+#### FUN-0D88FF54F8
+
+**函数**：`_register_external`
 
 - **ID / 行**：`FUN-0D88FF54F8` / `L304`（源码见本单元概览）
 - **签名 / 返回**：`_register_external(facts: dict[str, dict[str, Any]], report: dict[str, Any], *, as_of: str | None)` → `None`
@@ -4480,7 +5172,9 @@
 
 <a id="fun-afac55bb24"></a>
 
-#### `build_fact_registry`
+#### FUN-AFAC55BB24
+
+**函数**：`build_fact_registry`
 
 - **ID / 行**：`FUN-AFAC55BB24` / `L389`（源码见本单元概览）
 - **签名 / 返回**：`build_fact_registry(report: dict[str, Any])` → `dict[str, Any]`
@@ -4491,7 +5185,9 @@
 
 <a id="fun-f1860a0ed6"></a>
 
-#### `allowed_prices`
+#### FUN-F1860A0ED6
+
+**函数**：`allowed_prices`
 
 - **ID / 行**：`FUN-F1860A0ED6` / `L476`（源码见本单元概览）
 - **签名 / 返回**：`allowed_prices(registry: dict[str, Any])` → `set[float]`
@@ -4502,7 +5198,9 @@
 
 <a id="fun-cbacfa1e82"></a>
 
-#### `fact_lookup`
+#### FUN-CBACFA1E82
+
+**函数**：`fact_lookup`
 
 - **ID / 行**：`FUN-CBACFA1E82` / `L484`（源码见本单元概览）
 - **签名 / 返回**：`fact_lookup(registry: dict[str, Any], price: float, *, tolerance: float=0.51)` → `list[str]`
@@ -4513,7 +5211,9 @@
 
 <a id="fun-e14834ae01"></a>
 
-#### `fact_ids_for_signal`
+#### FUN-E14834AE01
+
+**函数**：`fact_ids_for_signal`
 
 - **ID / 行**：`FUN-E14834AE01` / `L495`（源码见本单元概览）
 - **签名 / 返回**：`fact_ids_for_signal(sig: dict[str, Any], registry: dict[str, Any])` → `dict[str, Any]`
@@ -4524,7 +5224,9 @@
 
 <a id="fun-91752c5a3c"></a>
 
-#### `compact_fact_index`
+#### FUN-91752C5A3C
+
+**函数**：`compact_fact_index`
 
 - **ID / 行**：`FUN-91752C5A3C` / `L518`（源码见本单元概览）
 - **签名 / 返回**：`compact_fact_index(registry: dict[str, Any], *, limit: int=120)` → `list[dict[str, Any]]`
@@ -4535,7 +5237,9 @@
 
 <a id="unit-c37864f306"></a>
 
-### src/analysis/field_glossary.py — 软件单元详细设计
+### UNIT-C37864F306
+
+**模块**：`src/analysis/field_glossary.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -4555,7 +5259,9 @@
 
 <a id="unit-3962aaac44"></a>
 
-### src/analysis/ict_pa.py — 软件单元详细设计
+### UNIT-3962AAAC44
+
+**模块**：`src/analysis/ict_pa.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -4575,7 +5281,9 @@
 
 <a id="fun-9d252e677d"></a>
 
-#### `_premium_discount`
+#### FUN-9D252E677D
+
+**函数**：`_premium_discount`
 
 - **ID / 行**：`FUN-9D252E677D` / `L80`（源码见本单元概览）
 - **签名 / 返回**：`_premium_discount(swing_high: float | None, swing_low: float | None, price: float)` → `tuple[str, float | None]`
@@ -4585,7 +5293,9 @@
 
 <a id="fun-655f9ec66c"></a>
 
-#### `_volume_signal`
+#### FUN-655F9EC66C
+
+**函数**：`_volume_signal`
 
 - **ID / 行**：`FUN-655F9EC66C` / `L93`（源码见本单元概览）
 - **签名 / 返回**：`_volume_signal(df: pd.DataFrame)` → `str`
@@ -4596,7 +5306,9 @@
 
 <a id="fun-51492ca837"></a>
 
-#### `_last_numeric`
+#### FUN-51492CA837
+
+**函数**：`_last_numeric`
 
 - **ID / 行**：`FUN-51492CA837` / `L109`（源码见本单元概览）
 - **签名 / 返回**：`_last_numeric(df: pd.DataFrame, column: str)` → `float | None`
@@ -4607,7 +5319,9 @@
 
 <a id="fun-b620f510c7"></a>
 
-#### `_swing_liquidity`
+#### FUN-B620F510C7
+
+**函数**：`_swing_liquidity`
 
 - **ID / 行**：`FUN-B620F510C7` / `L118`（源码见本单元概览）
 - **签名 / 返回**：`_swing_liquidity(swing_high: float | None, swing_low: float | None)` → `list[LiquidityZone]`
@@ -4618,7 +5332,9 @@
 
 <a id="fun-dd99d46e1a"></a>
 
-#### `_latest_structure_labels`
+#### FUN-DD99D46E1A
+
+**函数**：`_latest_structure_labels`
 
 - **ID / 行**：`FUN-DD99D46E1A` / `L145`（源码见本单元概览）
 - **签名 / 返回**：`_latest_structure_labels(events: list[StructureEvent], *, scope: Literal['internal', 'swing'] | None=None)` → `tuple[str, str]`
@@ -4629,7 +5345,9 @@
 
 <a id="fun-caebe97b43"></a>
 
-#### `analyze_timeframe`
+#### FUN-CAEBE97B43
+
+**函数**：`analyze_timeframe`
 
 - **ID / 行**：`FUN-CAEBE97B43` / `L161`（源码见本单元概览）
 - **签名 / 返回**：`analyze_timeframe(df: pd.DataFrame, timeframe: str)` → `TimeframeAnalysis`
@@ -4640,7 +5358,9 @@
 
 <a id="fun-2279759b7f"></a>
 
-#### `sentiment_score`
+#### FUN-2279759B7F
+
+**函数**：`sentiment_score`
 
 - **ID / 行**：`FUN-2279759B7F` / `L206`（源码见本单元概览）
 - **签名 / 返回**：`sentiment_score(analyses: dict[str, TimeframeAnalysis])` → `dict[str, float]`
@@ -4651,7 +5371,9 @@
 
 <a id="unit-a9ae5e6696"></a>
 
-### src/analysis/level_validator.py — 软件单元详细设计
+### UNIT-A9AE5E6696
+
+**模块**：`src/analysis/level_validator.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -4671,7 +5393,9 @@
 
 <a id="fun-3964465d91"></a>
 
-#### `_location_error`
+#### FUN-3964465D91
+
+**函数**：`_location_error`
 
 - **ID / 行**：`FUN-3964465D91` / `L22`（源码见本单元概览）
 - **签名 / 返回**：`_location_error(ctx: MarketContext, proposal: LevelProposal)` → `str | None`
@@ -4682,7 +5406,9 @@
 
 <a id="fun-4bc8ff4d21"></a>
 
-#### `_llm_signal_name`
+#### FUN-4BC8FF4D21
+
+**函数**：`_llm_signal_name`
 
 - **ID / 行**：`FUN-4BC8FF4D21` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`_llm_signal_name(proposal: LevelProposal)` → `str`
@@ -4693,7 +5419,9 @@
 
 <a id="fun-153aabf750"></a>
 
-#### `_tp_ladder_error`
+#### FUN-153AABF750
+
+**函数**：`_tp_ladder_error`
 
 - **ID / 行**：`FUN-153AABF750` / `L45`（源码见本单元概览）
 - **签名 / 返回**：`_tp_ladder_error(proposal: LevelProposal)` → `str | None`
@@ -4704,7 +5432,9 @@
 
 <a id="fun-fcbb9c053e"></a>
 
-#### `_geometry_error`
+#### FUN-FCBB9C053E
+
+**函数**：`_geometry_error`
 
 - **ID / 行**：`FUN-FCBB9C053E` / `L65`（源码见本单元概览）
 - **签名 / 返回**：`_geometry_error(proposal: LevelProposal)` → `str | None`
@@ -4715,7 +5445,9 @@
 
 <a id="fun-a872921e36"></a>
 
-#### `_position_size`
+#### FUN-A872921E36
+
+**函数**：`_position_size`
 
 - **ID / 行**：`FUN-A872921E36` / `L86`（源码见本单元概览）
 - **签名 / 返回**：`_position_size(confidence: float, grade: str, *, eligibility: str)` → `str`
@@ -4725,7 +5457,9 @@
 
 <a id="fun-89da4d6e6e"></a>
 
-#### `validate_llm_levels`
+#### FUN-89DA4D6E6E
+
+**函数**：`validate_llm_levels`
 
 - **ID / 行**：`FUN-89DA4D6E6E` / `L96`（源码见本单元概览）
 - **签名 / 返回**：`validate_llm_levels(ctx: MarketContext, proposals: list[LevelProposal], *, level_reactions: list[dict[str, Any]] | None=None)` → `tuple[list[TradingSignal], list[dict[str, Any]]]`
@@ -4736,7 +5470,9 @@
 
 <a id="fun-fe20142b1a"></a>
 
-#### `_grade_force`
+#### FUN-FE20142B1A
+
+**函数**：`_grade_force`
 
 - **ID / 行**：`FUN-FE20142B1A` / `L295`（源码见本单元概览）
 - **签名 / 返回**：`_grade_force(score: float)` → `str`
@@ -4746,7 +5482,9 @@
 
 <a id="unit-2f7fedba6f"></a>
 
-### src/analysis/luxalgo_smc.py — 软件单元详细设计
+### UNIT-2F7FEDBA6F
+
+**模块**：`src/analysis/luxalgo_smc.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -4766,7 +5504,9 @@
 
 <a id="fun-80471dd12f"></a>
 
-#### `_true_range`
+#### FUN-80471DD12F
+
+**函数**：`_true_range`
 
 - **ID / 行**：`FUN-80471DD12F` / `L71`（源码见本单元概览）
 - **签名 / 返回**：`_true_range(high: np.ndarray, low: np.ndarray, close: np.ndarray)` → `np.ndarray`
@@ -4777,7 +5517,9 @@
 
 <a id="fun-f820754950"></a>
 
-#### `_atr_series`
+#### FUN-F820754950
+
+**函数**：`_atr_series`
 
 - **ID / 行**：`FUN-F820754950` / `L80`（源码见本单元概览）
 - **签名 / 返回**：`_atr_series(high: np.ndarray, low: np.ndarray, close: np.ndarray, period: int)` → `np.ndarray`
@@ -4788,7 +5530,9 @@
 
 <a id="fun-fc6a52d232"></a>
 
-#### `_leg_at_bar`
+#### FUN-FC6A52D232
+
+**函数**：`_leg_at_bar`
 
 - **ID / 行**：`FUN-FC6A52D232` / `L90`（源码见本单元概览）
 - **签名 / 返回**：`_leg_at_bar(highs: np.ndarray, lows: np.ndarray, i: int, size: int, prev_leg: int)` → `int`
@@ -4799,7 +5543,9 @@
 
 <a id="fun-0a1736195c"></a>
 
-#### `_parsed_bar`
+#### FUN-0A1736195C
+
+**函数**：`_parsed_bar`
 
 - **ID / 行**：`FUN-0A1736195C` / `L103`（源码见本单元概览）
 - **签名 / 返回**：`_parsed_bar(high: float, low: float, vol: float)` → `tuple[float, float]`
@@ -4809,7 +5555,9 @@
 
 <a id="fun-8b8bd0c1c0"></a>
 
-#### `_fvg_threshold`
+#### FUN-8B8BD0C1C0
+
+**函数**：`_fvg_threshold`
 
 - **ID / 行**：`FUN-8B8BD0C1C0` / `L109`（源码见本单元概览）
 - **签名 / 返回**：`_fvg_threshold(cum_abs_delta: float, bar_index: int)` → `float`
@@ -4819,7 +5567,9 @@
 
 <a id="fun-2052af2dde"></a>
 
-#### `_store_order_block`
+#### FUN-2052AF2DDE
+
+**函数**：`_store_order_block`
 
 - **ID / 行**：`FUN-2052AF2DDE` / `L115`（源码见本单元概览）
 - **签名 / 返回**：`_store_order_block(parsed_highs: list[float], parsed_lows: list[float], times: list[pd.Timestamp], pivot_index: int, current_index: int, bias: Literal['bullish', 'bearish'])` → `OrderBlock | None`
@@ -4830,7 +5580,9 @@
 
 <a id="fun-31c7de2cd6"></a>
 
-#### `_mitigate_obs`
+#### FUN-31C7DE2CD6
+
+**函数**：`_mitigate_obs`
 
 - **ID / 行**：`FUN-31C7DE2CD6` / `L145`（源码见本单元概览）
 - **签名 / 返回**：`_mitigate_obs(obs: list[OrderBlock], high: float, low: float)` → `list[OrderBlock]`
@@ -4841,7 +5593,9 @@
 
 <a id="fun-a130bd9445"></a>
 
-#### `_mitigate_fvgs`
+#### FUN-A130BD9445
+
+**函数**：`_mitigate_fvgs`
 
 - **ID / 行**：`FUN-A130BD9445` / `L160`（源码见本单元概览）
 - **签名 / 返回**：`_mitigate_fvgs(fvgs: list[FairValueGap], high: float, low: float)` → `list[FairValueGap]`
@@ -4852,7 +5606,9 @@
 
 <a id="fun-603728af0a"></a>
 
-#### `_crossover`
+#### FUN-603728AF0A
+
+**函数**：`_crossover`
 
 - **ID / 行**：`FUN-603728AF0A` / `L175`（源码见本单元概览）
 - **签名 / 返回**：`_crossover(close_prev: float, close_curr: float, level: float)` → `bool`
@@ -4862,7 +5618,9 @@
 
 <a id="fun-0fd674f4f8"></a>
 
-#### `_crossunder`
+#### FUN-0FD674F4F8
+
+**函数**：`_crossunder`
 
 - **ID / 行**：`FUN-0FD674F4F8` / `L179`（源码见本单元概览）
 - **签名 / 返回**：`_crossunder(close_prev: float, close_curr: float, level: float)` → `bool`
@@ -4872,7 +5630,9 @@
 
 <a id="fun-d33565e210"></a>
 
-#### `_internal_confluence_bars`
+#### FUN-D33565E210
+
+**函数**：`_internal_confluence_bars`
 
 - **ID / 行**：`FUN-D33565E210` / `L183`（源码见本单元概览）
 - **签名 / 返回**：`_internal_confluence_bars(open_: float, high: float, low: float, close: float)` → `tuple[bool, bool]`
@@ -4883,7 +5643,9 @@
 
 <a id="fun-d317d1876f"></a>
 
-#### `_append_structure_event`
+#### FUN-D317D1876F
+
+**函数**：`_append_structure_event`
 
 - **ID / 行**：`FUN-D317D1876F` / `L196`（源码见本单元概览）
 - **签名 / 返回**：`_append_structure_event(events: list[StructureEvent], *, tag: Literal['BOS', 'CHoCH'], direction: Literal['bullish', 'bearish'], level: float, bar_time: pd.Timestamp, pivot_time: pd.Timestamp | None, scope: Literal['internal', 'swing'])` → `None`
@@ -4894,7 +5656,9 @@
 
 <a id="fun-5978222f4d"></a>
 
-#### `_update_structure_pivots`
+#### FUN-5978222F4D
+
+**函数**：`_update_structure_pivots`
 
 - **ID / 行**：`FUN-5978222F4D` / `L218`（源码见本单元概览）
 - **签名 / 返回**：`_update_structure_pivots(*, size: int, leg_prev: int, leg_curr: int, highs: np.ndarray, lows: np.ndarray, index: pd.DatetimeIndex, i: int, pivot_high: _Pivot, pivot_low: _Pivot, trailing: _Trailing | None, swings: list[SwingPoint], equal_mode: bool, atr_measure: float, equal_prev_low: _Pivot, equal_prev_high: _Pivot, liquidity: list[LiquidityZone])` → `None`
@@ -4905,7 +5669,9 @@
 
 <a id="fun-64ef8badda"></a>
 
-#### `_push_ob`
+#### FUN-64EF8BADDA
+
+**函数**：`_push_ob`
 
 - **ID / 行**：`FUN-64EF8BADDA` / `L287`（源码见本单元概览）
 - **签名 / 返回**：`_push_ob(blocks: list[OrderBlock], ob: OrderBlock | None)` → `None`
@@ -4916,7 +5682,9 @@
 
 <a id="fun-08ff07c7e5"></a>
 
-#### `analyze_luxalgo`
+#### FUN-08FF07C7E5
+
+**函数**：`analyze_luxalgo`
 
 - **ID / 行**：`FUN-08FF07C7E5` / `L295`（源码见本单元概览）
 - **签名 / 返回**：`analyze_luxalgo(df: pd.DataFrame)` → `LuxAlgoResult`
@@ -4927,7 +5695,9 @@
 
 <a id="unit-4f106aec16"></a>
 
-### src/analysis/narrative_combine.py — 软件单元详细设计
+### UNIT-4F106AEC16
+
+**模块**：`src/analysis/narrative_combine.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -4947,7 +5717,9 @@
 
 <a id="fun-891202ded4"></a>
 
-#### `_fmt`
+#### FUN-891202DED4
+
+**函数**：`_fmt`
 
 - **ID / 行**：`FUN-891202DED4` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`_fmt(value: Any)` → `str`
@@ -4958,7 +5730,9 @@
 
 <a id="fun-39e6ed0f5b"></a>
 
-#### `pa_block`
+#### FUN-39E6ED0F5B
+
+**函数**：`pa_block`
 
 - **ID / 行**：`FUN-39E6ED0F5B` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`pa_block(report: dict[str, Any], tf: str)` → `dict[str, Any]`
@@ -4969,7 +5743,9 @@
 
 <a id="fun-411453936c"></a>
 
-#### `value_zone_position`
+#### FUN-411453936C
+
+**函数**：`value_zone_position`
 
 - **ID / 行**：`FUN-411453936C` / `L41`（源码见本单元概览）
 - **签名 / 返回**：`value_zone_position(price: float | None, vp: dict[str, Any])` → `str`
@@ -4980,7 +5756,9 @@
 
 <a id="fun-98c0107c91"></a>
 
-#### `nearest_pa_sr`
+#### FUN-98C0107C91
+
+**函数**：`nearest_pa_sr`
 
 - **ID / 行**：`FUN-98C0107C91` / `L54`（源码见本单元概览）
 - **签名 / 返回**：`nearest_pa_sr(sr_levels: list[dict[str, Any]], price: float | None, direction: str, *, limit: int=3)` → `list[str]`
@@ -4991,7 +5769,9 @@
 
 <a id="fun-9f20c3627c"></a>
 
-#### `zone_midpoint`
+#### FUN-9F20C3627C
+
+**函数**：`zone_midpoint`
 
 - **ID / 行**：`FUN-9F20C3627C` / `L88`（源码见本单元概览）
 - **签名 / 返回**：`zone_midpoint(zone: str | None)` → `float | None`
@@ -5003,7 +5783,9 @@
 
 <a id="fun-e61095f39d"></a>
 
-#### `resonance_note`
+#### FUN-E61095F39D
+
+**函数**：`resonance_note`
 
 - **ID / 行**：`FUN-E61095F39D` / `L98`（源码见本单元概览）
 - **签名 / 返回**：`resonance_note(smc_zone: str | None, pa_prices: list[float], *, tolerance: float=RESONANCE_TOLERANCE)` → `str`
@@ -5014,7 +5796,9 @@
 
 <a id="fun-9e35377646"></a>
 
-#### `entry_resonance_text`
+#### FUN-9E35377646
+
+**函数**：`entry_resonance_text`
 
 - **ID / 行**：`FUN-9E35377646` / `L113`（源码见本单元概览）
 - **签名 / 返回**：`entry_resonance_text(signal: dict[str, Any], pa_block_5m: dict[str, Any], *, tolerance: float=RESONANCE_TOLERANCE)` → `str`
@@ -5025,7 +5809,9 @@
 
 <a id="fun-6d4b2fe2bb"></a>
 
-#### `pa_trend_label`
+#### FUN-6D4B2FE2BB
+
+**函数**：`pa_trend_label`
 
 - **ID / 行**：`FUN-6D4B2FE2BB` / `L139`（源码见本单元概览）
 - **签名 / 返回**：`pa_trend_label(price: float | None, vp: dict[str, Any])` → `str`
@@ -5036,7 +5822,9 @@
 
 <a id="fun-761ec7d9af"></a>
 
-#### `liquidity_pa_side_text`
+#### FUN-761EC7D9AF
+
+**函数**：`liquidity_pa_side_text`
 
 - **ID / 行**：`FUN-761EC7D9AF` / `L151`（源码见本单元概览）
 - **签名 / 返回**：`liquidity_pa_side_text(side_label: str, pa_labels: list[str])` → `str | None`
@@ -5047,7 +5835,9 @@
 
 <a id="fun-59652b92db"></a>
 
-#### `tf_pa_structure_levels`
+#### FUN-59652B92DB
+
+**函数**：`tf_pa_structure_levels`
 
 - **ID / 行**：`FUN-59652B92DB` / `L157`（源码见本单元概览）
 - **签名 / 返回**：`tf_pa_structure_levels(pa_tf: dict[str, Any], price: float | None, *, tf: str)` → `list[str]`
@@ -5058,7 +5848,9 @@
 
 <a id="fun-0917f96ed2"></a>
 
-#### `tf_pa_condition`
+#### FUN-0917F96ED2
+
+**函数**：`tf_pa_condition`
 
 - **ID / 行**：`FUN-0917F96ED2` / `L182`（源码见本单元概览）
 - **签名 / 返回**：`tf_pa_condition(tf: str, *, trend: str, vp: dict[str, Any])` → `str`
@@ -5068,7 +5860,9 @@
 
 <a id="fun-8f862d6445"></a>
 
-#### `tf_pa_invalidation`
+#### FUN-8F862D6445
+
+**函数**：`tf_pa_invalidation`
 
 - **ID / 行**：`FUN-8F862D6445` / `L192`（源码见本单元概览）
 - **签名 / 返回**：`tf_pa_invalidation(trend: str, vp: dict[str, Any])` → `str`
@@ -5079,7 +5873,9 @@
 
 <a id="fun-36832f1f03"></a>
 
-#### `liquidity_side_text`
+#### FUN-36832F1F03
+
+**函数**：`liquidity_side_text`
 
 - **ID / 行**：`FUN-36832F1F03` / `L203`（源码见本单元概览）
 - **签名 / 返回**：`liquidity_side_text(side_label: str, smc_rows: list[dict[str, Any]], pa_labels: list[str])` → `str | None`
@@ -5090,7 +5886,9 @@
 
 <a id="fun-75dd4e0160"></a>
 
-#### `tf_pa_context_line`
+#### FUN-75DD4E0160
+
+**函数**：`tf_pa_context_line`
 
 - **ID / 行**：`FUN-75DD4E0160` / `L218`（源码见本单元概览）
 - **签名 / 返回**：`tf_pa_context_line(tf: str, vp: dict[str, Any], price: float | None)` → `str`
@@ -5101,7 +5899,9 @@
 
 <a id="fun-8a883dd45a"></a>
 
-#### `build_pa_llm_summary`
+#### FUN-8A883DD45A
+
+**函数**：`build_pa_llm_summary`
 
 - **ID / 行**：`FUN-8A883DD45A` / `L231`（源码见本单元概览）
 - **签名 / 返回**：`build_pa_llm_summary(price_action: dict[str, Any], *, price: float | None)` → `dict[str, Any]`
@@ -5112,7 +5912,9 @@
 
 <a id="unit-b5b5d80eb7"></a>
 
-### src/analysis/narrative_facts.py — 软件单元详细设计
+### UNIT-B5B5D80EB7
+
+**模块**：`src/analysis/narrative_facts.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -5132,7 +5934,9 @@
 
 <a id="fun-5441c0b28d"></a>
 
-#### `build_narrative_facts_for_llm`
+#### FUN-5441C0B28D
+
+**函数**：`build_narrative_facts_for_llm`
 
 - **ID / 行**：`FUN-5441C0B28D` / `L15`（源码见本单元概览）
 - **签名 / 返回**：`build_narrative_facts_for_llm(report: dict[str, Any], *, ctx: MarketContext | None=None, technical_context: dict[str, Any] | None=None, event_limit: int | None=None, compact_for_llm: bool=True)` → `dict[str, Any]`
@@ -5143,7 +5947,9 @@
 
 <a id="unit-0d14c54b60"></a>
 
-### src/analysis/narrative_sections.py — 软件单元详细设计
+### UNIT-0D14C54B60
+
+**模块**：`src/analysis/narrative_sections.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -5163,7 +5969,9 @@
 
 <a id="fun-cafae2be89"></a>
 
-#### `_fmt`
+#### FUN-CAFAE2BE89
+
+**函数**：`_fmt`
 
 - **ID / 行**：`FUN-CAFAE2BE89` / `L36`（源码见本单元概览）
 - **签名 / 返回**：`_fmt(value: Any)` → `str`
@@ -5174,7 +5982,9 @@
 
 <a id="fun-77b59ff6c0"></a>
 
-#### `_section`
+#### FUN-77B59FF6C0
+
+**函数**：`_section`
 
 - **ID / 行**：`FUN-77B59FF6C0` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`_section(summary: str, *, context: list[str] | None=None, levels: list[str] | None=None, conditions: list[str] | None=None, invalidation: str='')` → `dict[str, Any]`
@@ -5185,7 +5995,9 @@
 
 <a id="fun-28571ac483"></a>
 
-#### `_intraday_pa_block`
+#### FUN-28571AC483
+
+**函数**：`_intraday_pa_block`
 
 - **ID / 行**：`FUN-28571AC483` / `L65`（源码见本单元概览）
 - **签名 / 返回**：`_intraday_pa_block(report: dict[str, Any])` → `dict[str, Any]`
@@ -5196,7 +6008,9 @@
 
 <a id="fun-9b4186d596"></a>
 
-#### `_overview_volume_context`
+#### FUN-9B4186D596
+
+**函数**：`_overview_volume_context`
 
 - **ID / 行**：`FUN-9B4186D596` / `L70`（源码见本单元概览）
 - **签名 / 返回**：`_overview_volume_context(report: dict[str, Any])` → `tuple[dict[str, Any], str]`
@@ -5208,7 +6022,9 @@
 
 <a id="fun-76ad3fd71d"></a>
 
-#### `_liquidity_pa_context`
+#### FUN-76AD3FD71D
+
+**函数**：`_liquidity_pa_context`
 
 - **ID / 行**：`FUN-76AD3FD71D` / `L82`（源码见本单元概览）
 - **签名 / 返回**：`_liquidity_pa_context(report: dict[str, Any])` → `tuple[dict[str, Any], str]`
@@ -5220,7 +6036,9 @@
 
 <a id="fun-d63e7f97de"></a>
 
-#### `build_rule_narrative_sections`
+#### FUN-D63E7F97DE
+
+**函数**：`build_rule_narrative_sections`
 
 - **ID / 行**：`FUN-D63E7F97DE` / `L94`（源码见本单元概览）
 - **签名 / 返回**：`build_rule_narrative_sections(report: dict[str, Any])` → `dict[str, dict[str, Any]]`
@@ -5231,7 +6049,9 @@
 
 <a id="fun-7fbc737860"></a>
 
-#### `section_to_bullets`
+#### FUN-7FBC737860
+
+**函数**：`section_to_bullets`
 
 - **ID / 行**：`FUN-7FBC737860` / `L205`（源码见本单元概览）
 - **签名 / 返回**：`section_to_bullets(section: dict[str, Any])` → `list[str]`
@@ -5242,7 +6062,9 @@
 
 <a id="fun-becbd2f758"></a>
 
-#### `overview_bullets_from_sections`
+#### FUN-BECBD2F758
+
+**函数**：`overview_bullets_from_sections`
 
 - **ID / 行**：`FUN-BECBD2F758` / `L218`（源码见本单元概览）
 - **签名 / 返回**：`overview_bullets_from_sections(sections: dict[str, dict[str, Any]])` → `list[str]`
@@ -5253,7 +6075,9 @@
 
 <a id="fun-6ee7e2523c"></a>
 
-#### `build_narrative_facts`
+#### FUN-6EE7E2523C
+
+**函数**：`build_narrative_facts`
 
 - **ID / 行**：`FUN-6EE7E2523C` / `L223`（源码见本单元概览）
 - **签名 / 返回**：`build_narrative_facts(report: dict[str, Any], technical_context: dict[str, Any], *, compact_for_llm: bool=False)` → `dict[str, Any]`
@@ -5264,7 +6088,9 @@
 
 <a id="fun-0717bfae8a"></a>
 
-#### `build_narrative_facts.add_context`
+#### FUN-0717BFAE8A
+
+**函数**：`build_narrative_facts.add_context`
 
 - **ID / 行**：`FUN-0717BFAE8A` / `L233`（源码见本单元概览）
 - **签名 / 返回**：`build_narrative_facts.add_context(level_id: str, value: Any, source: str, *, timeframe: str | None=None, kind: str='level')` → `None`
@@ -5275,7 +6101,9 @@
 
 <a id="fun-287fb686ea"></a>
 
-#### `build_narrative_facts.add_execution`
+#### FUN-287FB686EA
+
+**函数**：`build_narrative_facts.add_execution`
 
 - **ID / 行**：`FUN-287FB686EA` / `L244`（源码见本单元概览）
 - **签名 / 返回**：`build_narrative_facts.add_execution(level_id: str, value: Any, source: str, *, signal_id: str, kind: str='execution')` → `None`
@@ -5286,7 +6114,9 @@
 
 <a id="fun-f0ff3fb2e4"></a>
 
-#### `validate_and_merge_llm_sections`
+#### FUN-F0FF3FB2E4
+
+**函数**：`validate_and_merge_llm_sections`
 
 - **ID / 行**：`FUN-F0FF3FB2E4` / `L390`（源码见本单元概览）
 - **签名 / 返回**：`validate_and_merge_llm_sections(raw_sections: Any, *, rule_sections: dict[str, dict[str, Any]], facts: dict[str, Any], mode: str, threshold: float)` → `tuple[dict[str, dict[str, Any]], dict[str, Any]]`
@@ -5297,7 +6127,9 @@
 
 <a id="fun-58e4660f21"></a>
 
-#### `_confidence`
+#### FUN-58E4660F21
+
+**函数**：`_confidence`
 
 - **ID / 行**：`FUN-58E4660F21` / `L440`（源码见本单元概览）
 - **签名 / 返回**：`_confidence(value: Any)` → `float`
@@ -5308,7 +6140,9 @@
 
 <a id="fun-e6ef29ff95"></a>
 
-#### `_coerce_string_list`
+#### FUN-E6EF29FF95
+
+**函数**：`_coerce_string_list`
 
 - **ID / 行**：`FUN-E6EF29FF95` / `L447`（源码见本单元概览）
 - **签名 / 返回**：`_coerce_string_list(value: Any)` → `list[str] | None`
@@ -5319,7 +6153,9 @@
 
 <a id="fun-ca4fa260dd"></a>
 
-#### `_capped_section_lists`
+#### FUN-CA4FA260DD
+
+**函数**：`_capped_section_lists`
 
 - **ID / 行**：`FUN-CA4FA260DD` / `L474`（源码见本单元概览）
 - **签名 / 返回**：`_capped_section_lists(value: dict[str, Any])` → `dict[str, list[str]]`
@@ -5330,7 +6166,9 @@
 
 <a id="fun-3a8882518c"></a>
 
-#### `_section_visible_lines`
+#### FUN-3A8882518C
+
+**函数**：`_section_visible_lines`
 
 - **ID / 行**：`FUN-3A8882518C` / `L484`（源码见本单元概览）
 - **签名 / 返回**：`_section_visible_lines(value: dict[str, Any])` → `int`
@@ -5341,7 +6179,9 @@
 
 <a id="fun-75bc1eba00"></a>
 
-#### `_normalize_llm_section`
+#### FUN-75BC1EBA00
+
+**函数**：`_normalize_llm_section`
 
 - **ID / 行**：`FUN-75BC1EBA00` / `L492`（源码见本单元概览）
 - **签名 / 返回**：`_normalize_llm_section(value: dict[str, Any])` → `dict[str, Any]`
@@ -5352,7 +6192,9 @@
 
 <a id="fun-5c22fbf976"></a>
 
-#### `_validate_section`
+#### FUN-5C22FBF976
+
+**函数**：`_validate_section`
 
 - **ID / 行**：`FUN-5C22FBF976` / `L506`（源码见本单元概览）
 - **签名 / 返回**：`_validate_section(value: Any, *, allowed: set[float], expected_bias: str, calendar_state: str='', allowed_calendar_times: set[str] | None=None)` → `str | None`
@@ -5363,7 +6205,9 @@
 
 <a id="fun-21729c6d78"></a>
 
-#### `_expected_bias`
+#### FUN-21729C6D78
+
+**函数**：`_expected_bias`
 
 - **ID / 行**：`FUN-21729C6D78` / `L563`（源码见本单元概览）
 - **签名 / 返回**：`_expected_bias(facts: dict[str, Any])` → `str`
@@ -5374,7 +6218,9 @@
 
 <a id="fun-74a552c2a1"></a>
 
-#### `narrative_price_tolerance`
+#### FUN-74A552C2A1
+
+**函数**：`narrative_price_tolerance`
 
 - **ID / 行**：`FUN-74A552C2A1` / `L581`（源码见本单元概览）
 - **签名 / 返回**：`narrative_price_tolerance(token: str, reference: float)` → `float`
@@ -5385,7 +6231,9 @@
 
 <a id="fun-ea3075165b"></a>
 
-#### `_price_tolerance`
+#### FUN-EA3075165B
+
+**函数**：`_price_tolerance`
 
 - **ID / 行**：`FUN-EA3075165B` / `L602`（源码见本单元概览）
 - **签名 / 返回**：`_price_tolerance(reference: float)` → `float`
@@ -5396,7 +6244,9 @@
 
 <a id="fun-ee96ece754"></a>
 
-#### `_unapproved_prices`
+#### FUN-EE96ECE754
+
+**函数**：`_unapproved_prices`
 
 - **ID / 行**：`FUN-EE96ECE754` / `L607`（源码见本单元概览）
 - **签名 / 返回**：`_unapproved_prices(text: str, allowed: set[float])` → `str | None`
@@ -5407,7 +6257,9 @@
 
 <a id="fun-6cde98503a"></a>
 
-#### `_unapproved_calendar_claims`
+#### FUN-6CDE98503A
+
+**函数**：`_unapproved_calendar_claims`
 
 - **ID / 行**：`FUN-6CDE98503A` / `L629`（源码见本单元概览）
 - **签名 / 返回**：`_unapproved_calendar_claims(text: str, *, calendar_state: str, allowed_times: set[str])` → `str | None`
@@ -5418,7 +6270,9 @@
 
 <a id="fun-870e7671a1"></a>
 
-#### `_executable_wording_on_wait`
+#### FUN-870E7671A1
+
+**函数**：`_executable_wording_on_wait`
 
 - **ID / 行**：`FUN-870E7671A1` / `L687`（源码见本单元概览）
 - **签名 / 返回**：`_executable_wording_on_wait(text: str)` → `bool`
@@ -5429,7 +6283,9 @@
 
 <a id="fun-b4dcb46a68"></a>
 
-#### `_direction_conflict`
+#### FUN-B4DCB46A68
+
+**函数**：`_direction_conflict`
 
 - **ID / 行**：`FUN-B4DCB46A68` / `L693`（源码见本单元概览）
 - **签名 / 返回**：`_direction_conflict(text: str, expected_bias: str)` → `str | None`
@@ -5440,7 +6296,9 @@
 
 <a id="fun-25aeefe31c"></a>
 
-#### `_execution_authorized`
+#### FUN-25AEEFE31C
+
+**函数**：`_execution_authorized`
 
 - **ID / 行**：`FUN-25AEEFE31C` / `L705`（源码见本单元概览）
 - **签名 / 返回**：`_execution_authorized(facts: dict[str, Any])` → `bool`
@@ -5451,7 +6309,9 @@
 
 <a id="fun-d7185cbde0"></a>
 
-#### `validate_llm_top_level_fields`
+#### FUN-D7185CBDE0
+
+**函数**：`validate_llm_top_level_fields`
 
 - **ID / 行**：`FUN-D7185CBDE0` / `L716`（源码见本单元概览）
 - **签名 / 返回**：`validate_llm_top_level_fields(llm: dict[str, Any], *, facts: dict[str, Any])` → `dict[str, str | None]`
@@ -5462,7 +6322,9 @@
 
 <a id="fun-5260c4fffe"></a>
 
-#### `validate_llm_top_level`
+#### FUN-5260C4FFFE
+
+**函数**：`validate_llm_top_level`
 
 - **ID / 行**：`FUN-5260C4FFFE` / `L789`（源码见本单元概览）
 - **签名 / 返回**：`validate_llm_top_level(llm: dict[str, Any], *, facts: dict[str, Any])` → `str | None`
@@ -5473,7 +6335,9 @@
 
 <a id="unit-406cec1297"></a>
 
-### src/analysis/plan_signals.py — 软件单元详细设计
+### UNIT-406CEC1297
+
+**模块**：`src/analysis/plan_signals.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -5493,7 +6357,9 @@
 
 <a id="fun-df2b309e7a"></a>
 
-#### `pa_usable`
+#### FUN-DF2B309E7A
+
+**函数**：`pa_usable`
 
 - **ID / 行**：`FUN-DF2B309E7A` / `L30`（源码见本单元概览）
 - **签名 / 返回**：`pa_usable(price_action: dict[str, Any] | None)` → `bool`
@@ -5504,7 +6370,9 @@
 
 <a id="fun-edbd519580"></a>
 
-#### `_rule_sr_level`
+#### FUN-EDBD519580
+
+**函数**：`_rule_sr_level`
 
 - **ID / 行**：`FUN-EDBD519580` / `L41`（源码见本单元概览）
 - **签名 / 返回**：`_rule_sr_level(price: float, direction: str, label: str)` → `dict[str, Any]`
@@ -5515,7 +6383,9 @@
 
 <a id="fun-a04f67d803"></a>
 
-#### `build_rule_pa_block`
+#### FUN-A04F67D803
+
+**函数**：`build_rule_pa_block`
 
 - **ID / 行**：`FUN-A04F67D803` / `L51`（源码见本单元概览）
 - **签名 / 返回**：`build_rule_pa_block(*, price: float, swing_high: float, swing_low: float, analysis_5m: TimeframeAnalysis, price_action: dict[str, Any] | None=None, metrics: dict[str, Any] | None=None)` → `dict[str, Any]`
@@ -5526,7 +6396,9 @@
 
 <a id="fun-d4e38583ee"></a>
 
-#### `_atr`
+#### FUN-D4E38583EE
+
+**函数**：`_atr`
 
 - **ID / 行**：`FUN-D4E38583EE` / `L127`（源码见本单元概览）
 - **签名 / 返回**：`_atr(analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis)` → `float`
@@ -5536,7 +6408,9 @@
 
 <a id="fun-7820ca9cf2"></a>
 
-#### `_zone_band`
+#### FUN-7820CA9CF2
+
+**函数**：`_zone_band`
 
 - **ID / 行**：`FUN-7820CA9CF2` / `L131`（源码见本单元概览）
 - **签名 / 返回**：`_zone_band(center: float, atr: float, *, ratio: float=0.2)` → `tuple[float, float]`
@@ -5547,7 +6421,9 @@
 
 <a id="fun-b2869caf10"></a>
 
-#### `_nearest_pa_sr`
+#### FUN-B2869CAF10
+
+**函数**：`_nearest_pa_sr`
 
 - **ID / 行**：`FUN-B2869CAF10` / `L136`（源码见本单元概览）
 - **签名 / 返回**：`_nearest_pa_sr(sr_levels: list[dict[str, Any]], price: float, direction: str)` → `dict[str, Any] | None`
@@ -5558,7 +6434,9 @@
 
 <a id="fun-0cc973c97b"></a>
 
-#### `_vah_zone`
+#### FUN-0CC973C97B
+
+**函数**：`_vah_zone`
 
 - **ID / 行**：`FUN-0CC973C97B` / `L156`（源码见本单元概览）
 - **签名 / 返回**：`_vah_zone(vp: dict[str, Any], atr: float)` → `_PaZone | None`
@@ -5569,7 +6447,9 @@
 
 <a id="fun-0924b3ca47"></a>
 
-#### `_resistance_zone`
+#### FUN-0924B3CA47
+
+**函数**：`_resistance_zone`
 
 - **ID / 行**：`FUN-0924B3CA47` / `L164`（源码见本单元概览）
 - **签名 / 返回**：`_resistance_zone(sr: dict[str, Any], atr: float)` → `_PaZone`
@@ -5580,7 +6460,9 @@
 
 <a id="fun-2dc7daba92"></a>
 
-#### `_val_zone`
+#### FUN-2DC7DABA92
+
+**函数**：`_val_zone`
 
 - **ID / 行**：`FUN-2DC7DABA92` / `L171`（源码见本单元概览）
 - **签名 / 返回**：`_val_zone(vp: dict[str, Any], atr: float)` → `_PaZone | None`
@@ -5591,7 +6473,9 @@
 
 <a id="fun-05d58d82e1"></a>
 
-#### `_support_zone`
+#### FUN-05D58D82E1
+
+**函数**：`_support_zone`
 
 - **ID / 行**：`FUN-05D58D82E1` / `L179`（源码见本单元概览）
 - **签名 / 返回**：`_support_zone(sr: dict[str, Any], atr: float)` → `_PaZone`
@@ -5602,7 +6486,9 @@
 
 <a id="fun-ce8413dcd6"></a>
 
-#### `_sell_targets`
+#### FUN-CE8413DCD6
+
+**函数**：`_sell_targets`
 
 - **ID / 行**：`FUN-CE8413DCD6` / `L186`（源码见本单元概览）
 - **签名 / 返回**：`_sell_targets(entry_low: float, entry_high: float, *, poc: float | None, val: float | None, swing_low: float)` → `tuple[float, float, float] | None`
@@ -5613,7 +6499,9 @@
 
 <a id="fun-e65ed5c0aa"></a>
 
-#### `_buy_targets`
+#### FUN-E65ED5C0AA
+
+**函数**：`_buy_targets`
 
 - **ID / 行**：`FUN-E65ED5C0AA` / `L227`（源码见本单元概览）
 - **签名 / 返回**：`_buy_targets(entry_low: float, entry_high: float, *, price: float, poc: float | None, vah: float | None, swing_high: float, swing_low: float)` → `tuple[float, float, float]`
@@ -5624,7 +6512,9 @@
 
 <a id="fun-88ad48e01b"></a>
 
-#### `_smc_zones`
+#### FUN-88AD48E01B
+
+**函数**：`_smc_zones`
 
 - **ID / 行**：`FUN-88AD48E01B` / `L266`（源码见本单元概览）
 - **签名 / 返回**：`_smc_zones(analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis)` → `list[tuple[float, float, str]]`
@@ -5635,7 +6525,9 @@
 
 <a id="fun-e5ee860a8a"></a>
 
-#### `_zone_overlaps_entry`
+#### FUN-E5EE860A8A
+
+**函数**：`_zone_overlaps_entry`
 
 - **ID / 行**：`FUN-E5EE860A8A` / `L276`（源码见本单元概览）
 - **签名 / 返回**：`_zone_overlaps_entry(zone_low: float, zone_high: float, entry_low: float, entry_high: float, *, tolerance: float=RESONANCE_TOLERANCE)` → `bool`
@@ -5646,7 +6538,9 @@
 
 <a id="fun-9a867fc2bd"></a>
 
-#### `_structure_shifted`
+#### FUN-9A867FC2BD
+
+**函数**：`_structure_shifted`
 
 - **ID / 行**：`FUN-9A867FC2BD` / `L291`（源码见本单元概览）
 - **签名 / 返回**：`_structure_shifted(analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis, *, direction: str)` → `bool`
@@ -5657,7 +6551,9 @@
 
 <a id="fun-cd33dcdad5"></a>
 
-#### `smc_filter_adjustment`
+#### FUN-CD33DCDAD5
+
+**函数**：`smc_filter_adjustment`
 
 - **ID / 行**：`FUN-CD33DCDAD5` / `L306`（源码见本单元概览）
 - **签名 / 返回**：`smc_filter_adjustment(*, direction: str, entry_low: float, entry_high: float, analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis)` → `_SmcFilter`
@@ -5668,7 +6564,9 @@
 
 <a id="fun-9cd2c897d0"></a>
 
-#### `val_sweep_confirmed`
+#### FUN-9CD2C897D0
+
+**函数**：`val_sweep_confirmed`
 
 - **ID / 行**：`FUN-9CD2C897D0` / `L352`（源码见本单元概览）
 - **签名 / 返回**：`val_sweep_confirmed(*, price: float, val: float, analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis)` → `tuple[bool, list[str]]`
@@ -5679,7 +6577,9 @@
 
 <a id="fun-8f66092349"></a>
 
-#### `build_pa_short_aggressive`
+#### FUN-8F66092349
+
+**函数**：`build_pa_short_aggressive`
 
 - **ID / 行**：`FUN-8F66092349` / `L384`（源码见本单元概览）
 - **签名 / 返回**：`build_pa_short_aggressive(*, price: float, pa_block: dict[str, Any], swing_low: float, atr: float)` → `tuple[_PaZone, float, list[float]] | None`
@@ -5690,7 +6590,9 @@
 
 <a id="fun-f24046f4b0"></a>
 
-#### `build_pa_short_conservative`
+#### FUN-F24046F4B0
+
+**函数**：`build_pa_short_conservative`
 
 - **ID / 行**：`FUN-F24046F4B0` / `L412`（源码见本单元概览）
 - **签名 / 返回**：`build_pa_short_conservative(*, price: float, pa_block: dict[str, Any], swing_low: float, atr: float)` → `tuple[_PaZone, float, list[float]] | None`
@@ -5701,7 +6603,9 @@
 
 <a id="fun-c5a6f97a5f"></a>
 
-#### `build_pa_long_sweep`
+#### FUN-C5A6F97A5F
+
+**函数**：`build_pa_long_sweep`
 
 - **ID / 行**：`FUN-C5A6F97A5F` / `L440`（源码见本单元概览）
 - **签名 / 返回**：`build_pa_long_sweep(*, price: float, pa_block: dict[str, Any], swing_high: float, swing_low: float, analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis)` → `tuple[_PaZone, float, list[float], bool, list[str]] | None`
@@ -5712,7 +6616,9 @@
 
 <a id="unit-daf97d09e5"></a>
 
-### src/analysis/price_action_facts.py — 软件单元详细设计
+### UNIT-DAF97D09E5
+
+**模块**：`src/analysis/price_action_facts.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -5732,7 +6638,9 @@
 
 <a id="fun-c06b90a09b"></a>
 
-#### `_ltf_covers_window`
+#### FUN-C06B90A09B
+
+**函数**：`_ltf_covers_window`
 
 - **ID / 行**：`FUN-C06B90A09B` / `L24`（源码见本单元概览）
 - **签名 / 返回**：`_ltf_covers_window(ltf_slice: pd.DataFrame, start: pd.Timestamp, end: pd.Timestamp, *, min_frac: float=_LTF_COVER_FRAC)` → `bool`
@@ -5743,7 +6651,9 @@
 
 <a id="fun-bce4e6db5f"></a>
 
-#### `_align_timestamp`
+#### FUN-BCE4E6DB5F
+
+**函数**：`_align_timestamp`
 
 - **ID / 行**：`FUN-BCE4E6DB5F` / `L45`（源码见本单元概览）
 - **签名 / 返回**：`_align_timestamp(ts: pd.Timestamp, ref: pd.DatetimeIndex)` → `pd.Timestamp`
@@ -5754,7 +6664,9 @@
 
 <a id="fun-cf1adc9362"></a>
 
-#### `_bars_for_latest_session_day`
+#### FUN-CF1ADC9362
+
+**函数**：`_bars_for_latest_session_day`
 
 - **ID / 行**：`FUN-CF1ADC9362` / `L56`（源码见本单元概览）
 - **签名 / 返回**：`_bars_for_latest_session_day(df_5m: pd.DataFrame, df_1d: pd.DataFrame)` → `pd.DataFrame`
@@ -5765,7 +6677,9 @@
 
 <a id="fun-a13f4e6eec"></a>
 
-#### `_session_matches_daily`
+#### FUN-A13F4E6EEC
+
+**函数**：`_session_matches_daily`
 
 - **ID / 行**：`FUN-A13F4E6EEC` / `L73`（源码见本单元概览）
 - **签名 / 返回**：`_session_matches_daily(df_session: pd.DataFrame, daily_row: pd.Series, *, tol: float)` → `bool`
@@ -5776,7 +6690,9 @@
 
 <a id="fun-6da9739c93"></a>
 
-#### `build_session_price_action_block`
+#### FUN-6DA9739C93
+
+**函数**：`build_session_price_action_block`
 
 - **ID / 行**：`FUN-6DA9739C93` / `L86`（源码见本单元概览）
 - **签名 / 返回**：`build_session_price_action_block(df_5m: pd.DataFrame | None, df_1d: pd.DataFrame | None)` → `dict[str, Any] | None`
@@ -5787,7 +6703,9 @@
 
 <a id="fun-c677f127b2"></a>
 
-#### `build_price_action_summaries`
+#### FUN-C677F127B2
+
+**函数**：`build_price_action_summaries`
 
 - **ID / 行**：`FUN-C677F127B2` / `L110`（源码见本单元概览）
 - **签名 / 返回**：`build_price_action_summaries(data: dict[str, pd.DataFrame], *, lookback: int=DEFAULT_LOOKBACK)` → `dict[str, dict[str, Any]]`
@@ -5798,7 +6716,9 @@
 
 <a id="fun-edaa738364"></a>
 
-#### `chart_sr_levels`
+#### FUN-EDAA738364
+
+**函数**：`chart_sr_levels`
 
 - **ID / 行**：`FUN-EDAA738364` / `L151`（源码见本单元概览）
 - **签名 / 返回**：`chart_sr_levels(report: dict[str, Any], timeframe: str='5m')` → `list[dict[str, Any]]`
@@ -5809,7 +6729,9 @@
 
 <a id="unit-ce01c0290c"></a>
 
-### src/analysis/proximity.py — 软件单元详细设计
+### UNIT-CE01C0290C
+
+**模块**：`src/analysis/proximity.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -5829,7 +6751,9 @@
 
 <a id="fun-575ce11369"></a>
 
-#### `proximity_threshold`
+#### FUN-575CE11369
+
+**函数**：`proximity_threshold`
 
 - **ID / 行**：`FUN-575CE11369` / `L12`（源码见本单元概览）
 - **签名 / 返回**：`proximity_threshold(price: float, atr: float | None, *, atr_mult: float=1.0, pct: float=PCT_FALLBACK)` → `float`
@@ -5840,7 +6764,9 @@
 
 <a id="fun-914f4d90ea"></a>
 
-#### `zone_near_price`
+#### FUN-914F4D90EA
+
+**函数**：`zone_near_price`
 
 - **ID / 行**：`FUN-914F4D90EA` / `L22`（源码见本单元概览）
 - **签名 / 返回**：`zone_near_price(price: float, low: float, high: float, atr: float | None, *, atr_mult: float=1.0, pct: float=PCT_FALLBACK)` → `bool`
@@ -5851,7 +6777,9 @@
 
 <a id="fun-8793f9d1f1"></a>
 
-#### `level_near_price`
+#### FUN-8793F9D1F1
+
+**函数**：`level_near_price`
 
 - **ID / 行**：`FUN-8793F9D1F1` / `L39`（源码见本单元概览）
 - **签名 / 返回**：`level_near_price(level: float, price: float, atr: float | None, *, atr_mult: float=1.0, pct: float=PCT_FALLBACK)` → `bool`
@@ -5862,7 +6790,9 @@
 
 <a id="unit-dad8a91ff9"></a>
 
-### src/analysis/report_engine.py — 软件单元详细设计
+### UNIT-DAD8A91FF9
+
+**模块**：`src/analysis/report_engine.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -5882,7 +6812,9 @@
 
 <a id="fun-46bd20a480"></a>
 
-#### `_compute_risk_reward`
+#### FUN-46BD20A480
+
+**函数**：`_compute_risk_reward`
 
 - **ID / 行**：`FUN-46BD20A480` / `L78`（源码见本单元概览）
 - **签名 / 返回**：`_compute_risk_reward(*, direction: str, entry_low: float, entry_high: float, stop_loss: float, take_profits: list[float])` → `str`
@@ -5892,7 +6824,9 @@
 
 <a id="fun-dcc89b25ee"></a>
 
-#### `_risk_reward_ratio`
+#### FUN-DCC89B25EE
+
+**函数**：`_risk_reward_ratio`
 
 - **ID / 行**：`FUN-DCC89B25EE` / `L104`（源码见本单元概览）
 - **签名 / 返回**：`_risk_reward_ratio(*, direction: str, entry_low: float, entry_high: float, stop_loss: float, take_profits: list[float])` → `float`
@@ -5902,7 +6836,9 @@
 
 <a id="fun-15ed1e142c"></a>
 
-#### `_grade`
+#### FUN-15ED1E142C
+
+**函数**：`_grade`
 
 - **ID / 行**：`FUN-15ED1E142C` / `L127`（源码见本单元概览）
 - **签名 / 返回**：`_grade(score: float)` → `str`
@@ -5912,7 +6848,9 @@
 
 <a id="fun-79027dc513"></a>
 
-#### `_zone_relation`
+#### FUN-79027DC513
+
+**函数**：`_zone_relation`
 
 - **ID / 行**：`FUN-79027DC513` / `L137`（源码见本单元概览）
 - **签名 / 返回**：`_zone_relation(*, price: float, direction: str, entry_low: float, entry_high: float)` → `tuple[str, float]`
@@ -5922,7 +6860,9 @@
 
 <a id="fun-4edf24baf8"></a>
 
-#### `_stop_breached`
+#### FUN-4EDF24BAF8
+
+**函数**：`_stop_breached`
 
 - **ID / 行**：`FUN-4EDF24BAF8` / `L157`（源码见本单元概览）
 - **签名 / 返回**：`_stop_breached(*, price: float, direction: str, stop_loss: float)` → `bool`
@@ -5932,7 +6872,9 @@
 
 <a id="fun-216988a705"></a>
 
-#### `_setup_status_and_score`
+#### FUN-216988A705
+
+**函数**：`_setup_status_and_score`
 
 - **ID / 行**：`FUN-216988A705` / `L164`（源码见本单元概览）
 - **签名 / 返回**：`_setup_status_and_score(*, name: str, direction: str, theme: str, setup_type: str, price: float, entry_low: float, entry_high: float, stop_loss: float, take_profits: list[float], sentiment: dict[str, float], trigger_confirmed: bool=False)` → `tuple[str, bool, str, float, str, list[str]]`
@@ -5943,7 +6885,9 @@
 
 <a id="fun-db79153948"></a>
 
-#### `compute_trading_signals`
+#### FUN-DB79153948
+
+**函数**：`compute_trading_signals`
 
 - **ID / 行**：`FUN-DB79153948` / `L257`（源码见本单元概览）
 - **签名 / 返回**：`compute_trading_signals(ctx: MarketContext)` → `list[TradingSignal]`
@@ -5954,7 +6898,9 @@
 
 <a id="fun-c46ab92251"></a>
 
-#### `_apply_smc_filter_score`
+#### FUN-C46AB92251
+
+**函数**：`_apply_smc_filter_score`
 
 - **ID / 行**：`FUN-C46AB92251` / `L281`（源码见本单元概览）
 - **签名 / 返回**：`_apply_smc_filter_score(*, direction: str, entry_low: float, entry_high: float, analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis, score: float, reasons: list[str])` → `tuple[float, str, list[str]]`
@@ -5965,7 +6911,9 @@
 
 <a id="fun-b29ba1665b"></a>
 
-#### `_finalize_pa_plan_meta`
+#### FUN-B29BA1665B
+
+**函数**：`_finalize_pa_plan_meta`
 
 - **ID / 行**：`FUN-B29BA1665B` / `L303`（源码见本单元概览）
 - **签名 / 返回**：`_finalize_pa_plan_meta(*, rule_fallback: bool, setup_type: str, zone_label: str, score: float, grade: str, reasons: list[str], short_note: str | None=None)` → `tuple[str, str, float, str, list[str]]`
@@ -5976,7 +6924,9 @@
 
 <a id="fun-7b436508b0"></a>
 
-#### `generate_trading_signals`
+#### FUN-7B436508B0
+
+**函数**：`generate_trading_signals`
 
 - **ID / 行**：`FUN-7B436508B0` / `L325`（源码见本单元概览）
 - **签名 / 返回**：`generate_trading_signals(price: float, analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis, swing_high: float, swing_low: float, sentiment: dict[str, float], *, price_action: dict[str, Any] | None=None, metrics: dict[str, Any] | None=None)` → `list[TradingSignal]`
@@ -5987,7 +6937,9 @@
 
 <a id="fun-3121795202"></a>
 
-#### `_generate_pa_signals`
+#### FUN-3121795202
+
+**函数**：`_generate_pa_signals`
 
 - **ID / 行**：`FUN-3121795202` / `L371`（源码见本单元概览）
 - **签名 / 返回**：`_generate_pa_signals(price: float, analysis_5m: TimeframeAnalysis, analysis_15m: TimeframeAnalysis, swing_high: float, swing_low: float, sentiment: dict[str, float], *, price_action: dict[str, Any], rule_fallback: bool=False)` → `list[TradingSignal]`
@@ -5998,7 +6950,9 @@
 
 <a id="fun-570c5667b7"></a>
 
-#### `trend_projections`
+#### FUN-570C5667B7
+
+**函数**：`trend_projections`
 
 - **ID / 行**：`FUN-570C5667B7` / `L610`（源码见本单元概览）
 - **签名 / 返回**：`trend_projections(price: float, swing_high: float, swing_low: float, sentiment: dict[str, float])` → `list[dict[str, Any]]`
@@ -6009,7 +6963,9 @@
 
 <a id="fun-e3c1c289a1"></a>
 
-#### `build_conclusion`
+#### FUN-E3C1C289A1
+
+**函数**：`build_conclusion`
 
 - **ID / 行**：`FUN-E3C1C289A1` / `L730`（源码见本单元概览）
 - **签名 / 返回**：`build_conclusion(sentiment: dict[str, float], primary_trend: str, signals: list[TradingSignal])` → `dict[str, Any]`
@@ -6020,7 +6976,9 @@
 
 <a id="fun-a5ab9c9398"></a>
 
-#### `invalidation_rules`
+#### FUN-A5AB9C9398
+
+**函数**：`invalidation_rules`
 
 - **ID / 行**：`FUN-A5AB9C9398` / `L805`（源码见本单元概览）
 - **签名 / 返回**：`invalidation_rules(analysis_15m: TimeframeAnalysis, swing_high: float, signals: list[TradingSignal])` → `list[str]`
@@ -6031,7 +6989,9 @@
 
 <a id="fun-5fd97aa52d"></a>
 
-#### `parse_risk_events_calendar`
+#### FUN-5FD97AA52D
+
+**函数**：`parse_risk_events_calendar`
 
 - **ID / 行**：`FUN-5FD97AA52D` / `L829`（源码见本单元概览）
 - **签名 / 返回**：`parse_risk_events_calendar(risk_events: str)` → `list[dict[str, str]]`
@@ -6042,7 +7002,9 @@
 
 <a id="fun-fddea7563f"></a>
 
-#### `build_calendar_events`
+#### FUN-FDDEA7563F
+
+**函数**：`build_calendar_events`
 
 - **ID / 行**：`FUN-FDDEA7563F` / `L854`（源码见本单元概览）
 - **签名 / 返回**：`build_calendar_events()` → `list[dict[str, str]]`
@@ -6052,7 +7014,9 @@
 
 <a id="fun-c04ff0655e"></a>
 
-#### `calendar_rows_from_external`
+#### FUN-C04FF0655E
+
+**函数**：`calendar_rows_from_external`
 
 - **ID / 行**：`FUN-C04FF0655E` / `L864`（源码见本单元概览）
 - **签名 / 返回**：`calendar_rows_from_external(*, calendar_events: list[Any] | None=None, risk_events: str='—')` → `list[dict[str, str]]`
@@ -6063,7 +7027,9 @@
 
 <a id="fun-3196d79811"></a>
 
-#### `_build_context_levels`
+#### FUN-3196D79811
+
+**函数**：`_build_context_levels`
 
 - **ID / 行**：`FUN-3196D79811` / `L899`（源码见本单元概览）
 - **签名 / 返回**：`_build_context_levels(price: float, swing_high: float, swing_low: float, swing_tf: str, swing_atr: float | None)` → `list[dict[str, Any]]`
@@ -6074,7 +7040,9 @@
 
 <a id="fun-6ab88c4476"></a>
 
-#### `build_key_levels`
+#### FUN-6AB88C4476
+
+**函数**：`build_key_levels`
 
 - **ID / 行**：`FUN-6AB88C4476` / `L934`（源码见本单元概览）
 - **签名 / 返回**：`build_key_levels(price: float, metrics: dict, swing_high: float, swing_low: float, fib: list[dict], signals: list[TradingSignal], *, swing_tf: str='4h', swing_atr: float | None=None)` → `list[dict[str, Any]]`
@@ -6085,7 +7053,9 @@
 
 <a id="fun-0e716fdbd6"></a>
 
-#### `build_resistance_support`
+#### FUN-0E716FDBD6
+
+**函数**：`build_resistance_support`
 
 - **ID / 行**：`FUN-0E716FDBD6` / `L979`（源码见本单元概览）
 - **签名 / 返回**：`build_resistance_support(key_levels: list[dict], liquidity: list[dict])` → `tuple[list[str], list[str]]`
@@ -6096,7 +7066,9 @@
 
 <a id="fun-666ae14d42"></a>
 
-#### `_signal_value`
+#### FUN-666AE14D42
+
+**函数**：`_signal_value`
 
 - **ID / 行**：`FUN-666AE14D42` / `L1006`（源码见本单元概览）
 - **签名 / 返回**：`_signal_value(signal: TradingSignal | dict[str, Any], key: str, default: Any=None)` → `Any`
@@ -6107,7 +7079,9 @@
 
 <a id="fun-5dd9e47b1e"></a>
 
-#### `_assign_signal_roles`
+#### FUN-5DD9E47B1E
+
+**函数**：`_assign_signal_roles`
 
 - **ID / 行**：`FUN-5DD9E47B1E` / `L1012`（源码见本单元概览）
 - **签名 / 返回**：`_assign_signal_roles(signals: list[TradingSignal], sentiment: dict[str, float])` → `None`
@@ -6118,7 +7092,9 @@
 
 <a id="fun-a1e1bc8771"></a>
 
-#### `build_strategy_plans`
+#### FUN-A1E1BC8771
+
+**函数**：`build_strategy_plans`
 
 - **ID / 行**：`FUN-A1E1BC8771` / `L1024`（源码见本单元概览）
 - **签名 / 返回**：`build_strategy_plans(signals: list[TradingSignal | dict[str, Any]])` → `list[dict[str, Any]]`
@@ -6129,7 +7105,9 @@
 
 <a id="fun-b8f52e3dc7"></a>
 
-#### `authorized_position_scale`
+#### FUN-B8F52E3DC7
+
+**函数**：`authorized_position_scale`
 
 - **ID / 行**：`FUN-B8F52E3DC7` / `L1042`（源码见本单元概览）
 - **签名 / 返回**：`authorized_position_scale(reviews: list, decision)` → `float`
@@ -6140,7 +7118,9 @@
 
 <a id="fun-a43ced947f"></a>
 
-#### `format_authorized_position_size`
+#### FUN-A43CED947F
+
+**函数**：`format_authorized_position_size`
 
 - **ID / 行**：`FUN-A43CED947F` / `L1057`（源码见本单元概览）
 - **签名 / 返回**：`format_authorized_position_size(scale: float, action: str)` → `str`
@@ -6150,7 +7130,9 @@
 
 <a id="fun-34dce71c07"></a>
 
-#### `_normalize_signal_dict_take_profits`
+#### FUN-34DCE71C07
+
+**函数**：`_normalize_signal_dict_take_profits`
 
 - **ID / 行**：`FUN-34DCE71C07` / `L1070`（源码见本单元概览）
 - **签名 / 返回**：`_normalize_signal_dict_take_profits(sig: dict[str, Any])` → `None`
@@ -6161,7 +7143,9 @@
 
 <a id="fun-e8ad3336d7"></a>
 
-#### `_review_field`
+#### FUN-E8AD3336D7
+
+**函数**：`_review_field`
 
 - **ID / 行**：`FUN-E8AD3336D7` / `L1086`（源码见本单元概览）
 - **签名 / 返回**：`_review_field(review: object, name: str, default: object=None)` → `object`
@@ -6172,7 +7156,9 @@
 
 <a id="fun-be4a18b71c"></a>
 
-#### `_format_risk_veto_lines`
+#### FUN-BE4A18B71C
+
+**函数**：`_format_risk_veto_lines`
 
 - **ID / 行**：`FUN-BE4A18B71C` / `L1092`（源码见本单元概览）
 - **签名 / 返回**：`_format_risk_veto_lines(risk_reviews: list | None, *, candidate_index: int | None)` → `list[str]`
@@ -6183,7 +7169,9 @@
 
 <a id="fun-4c3a66bdae"></a>
 
-#### `_format_trader_veto_lines`
+#### FUN-4C3A66BDAE
+
+**函数**：`_format_trader_veto_lines`
 
 - **ID / 行**：`FUN-4C3A66BDAE` / `L1126`（源码见本单元概览）
 - **签名 / 返回**：`_format_trader_veto_lines(proposal: object | None, *, candidate_index: int | None)` → `list[str]`
@@ -6194,7 +7182,9 @@
 
 <a id="fun-15ccc085e1"></a>
 
-#### `_format_level_validation_lines`
+#### FUN-15CCC085E1
+
+**函数**：`_format_level_validation_lines`
 
 - **ID / 行**：`FUN-15CCC085E1` / `L1154`（源码见本单元概览）
 - **签名 / 返回**：`_format_level_validation_lines(validated_plans: list[dict[str, Any]] | None, sig: dict[str, Any])` → `list[str]`
@@ -6205,7 +7195,9 @@
 
 <a id="fun-3539753867"></a>
 
-#### `build_signal_rejection_notes`
+#### FUN-3539753867
+
+**函数**：`build_signal_rejection_notes`
 
 - **ID / 行**：`FUN-3539753867` / `L1182`（源码见本单元概览）
 - **签名 / 返回**：`build_signal_rejection_notes(sig: dict[str, Any], *, decision_action: str, observation_mode: bool=False, primary_name: str | None=None, primary_sig: dict[str, Any] | None=None, decision_summary: str='', decision_confidence: float | None=None, risk_reviews: list | None=None, candidate_index: int | None=None, proposal: object | None=None, validated_plans: list[dict[str, Any]] | None=None)` → `list[str]`
@@ -6216,7 +7208,9 @@
 
 <a id="fun-3bf762bd92"></a>
 
-#### `build_signal_rejection_reason`
+#### FUN-3BF762BD92
+
+**函数**：`build_signal_rejection_reason`
 
 - **ID / 行**：`FUN-3BF762BD92` / `L1264`（源码见本单元概览）
 - **签名 / 返回**：`build_signal_rejection_reason(sig: dict[str, Any], *, decision_action: str, observation_mode: bool=False, primary_name: str | None=None, primary_sig: dict[str, Any] | None=None, decision_summary: str='', decision_confidence: float | None=None, risk_reviews: list | None=None, candidate_index: int | None=None, proposal: object | None=None, validated_plans: list[dict[str, Any]] | None=None)` → `str`
@@ -6227,7 +7221,9 @@
 
 <a id="fun-442599ada0"></a>
 
-#### `_signal_to_dict`
+#### FUN-442599ADA0
+
+**函数**：`_signal_to_dict`
 
 - **ID / 行**：`FUN-442599ADA0` / `L1295`（源码见本单元概览）
 - **签名 / 返回**：`_signal_to_dict(signal: TradingSignal)` → `dict[str, Any]`
@@ -6238,7 +7234,9 @@
 
 <a id="fun-9883fd47f5"></a>
 
-#### `_assign_signal_ids`
+#### FUN-9883FD47F5
+
+**函数**：`_assign_signal_ids`
 
 - **ID / 行**：`FUN-9883FD47F5` / `L1302`（源码见本单元概览）
 - **签名 / 返回**：`_assign_signal_ids(sig_dicts: list[dict[str, Any]])` → `None`
@@ -6249,7 +7247,9 @@
 
 <a id="fun-435783f2d2"></a>
 
-#### `_signal_execution_ready`
+#### FUN-435783F2D2
+
+**函数**：`_signal_execution_ready`
 
 - **ID / 行**：`FUN-435783F2D2` / `L1307`（源码见本单元概览）
 - **签名 / 返回**：`_signal_execution_ready(sig: dict[str, Any] | None)` → `bool`
@@ -6260,7 +7260,9 @@
 
 <a id="fun-5d6d01887f"></a>
 
-#### `apply_manager_authorization`
+#### FUN-5D6D01887F
+
+**函数**：`apply_manager_authorization`
 
 - **ID / 行**：`FUN-5D6D01887F` / `L1316`（源码见本单元概览）
 - **签名 / 返回**：`apply_manager_authorization(report: dict, decision, risk_reviews: list, *, proposal: object | None=None)` → `None`
@@ -6271,7 +7273,9 @@
 
 <a id="fun-91b63c3cae"></a>
 
-#### `apply_manager_authorization._attach_rejection`
+#### FUN-91B63C3CAE
+
+**函数**：`apply_manager_authorization._attach_rejection`
 
 - **ID / 行**：`FUN-91B63C3CAE` / `L1353`（源码见本单元概览）
 - **签名 / 返回**：`apply_manager_authorization._attach_rejection(sig: dict[str, Any], *, idx: int, primary_name: str | None=None, primary_sig: dict | None=None)` → `None`
@@ -6282,7 +7286,9 @@
 
 <a id="fun-6d5b47fa9d"></a>
 
-#### `apply_manager_authorization._clear_auth_meta`
+#### FUN-6D5B47FA9D
+
+**函数**：`apply_manager_authorization._clear_auth_meta`
 
 - **ID / 行**：`FUN-6D5B47FA9D` / `L1376`（源码见本单元概览）
 - **签名 / 返回**：`apply_manager_authorization._clear_auth_meta(*, plan_authorized: bool=False)` → `None`
@@ -6293,7 +7299,9 @@
 
 <a id="fun-358a1e0942"></a>
 
-#### `_authorized_primary_signal`
+#### FUN-358A1E0942
+
+**函数**：`_authorized_primary_signal`
 
 - **ID / 行**：`FUN-358A1E0942` / `L1488`（源码见本单元概览）
 - **签名 / 返回**：`_authorized_primary_signal(report: dict[str, Any])` → `dict[str, Any] | None`
@@ -6304,7 +7312,9 @@
 
 <a id="fun-26766e75ae"></a>
 
-#### `_format_entry_zone`
+#### FUN-26766E75AE
+
+**函数**：`_format_entry_zone`
 
 - **ID / 行**：`FUN-26766E75AE` / `L1495`（源码见本单元概览）
 - **签名 / 返回**：`_format_entry_zone(signal: dict[str, Any])` → `str`
@@ -6315,7 +7325,9 @@
 
 <a id="fun-f903e47206"></a>
 
-#### `build_final_decision_meta`
+#### FUN-F903E47206
+
+**函数**：`build_final_decision_meta`
 
 - **ID / 行**：`FUN-F903E47206` / `L1502`（源码见本单元概览）
 - **签名 / 返回**：`build_final_decision_meta(report: dict[str, Any])` → `dict[str, Any]`
@@ -6326,7 +7338,9 @@
 
 <a id="fun-db059d9e58"></a>
 
-#### `align_conclusion_with_manager_decision`
+#### FUN-DB059D9E58
+
+**函数**：`align_conclusion_with_manager_decision`
 
 - **ID / 行**：`FUN-DB059D9E58` / `L1551`（源码见本单元概览）
 - **签名 / 返回**：`align_conclusion_with_manager_decision(report: dict[str, Any])` → `None`
@@ -6337,7 +7351,9 @@
 
 <a id="fun-cc7188b273"></a>
 
-#### `build_path_summary`
+#### FUN-CC7188B273
+
+**函数**：`build_path_summary`
 
 - **ID / 行**：`FUN-CC7188B273` / `L1628`（源码见本单元概览）
 - **签名 / 返回**：`build_path_summary(projections: list[dict])` → `list[dict[str, Any]]`
@@ -6348,7 +7364,9 @@
 
 <a id="fun-65d3afa4f8"></a>
 
-#### `build_report`
+#### FUN-65D3AFA4F8
+
+**函数**：`build_report`
 
 - **ID / 行**：`FUN-65D3AFA4F8` / `L1644`（源码见本单元概览）
 - **签名 / 返回**：`build_report(data: dict[str, pd.DataFrame], analyses: dict[str, TimeframeAnalysis], *, signals: list[TradingSignal] | None=None)` → `dict[str, Any]`
@@ -6359,7 +7377,9 @@
 
 <a id="unit-cd6da8c4a3"></a>
 
-### src/analysis/report_facts.py — 软件单元详细设计
+### UNIT-CD6DA8C4A3
+
+**模块**：`src/analysis/report_facts.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -6379,7 +7399,9 @@
 
 <a id="fun-7f2a7da4e4"></a>
 
-#### `build_tf_summaries`
+#### FUN-7F2A7DA4E4
+
+**函数**：`build_tf_summaries`
 
 - **ID / 行**：`FUN-7F2A7DA4E4` / `L19`（源码见本单元概览）
 - **签名 / 返回**：`build_tf_summaries(data: dict[str, pd.DataFrame], analyses: dict[str, TimeframeAnalysis], *, price: float)` → `dict[str, dict[str, Any]]`
@@ -6390,7 +7412,9 @@
 
 <a id="fun-6ed8e3091f"></a>
 
-#### `_strong_weak_context_entries`
+#### FUN-6ED8E3091F
+
+**函数**：`_strong_weak_context_entries`
 
 - **ID / 行**：`FUN-6ED8E3091F` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`_strong_weak_context_entries(analysis: TimeframeAnalysis, *, price: float, swing_atr: float | None)` → `list[dict[str, Any]]`
@@ -6401,7 +7425,9 @@
 
 <a id="fun-c657924e3f"></a>
 
-#### `build_liquidity_entries`
+#### FUN-C657924E3F
+
+**函数**：`build_liquidity_entries`
 
 - **ID / 行**：`FUN-C657924E3F` / `L68`（源码见本单元概览）
 - **签名 / 返回**：`build_liquidity_entries(analyses: dict[str, TimeframeAnalysis], *, price: float, swing_tf: str, swing_atr: float | None)` → `list[dict[str, Any]]`
@@ -6412,7 +7438,9 @@
 
 <a id="unit-1aecfa1072"></a>
 
-### src/analysis/report_invariant_gate.py — 软件单元详细设计
+### UNIT-1AECFA1072
+
+**模块**：`src/analysis/report_invariant_gate.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -6432,7 +7460,9 @@
 
 <a id="fun-bf2c9119ea"></a>
 
-#### `_revoke_execution`
+#### FUN-BF2C9119EA
+
+**函数**：`_revoke_execution`
 
 - **ID / 行**：`FUN-BF2C9119EA` / `L24`（源码见本单元概览）
 - **签名 / 返回**：`_revoke_execution(report: dict[str, Any], remediations: list[str])` → `None`
@@ -6443,7 +7473,9 @@
 
 <a id="fun-b1bed5ecad"></a>
 
-#### `_sanitize_llm_fields`
+#### FUN-B1BED5ECAD
+
+**函数**：`_sanitize_llm_fields`
 
 - **ID / 行**：`FUN-B1BED5ECAD` / `L42`（源码见本单元概览）
 - **签名 / 返回**：`_sanitize_llm_fields(report: dict[str, Any], violations: list[dict[str, str]], remediations: list[str])` → `None`
@@ -6454,7 +7486,9 @@
 
 <a id="fun-0d8ba6c403"></a>
 
-#### `_sanitize_conclusion`
+#### FUN-0D8BA6C403
+
+**函数**：`_sanitize_conclusion`
 
 - **ID / 行**：`FUN-0D8BA6C403` / `L59`（源码见本单元概览）
 - **签名 / 返回**：`_sanitize_conclusion(report: dict[str, Any], remediations: list[str])` → `None`
@@ -6465,7 +7499,9 @@
 
 <a id="fun-2e93cd50fc"></a>
 
-#### `apply_report_invariant_gate`
+#### FUN-2E93CD50FC
+
+**函数**：`apply_report_invariant_gate`
 
 - **ID / 行**：`FUN-2E93CD50FC` / `L71`（源码见本单元概览）
 - **签名 / 返回**：`apply_report_invariant_gate(report: dict[str, Any], invariants: dict[str, Any])` → `dict[str, Any]`
@@ -6476,7 +7512,9 @@
 
 <a id="unit-70bd327d9d"></a>
 
-### src/analysis/report_invariants.py — 软件单元详细设计
+### UNIT-70BD327D9D
+
+**模块**：`src/analysis/report_invariants.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -6496,7 +7534,9 @@
 
 <a id="fun-c9004b2dc1"></a>
 
-#### `_violation`
+#### FUN-C9004B2DC1
+
+**函数**：`_violation`
 
 - **ID / 行**：`FUN-C9004B2DC1` / `L19`（源码见本单元概览）
 - **签名 / 返回**：`_violation(code: str, field: str, message: str)` → `dict[str, str]`
@@ -6506,7 +7546,9 @@
 
 <a id="fun-39a8495c0f"></a>
 
-#### `_manager_wait`
+#### FUN-39A8495C0F
+
+**函数**：`_manager_wait`
 
 - **ID / 行**：`FUN-39A8495C0F` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`_manager_wait(meta: dict[str, Any])` → `bool`
@@ -6517,7 +7559,9 @@
 
 <a id="fun-f9403871be"></a>
 
-#### `_observation_mode`
+#### FUN-F9403871BE
+
+**函数**：`_observation_mode`
 
 - **ID / 行**：`FUN-F9403871BE` / `L31`（源码见本单元概览）
 - **签名 / 返回**：`_observation_mode(meta: dict[str, Any])` → `bool`
@@ -6528,7 +7572,9 @@
 
 <a id="fun-6461023713"></a>
 
-#### `_normalize_direction`
+#### FUN-6461023713
+
+**函数**：`_normalize_direction`
 
 - **ID / 行**：`FUN-6461023713` / `L35`（源码见本单元概览）
 - **签名 / 返回**：`_normalize_direction(raw: str)` → `str`
@@ -6539,7 +7585,9 @@
 
 <a id="fun-574f6bf2c5"></a>
 
-#### `_authorized_signals_for_geometry`
+#### FUN-574F6BF2C5
+
+**函数**：`_authorized_signals_for_geometry`
 
 - **ID / 行**：`FUN-574F6BF2C5` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`_authorized_signals_for_geometry(report: dict[str, Any])` → `list[dict[str, Any]]`
@@ -6550,7 +7598,9 @@
 
 <a id="fun-eb10a8bba7"></a>
 
-#### `_check_signal_geometry`
+#### FUN-EB10A8BBA7
+
+**函数**：`_check_signal_geometry`
 
 - **ID / 行**：`FUN-EB10A8BBA7` / `L68`（源码见本单元概览）
 - **签名 / 返回**：`_check_signal_geometry(report: dict[str, Any])` → `list[dict[str, str]]`
@@ -6561,7 +7611,9 @@
 
 <a id="fun-202a49097f"></a>
 
-#### `_llm_top_level_active`
+#### FUN-202A49097F
+
+**函数**：`_llm_top_level_active`
 
 - **ID / 行**：`FUN-202A49097F` / `L98`（源码见本单元概览）
 - **签名 / 返回**：`_llm_top_level_active(llm: dict[str, Any])` → `bool`
@@ -6572,7 +7624,9 @@
 
 <a id="fun-070be1843c"></a>
 
-#### `_check_authorization_narrative`
+#### FUN-070BE1843C
+
+**函数**：`_check_authorization_narrative`
 
 - **ID / 行**：`FUN-070BE1843C` / `L108`（源码见本单元概览）
 - **签名 / 返回**：`_check_authorization_narrative(report: dict[str, Any])` → `list[dict[str, str]]`
@@ -6583,7 +7637,9 @@
 
 <a id="fun-f9e30a657b"></a>
 
-#### `_check_manager_alignment`
+#### FUN-F9E30A657B
+
+**函数**：`_check_manager_alignment`
 
 - **ID / 行**：`FUN-F9E30A657B` / `L131`（源码见本单元概览）
 - **签名 / 返回**：`_check_manager_alignment(report: dict[str, Any])` → `list[dict[str, str]]`
@@ -6594,7 +7650,9 @@
 
 <a id="fun-5a7430694e"></a>
 
-#### `_check_fact_prices`
+#### FUN-5A7430694E
+
+**函数**：`_check_fact_prices`
 
 - **ID / 行**：`FUN-5A7430694E` / `L167`（源码见本单元概览）
 - **签名 / 返回**：`_check_fact_prices(report: dict[str, Any], registry: dict[str, Any])` → `list[dict[str, str]]`
@@ -6605,7 +7663,9 @@
 
 <a id="fun-26dad09727"></a>
 
-#### `_check_freshness_language`
+#### FUN-26DAD09727
+
+**函数**：`_check_freshness_language`
 
 - **ID / 行**：`FUN-26DAD09727` / `L195`（源码见本单元概览）
 - **签名 / 返回**：`_check_freshness_language(report: dict[str, Any])` → `list[dict[str, str]]`
@@ -6616,7 +7676,9 @@
 
 <a id="fun-cb762c7ebb"></a>
 
-#### `_check_audit_metadata`
+#### FUN-CB762C7EBB
+
+**函数**：`_check_audit_metadata`
 
 - **ID / 行**：`FUN-CB762C7EBB` / `L209`（源码见本单元概览）
 - **签名 / 返回**：`_check_audit_metadata(report: dict[str, Any])` → `list[dict[str, str]]`
@@ -6627,7 +7689,9 @@
 
 <a id="fun-8b2af809d8"></a>
 
-#### `validate_report_invariants`
+#### FUN-8B2AF809D8
+
+**函数**：`validate_report_invariants`
 
 - **ID / 行**：`FUN-8B2AF809D8` / `L227`（源码见本单元概览）
 - **签名 / 返回**：`validate_report_invariants(report: dict[str, Any], *, registry: dict[str, Any] | None=None)` → `dict[str, Any]`
@@ -6638,7 +7702,9 @@
 
 <a id="unit-07e7315842"></a>
 
-### src/analysis/report_reliability.py — 软件单元详细设计
+### UNIT-07E7315842
+
+**模块**：`src/analysis/report_reliability.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -6658,7 +7724,9 @@
 
 <a id="fun-c44555ff7c"></a>
 
-#### `_clamp`
+#### FUN-C44555FF7C
+
+**函数**：`_clamp`
 
 - **ID / 行**：`FUN-C44555FF7C` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`_clamp(value: float)` → `float`
@@ -6669,7 +7737,9 @@
 
 <a id="fun-276b3e529b"></a>
 
-#### `_normalize_source`
+#### FUN-276B3E529B
+
+**函数**：`_normalize_source`
 
 - **ID / 行**：`FUN-276B3E529B` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`_normalize_source(raw: str)` → `str | None`
@@ -6680,7 +7750,9 @@
 
 <a id="fun-ac8525df31"></a>
 
-#### `_collect_item_sources`
+#### FUN-AC8525DF31
+
+**函数**：`_collect_item_sources`
 
 - **ID / 行**：`FUN-AC8525DF31` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`_collect_item_sources(item: dict[str, Any])` → `set[str]`
@@ -6691,7 +7763,9 @@
 
 <a id="fun-feb3154c03"></a>
 
-#### `_data_quality`
+#### FUN-FEB3154C03
+
+**函数**：`_data_quality`
 
 - **ID / 行**：`FUN-FEB3154C03` / `L47`（源码见本单元概览）
 - **签名 / 返回**：`_data_quality(report: dict[str, Any])` → `float`
@@ -6702,7 +7776,9 @@
 
 <a id="fun-a8d6008a74"></a>
 
-#### `_freshness_quality`
+#### FUN-A8D6008A74
+
+**函数**：`_freshness_quality`
 
 - **ID / 行**：`FUN-A8D6008A74` / `L63`（源码见本单元概览）
 - **签名 / 返回**：`_freshness_quality(report: dict[str, Any])` → `float`
@@ -6713,7 +7789,9 @@
 
 <a id="fun-64e7649c32"></a>
 
-#### `_evidence_coverage`
+#### FUN-64E7649C32
+
+**函数**：`_evidence_coverage`
 
 - **ID / 行**：`FUN-64E7649C32` / `L70`（源码见本单元概览）
 - **签名 / 返回**：`_evidence_coverage(report: dict[str, Any])` → `float`
@@ -6724,7 +7802,9 @@
 
 <a id="fun-f6a742357c"></a>
 
-#### `_source_diversity`
+#### FUN-F6A742357C
+
+**函数**：`_source_diversity`
 
 - **ID / 行**：`FUN-F6A742357C` / `L82`（源码见本单元概览）
 - **签名 / 返回**：`_source_diversity(report: dict[str, Any])` → `float`
@@ -6735,7 +7815,9 @@
 
 <a id="fun-c83d50260f"></a>
 
-#### `_cross_timeframe_agreement`
+#### FUN-C83D50260F
+
+**函数**：`_cross_timeframe_agreement`
 
 - **ID / 行**：`FUN-C83D50260F` / `L96`（源码见本单元概览）
 - **签名 / 返回**：`_cross_timeframe_agreement(report: dict[str, Any])` → `float`
@@ -6746,7 +7828,9 @@
 
 <a id="fun-fb32931ed7"></a>
 
-#### `_bull_bear_separation`
+#### FUN-FB32931ED7
+
+**函数**：`_bull_bear_separation`
 
 - **ID / 行**：`FUN-FB32931ED7` / `L107`（源码见本单元概览）
 - **签名 / 返回**：`_bull_bear_separation(report: dict[str, Any])` → `float`
@@ -6757,7 +7841,9 @@
 
 <a id="fun-4e2b9ea344"></a>
 
-#### `_schema_quality`
+#### FUN-4E2B9EA344
+
+**函数**：`_schema_quality`
 
 - **ID / 行**：`FUN-4E2B9EA344` / `L115`（源码见本单元概览）
 - **签名 / 返回**：`_schema_quality(report: dict[str, Any])` → `float`
@@ -6768,7 +7854,9 @@
 
 <a id="fun-3daba6ffad"></a>
 
-#### `compute_report_reliability`
+#### FUN-3DABA6FFAD
+
+**函数**：`compute_report_reliability`
 
 - **ID / 行**：`FUN-3DABA6FFAD` / `L125`（源码见本单元概览）
 - **签名 / 返回**：`compute_report_reliability(report: dict[str, Any])` → `dict[str, Any]`
@@ -6779,7 +7867,9 @@
 
 <a id="unit-0cc0e8d72a"></a>
 
-### src/analysis/risk_gates.py — 软件单元详细设计
+### UNIT-0CC0E8D72A
+
+**模块**：`src/analysis/risk_gates.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -6799,7 +7889,9 @@
 
 <a id="fun-8340a338d8"></a>
 
-#### `_signal_dict`
+#### FUN-8340A338D8
+
+**函数**：`_signal_dict`
 
 - **ID / 行**：`FUN-8340A338D8` / `L18`（源码见本单元概览）
 - **签名 / 返回**：`_signal_dict(sig: Any)` → `dict[str, Any]`
@@ -6810,7 +7902,9 @@
 
 <a id="fun-6ea0957492"></a>
 
-#### `_entry_mid`
+#### FUN-6EA0957492
+
+**函数**：`_entry_mid`
 
 - **ID / 行**：`FUN-6EA0957492` / `L26`（源码见本单元概览）
 - **签名 / 返回**：`_entry_mid(sig: dict[str, Any])` → `float`
@@ -6821,7 +7915,9 @@
 
 <a id="fun-e7212ec1e1"></a>
 
-#### `_risk_reward`
+#### FUN-E7212EC1E1
+
+**函数**：`_risk_reward`
 
 - **ID / 行**：`FUN-E7212EC1E1` / `L30`（源码见本单元概览）
 - **签名 / 返回**：`_risk_reward(sig: dict[str, Any])` → `float`
@@ -6832,7 +7928,9 @@
 
 <a id="fun-03ea7fde9d"></a>
 
-#### `signal_trigger_ready`
+#### FUN-03EA7FDE9D
+
+**函数**：`signal_trigger_ready`
 
 - **ID / 行**：`FUN-03EA7FDE9D` / `L50`（源码见本单元概览）
 - **签名 / 返回**：`signal_trigger_ready(sig: Any)` → `bool`
@@ -6843,7 +7941,9 @@
 
 <a id="fun-8e3c0f41d3"></a>
 
-#### `validate_signal_geometry`
+#### FUN-8E3C0F41D3
+
+**函数**：`validate_signal_geometry`
 
 - **ID / 行**：`FUN-8E3C0F41D3` / `L58`（源码见本单元概览）
 - **签名 / 返回**：`validate_signal_geometry(sig: Any, *, current_price: float)` → `list[str]`
@@ -6854,7 +7954,9 @@
 
 <a id="fun-df12984213"></a>
 
-#### `apply_risk_gates`
+#### FUN-DF12984213
+
+**函数**：`apply_risk_gates`
 
 - **ID / 行**：`FUN-DF12984213` / `L104`（源码见本单元概览）
 - **签名 / 返回**：`apply_risk_gates(reviews: list, proposal, signals: list[Any], *, current_price: float, data_as_of: dict[str, Any] | None=None, observation_mode: bool=False)` → `list`
@@ -6865,7 +7967,9 @@
 
 <a id="unit-84723142fa"></a>
 
-### src/analysis/signal_geometry.py — 软件单元详细设计
+### UNIT-84723142FA
+
+**模块**：`src/analysis/signal_geometry.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -6885,7 +7989,9 @@
 
 <a id="fun-35226fd4cc"></a>
 
-#### `_dedupe_preserve_order`
+#### FUN-35226FD4CC
+
+**函数**：`_dedupe_preserve_order`
 
 - **ID / 行**：`FUN-35226FD4CC` / `L8`（源码见本单元概览）
 - **签名 / 返回**：`_dedupe_preserve_order(levels: list[float])` → `list[float]`
@@ -6896,7 +8002,9 @@
 
 <a id="fun-2abed7854b"></a>
 
-#### `normalize_take_profits`
+#### FUN-2ABED7854B
+
+**函数**：`normalize_take_profits`
 
 - **ID / 行**：`FUN-2ABED7854B` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`normalize_take_profits(*, direction: str, entry_low: float, entry_high: float, take_profits: list[float], theme: str='')` → `list[float]`
@@ -6907,7 +8015,9 @@
 
 <a id="fun-f4b66c6737"></a>
 
-#### `normalize_signal_take_profits`
+#### FUN-F4B66C6737
+
+**函数**：`normalize_signal_take_profits`
 
 - **ID / 行**：`FUN-F4B66C6737` / `L43`（源码见本单元概览）
 - **签名 / 返回**：`normalize_signal_take_profits(signal: dict[str, Any])` → `list[float]`
@@ -6918,7 +8028,9 @@
 
 <a id="unit-c8f58d21e1"></a>
 
-### src/analysis/signal_identity.py — 软件单元详细设计
+### UNIT-C8F58D21E1
+
+**模块**：`src/analysis/signal_identity.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -6938,7 +8050,9 @@
 
 <a id="fun-515303b30d"></a>
 
-#### `stable_signal_id`
+#### FUN-515303B30D
+
+**函数**：`stable_signal_id`
 
 - **ID / 行**：`FUN-515303B30D` / `L10`（源码见本单元概览）
 - **签名 / 返回**：`stable_signal_id(signal: dict[str, Any])` → `str`
@@ -6949,7 +8063,9 @@
 
 <a id="unit-7faaa8edca"></a>
 
-### src/analysis/technical_context.py — 软件单元详细设计
+### UNIT-7FAAA8EDCA
+
+**模块**：`src/analysis/technical_context.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -6969,7 +8085,9 @@
 
 <a id="fun-86bf8dedc0"></a>
 
-#### `distance_pct`
+#### FUN-86BF8DEDC0
+
+**函数**：`distance_pct`
 
 - **ID / 行**：`FUN-86BF8DEDC0` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`distance_pct(price: float, level: float)` → `float`
@@ -6979,7 +8097,9 @@
 
 <a id="fun-a9814ca00a"></a>
 
-#### `primary_analysis`
+#### FUN-A9814CA00A
+
+**函数**：`primary_analysis`
 
 - **ID / 行**：`FUN-A9814CA00A` / `L33`（源码见本单元概览）
 - **签名 / 返回**：`primary_analysis(ctx: MarketContext)` → `TimeframeAnalysis | None`
@@ -6990,7 +8110,9 @@
 
 <a id="fun-e2f42619c2"></a>
 
-#### `fibonacci_context`
+#### FUN-E2F42619C2
+
+**函数**：`fibonacci_context`
 
 - **ID / 行**：`FUN-E2F42619C2` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`fibonacci_context(ctx: MarketContext)` → `dict[str, Any]`
@@ -7001,7 +8123,9 @@
 
 <a id="fun-e5355cc1ae"></a>
 
-#### `support_resistance_context`
+#### FUN-E5355CC1AE
+
+**函数**：`support_resistance_context`
 
 - **ID / 行**：`FUN-E5355CC1AE` / `L62`（源码见本单元概览）
 - **签名 / 返回**：`support_resistance_context(ctx: MarketContext, *, limit: int=12)` → `dict[str, Any]`
@@ -7012,7 +8136,9 @@
 
 <a id="fun-67805426ec"></a>
 
-#### `support_resistance_context.add_level`
+#### FUN-67805426EC
+
+**函数**：`support_resistance_context.add_level`
 
 - **ID / 行**：`FUN-67805426EC` / `L66`（源码见本单元概览）
 - **签名 / 返回**：`support_resistance_context.add_level(*, price: float | None, kind: str | None, label: str, source: str, timeframe: str | None=None, strength: float=0.4)` → `None`
@@ -7023,7 +8149,9 @@
 
 <a id="fun-ab952e6029"></a>
 
-#### `support_resistance_context.add_zone`
+#### FUN-AB952E6029
+
+**函数**：`support_resistance_context.add_zone`
 
 - **ID / 行**：`FUN-AB952E6029` / `L90`（源码见本单元概览）
 - **签名 / 返回**：`support_resistance_context.add_zone(*, low: float, high: float, preferred_kind: str, label: str, source: str, timeframe: str | None, strength: float)` → `None`
@@ -7034,7 +8162,9 @@
 
 <a id="fun-41bb47141e"></a>
 
-#### `indicator_snapshot`
+#### FUN-41BB47141E
+
+**函数**：`indicator_snapshot`
 
 - **ID / 行**：`FUN-41BB47141E` / `L191`（源码见本单元概览）
 - **签名 / 返回**：`indicator_snapshot(ctx: MarketContext)` → `dict[str, Any]`
@@ -7045,7 +8175,9 @@
 
 <a id="fun-ab37ca5fb2"></a>
 
-#### `structure_narrative`
+#### FUN-AB37CA5FB2
+
+**函数**：`structure_narrative`
 
 - **ID / 行**：`FUN-AB37CA5FB2` / `L209`（源码见本单元概览）
 - **签名 / 返回**：`structure_narrative(analysis: TimeframeAnalysis, *, max_events: int=2)` → `str`
@@ -7056,7 +8188,9 @@
 
 <a id="fun-8894db4de1"></a>
 
-#### `timeframe_context`
+#### FUN-8894DB4DE1
+
+**函数**：`timeframe_context`
 
 - **ID / 行**：`FUN-8894DB4DE1` / `L245`（源码见本单元概览）
 - **签名 / 返回**：`timeframe_context(tf: str, analysis: TimeframeAnalysis, *, price: float, event_limit: int=8, ob_limit: int=5, fvg_limit: int=5, liquidity_limit: int=6)` → `dict[str, Any]`
@@ -7067,7 +8201,9 @@
 
 <a id="fun-8313bc01b7"></a>
 
-#### `technical_quality`
+#### FUN-8313BC01B7
+
+**函数**：`technical_quality`
 
 - **ID / 行**：`FUN-8313BC01B7` / `L302`（源码见本单元概览）
 - **签名 / 返回**：`technical_quality(ctx: MarketContext, indicators: dict[str, Any] | None=None)` → `dict[str, Any]`
@@ -7078,7 +8214,9 @@
 
 <a id="fun-9091131d8f"></a>
 
-#### `build_technical_context`
+#### FUN-9091131D8F
+
+**函数**：`build_technical_context`
 
 - **ID / 行**：`FUN-9091131D8F` / `L351`（源码见本单元概览）
 - **签名 / 返回**：`build_technical_context(ctx: MarketContext, *, event_limit: int=8)` → `dict[str, Any]`
@@ -7089,7 +8227,9 @@
 
 <a id="fun-303ba8669b"></a>
 
-#### `_ready_indicators`
+#### FUN-303BA8669B
+
+**函数**：`_ready_indicators`
 
 - **ID / 行**：`FUN-303BA8669B` / `L381`（源码见本单元概览）
 - **签名 / 返回**：`_ready_indicators(row: pd.Series)` → `list[str]`
@@ -7100,7 +8240,9 @@
 
 <a id="fun-42e28caea1"></a>
 
-#### `_nonzero_volume_ratio`
+#### FUN-42E28CAEA1
+
+**函数**：`_nonzero_volume_ratio`
 
 - **ID / 行**：`FUN-42E28CAEA1` / `L385`（源码见本单元概览）
 - **签名 / 返回**：`_nonzero_volume_ratio(df: pd.DataFrame)` → `float`
@@ -7111,7 +8253,9 @@
 
 <a id="fun-be25278d2d"></a>
 
-#### `_rank_ict_events`
+#### FUN-BE25278D2D
+
+**函数**：`_rank_ict_events`
 
 - **ID / 行**：`FUN-BE25278D2D` / `L392`（源码见本单元概览）
 - **签名 / 返回**：`_rank_ict_events(analysis: TimeframeAnalysis, *, limit: int)` → `list[dict[str, Any]]`
@@ -7122,7 +8266,9 @@
 
 <a id="fun-4a23106463"></a>
 
-#### `_level_kind`
+#### FUN-4A23106463
+
+**函数**：`_level_kind`
 
 - **ID / 行**：`FUN-4A23106463` / `L410`（源码见本单元概览）
 - **签名 / 返回**：`_level_kind(price: float, level: float)` → `str`
@@ -7132,7 +8278,9 @@
 
 <a id="fun-41c768d621"></a>
 
-#### `_zone_kind`
+#### FUN-41C768D621
+
+**函数**：`_zone_kind`
 
 - **ID / 行**：`FUN-41C768D621` / `L418`（源码见本单元概览）
 - **签名 / 返回**：`_zone_kind(price: float, low: float, high: float, preferred: str)` → `str`
@@ -7142,7 +8290,9 @@
 
 <a id="fun-c48fb80201"></a>
 
-#### `_dedupe_levels`
+#### FUN-C48FB80201
+
+**函数**：`_dedupe_levels`
 
 - **ID / 行**：`FUN-C48FB80201` / `L428`（源码见本单元概览）
 - **签名 / 返回**：`_dedupe_levels(levels: list[dict[str, Any]])` → `list[dict[str, Any]]`
@@ -7153,7 +8303,9 @@
 
 <a id="unit-ebf42549f9"></a>
 
-### src/analysis/tf_snapshot.py — 软件单元详细设计
+### UNIT-EBF42549F9
+
+**模块**：`src/analysis/tf_snapshot.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7173,7 +8325,9 @@
 
 <a id="fun-7354a02bce"></a>
 
-#### `_newest_events`
+#### FUN-7354A02BCE
+
+**函数**：`_newest_events`
 
 - **ID / 行**：`FUN-7354A02BCE` / `L12`（源码见本单元概览）
 - **签名 / 返回**：`_newest_events(events: list[StructureEvent], *, kind: str, limit: int=SNAPSHOT_LIMIT)` → `list[StructureEvent]`
@@ -7184,7 +8338,9 @@
 
 <a id="fun-a7616824f7"></a>
 
-#### `_serialize_event`
+#### FUN-A7616824F7
+
+**函数**：`_serialize_event`
 
 - **ID / 行**：`FUN-A7616824F7` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`_serialize_event(event: StructureEvent)` → `dict[str, Any]`
@@ -7195,7 +8351,9 @@
 
 <a id="fun-6dedb23061"></a>
 
-#### `_strong_weak_high_low`
+#### FUN-6DEDB23061
+
+**函数**：`_strong_weak_high_low`
 
 - **ID / 行**：`FUN-6DEDB23061` / `L35`（源码见本单元概览）
 - **签名 / 返回**：`_strong_weak_high_low(trend: str, swing_high: float | None, swing_low: float | None)` → `dict[str, float | None]`
@@ -7205,7 +8363,9 @@
 
 <a id="fun-c91f12310a"></a>
 
-#### `build_tf_snapshot`
+#### FUN-C91F12310A
+
+**函数**：`build_tf_snapshot`
 
 - **ID / 行**：`FUN-C91F12310A` / `L62`（源码见本单元概览）
 - **签名 / 返回**：`build_tf_snapshot(analysis: TimeframeAnalysis)` → `dict[str, Any]`
@@ -7216,7 +8376,9 @@
 
 <a id="arc-agents"></a>
 
-## ARC-AGENTS — 规则/LLM Agent 编排
+## ARC-AGENTS
+
+**名称**：规则/LLM Agent 编排
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -7259,7 +8421,9 @@
 
 <a id="unit-818fcec908"></a>
 
-### src/agents/__init__.py — 软件单元详细设计
+### UNIT-818FCEC908
+
+**模块**：`src/agents/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7279,7 +8443,9 @@
 
 <a id="unit-b6c46ef660"></a>
 
-### src/agents/analysts/__init__.py — 软件单元详细设计
+### UNIT-B6C46EF660
+
+**模块**：`src/agents/analysts/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7299,7 +8465,9 @@
 
 <a id="fun-00321f2b4a"></a>
 
-#### `run_analyst_team`
+#### FUN-00321F2B4A
+
+**函数**：`run_analyst_team`
 
 - **ID / 行**：`FUN-00321F2B4A` / `L20`（源码见本单元概览）
 - **签名 / 返回**：`run_analyst_team(ctx: MarketContext)` → `AnalystTeam`
@@ -7310,7 +8478,9 @@
 
 <a id="unit-8110cb5da5"></a>
 
-### src/agents/analysts/base.py — 软件单元详细设计
+### UNIT-8110CB5DA5
+
+**模块**：`src/agents/analysts/base.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7330,7 +8500,9 @@
 
 <a id="fun-c3439bfbe3"></a>
 
-#### `confidence_from_items`
+#### FUN-C3439BFBE3
+
+**函数**：`confidence_from_items`
 
 - **ID / 行**：`FUN-C3439BFBE3` / `L11`（源码见本单元概览）
 - **签名 / 返回**：`confidence_from_items(items: list[EvidenceItem])` → `float`
@@ -7341,7 +8513,9 @@
 
 <a id="fun-cc65b2503a"></a>
 
-#### `build_report`
+#### FUN-CC65B2503A
+
+**函数**：`build_report`
 
 - **ID / 行**：`FUN-CC65B2503A` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`build_report(*, agent: str, items: list[EvidenceItem], bias: Bias, summary: str | None=None)` → `AnalystReport`
@@ -7352,7 +8526,9 @@
 
 <a id="fun-7ef67bfe39"></a>
 
-#### `items_for_direction`
+#### FUN-7EF67BFE39
+
+**函数**：`items_for_direction`
 
 - **ID / 行**：`FUN-7EF67BFE39` / `L39`（源码见本单元概览）
 - **签名 / 返回**：`items_for_direction(team_reports: list[AnalystReport], direction: Bias)` → `list[EvidenceItem]`
@@ -7364,7 +8540,9 @@
 
 <a id="unit-87b2f0bba3"></a>
 
-### src/agents/analysts/evidence_ids.py — 软件单元详细设计
+### UNIT-87B2F0BBA3
+
+**模块**：`src/agents/analysts/evidence_ids.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7384,7 +8562,9 @@
 
 <a id="fun-736ecac34c"></a>
 
-#### `assign_evidence_ids`
+#### FUN-736ECAC34C
+
+**函数**：`assign_evidence_ids`
 
 - **ID / 行**：`FUN-736ECAC34C` / `L8`（源码见本单元概览）
 - **签名 / 返回**：`assign_evidence_ids(agent: str, items: list[EvidenceItem])` → `list[EvidenceItem]`
@@ -7395,7 +8575,9 @@
 
 <a id="unit-5e6c877f3b"></a>
 
-### src/agents/analysts/evidence_provenance.py — 软件单元详细设计
+### UNIT-5E6C877F3B
+
+**模块**：`src/agents/analysts/evidence_provenance.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7415,7 +8597,9 @@
 
 <a id="fun-89a55043e0"></a>
 
-#### `analyst_evidence_ids`
+#### FUN-89A55043E0
+
+**函数**：`analyst_evidence_ids`
 
 - **ID / 行**：`FUN-89A55043E0` / `L10`（源码见本单元概览）
 - **签名 / 返回**：`analyst_evidence_ids(team: AnalystTeam)` → `set[str]`
@@ -7426,7 +8610,9 @@
 
 <a id="fun-c2ce034d09"></a>
 
-#### `evidence_registry`
+#### FUN-C2CE034D09
+
+**函数**：`evidence_registry`
 
 - **ID / 行**：`FUN-C2CE034D09` / `L20`（源码见本单元概览）
 - **签名 / 返回**：`evidence_registry(team: AnalystTeam)` → `dict[str, EvidenceItem]`
@@ -7437,7 +8623,9 @@
 
 <a id="fun-bc6ab45103"></a>
 
-#### `is_new_structure_id`
+#### FUN-BC6AB45103
+
+**函数**：`is_new_structure_id`
 
 - **ID / 行**：`FUN-BC6AB45103` / `L30`（源码见本单元概览）
 - **签名 / 返回**：`is_new_structure_id(evidence_id: str, agent: str)` → `bool`
@@ -7447,7 +8635,9 @@
 
 <a id="fun-5138cc692a"></a>
 
-#### `_allowed_id`
+#### FUN-5138CC692A
+
+**函数**：`_allowed_id`
 
 - **ID / 行**：`FUN-5138CC692A` / `L35`（源码见本单元概览）
 - **签名 / 返回**：`_allowed_id(evidence_id: str, *, agent: str, allowed_ids: set[str])` → `bool`
@@ -7458,7 +8648,9 @@
 
 <a id="fun-aea352184d"></a>
 
-#### `dedupe_evidence_items`
+#### FUN-AEA352184D
+
+**函数**：`dedupe_evidence_items`
 
 - **ID / 行**：`FUN-AEA352184D` / `L42`（源码见本单元概览）
 - **签名 / 返回**：`dedupe_evidence_items(items: list[EvidenceItem])` → `tuple[list[EvidenceItem], int]`
@@ -7469,7 +8661,9 @@
 
 <a id="fun-dfee2688c2"></a>
 
-#### `_restore_refs`
+#### FUN-DFEE2688C2
+
+**函数**：`_restore_refs`
 
 - **ID / 行**：`FUN-DFEE2688C2` / `L57`（源码见本单元概览）
 - **签名 / 返回**：`_restore_refs(item: EvidenceItem, registry: dict[str, EvidenceItem])` → `EvidenceItem`
@@ -7480,7 +8674,9 @@
 
 <a id="fun-43d1351553"></a>
 
-#### `parse_research_items`
+#### FUN-43D1351553
+
+**函数**：`parse_research_items`
 
 - **ID / 行**：`FUN-43D1351553` / `L77`（源码见本单元概览）
 - **签名 / 返回**：`parse_research_items(rows: list[dict[str, Any]], *, agent: str, direction: Bias, allowed_ids: set[str], registry: dict[str, EvidenceItem], item_refs_fn)` → `tuple[list[EvidenceItem], int]`
@@ -7492,7 +8688,9 @@
 
 <a id="fun-87a0b32a1c"></a>
 
-#### `build_research_provenance_meta`
+#### FUN-87A0B32A1C
+
+**函数**：`build_research_provenance_meta`
 
 - **ID / 行**：`FUN-87A0B32A1C` / `L125`（源码见本单元概览）
 - **签名 / 返回**：`build_research_provenance_meta(items: list[EvidenceItem], *, allowed_ids: set[str], model_confidence: float, dedupe_dropped: int=0)` → `dict[str, Any]`
@@ -7503,7 +8701,9 @@
 
 <a id="fun-94884173fc"></a>
 
-#### `blend_research_confidence`
+#### FUN-94884173FC
+
+**函数**：`blend_research_confidence`
 
 - **ID / 行**：`FUN-94884173FC` / `L159`（源码见本单元概览）
 - **签名 / 返回**：`blend_research_confidence(model_confidence: float, meta: dict[str, Any])` → `float`
@@ -7514,7 +8714,9 @@
 
 <a id="fun-d72e36ce1e"></a>
 
-#### `build_debate_provenance_meta`
+#### FUN-D72E36CE1E
+
+**函数**：`build_debate_provenance_meta`
 
 - **ID / 行**：`FUN-D72E36CE1E` / `L164`（源码见本单元概览）
 - **签名 / 返回**：`build_debate_provenance_meta(bullish: list[EvidenceItem], bearish: list[EvidenceItem], *, model_consensus_strength: float)` → `dict[str, Any]`
@@ -7525,7 +8727,9 @@
 
 <a id="fun-1e35c05ea3"></a>
 
-#### `blend_debate_consensus`
+#### FUN-1E35C05EA3
+
+**函数**：`blend_debate_consensus`
 
 - **ID / 行**：`FUN-1E35C05EA3` / `L190`（源码见本单元概览）
 - **签名 / 返回**：`blend_debate_consensus(model_strength: float, meta: dict[str, Any])` → `float`
@@ -7536,7 +8740,9 @@
 
 <a id="unit-52003276aa"></a>
 
-### src/agents/analysts/fundamentals.py — 软件单元详细设计
+### UNIT-52003276AA
+
+**模块**：`src/agents/analysts/fundamentals.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7556,7 +8762,9 @@
 
 <a id="fun-39f851dead"></a>
 
-#### `_bias_from_quotes`
+#### FUN-39F851DEAD
+
+**函数**：`_bias_from_quotes`
 
 - **ID / 行**：`FUN-39F851DEAD` / `L11`（源码见本单元概览）
 - **签名 / 返回**：`_bias_from_quotes(ctx: MarketContext)` → `Bias`
@@ -7567,7 +8775,9 @@
 
 <a id="fun-d0b578d7f2"></a>
 
-#### `_macro_context_evidence`
+#### FUN-D0B578D7F2
+
+**函数**：`_macro_context_evidence`
 
 - **ID / 行**：`FUN-D0B578D7F2` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`_macro_context_evidence(ctx: MarketContext)` → `list[EvidenceItem]`
@@ -7578,7 +8788,9 @@
 
 <a id="fun-2dc8e34e80"></a>
 
-#### `run_fundamentals_analyst`
+#### FUN-2DC8E34E80
+
+**函数**：`run_fundamentals_analyst`
 
 - **ID / 行**：`FUN-2DC8E34E80` / `L93`（源码见本单元概览）
 - **签名 / 返回**：`run_fundamentals_analyst(ctx: MarketContext)` → `AnalystReport`
@@ -7589,7 +8801,9 @@
 
 <a id="unit-3628b84ddf"></a>
 
-### src/agents/analysts/news.py — 软件单元详细设计
+### UNIT-3628B84DDF
+
+**模块**：`src/agents/analysts/news.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7609,7 +8823,9 @@
 
 <a id="fun-215c3fb37a"></a>
 
-#### `_news_context_evidence`
+#### FUN-215C3FB37A
+
+**函数**：`_news_context_evidence`
 
 - **ID / 行**：`FUN-215C3FB37A` / `L12`（源码见本单元概览）
 - **签名 / 返回**：`_news_context_evidence(ctx: MarketContext, *, is_live: bool)` → `list[EvidenceItem]`
@@ -7620,7 +8836,9 @@
 
 <a id="fun-b07796dbd7"></a>
 
-#### `run_news_analyst`
+#### FUN-B07796DBD7
+
+**函数**：`run_news_analyst`
 
 - **ID / 行**：`FUN-B07796DBD7` / `L77`（源码见本单元概览）
 - **签名 / 返回**：`run_news_analyst(ctx: MarketContext)` → `AnalystReport`
@@ -7631,7 +8849,9 @@
 
 <a id="unit-b6597d0c34"></a>
 
-### src/agents/analysts/news_bias.py — 软件单元详细设计
+### UNIT-B6597D0C34
+
+**模块**：`src/agents/analysts/news_bias.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7651,7 +8871,9 @@
 
 <a id="fun-8413383608"></a>
 
-#### `infer_news_bias`
+#### FUN-8413383608
+
+**函数**：`infer_news_bias`
 
 - **ID / 行**：`FUN-8413383608` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`infer_news_bias(headlines: list[HeadlineItem], calendar: list[CalendarEvent], *, risk_text: str='')` → `Bias`
@@ -7662,7 +8884,9 @@
 
 <a id="unit-8f2897b88a"></a>
 
-### src/agents/analysts/sentiment.py — 软件单元详细设计
+### UNIT-8F2897B88A
+
+**模块**：`src/agents/analysts/sentiment.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7682,7 +8906,9 @@
 
 <a id="fun-853c57015e"></a>
 
-#### `_social_note`
+#### FUN-853C57015E
+
+**函数**：`_social_note`
 
 - **ID / 行**：`FUN-853C57015E` / `L12`（源码见本单元概览）
 - **签名 / 返回**：`_social_note(ext, post_count: int)` → `str`
@@ -7693,7 +8919,9 @@
 
 <a id="fun-e569d3f536"></a>
 
-#### `_social_bias_delta`
+#### FUN-E569D3F536
+
+**函数**：`_social_bias_delta`
 
 - **ID / 行**：`FUN-E569D3F536` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`_social_bias_delta(posts: list[dict])` → `float`
@@ -7704,7 +8932,9 @@
 
 <a id="fun-00db5653b2"></a>
 
-#### `_sentiment_context_evidence`
+#### FUN-00DB5653B2
+
+**函数**：`_sentiment_context_evidence`
 
 - **ID / 行**：`FUN-00DB5653B2` / `L33`（源码见本单元概览）
 - **签名 / 返回**：`_sentiment_context_evidence(ctx: MarketContext, vote: dict[str, float])` → `list[EvidenceItem]`
@@ -7715,7 +8945,9 @@
 
 <a id="fun-8e5ddab513"></a>
 
-#### `run_sentiment_analyst`
+#### FUN-8E5DDAB513
+
+**函数**：`run_sentiment_analyst`
 
 - **ID / 行**：`FUN-8E5DDAB513` / `L103`（源码见本单元概览）
 - **签名 / 返回**：`run_sentiment_analyst(ctx: MarketContext)` → `AnalystReport`
@@ -7726,7 +8958,9 @@
 
 <a id="unit-3363ad337f"></a>
 
-### src/agents/analysts/structure_zones.py — 软件单元详细设计
+### UNIT-3363AD337F
+
+**模块**：`src/agents/analysts/structure_zones.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7746,7 +8980,9 @@
 
 <a id="fun-6eec9deabd"></a>
 
-#### `ict_zone_evidence`
+#### FUN-6EEC9DEABD
+
+**函数**：`ict_zone_evidence`
 
 - **ID / 行**：`FUN-6EEC9DEABD` / `L11`（源码见本单元概览）
 - **签名 / 返回**：`ict_zone_evidence(ctx: MarketContext)` → `list[EvidenceItem]`
@@ -7757,7 +8993,9 @@
 
 <a id="unit-8d8fc5eaa1"></a>
 
-### src/agents/analysts/technical.py — 软件单元详细设计
+### UNIT-8D8FC5EAA1
+
+**模块**：`src/agents/analysts/technical.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7777,7 +9015,9 @@
 
 <a id="fun-6bf4e07518"></a>
 
-#### `_structure_bias`
+#### FUN-6BF4E07518
+
+**函数**：`_structure_bias`
 
 - **ID / 行**：`FUN-6BF4E07518` / `L19`（源码见本单元概览）
 - **签名 / 返回**：`_structure_bias(analyses: dict[str, TimeframeAnalysis])` → `tuple[Bias, list[EvidenceItem]]`
@@ -7788,7 +9028,9 @@
 
 <a id="fun-a800d7efb0"></a>
 
-#### `_ict_context_evidence`
+#### FUN-A800D7EFB0
+
+**函数**：`_ict_context_evidence`
 
 - **ID / 行**：`FUN-A800D7EFB0` / `L72`（源码见本单元概览）
 - **签名 / 返回**：`_ict_context_evidence(ctx: MarketContext)` → `tuple[Bias, list[EvidenceItem]]`
@@ -7799,7 +9041,9 @@
 
 <a id="fun-047ed2fce9"></a>
 
-#### `_fibonacci_evidence`
+#### FUN-047ED2FCE9
+
+**函数**：`_fibonacci_evidence`
 
 - **ID / 行**：`FUN-047ED2FCE9` / `L149`（源码见本单元概览）
 - **签名 / 返回**：`_fibonacci_evidence(technical_ctx: dict, price: float)` → `list[EvidenceItem]`
@@ -7810,7 +9054,9 @@
 
 <a id="fun-30c0262d6e"></a>
 
-#### `_indicator_evidence`
+#### FUN-30C0262D6E
+
+**函数**：`_indicator_evidence`
 
 - **ID / 行**：`FUN-30C0262D6E` / `L179`（源码见本单元概览）
 - **签名 / 返回**：`_indicator_evidence(technical_ctx: dict)` → `tuple[Bias, list[EvidenceItem]]`
@@ -7821,7 +9067,9 @@
 
 <a id="fun-efb2eb527e"></a>
 
-#### `_quality_evidence`
+#### FUN-EFB2EB527E
+
+**函数**：`_quality_evidence`
 
 - **ID / 行**：`FUN-EFB2EB527E` / `L264`（源码见本单元概览）
 - **签名 / 返回**：`_quality_evidence(technical_ctx: dict)` → `list[EvidenceItem]`
@@ -7832,7 +9080,9 @@
 
 <a id="fun-0adaa6f91a"></a>
 
-#### `_support_resistance_evidence`
+#### FUN-0ADAA6F91A
+
+**函数**：`_support_resistance_evidence`
 
 - **ID / 行**：`FUN-0ADAA6F91A` / `L280`（源码见本单元概览）
 - **签名 / 返回**：`_support_resistance_evidence(technical_ctx: dict)` → `tuple[Bias, list[EvidenceItem]]`
@@ -7843,7 +9093,9 @@
 
 <a id="fun-699a6c41bf"></a>
 
-#### `_level_price_text`
+#### FUN-699A6C41BF
+
+**函数**：`_level_price_text`
 
 - **ID / 行**：`FUN-699A6C41BF` / `L331`（源码见本单元概览）
 - **签名 / 返回**：`_level_price_text(level: dict)` → `str`
@@ -7854,7 +9106,9 @@
 
 <a id="fun-5e5145e5af"></a>
 
-#### `_pa_evidence`
+#### FUN-5E5145E5AF
+
+**函数**：`_pa_evidence`
 
 - **ID / 行**：`FUN-5E5145E5AF` / `L337`（源码见本单元概览）
 - **签名 / 返回**：`_pa_evidence(technical_ctx: dict)` → `list[EvidenceItem]`
@@ -7865,7 +9119,9 @@
 
 <a id="fun-10ecc215f3"></a>
 
-#### `run_technical_analyst`
+#### FUN-10ECC215F3
+
+**函数**：`run_technical_analyst`
 
 - **ID / 行**：`FUN-10ECC215F3` / `L374`（源码见本单元概览）
 - **签名 / 返回**：`run_technical_analyst(ctx: MarketContext)` → `AnalystReport`
@@ -7877,7 +9133,9 @@
 
 <a id="unit-8933374b3e"></a>
 
-### src/agents/bearish.py — 软件单元详细设计
+### UNIT-8933374B3E
+
+**模块**：`src/agents/bearish.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7897,7 +9155,9 @@
 
 <a id="fun-c2054ace2c"></a>
 
-#### `_structure_items`
+#### FUN-C2054ACE2C
+
+**函数**：`_structure_items`
 
 - **ID / 行**：`FUN-C2054ACE2C` / `L12`（源码见本单元概览）
 - **签名 / 返回**：`_structure_items(analyses: dict[str, TimeframeAnalysis])` → `list[EvidenceItem]`
@@ -7908,7 +9168,9 @@
 
 <a id="fun-63515361b0"></a>
 
-#### `run_bearish_researcher`
+#### FUN-63515361B0
+
+**函数**：`run_bearish_researcher`
 
 - **ID / 行**：`FUN-63515361B0` / `L80`（源码见本单元概览）
 - **签名 / 返回**：`run_bearish_researcher(ctx: MarketContext, team: AnalystTeam | None=None)` → `AgentEvidence`
@@ -7919,7 +9181,9 @@
 
 <a id="unit-6008a95748"></a>
 
-### src/agents/bullish.py — 软件单元详细设计
+### UNIT-6008A95748
+
+**模块**：`src/agents/bullish.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7939,7 +9203,9 @@
 
 <a id="fun-3bd84eeb0a"></a>
 
-#### `_structure_items`
+#### FUN-3BD84EEB0A
+
+**函数**：`_structure_items`
 
 - **ID / 行**：`FUN-3BD84EEB0A` / `L12`（源码见本单元概览）
 - **签名 / 返回**：`_structure_items(analyses: dict[str, TimeframeAnalysis])` → `list[EvidenceItem]`
@@ -7950,7 +9216,9 @@
 
 <a id="fun-87ec3ef32e"></a>
 
-#### `run_bullish_researcher`
+#### FUN-87EC3EF32E
+
+**函数**：`run_bullish_researcher`
 
 - **ID / 行**：`FUN-87EC3EF32E` / `L70`（源码见本单元概览）
 - **签名 / 返回**：`run_bullish_researcher(ctx: MarketContext, team: AnalystTeam | None=None)` → `AgentEvidence`
@@ -7961,7 +9229,9 @@
 
 <a id="unit-34bf03f815"></a>
 
-### src/agents/debate.py — 软件单元详细设计
+### UNIT-34BF03F815
+
+**模块**：`src/agents/debate.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -7981,7 +9251,9 @@
 
 <a id="fun-29aa7948ff"></a>
 
-#### `run_debate`
+#### FUN-29AA7948FF
+
+**函数**：`run_debate`
 
 - **ID / 行**：`FUN-29AA7948FF` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`run_debate(bullish: AgentEvidence, bearish: AgentEvidence, analyses, team: AnalystTeam | None=None, ctx: MarketContext | None=None)` → `ResearchDebate`
@@ -7992,7 +9264,9 @@
 
 <a id="unit-f23db48d75"></a>
 
-### src/agents/factory.py — 软件单元详细设计
+### UNIT-F23DB48D75
+
+**模块**：`src/agents/factory.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8012,7 +9286,9 @@
 
 <a id="fun-5766bc355b"></a>
 
-#### `_use_llm_stage`
+#### FUN-5766BC355B
+
+**函数**：`_use_llm_stage`
 
 - **ID / 行**：`FUN-5766BC355B` / `L60`（源码见本单元概览）
 - **签名 / 返回**：`_use_llm_stage(stage_enabled: bool)` → `bool`
@@ -8023,7 +9299,9 @@
 
 <a id="fun-8bd56770da"></a>
 
-#### `_pick_evidence`
+#### FUN-8BD56770DA
+
+**函数**：`_pick_evidence`
 
 - **ID / 行**：`FUN-8BD56770DA` / `L71`（源码见本单元概览）
 - **签名 / 返回**：`_pick_evidence(stage: str, rule_result: AgentEvidence, llm_result: AgentEvidence | None, trace, pipeline: AgentPipelineMeta)` → `AgentEvidence`
@@ -8034,7 +9312,9 @@
 
 <a id="fun-69649a77ae"></a>
 
-#### `_pick_analyst_report`
+#### FUN-69649A77AE
+
+**函数**：`_pick_analyst_report`
 
 - **ID / 行**：`FUN-69649A77AE` / `L103`（源码见本单元概览）
 - **签名 / 返回**：`_pick_analyst_report(stage: str, rule_result: AnalystReport, llm_result: AnalystReport | None, trace, pipeline: AgentPipelineMeta)` → `AnalystReport`
@@ -8045,7 +9325,9 @@
 
 <a id="fun-61f26f47e9"></a>
 
-#### `_analyst_team_aggregate_source`
+#### FUN-61F26F47E9
+
+**函数**：`_analyst_team_aggregate_source`
 
 - **ID / 行**：`FUN-61F26F47E9` / `L137`（源码见本单元概览）
 - **签名 / 返回**：`_analyst_team_aggregate_source(llm_picked: int, total: int=4)` → `StageSource`
@@ -8056,7 +9338,9 @@
 
 <a id="fun-590a53a74c"></a>
 
-#### `_use_llm_analyst`
+#### FUN-590A53A74C
+
+**函数**：`_use_llm_analyst`
 
 - **ID / 行**：`FUN-590A53A74C` / `L145`（源码见本单元概览）
 - **签名 / 返回**：`_use_llm_analyst(stage: str)` → `bool`
@@ -8067,7 +9351,9 @@
 
 <a id="fun-c7c1e6f330"></a>
 
-#### `_needs_rule_baseline`
+#### FUN-C7C1E6F330
+
+**函数**：`_needs_rule_baseline`
 
 - **ID / 行**：`FUN-C7C1E6F330` / `L149`（源码见本单元概览）
 - **签名 / 返回**：`_needs_rule_baseline()` → `bool`
@@ -8078,7 +9364,9 @@
 
 <a id="fun-27167e88c9"></a>
 
-#### `_llm_stage_ok`
+#### FUN-27167E88C9
+
+**函数**：`_llm_stage_ok`
 
 - **ID / 行**：`FUN-27167E88C9` / `L154`（源码见本单元概览）
 - **签名 / 返回**：`_llm_stage_ok(llm_result, trace)` → `bool`
@@ -8088,7 +9376,9 @@
 
 <a id="fun-3e86d74ceb"></a>
 
-#### `_ensure_rule_baseline`
+#### FUN-3E86D74CEB
+
+**函数**：`_ensure_rule_baseline`
 
 - **ID / 行**：`FUN-3E86D74CEB` / `L158`（源码见本单元概览）
 - **签名 / 返回**：`_ensure_rule_baseline(rule_result, llm_result, trace, compute_rule)` → `runtime/inferred`
@@ -8099,7 +9389,9 @@
 
 <a id="fun-e8a54418d1"></a>
 
-#### `run_analyst_team`
+#### FUN-E8A54418D1
+
+**函数**：`run_analyst_team`
 
 - **ID / 行**：`FUN-E8A54418D1` / `L167`（源码见本单元概览）
 - **签名 / 返回**：`run_analyst_team(ctx: MarketContext, pipeline: AgentPipelineMeta)` → `AnalystTeam`
@@ -8111,7 +9403,9 @@
 
 <a id="fun-7a4ecb2fc6"></a>
 
-#### `run_bullish`
+#### FUN-7A4ECB2FC6
+
+**函数**：`run_bullish`
 
 - **ID / 行**：`FUN-7A4ECB2FC6` / `L282`（源码见本单元概览）
 - **签名 / 返回**：`run_bullish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam)` → `AgentEvidence`
@@ -8123,7 +9417,9 @@
 
 <a id="fun-5113cb3027"></a>
 
-#### `run_bearish`
+#### FUN-5113CB3027
+
+**函数**：`run_bearish`
 
 - **ID / 行**：`FUN-5113CB3027` / `L302`（源码见本单元概览）
 - **签名 / 返回**：`run_bearish(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam)` → `AgentEvidence`
@@ -8135,7 +9431,9 @@
 
 <a id="fun-91a30f1f5d"></a>
 
-#### `research_uses_parallel_llm`
+#### FUN-91A30F1F5D
+
+**函数**：`research_uses_parallel_llm`
 
 - **ID / 行**：`FUN-91A30F1F5D` / `L322`（源码见本单元概览）
 - **签名 / 返回**：`research_uses_parallel_llm()` → `bool`
@@ -8146,7 +9444,9 @@
 
 <a id="fun-70aa2e8b05"></a>
 
-#### `run_research_team`
+#### FUN-70AA2E8B05
+
+**函数**：`run_research_team`
 
 - **ID / 行**：`FUN-70AA2E8B05` / `L332`（源码见本单元概览）
 - **签名 / 返回**：`run_research_team(ctx: MarketContext, pipeline: AgentPipelineMeta, team: AnalystTeam)` → `tuple[AgentEvidence, AgentEvidence]`
@@ -8158,7 +9458,9 @@
 
 <a id="fun-4f354a267b"></a>
 
-#### `_pick_debate`
+#### FUN-4F354A267B
+
+**函数**：`_pick_debate`
 
 - **ID / 行**：`FUN-4F354A267B` / `L379`（源码见本单元概览）
 - **签名 / 返回**：`_pick_debate(rule_result: ResearchDebate, llm_result: ResearchDebate | None, trace, pipeline: AgentPipelineMeta)` → `ResearchDebate`
@@ -8169,7 +9471,9 @@
 
 <a id="fun-7599e6282b"></a>
 
-#### `run_debate`
+#### FUN-7599E6282B
+
+**函数**：`run_debate`
 
 - **ID / 行**：`FUN-7599E6282B` / `L408`（源码见本单元概览）
 - **签名 / 返回**：`run_debate(bullish: AgentEvidence, bearish: AgentEvidence, analyses, pipeline: AgentPipelineMeta, team: AnalystTeam, ctx: MarketContext)` → `ResearchDebate`
@@ -8181,7 +9485,9 @@
 
 <a id="fun-682ee70c11"></a>
 
-#### `run_level_proposer`
+#### FUN-682EE70C11
+
+**函数**：`run_level_proposer`
 
 - **ID / 行**：`FUN-682EE70C11` / `L444`（源码见本单元概览）
 - **签名 / 返回**：`run_level_proposer(ctx: MarketContext, team: AnalystTeam, debate: ResearchDebate, pipeline: AgentPipelineMeta, rule_signals: list[TradingSignal])` → `list[LevelProposal]`
@@ -8193,7 +9499,9 @@
 
 <a id="fun-c68a4cf1f3"></a>
 
-#### `run_trader`
+#### FUN-C68A4CF1F3
+
+**函数**：`run_trader`
 
 - **ID / 行**：`FUN-C68A4CF1F3` / `L471`（源码见本单元概览）
 - **签名 / 返回**：`run_trader(ctx: MarketContext, debate: ResearchDebate, pipeline: AgentPipelineMeta, signals: list[TradingSignal], team: AnalystTeam | None=None, *, observation_mode: bool=False)` → `runtime/inferred`
@@ -8205,7 +9513,9 @@
 
 <a id="fun-bab0b34f57"></a>
 
-#### `run_risk`
+#### FUN-BAB0B34F57
+
+**函数**：`run_risk`
 
 - **ID / 行**：`FUN-BAB0B34F57` / `L506`（源码见本单元概览）
 - **签名 / 返回**：`run_risk(proposal: TransactionProposal, signals: list, pipeline: AgentPipelineMeta, *, current_price: float=0.0, data_as_of: dict | None=None, observation_mode: bool=False)` → `list[RiskReview]`
@@ -8217,7 +9527,9 @@
 
 <a id="fun-d6ed0e37d5"></a>
 
-#### `run_risk._gate`
+#### FUN-D6ED0E37D5
+
+**函数**：`run_risk._gate`
 
 - **ID / 行**：`FUN-D6ED0E37D5` / `L515`（源码见本单元概览）
 - **签名 / 返回**：`run_risk._gate(reviews: list[RiskReview])` → `list[RiskReview]`
@@ -8228,7 +9540,9 @@
 
 <a id="fun-60d80a7b70"></a>
 
-#### `run_manager`
+#### FUN-60D80A7B70
+
+**函数**：`run_manager`
 
 - **ID / 行**：`FUN-60D80A7B70` / `L564`（源码见本单元概览）
 - **签名 / 返回**：`run_manager(proposal: TransactionProposal, reviews: list[RiskReview], pipeline: AgentPipelineMeta)` → `ManagerDecision`
@@ -8240,7 +9554,9 @@
 
 <a id="unit-1606bdc6e2"></a>
 
-### src/agents/llm/__init__.py — 软件单元详细设计
+### UNIT-1606BDC6E2
+
+**模块**：`src/agents/llm/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8260,7 +9576,9 @@
 
 <a id="unit-3eeb009803"></a>
 
-### src/agents/llm/base.py — 软件单元详细设计
+### UNIT-3EEB009803
+
+**模块**：`src/agents/llm/base.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8280,7 +9598,9 @@
 
 <a id="fun-e3963880ea"></a>
 
-#### `_backoff_seconds`
+#### FUN-E3963880EA
+
+**函数**：`_backoff_seconds`
 
 - **ID / 行**：`FUN-E3963880EA` / `L30`（源码见本单元概览）
 - **签名 / 返回**：`_backoff_seconds(attempt: int)` → `float`
@@ -8290,7 +9610,9 @@
 
 <a id="fun-b6641135ba"></a>
 
-#### `_parse_llm_json`
+#### FUN-B6641135BA
+
+**函数**：`_parse_llm_json`
 
 - **ID / 行**：`FUN-B6641135BA` / `L36`（源码见本单元概览）
 - **签名 / 返回**：`_parse_llm_json(raw: str)` → `dict[str, Any]`
@@ -8302,7 +9624,9 @@
 
 <a id="fun-6474c56d9a"></a>
 
-#### `_stream_once`
+#### FUN-6474C56D9A
+
+**函数**：`_stream_once`
 
 - **ID / 行**：`FUN-6474C56D9A` / `L65`（源码见本单元概览）
 - **签名 / 返回**：`_stream_once(client: LLMClient, messages: list[dict[str, str]], *, stage: str, temperature: float)` → `str`
@@ -8314,7 +9638,9 @@
 
 <a id="fun-79e9f3d3c1"></a>
 
-#### `stream_llm_json`
+#### FUN-79E9F3D3C1
+
+**函数**：`stream_llm_json`
 
 - **ID / 行**：`FUN-79E9F3D3C1` / `L84`（源码见本单元概览）
 - **签名 / 返回**：`stream_llm_json(client: LLMClient, messages: list[dict[str, str]], *, stage: str, temperature: float=0.2, max_attempts: int | None=None)` → `str`
@@ -8326,7 +9652,9 @@
 
 <a id="fun-ddb9984fe6"></a>
 
-#### `run_llm_stage`
+#### FUN-DDB9984FE6
+
+**函数**：`run_llm_stage`
 
 - **ID / 行**：`FUN-DDB9984FE6` / `L125`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_stage(*, stage: str, model: str, client: LLMClient, messages: list[dict[str, str]], parse: Callable[[dict[str, Any]], T], temperature: float=0.2)` → `tuple[T | None, LLMStageTrace]`
@@ -8338,7 +9666,9 @@
 
 <a id="unit-3a49bda3a6"></a>
 
-### src/agents/llm/payload.py — 软件单元详细设计
+### UNIT-3A49BDA3A6
+
+**模块**：`src/agents/llm/payload.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8358,7 +9688,9 @@
 
 <a id="fun-2aeed14a2e"></a>
 
-#### `_tf_block`
+#### FUN-2AEED14A2E
+
+**函数**：`_tf_block`
 
 - **ID / 行**：`FUN-2AEED14A2E` / `L34`（源码见本单元概览）
 - **签名 / 返回**：`_tf_block(tf: str, analysis: TimeframeAnalysis, *, price: float)` → `dict[str, Any]`
@@ -8369,7 +9701,9 @@
 
 <a id="fun-f3d598c89c"></a>
 
-#### `_structure_vote`
+#### FUN-F3D598C89C
+
+**函数**：`_structure_vote`
 
 - **ID / 行**：`FUN-F3D598C89C` / `L38`（源码见本单元概览）
 - **签名 / 返回**：`_structure_vote(analyses)` → `dict[str, float]`
@@ -8380,7 +9714,9 @@
 
 <a id="fun-eaa77ee71a"></a>
 
-#### `_timeframe_trends`
+#### FUN-EAA77EE71A
+
+**函数**：`_timeframe_trends`
 
 - **ID / 行**：`FUN-EAA77EE71A` / `L42`（源码见本单元概览）
 - **签名 / 返回**：`_timeframe_trends(ctx: MarketContext)` → `dict[str, str]`
@@ -8390,7 +9726,9 @@
 
 <a id="fun-6d3cf52f12"></a>
 
-#### `_event_risk_block`
+#### FUN-6D3CF52F12
+
+**函数**：`_event_risk_block`
 
 - **ID / 行**：`FUN-6D3CF52F12` / `L48`（源码见本单元概览）
 - **签名 / 返回**：`_event_risk_block(ctx: MarketContext)` → `dict[str, Any]`
@@ -8401,7 +9739,9 @@
 
 <a id="fun-c677217758"></a>
 
-#### `technical_level_reactions_payload`
+#### FUN-C677217758
+
+**函数**：`technical_level_reactions_payload`
 
 - **ID / 行**：`FUN-C677217758` / `L57`（源码见本单元概览）
 - **签名 / 返回**：`technical_level_reactions_payload(team: AnalystTeam)` → `list[dict[str, Any]]`
@@ -8412,7 +9752,9 @@
 
 <a id="fun-6c3bfd3baa"></a>
 
-#### `analyst_team_payload`
+#### FUN-6C3BFD3BAA
+
+**函数**：`analyst_team_payload`
 
 - **ID / 行**：`FUN-6C3BFD3BAA` / `L87`（源码见本单元概览）
 - **签名 / 返回**：`analyst_team_payload(team: AnalystTeam)` → `dict[str, Any]`
@@ -8423,7 +9765,9 @@
 
 <a id="fun-a152bbc0e8"></a>
 
-#### `analyst_team_summaries_payload`
+#### FUN-A152BBC0E8
+
+**函数**：`analyst_team_summaries_payload`
 
 - **ID / 行**：`FUN-A152BBC0E8` / `L114`（源码见本单元概览）
 - **签名 / 返回**：`analyst_team_summaries_payload(team: AnalystTeam, *, top_items: int=0)` → `dict[str, Any]`
@@ -8434,7 +9778,9 @@
 
 <a id="fun-6749b95a24"></a>
 
-#### `analyst_team_input_payload`
+#### FUN-6749B95A24
+
+**函数**：`analyst_team_input_payload`
 
 - **ID / 行**：`FUN-6749B95A24` / `L139`（源码见本单元概览）
 - **签名 / 返回**：`analyst_team_input_payload(ctx: MarketContext)` → `dict[str, Any]`
@@ -8445,7 +9791,9 @@
 
 <a id="fun-293475f5a3"></a>
 
-#### `_fibonacci_block`
+#### FUN-293475F5A3
+
+**函数**：`_fibonacci_block`
 
 - **ID / 行**：`FUN-293475F5A3` / `L150`（源码见本单元概览）
 - **签名 / 返回**：`_fibonacci_block(ctx: MarketContext)` → `dict[str, Any]`
@@ -8456,7 +9804,9 @@
 
 <a id="fun-3c9a11e1b3"></a>
 
-#### `market_payload`
+#### FUN-3C9A11E1B3
+
+**函数**：`market_payload`
 
 - **ID / 行**：`FUN-3C9A11E1B3` / `L155`（源码见本单元概览）
 - **签名 / 返回**：`market_payload(ctx: MarketContext, team: AnalystTeam | None=None)` → `dict[str, Any]`
@@ -8467,7 +9817,9 @@
 
 <a id="fun-fddf16b339"></a>
 
-#### `research_payload`
+#### FUN-FDDF16B339
+
+**函数**：`research_payload`
 
 - **ID / 行**：`FUN-FDDF16B339` / `L176`（源码见本单元概览）
 - **签名 / 返回**：`research_payload(ctx: MarketContext, team: AnalystTeam, direction: str)` → `dict[str, Any]`
@@ -8478,7 +9830,9 @@
 
 <a id="fun-081944e744"></a>
 
-#### `technical_analyst_payload`
+#### FUN-081944E744
+
+**函数**：`technical_analyst_payload`
 
 - **ID / 行**：`FUN-081944E744` / `L197`（源码见本单元概览）
 - **签名 / 返回**：`technical_analyst_payload(ctx: MarketContext)` → `dict[str, Any]`
@@ -8489,7 +9843,9 @@
 
 <a id="fun-f93a6b184d"></a>
 
-#### `fundamentals_analyst_payload`
+#### FUN-F93A6B184D
+
+**函数**：`fundamentals_analyst_payload`
 
 - **ID / 行**：`FUN-F93A6B184D` / `L229`（源码见本单元概览）
 - **签名 / 返回**：`fundamentals_analyst_payload(ctx: MarketContext)` → `dict[str, Any]`
@@ -8500,7 +9856,9 @@
 
 <a id="fun-3fc60de348"></a>
 
-#### `news_analyst_payload`
+#### FUN-3FC60DE348
+
+**函数**：`news_analyst_payload`
 
 - **ID / 行**：`FUN-3FC60DE348` / `L244`（源码见本单元概览）
 - **签名 / 返回**：`news_analyst_payload(ctx: MarketContext)` → `dict[str, Any]`
@@ -8511,7 +9869,9 @@
 
 <a id="fun-e83e383708"></a>
 
-#### `sentiment_analyst_payload`
+#### FUN-E83E383708
+
+**函数**：`sentiment_analyst_payload`
 
 - **ID / 行**：`FUN-E83E383708` / `L286`（源码见本单元概览）
 - **签名 / 返回**：`sentiment_analyst_payload(ctx: MarketContext)` → `dict[str, Any]`
@@ -8522,7 +9882,9 @@
 
 <a id="fun-3e594bc0fa"></a>
 
-#### `debate_payload`
+#### FUN-3E594BC0FA
+
+**函数**：`debate_payload`
 
 - **ID / 行**：`FUN-3E594BC0FA` / `L300`（源码见本单元概览）
 - **签名 / 返回**：`debate_payload(bullish: AgentEvidence, bearish: AgentEvidence, analyses, *, ctx: MarketContext | None=None, team: AnalystTeam | None=None)` → `dict[str, Any]`
@@ -8533,7 +9895,9 @@
 
 <a id="fun-8646951a9c"></a>
 
-#### `evidence_payload`
+#### FUN-8646951A9C
+
+**函数**：`evidence_payload`
 
 - **ID / 行**：`FUN-8646951A9C` / `L340`（源码见本单元概览）
 - **签名 / 返回**：`evidence_payload(evidence: AgentEvidence)` → `dict[str, Any]`
@@ -8544,7 +9908,9 @@
 
 <a id="fun-35a12d35f4"></a>
 
-#### `_signal_payload`
+#### FUN-35A12D35F4
+
+**函数**：`_signal_payload`
 
 - **ID / 行**：`FUN-35A12D35F4` / `L361`（源码见本单元概览）
 - **签名 / 返回**：`_signal_payload(signal: Any)` → `dict[str, Any]`
@@ -8555,7 +9921,9 @@
 
 <a id="fun-256c7b349e"></a>
 
-#### `signal_list_payload`
+#### FUN-256C7B349E
+
+**函数**：`signal_list_payload`
 
 - **ID / 行**：`FUN-256C7B349E` / `L378`（源码见本单元概览）
 - **签名 / 返回**：`signal_list_payload(signals: list[Any])` → `list[dict[str, Any]]`
@@ -8566,7 +9934,9 @@
 
 <a id="fun-992d8a594f"></a>
 
-#### `_legacy_trader_payload`
+#### FUN-992D8A594F
+
+**函数**：`_legacy_trader_payload`
 
 - **ID / 行**：`FUN-992D8A594F` / `L385`（源码见本单元概览）
 - **签名 / 返回**：`_legacy_trader_payload(ctx: MarketContext, debate: ResearchDebate, signals: list[Any])` → `dict[str, Any]`
@@ -8577,7 +9947,9 @@
 
 <a id="fun-8ce195cdf3"></a>
 
-#### `trader_decision_payload`
+#### FUN-8CE195CDF3
+
+**函数**：`trader_decision_payload`
 
 - **ID / 行**：`FUN-8CE195CDF3` / `L406`（源码见本单元概览）
 - **签名 / 返回**：`trader_decision_payload(ctx: MarketContext, debate: ResearchDebate, team: AnalystTeam, signals: list[Any])` → `dict[str, Any]`
@@ -8588,7 +9960,9 @@
 
 <a id="fun-aac9fbd67b"></a>
 
-#### `trader_payload`
+#### FUN-AAC9FBD67B
+
+**函数**：`trader_payload`
 
 - **ID / 行**：`FUN-AAC9FBD67B` / `L434`（源码见本单元概览）
 - **签名 / 返回**：`trader_payload(ctx: MarketContext, debate: ResearchDebate, signals: list[Any], team: AnalystTeam | None=None)` → `dict[str, Any]`
@@ -8599,7 +9973,9 @@
 
 <a id="fun-f44f676424"></a>
 
-#### `risk_payload`
+#### FUN-F44F676424
+
+**函数**：`risk_payload`
 
 - **ID / 行**：`FUN-F44F676424` / `L445`（源码见本单元概览）
 - **签名 / 返回**：`risk_payload(proposal: TransactionProposal, signal_count: int, *, signals: list[Any] | None=None, current_price: float | None=None, data_as_of: dict[str, Any] | None=None)` → `dict[str, Any]`
@@ -8610,7 +9986,9 @@
 
 <a id="fun-63914db325"></a>
 
-#### `manager_payload`
+#### FUN-63914DB325
+
+**函数**：`manager_payload`
 
 - **ID / 行**：`FUN-63914DB325` / `L496`（源码见本单元概览）
 - **签名 / 返回**：`manager_payload(proposal: TransactionProposal, reviews: list[RiskReview])` → `dict[str, Any]`
@@ -8621,7 +9999,9 @@
 
 <a id="fun-c4847806bf"></a>
 
-#### `level_proposer_payload`
+#### FUN-C4847806BF
+
+**函数**：`level_proposer_payload`
 
 - **ID / 行**：`FUN-C4847806BF` / `L513`（源码见本单元概览）
 - **签名 / 返回**：`level_proposer_payload(ctx: MarketContext, team: AnalystTeam, debate: ResearchDebate, rule_signals: list[Any])` → `dict[str, Any]`
@@ -8632,7 +10012,9 @@
 
 <a id="unit-9b539edeb6"></a>
 
-### src/agents/llm/schemas.py — 软件单元详细设计
+### UNIT-9B539EDEB6
+
+**模块**：`src/agents/llm/schemas.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8652,7 +10034,9 @@
 
 <a id="fun-8ec477c06b"></a>
 
-#### `_item_refs`
+#### FUN-8EC477C06B
+
+**函数**：`_item_refs`
 
 - **ID / 行**：`FUN-8EC477C06B` / `L33`（源码见本单元概览）
 - **签名 / 返回**：`_item_refs(row: dict[str, Any], category: str)` → `dict[str, Any]`
@@ -8663,7 +10047,9 @@
 
 <a id="fun-330aae4a56"></a>
 
-#### `_clamp_strength`
+#### FUN-330AAE4A56
+
+**函数**：`_clamp_strength`
 
 - **ID / 行**：`FUN-330AAE4A56` / `L46`（源码见本单元概览）
 - **签名 / 返回**：`_clamp_strength(v: Any)` → `float`
@@ -8674,7 +10060,9 @@
 
 <a id="fun-352076cbe7"></a>
 
-#### `_string_list`
+#### FUN-352076CBE7
+
+**函数**：`_string_list`
 
 - **ID / 行**：`FUN-352076CBE7` / `L54`（源码见本单元概览）
 - **签名 / 返回**：`_string_list(value: Any, *, fallback: list[str] | None=None, limit: int=8)` → `list[str]`
@@ -8685,7 +10073,9 @@
 
 <a id="fun-fefe6cd472"></a>
 
-#### `_index_list`
+#### FUN-FEFE6CD472
+
+**函数**：`_index_list`
 
 - **ID / 行**：`FUN-FEFE6CD472` / `L64`（源码见本单元概览）
 - **签名 / 返回**：`_index_list(value: Any, *, allowed: set[int])` → `list[int]`
@@ -8696,7 +10086,9 @@
 
 <a id="fun-d4331ef421"></a>
 
-#### `_float_field`
+#### FUN-D4331EF421
+
+**函数**：`_float_field`
 
 - **ID / 行**：`FUN-D4331EF421` / `L78`（源码见本单元概览）
 - **签名 / 返回**：`_float_field(row: dict[str, Any], name: str)` → `float`
@@ -8708,7 +10100,9 @@
 
 <a id="fun-abc4913591"></a>
 
-#### `_parse_level_reactions`
+#### FUN-ABC4913591
+
+**函数**：`_parse_level_reactions`
 
 - **ID / 行**：`FUN-ABC4913591` / `L85`（源码见本单元概览）
 - **签名 / 返回**：`_parse_level_reactions(data: dict[str, Any], *, agent: str)` → `list[dict[str, Any]]`
@@ -8719,7 +10113,9 @@
 
 <a id="fun-16c25d76d9"></a>
 
-#### `_level_reactions_from_items`
+#### FUN-16C25D76D9
+
+**函数**：`_level_reactions_from_items`
 
 - **ID / 行**：`FUN-16C25D76D9` / `L150`（源码见本单元概览）
 - **签名 / 返回**：`_level_reactions_from_items(items: list[EvidenceItem])` → `list[dict[str, Any]]`
@@ -8730,7 +10126,9 @@
 
 <a id="fun-1aa683b3a6"></a>
 
-#### `_merge_level_reactions_into_items`
+#### FUN-1AA683B3A6
+
+**函数**：`_merge_level_reactions_into_items`
 
 - **ID / 行**：`FUN-1AA683B3A6` / `L176`（源码见本单元概览）
 - **签名 / 返回**：`_merge_level_reactions_into_items(items: list[EvidenceItem], reactions: list[dict[str, Any]], *, agent: str)` → `list[EvidenceItem]`
@@ -8741,7 +10139,9 @@
 
 <a id="fun-bb1277c4f9"></a>
 
-#### `parse_analyst_report`
+#### FUN-BB1277C4F9
+
+**函数**：`parse_analyst_report`
 
 - **ID / 行**：`FUN-BB1277C4F9` / `L219`（源码见本单元概览）
 - **签名 / 返回**：`parse_analyst_report(data: dict[str, Any], *, agent: str)` → `AnalystReport`
@@ -8753,7 +10153,9 @@
 
 <a id="fun-5a54aee754"></a>
 
-#### `parse_agent_evidence`
+#### FUN-5A54AEE754
+
+**函数**：`parse_agent_evidence`
 
 - **ID / 行**：`FUN-5A54AEE754` / `L278`（源码见本单元概览）
 - **签名 / 返回**：`parse_agent_evidence(data: dict[str, Any], *, agent: str, direction: Bias, allowed_evidence_ids: set[str] | None=None, evidence_registry: dict[str, EvidenceItem] | None=None)` → `AgentEvidence`
@@ -8765,7 +10167,9 @@
 
 <a id="fun-c7499346d6"></a>
 
-#### `parse_research_debate`
+#### FUN-C7499346D6
+
+**函数**：`parse_research_debate`
 
 - **ID / 行**：`FUN-C7499346D6` / `L356`（源码见本单元概览）
 - **签名 / 返回**：`parse_research_debate(data: dict[str, Any], *, bullish: AgentEvidence, bearish: AgentEvidence)` → `ResearchDebate`
@@ -8776,7 +10180,9 @@
 
 <a id="fun-3f721baec4"></a>
 
-#### `_compose_level_deduction_reason`
+#### FUN-3F721BAEC4
+
+**函数**：`_compose_level_deduction_reason`
 
 - **ID / 行**：`FUN-3F721BAEC4` / `L405`（源码见本单元概览）
 - **签名 / 返回**：`_compose_level_deduction_reason(*, anchor_level: str, expected_reaction: str, deduction: str, reason: str)` → `str`
@@ -8787,7 +10193,9 @@
 
 <a id="fun-548d3233a2"></a>
 
-#### `_level_deduction_quality`
+#### FUN-548D3233A2
+
+**函数**：`_level_deduction_quality`
 
 - **ID / 行**：`FUN-548D3233A2` / `L425`（源码见本单元概览）
 - **签名 / 返回**：`_level_deduction_quality(*, anchor_level: str, expected_reaction: str, deduction: str, reason: str, reaction_evidence_id: str)` → `bool`
@@ -8798,7 +10206,9 @@
 
 <a id="fun-28618f8314"></a>
 
-#### `parse_level_proposals`
+#### FUN-28618F8314
+
+**函数**：`parse_level_proposals`
 
 - **ID / 行**：`FUN-28618F8314` / `L444`（源码见本单元概览）
 - **签名 / 返回**：`parse_level_proposals(data: dict[str, Any])` → `list[LevelProposal]`
@@ -8810,7 +10220,9 @@
 
 <a id="fun-866b1d79aa"></a>
 
-#### `_validate_level_path_contract`
+#### FUN-866B1D79AA
+
+**函数**：`_validate_level_path_contract`
 
 - **ID / 行**：`FUN-866B1D79AA` / `L532`（源码见本单元概览）
 - **签名 / 返回**：`_validate_level_path_contract(proposals: list[LevelProposal])` → `None`
@@ -8822,7 +10234,9 @@
 
 <a id="fun-1cf0104153"></a>
 
-#### `parse_transaction_proposal`
+#### FUN-1CF0104153
+
+**函数**：`parse_transaction_proposal`
 
 - **ID / 行**：`FUN-1CF0104153` / `L540`（源码见本单元概览）
 - **签名 / 返回**：`parse_transaction_proposal(data: dict[str, Any], *, debate_bias: Bias, signal_count: int)` → `TransactionProposal`
@@ -8833,7 +10247,9 @@
 
 <a id="fun-616d649c39"></a>
 
-#### `parse_risk_reviews`
+#### FUN-616D649C39
+
+**函数**：`parse_risk_reviews`
 
 - **ID / 行**：`FUN-616D649C39` / `L567`（源码见本单元概览）
 - **签名 / 返回**：`parse_risk_reviews(data: dict[str, Any], *, proposal: TransactionProposal, signal_count: int)` → `list[RiskReview]`
@@ -8845,7 +10261,9 @@
 
 <a id="fun-675d6fb6d6"></a>
 
-#### `parse_manager_decision`
+#### FUN-675D6FB6D6
+
+**函数**：`parse_manager_decision`
 
 - **ID / 行**：`FUN-675D6FB6D6` / `L603`（源码见本单元概览）
 - **签名 / 返回**：`parse_manager_decision(data: dict[str, Any], *, proposal: TransactionProposal, reviews: list[RiskReview])` → `ManagerDecision`
@@ -8856,7 +10274,9 @@
 
 <a id="unit-7226a2379a"></a>
 
-### src/agents/llm/stages/__init__.py — 软件单元详细设计
+### UNIT-7226A2379A
+
+**模块**：`src/agents/llm/stages/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8876,7 +10296,9 @@
 
 <a id="unit-1df6497ce4"></a>
 
-### src/agents/llm/stages/analysts/__init__.py — 软件单元详细设计
+### UNIT-1DF6497CE4
+
+**模块**：`src/agents/llm/stages/analysts/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8896,7 +10318,9 @@
 
 <a id="unit-73b0811649"></a>
 
-### src/agents/llm/stages/analysts/_common.py — 软件单元详细设计
+### UNIT-73B0811649
+
+**模块**：`src/agents/llm/stages/analysts/_common.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8916,7 +10340,9 @@
 
 <a id="fun-55e3a906bd"></a>
 
-#### `run_specialist_llm`
+#### FUN-55E3A906BD
+
+**函数**：`run_specialist_llm`
 
 - **ID / 行**：`FUN-55E3A906BD` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`run_specialist_llm(ctx: MarketContext, *, stage: str, agent: str, system: str, payload_fn: Callable[[MarketContext], dict[str, Any]], user_prefix: str)` → `tuple[AnalystReport | None, LLMStageTrace]`
@@ -8927,7 +10353,9 @@
 
 <a id="unit-fcd3d48fde"></a>
 
-### src/agents/llm/stages/analysts/fundamentals.py — 软件单元详细设计
+### UNIT-FCD3D48FDE
+
+**模块**：`src/agents/llm/stages/analysts/fundamentals.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8947,7 +10375,9 @@
 
 <a id="fun-039cd9925f"></a>
 
-#### `run_llm_fundamentals_analyst`
+#### FUN-039CD9925F
+
+**函数**：`run_llm_fundamentals_analyst`
 
 - **ID / 行**：`FUN-039CD9925F` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_fundamentals_analyst(ctx: MarketContext)` → `tuple[AnalystReport | None, LLMStageTrace]`
@@ -8958,7 +10388,9 @@
 
 <a id="unit-25115c1d6f"></a>
 
-### src/agents/llm/stages/analysts/news.py — 软件单元详细设计
+### UNIT-25115C1D6F
+
+**模块**：`src/agents/llm/stages/analysts/news.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -8978,7 +10410,9 @@
 
 <a id="fun-4e10e953f7"></a>
 
-#### `run_llm_news_analyst`
+#### FUN-4E10E953F7
+
+**函数**：`run_llm_news_analyst`
 
 - **ID / 行**：`FUN-4E10E953F7` / `L20`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_news_analyst(ctx: MarketContext)` → `tuple[AnalystReport | None, LLMStageTrace]`
@@ -8989,7 +10423,9 @@
 
 <a id="unit-2bf1b61e7e"></a>
 
-### src/agents/llm/stages/analysts/sentiment.py — 软件单元详细设计
+### UNIT-2BF1B61E7E
+
+**模块**：`src/agents/llm/stages/analysts/sentiment.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9009,7 +10445,9 @@
 
 <a id="fun-417df23078"></a>
 
-#### `run_llm_sentiment_analyst`
+#### FUN-417DF23078
+
+**函数**：`run_llm_sentiment_analyst`
 
 - **ID / 行**：`FUN-417DF23078` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_sentiment_analyst(ctx: MarketContext)` → `tuple[AnalystReport | None, LLMStageTrace]`
@@ -9020,7 +10458,9 @@
 
 <a id="unit-a3445b9493"></a>
 
-### src/agents/llm/stages/analysts/technical.py — 软件单元详细设计
+### UNIT-A3445B9493
+
+**模块**：`src/agents/llm/stages/analysts/technical.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9040,7 +10480,9 @@
 
 <a id="fun-c901472c03"></a>
 
-#### `run_llm_technical_analyst`
+#### FUN-C901472C03
+
+**函数**：`run_llm_technical_analyst`
 
 - **ID / 行**：`FUN-C901472C03` / `L61`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_technical_analyst(ctx: MarketContext)` → `tuple[AnalystReport | None, LLMStageTrace]`
@@ -9051,7 +10493,9 @@
 
 <a id="unit-2ccd7c4dcb"></a>
 
-### src/agents/llm/stages/bearish.py — 软件单元详细设计
+### UNIT-2CCD7C4DCB
+
+**模块**：`src/agents/llm/stages/bearish.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9071,7 +10515,9 @@
 
 <a id="fun-1d081c3bb3"></a>
 
-#### `run_llm_bearish`
+#### FUN-1D081C3BB3
+
+**函数**：`run_llm_bearish`
 
 - **ID / 行**：`FUN-1D081C3BB3` / `L34`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_bearish(ctx: MarketContext, team: AnalystTeam | None=None)` → `tuple[AgentEvidence | None, LLMStageTrace]`
@@ -9082,7 +10528,9 @@
 
 <a id="unit-12bf07eb04"></a>
 
-### src/agents/llm/stages/bullish.py — 软件单元详细设计
+### UNIT-12BF07EB04
+
+**模块**：`src/agents/llm/stages/bullish.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9102,7 +10550,9 @@
 
 <a id="fun-9efeb32d2f"></a>
 
-#### `run_llm_bullish`
+#### FUN-9EFEB32D2F
+
+**函数**：`run_llm_bullish`
 
 - **ID / 行**：`FUN-9EFEB32D2F` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_bullish(ctx: MarketContext, team: AnalystTeam | None=None)` → `tuple[AgentEvidence | None, LLMStageTrace]`
@@ -9113,7 +10563,9 @@
 
 <a id="unit-3970799e39"></a>
 
-### src/agents/llm/stages/debate.py — 软件单元详细设计
+### UNIT-3970799E39
+
+**模块**：`src/agents/llm/stages/debate.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9133,7 +10585,9 @@
 
 <a id="fun-59f17fb960"></a>
 
-#### `run_llm_debate`
+#### FUN-59F17FB960
+
+**函数**：`run_llm_debate`
 
 - **ID / 行**：`FUN-59F17FB960` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_debate(bullish: AgentEvidence, bearish: AgentEvidence, analyses, *, ctx: MarketContext | None=None, team: AnalystTeam | None=None)` → `tuple[ResearchDebate | None, LLMStageTrace]`
@@ -9144,7 +10598,9 @@
 
 <a id="unit-4fbc2b73a8"></a>
 
-### src/agents/llm/stages/levels.py — 软件单元详细设计
+### UNIT-4FBC2B73A8
+
+**模块**：`src/agents/llm/stages/levels.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9164,7 +10620,9 @@
 
 <a id="fun-cbb3a88b74"></a>
 
-#### `run_llm_level_proposer`
+#### FUN-CBB3A88B74
+
+**函数**：`run_llm_level_proposer`
 
 - **ID / 行**：`FUN-CBB3A88B74` / `L61`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_level_proposer(ctx: MarketContext, team: AnalystTeam, debate: ResearchDebate, rule_signals: list[object])` → `tuple[list[LevelProposal] | None, LLMStageTrace]`
@@ -9175,7 +10633,9 @@
 
 <a id="unit-5ed826be60"></a>
 
-### src/agents/llm/stages/manager.py — 软件单元详细设计
+### UNIT-5ED826BE60
+
+**模块**：`src/agents/llm/stages/manager.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9195,7 +10655,9 @@
 
 <a id="fun-af30a97dcf"></a>
 
-#### `run_llm_manager`
+#### FUN-AF30A97DCF
+
+**函数**：`run_llm_manager`
 
 - **ID / 行**：`FUN-AF30A97DCF` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_manager(proposal: TransactionProposal, reviews: list[RiskReview])` → `tuple[ManagerDecision | None, LLMStageTrace]`
@@ -9206,7 +10668,9 @@
 
 <a id="unit-9038f74287"></a>
 
-### src/agents/llm/stages/risk.py — 软件单元详细设计
+### UNIT-9038F74287
+
+**模块**：`src/agents/llm/stages/risk.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9226,7 +10690,9 @@
 
 <a id="fun-836a19ca04"></a>
 
-#### `run_llm_risk`
+#### FUN-836A19CA04
+
+**函数**：`run_llm_risk`
 
 - **ID / 行**：`FUN-836A19CA04` / `L28`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_risk(proposal: TransactionProposal, signal_count: int, *, signals: list[Any] | None=None, current_price: float | None=None, data_as_of: dict[str, Any] | None=None)` → `tuple[list[RiskReview] | None, LLMStageTrace]`
@@ -9237,7 +10703,9 @@
 
 <a id="fun-31f4ada410"></a>
 
-#### `run_llm_risk._parse`
+#### FUN-31F4ADA410
+
+**函数**：`run_llm_risk._parse`
 
 - **ID / 行**：`FUN-31F4ADA410` / `L46`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_risk._parse(data: dict)` → `list[RiskReview]`
@@ -9248,7 +10716,9 @@
 
 <a id="unit-a996419c04"></a>
 
-### src/agents/llm/stages/trader.py — 软件单元详细设计
+### UNIT-A996419C04
+
+**模块**：`src/agents/llm/stages/trader.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9268,7 +10738,9 @@
 
 <a id="fun-ddd80e4bd9"></a>
 
-#### `run_llm_trader`
+#### FUN-DDD80E4BD9
+
+**函数**：`run_llm_trader`
 
 - **ID / 行**：`FUN-DDD80E4BD9` / `L28`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_trader(ctx: MarketContext, debate: ResearchDebate, signals: list[TradingSignal], team: AnalystTeam | None=None)` → `tuple[TransactionProposal | None, LLMStageTrace]`
@@ -9279,7 +10751,9 @@
 
 <a id="fun-839ea81209"></a>
 
-#### `run_llm_trader._parse`
+#### FUN-839EA81209
+
+**函数**：`run_llm_trader._parse`
 
 - **ID / 行**：`FUN-839EA81209` / `L38`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_trader._parse(data: dict)` → `TransactionProposal`
@@ -9290,7 +10764,9 @@
 
 <a id="unit-cc665640c2"></a>
 
-### src/agents/manager.py — 软件单元详细设计
+### UNIT-CC665640C2
+
+**模块**：`src/agents/manager.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9310,7 +10786,9 @@
 
 <a id="fun-8c2914e178"></a>
 
-#### `_scale_for_indices`
+#### FUN-8C2914E178
+
+**函数**：`_scale_for_indices`
 
 - **ID / 行**：`FUN-8C2914E178` / `L8`（源码见本单元概览）
 - **签名 / 返回**：`_scale_for_indices(reviews: list[RiskReview], indices: list[int])` → `float`
@@ -9321,7 +10799,9 @@
 
 <a id="fun-a6411be7ce"></a>
 
-#### `_evidence_confidence`
+#### FUN-A6411BE7CE
+
+**函数**：`_evidence_confidence`
 
 - **ID / 行**：`FUN-A6411BE7CE` / `L20`（源码见本单元概览）
 - **签名 / 返回**：`_evidence_confidence(reviews: list[RiskReview], proposal: TransactionProposal, *, action: str)` → `float`
@@ -9332,7 +10812,9 @@
 
 <a id="fun-f7395a9fd5"></a>
 
-#### `run_manager`
+#### FUN-F7395A9FD5
+
+**函数**：`run_manager`
 
 - **ID / 行**：`FUN-F7395A9FD5` / `L38`（源码见本单元概览）
 - **签名 / 返回**：`run_manager(proposal: TransactionProposal, reviews: list[RiskReview])` → `ManagerDecision`
@@ -9343,7 +10825,9 @@
 
 <a id="unit-c1468c2396"></a>
 
-### src/agents/risk.py — 软件单元详细设计
+### UNIT-C1468C2396
+
+**模块**：`src/agents/risk.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9363,7 +10847,9 @@
 
 <a id="fun-d7ba82b894"></a>
 
-#### `_review`
+#### FUN-D7BA82B894
+
+**函数**：`_review`
 
 - **ID / 行**：`FUN-D7BA82B894` / `L11`（源码见本单元概览）
 - **签名 / 返回**：`_review(profile: RiskProfile, proposal: TransactionProposal, signal_count: int)` → `RiskReview`
@@ -9374,7 +10860,9 @@
 
 <a id="fun-f364bcfeae"></a>
 
-#### `run_risk_team`
+#### FUN-F364BCFEAE
+
+**函数**：`run_risk_team`
 
 - **ID / 行**：`FUN-F364BCFEAE` / `L60`（源码见本单元概览）
 - **签名 / 返回**：`run_risk_team(proposal: TransactionProposal, signal_count: int, *, signals: list[Any] | None=None, current_price: float=0.0, data_as_of: dict[str, Any] | None=None, observation_mode: bool=False)` → `list[RiskReview]`
@@ -9385,7 +10873,9 @@
 
 <a id="unit-6340c2c541"></a>
 
-### src/agents/trader.py — 软件单元详细设计
+### UNIT-6340C2C541
+
+**模块**：`src/agents/trader.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9405,7 +10895,9 @@
 
 <a id="fun-fee6c661e8"></a>
 
-#### `run_trader_agent`
+#### FUN-FEE6C661E8
+
+**函数**：`run_trader_agent`
 
 - **ID / 行**：`FUN-FEE6C661E8` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`run_trader_agent(ctx: MarketContext, debate: ResearchDebate, signals: list[TradingSignal])` → `tuple[TransactionProposal, list[TradingSignal]]`
@@ -9416,7 +10908,9 @@
 
 <a id="arc-llm"></a>
 
-## ARC-LLM — LLM 传输、上下文和策略
+## ARC-LLM
+
+**名称**：LLM 传输、上下文和策略
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -9432,7 +10926,9 @@
 
 <a id="unit-598812089b"></a>
 
-### src/llm/__init__.py — 软件单元详细设计
+### UNIT-598812089B
+
+**模块**：`src/llm/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9452,7 +10948,9 @@
 
 <a id="unit-f5cb9d3f8c"></a>
 
-### src/llm/analyst.py — 软件单元详细设计
+### UNIT-F5CB9D3F8C
+
+**模块**：`src/llm/analyst.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9472,7 +10970,9 @@
 
 <a id="fun-2e761b537c"></a>
 
-#### `_error_result`
+#### FUN-2E761B537C
+
+**函数**：`_error_result`
 
 - **ID / 行**：`FUN-2E761B537C` / `L32`（源码见本单元概览）
 - **签名 / 返回**：`_error_result(report: dict[str, Any], error: str)` → `LLMAnalysis`
@@ -9483,7 +10983,9 @@
 
 <a id="fun-7a3c5fbb90"></a>
 
-#### `_disabled_result`
+#### FUN-7A3C5FBB90
+
+**函数**：`_disabled_result`
 
 - **ID / 行**：`FUN-7A3C5FBB90` / `L49`（源码见本单元概览）
 - **签名 / 返回**：`_disabled_result(reason: str='LLM 未启用')` → `LLMAnalysis`
@@ -9494,7 +10996,9 @@
 
 <a id="fun-b472cd2d40"></a>
 
-#### `_client_from_config`
+#### FUN-B472CD2D40
+
+**函数**：`_client_from_config`
 
 - **ID / 行**：`FUN-B472CD2D40` / `L53`（源码见本单元概览）
 - **签名 / 返回**：`_client_from_config()` → `LLMClient`
@@ -9506,7 +11010,9 @@
 
 <a id="fun-05d603b92f"></a>
 
-#### `_parse_result`
+#### FUN-05D603B92F
+
+**函数**：`_parse_result`
 
 - **ID / 行**：`FUN-05D603B92F` / `L59`（源码见本单元概览）
 - **签名 / 返回**：`_parse_result(data: dict[str, Any], *, model: str, provider: str)` → `LLMAnalysis`
@@ -9517,7 +11023,9 @@
 
 <a id="fun-7722d6583b"></a>
 
-#### `validate_llm_payload`
+#### FUN-7722D6583B
+
+**函数**：`validate_llm_payload`
 
 - **ID / 行**：`FUN-7722D6583B` / `L89`（源码见本单元概览）
 - **签名 / 返回**：`validate_llm_payload(data: dict[str, Any], report: dict[str, Any], *, facts: dict[str, Any] | None=None, mode: str | None=None, threshold: float | None=None, model: str | None=None, provider: str | None=None)` → `LLMAnalysis`
@@ -9528,7 +11036,9 @@
 
 <a id="fun-c0808d1fd3"></a>
 
-#### `run_llm_analysis`
+#### FUN-C0808D1FD3
+
+**函数**：`run_llm_analysis`
 
 - **ID / 行**：`FUN-C0808D1FD3` / `L130`（源码见本单元概览）
 - **签名 / 返回**：`run_llm_analysis(ctx: MarketContext, debate: ResearchDebate, decision: ManagerDecision, report: dict[str, Any])` → `LLMAnalysis`
@@ -9539,7 +11049,9 @@
 
 <a id="fun-307482df32"></a>
 
-#### `apply_llm_to_report`
+#### FUN-307482DF32
+
+**函数**：`apply_llm_to_report`
 
 - **ID / 行**：`FUN-307482DF32` / `L190`（源码见本单元概览）
 - **签名 / 返回**：`apply_llm_to_report(report: dict[str, Any], llm: LLMAnalysis)` → `None`
@@ -9551,7 +11063,9 @@
 
 <a id="unit-d7fd07af44"></a>
 
-### src/llm/client.py — 软件单元详细设计
+### UNIT-D7FD07AF44
+
+**模块**：`src/llm/client.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9571,7 +11085,9 @@
 
 <a id="fun-184ed552df"></a>
 
-#### `LLMClient.__init__`
+#### FUN-184ED552DF
+
+**函数**：`LLMClient.__init__`
 
 - **ID / 行**：`FUN-184ED552DF` / `L24`（源码见本单元概览）
 - **签名 / 返回**：`LLMClient.__init__(self, *, api_key: str, base_url: str, model: str, timeout: int | float | None=None, connect_timeout: float | None=None, read_timeout: float | None=None)` → `None`
@@ -9582,7 +11098,9 @@
 
 <a id="fun-b3cf019763"></a>
 
-#### `LLMClient.timeout`
+#### FUN-B3CF019763
+
+**函数**：`LLMClient.timeout`
 
 - **ID / 行**：`FUN-B3CF019763` / `L54`（源码见本单元概览）
 - **签名 / 返回**：`LLMClient.timeout(self)` → `float`
@@ -9592,7 +11110,9 @@
 
 <a id="fun-6281d0133f"></a>
 
-#### `LLMClient._request_timeout`
+#### FUN-6281D0133F
+
+**函数**：`LLMClient._request_timeout`
 
 - **ID / 行**：`FUN-6281D0133F` / `L58`（源码见本单元概览）
 - **签名 / 返回**：`LLMClient._request_timeout(self)` → `tuple[float, float]`
@@ -9602,7 +11122,9 @@
 
 <a id="fun-870c1d436c"></a>
 
-#### `LLMClient._headers`
+#### FUN-870C1D436C
+
+**函数**：`LLMClient._headers`
 
 - **ID / 行**：`FUN-870C1D436C` / `L61`（源码见本单元概览）
 - **签名 / 返回**：`LLMClient._headers(self)` → `dict[str, str]`
@@ -9612,7 +11134,9 @@
 
 <a id="fun-c5e317f9c8"></a>
 
-#### `LLMClient._parse_sse_line`
+#### FUN-C5E317F9C8
+
+**函数**：`LLMClient._parse_sse_line`
 
 - **ID / 行**：`FUN-C5E317F9C8` / `L67`（源码见本单元概览）
 - **签名 / 返回**：`LLMClient._parse_sse_line(self, line: str)` → `str | None`
@@ -9623,7 +11147,9 @@
 
 <a id="fun-b2c894bd12"></a>
 
-#### `LLMClient.chat_stream`
+#### FUN-B2C894BD12
+
+**函数**：`LLMClient.chat_stream`
 
 - **ID / 行**：`FUN-B2C894BD12` / `L87`（源码见本单元概览）
 - **签名 / 返回**：`LLMClient.chat_stream(self, messages: list[dict[str, str]], *, temperature: float=0.3, response_format: dict[str, str] | None=None)` → `Iterator[str]`
@@ -9635,7 +11161,9 @@
 
 <a id="fun-feaf06c7c1"></a>
 
-#### `LLMClient.chat`
+#### FUN-FEAF06C7C1
+
+**函数**：`LLMClient.chat`
 
 - **ID / 行**：`FUN-FEAF06C7C1` / `L145`（源码见本单元概览）
 - **签名 / 返回**：`LLMClient.chat(self, messages: list[dict[str, str]], *, temperature: float=0.3, response_format: dict[str, str] | None=None)` → `str`
@@ -9647,7 +11175,9 @@
 
 <a id="fun-cc950a51e1"></a>
 
-#### `LLMClient.chat_json`
+#### FUN-CC950A51E1
+
+**函数**：`LLMClient.chat_json`
 
 - **ID / 行**：`FUN-CC950A51E1` / `L164`（源码见本单元概览）
 - **签名 / 返回**：`LLMClient.chat_json(self, messages: list[dict[str, str]], *, temperature: float=0.2)` → `dict[str, Any]`
@@ -9659,7 +11189,9 @@
 
 <a id="unit-6c3fd6c2e5"></a>
 
-### src/llm/context.py — 软件单元详细设计
+### UNIT-6C3FD6C2E5
+
+**模块**：`src/llm/context.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9679,7 +11211,9 @@
 
 <a id="fun-a5b3114ea5"></a>
 
-#### `_slim_external`
+#### FUN-A5B3114EA5
+
+**函数**：`_slim_external`
 
 - **ID / 行**：`FUN-A5B3114EA5` / `L28`（源码见本单元概览）
 - **签名 / 返回**：`_slim_external(external: dict[str, Any], derived: dict[str, Any] | None=None)` → `dict[str, Any]`
@@ -9690,7 +11224,9 @@
 
 <a id="fun-311efc4821"></a>
 
-#### `_slim_narrative_technical_context`
+#### FUN-311EFC4821
+
+**函数**：`_slim_narrative_technical_context`
 
 - **ID / 行**：`FUN-311EFC4821` / `L45`（源码见本单元概览）
 - **签名 / 返回**：`_slim_narrative_technical_context(ctx: MarketContext)` → `dict[str, Any]`
@@ -9701,7 +11237,9 @@
 
 <a id="fun-8860117010"></a>
 
-#### `_levels_as_fact_refs`
+#### FUN-8860117010
+
+**函数**：`_levels_as_fact_refs`
 
 - **ID / 行**：`FUN-8860117010` / `L61`（源码见本单元概览）
 - **签名 / 返回**：`_levels_as_fact_refs(levels: list[dict[str, Any]], registry: dict[str, Any])` → `list[dict[str, Any]]`
@@ -9712,7 +11250,9 @@
 
 <a id="fun-8566c1a15c"></a>
 
-#### `_slim_narrative_facts`
+#### FUN-8566C1A15C
+
+**函数**：`_slim_narrative_facts`
 
 - **ID / 行**：`FUN-8566C1A15C` / `L78`（源码见本单元概览）
 - **签名 / 返回**：`_slim_narrative_facts(facts: dict[str, Any], registry: dict[str, Any])` → `dict[str, Any]`
@@ -9723,7 +11263,9 @@
 
 <a id="fun-b49d34199c"></a>
 
-#### `estimate_payload_size`
+#### FUN-B49D34199C
+
+**函数**：`estimate_payload_size`
 
 - **ID / 行**：`FUN-B49D34199C` / `L89`（源码见本单元概览）
 - **签名 / 返回**：`estimate_payload_size(payload: dict[str, Any])` → `dict[str, int]`
@@ -9734,7 +11276,9 @@
 
 <a id="fun-4d78ddfbc7"></a>
 
-#### `build_llm_context`
+#### FUN-4D78DDFBC7
+
+**函数**：`build_llm_context`
 
 - **ID / 行**：`FUN-4D78DDFBC7` / `L95`（源码见本单元概览）
 - **签名 / 返回**：`build_llm_context(ctx: MarketContext, debate: ResearchDebate, decision: ManagerDecision, report: dict[str, Any])` → `dict[str, Any]`
@@ -9745,7 +11289,9 @@
 
 <a id="unit-deb0d517c6"></a>
 
-### src/llm/format_io.py — 软件单元详细设计
+### UNIT-DEB0D517C6
+
+**模块**：`src/llm/format_io.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9765,7 +11311,9 @@
 
 <a id="fun-9200a4bf77"></a>
 
-#### `format_llm_output`
+#### FUN-9200A4BF77
+
+**函数**：`format_llm_output`
 
 - **ID / 行**：`FUN-9200A4BF77` / `L9`（源码见本单元概览）
 - **签名 / 返回**：`format_llm_output(text: str)` → `str`
@@ -9776,7 +11324,9 @@
 
 <a id="fun-0d23896651"></a>
 
-#### `format_messages`
+#### FUN-0D23896651
+
+**函数**：`format_messages`
 
 - **ID / 行**：`FUN-0D23896651` / `L20`（源码见本单元概览）
 - **签名 / 返回**：`format_messages(messages: list[dict[str, str]], *, max_chars: int=12000)` → `str`
@@ -9787,7 +11337,9 @@
 
 <a id="fun-c67d97c1fe"></a>
 
-#### `messages_to_dict`
+#### FUN-C67D97C1FE
+
+**函数**：`messages_to_dict`
 
 - **ID / 行**：`FUN-C67D97C1FE` / `L32`（源码见本单元概览）
 - **签名 / 返回**：`messages_to_dict(messages: list[dict[str, str]])` → `list[dict[str, Any]]`
@@ -9798,7 +11350,9 @@
 
 <a id="unit-fbf77b94fb"></a>
 
-### src/llm/narrative_output.py — 软件单元详细设计
+### UNIT-FBF77B94FB
+
+**模块**：`src/llm/narrative_output.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9818,7 +11372,9 @@
 
 <a id="fun-5605d6120b"></a>
 
-#### `_try_parse_json`
+#### FUN-5605D6120B
+
+**函数**：`_try_parse_json`
 
 - **ID / 行**：`FUN-5605D6120B` / `L19`（源码见本单元概览）
 - **签名 / 返回**：`_try_parse_json(text: str)` → `dict[str, Any] | None`
@@ -9829,7 +11385,9 @@
 
 <a id="fun-8d01609c7d"></a>
 
-#### `_pct`
+#### FUN-8D01609C7D
+
+**函数**：`_pct`
 
 - **ID / 行**：`FUN-8D01609C7D` / `L43`（源码见本单元概览）
 - **签名 / 返回**：`_pct(v: Any)` → `str`
@@ -9840,7 +11398,9 @@
 
 <a id="fun-80154bbc17"></a>
 
-#### `_lines_to_html`
+#### FUN-80154BBC17
+
+**函数**：`_lines_to_html`
 
 - **ID / 行**：`FUN-80154BBC17` / `L51`（源码见本单元概览）
 - **签名 / 返回**：`_lines_to_html(lines: list[str])` → `str`
@@ -9851,7 +11411,9 @@
 
 <a id="fun-2145bad99e"></a>
 
-#### `_fmt_evidence`
+#### FUN-2145BAD99E
+
+**函数**：`_fmt_evidence`
 
 - **ID / 行**：`FUN-2145BAD99E` / `L57`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_evidence(direction: str, data: dict[str, Any])` → `str`
@@ -9862,7 +11424,9 @@
 
 <a id="fun-1e02af4dd5"></a>
 
-#### `_fmt_debate`
+#### FUN-1E02AF4DD5
+
+**函数**：`_fmt_debate`
 
 - **ID / 行**：`FUN-1E02AF4DD5` / `L84`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_debate(data: dict[str, Any])` → `str`
@@ -9873,7 +11437,9 @@
 
 <a id="fun-76a10bccd6"></a>
 
-#### `_fmt_narrative`
+#### FUN-76A10BCCD6
+
+**函数**：`_fmt_narrative`
 
 - **ID / 行**：`FUN-76A10BCCD6` / `L100`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_narrative(data: dict[str, Any])` → `str`
@@ -9884,7 +11450,9 @@
 
 <a id="fun-ac5a907908"></a>
 
-#### `_fmt_generic`
+#### FUN-AC5A907908
+
+**函数**：`_fmt_generic`
 
 - **ID / 行**：`FUN-AC5A907908` / `L122`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_generic(data: dict[str, Any])` → `str`
@@ -9895,7 +11463,9 @@
 
 <a id="fun-6dab1399aa"></a>
 
-#### `_fmt_analyst_report`
+#### FUN-6DAB1399AA
+
+**函数**：`_fmt_analyst_report`
 
 - **ID / 行**：`FUN-6DAB1399AA` / `L135`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_analyst_report(title: str, data: dict[str, Any])` → `str`
@@ -9906,7 +11476,9 @@
 
 <a id="fun-ebf3493e57"></a>
 
-#### `_fmt_analyst_team`
+#### FUN-EBF3493E57
+
+**函数**：`_fmt_analyst_team`
 
 - **ID / 行**：`FUN-EBF3493E57` / `L172`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_analyst_team(data: dict[str, Any])` → `str`
@@ -9917,7 +11489,9 @@
 
 <a id="fun-8d05235fca"></a>
 
-#### `_fmt_context`
+#### FUN-8D05235FCA
+
+**函数**：`_fmt_context`
 
 - **ID / 行**：`FUN-8D05235FCA` / `L196`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_context(data: dict[str, Any])` → `str`
@@ -9928,7 +11502,9 @@
 
 <a id="fun-3b28d5a15c"></a>
 
-#### `format_llm_narrative`
+#### FUN-3B28D5A15C
+
+**函数**：`format_llm_narrative`
 
 - **ID / 行**：`FUN-3B28D5A15C` / `L241`（源码见本单元概览）
 - **签名 / 返回**：`format_llm_narrative(stage: str, raw: str)` → `str`
@@ -9939,7 +11515,9 @@
 
 <a id="unit-a605fcb3a9"></a>
 
-### src/llm/prompts.py — 软件单元详细设计
+### UNIT-A605FCB3A9
+
+**模块**：`src/llm/prompts.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -9959,7 +11537,9 @@
 
 <a id="fun-ec14c06c57"></a>
 
-#### `_observation_hint`
+#### FUN-EC14C06C57
+
+**函数**：`_observation_hint`
 
 - **ID / 行**：`FUN-EC14C06C57` / `L63`（源码见本单元概览）
 - **签名 / 返回**：`_observation_hint(context: dict[str, Any])` → `str`
@@ -9970,7 +11550,9 @@
 
 <a id="fun-b5e78a9a6d"></a>
 
-#### `build_messages`
+#### FUN-B5E78A9A6D
+
+**函数**：`build_messages`
 
 - **ID / 行**：`FUN-B5E78A9A6D` / `L74`（源码见本单元概览）
 - **签名 / 返回**：`build_messages(context: dict[str, Any])` → `list[dict[str, str]]`
@@ -9981,7 +11563,9 @@
 
 <a id="unit-6568b95afa"></a>
 
-### src/llm/router.py — 软件单元详细设计
+### UNIT-6568B95AFA
+
+**模块**：`src/llm/router.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10001,7 +11585,9 @@
 
 <a id="fun-1b26737be4"></a>
 
-#### `client_for_model`
+#### FUN-1B26737BE4
+
+**函数**：`client_for_model`
 
 - **ID / 行**：`FUN-1B26737BE4` / `L19`（源码见本单元概览）
 - **签名 / 返回**：`client_for_model(model: str)` → `LLMClient`
@@ -10012,7 +11598,9 @@
 
 <a id="fun-c1648afe95"></a>
 
-#### `get_fast_client`
+#### FUN-C1648AFE95
+
+**函数**：`get_fast_client`
 
 - **ID / 行**：`FUN-C1648AFE95` / `L30`（源码见本单元概览）
 - **签名 / 返回**：`get_fast_client()` → `LLMClient`
@@ -10023,7 +11611,9 @@
 
 <a id="fun-b6cefe1540"></a>
 
-#### `get_strong_client`
+#### FUN-B6CEFE1540
+
+**函数**：`get_strong_client`
 
 - **ID / 行**：`FUN-B6CEFE1540` / `L34`（源码见本单元概览）
 - **签名 / 返回**：`get_strong_client()` → `LLMClient`
@@ -10034,7 +11624,9 @@
 
 <a id="fun-99cb06f377"></a>
 
-#### `get_debate_client`
+#### FUN-99CB06F377
+
+**函数**：`get_debate_client`
 
 - **ID / 行**：`FUN-99CB06F377` / `L38`（源码见本单元概览）
 - **签名 / 返回**：`get_debate_client()` → `LLMClient`
@@ -10045,7 +11637,9 @@
 
 <a id="fun-4719de86ff"></a>
 
-#### `client_for_stage`
+#### FUN-4719DE86FF
+
+**函数**：`client_for_stage`
 
 - **ID / 行**：`FUN-4719DE86FF` / `L45`（源码见本单元概览）
 - **签名 / 返回**：`client_for_stage(stage: str)` → `LLMClient`
@@ -10056,7 +11650,9 @@
 
 <a id="fun-dc9786297e"></a>
 
-#### `routing_meta`
+#### FUN-DC9786297E
+
+**函数**：`routing_meta`
 
 - **ID / 行**：`FUN-DC9786297E` / `L57`（源码见本单元概览）
 - **签名 / 返回**：`routing_meta()` → `dict`
@@ -10067,7 +11663,9 @@
 
 <a id="fun-32ab5acbe0"></a>
 
-#### `llm_configured`
+#### FUN-32AB5ACBE0
+
+**函数**：`llm_configured`
 
 - **ID / 行**：`FUN-32AB5ACBE0` / `L62`（源码见本单元概览）
 - **签名 / 返回**：`llm_configured()` → `bool`
@@ -10078,7 +11676,9 @@
 
 <a id="unit-e488978a91"></a>
 
-### src/llm/stage_policy.py — 软件单元详细设计
+### UNIT-E488978A91
+
+**模块**：`src/llm/stage_policy.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10098,7 +11698,9 @@
 
 <a id="fun-8a092a53c7"></a>
 
-#### `StagePolicy.to_dict`
+#### FUN-8A092A53C7
+
+**函数**：`StagePolicy.to_dict`
 
 - **ID / 行**：`FUN-8A092A53C7` / `L39`（源码见本单元概览）
 - **签名 / 返回**：`StagePolicy.to_dict(self)` → `dict[str, Any]`
@@ -10109,7 +11711,9 @@
 
 <a id="fun-16718e4e98"></a>
 
-#### `_default_attempts`
+#### FUN-16718E4E98
+
+**函数**：`_default_attempts`
 
 - **ID / 行**：`FUN-16718E4E98` / `L43`（源码见本单元概览）
 - **签名 / 返回**：`_default_attempts()` → `int`
@@ -10120,7 +11724,9 @@
 
 <a id="fun-500b8f3420"></a>
 
-#### `_policies`
+#### FUN-500B8F3420
+
+**函数**：`_policies`
 
 - **ID / 行**：`FUN-500B8F3420` / `L48`（源码见本单元概览）
 - **签名 / 返回**：`_policies()` → `dict[str, StagePolicy]`
@@ -10131,7 +11737,9 @@
 
 <a id="fun-1d1021888e"></a>
 
-#### `get_stage_policy`
+#### FUN-1D1021888E
+
+**函数**：`get_stage_policy`
 
 - **ID / 行**：`FUN-1D1021888E` / `L91`（源码见本单元概览）
 - **签名 / 返回**：`get_stage_policy(stage: str)` → `StagePolicy`
@@ -10142,7 +11750,9 @@
 
 <a id="fun-931519418f"></a>
 
-#### `estimate_messages_size`
+#### FUN-931519418F
+
+**函数**：`estimate_messages_size`
 
 - **ID / 行**：`FUN-931519418F` / `L107`（源码见本单元概览）
 - **签名 / 返回**：`estimate_messages_size(messages: list[dict[str, str]])` → `dict[str, int]`
@@ -10153,7 +11763,9 @@
 
 <a id="fun-288812bac3"></a>
 
-#### `estimate_text_size`
+#### FUN-288812BAC3
+
+**函数**：`estimate_text_size`
 
 - **ID / 行**：`FUN-288812BAC3` / `L115`（源码见本单元概览）
 - **签名 / 返回**：`estimate_text_size(text: str)` → `dict[str, int]`
@@ -10164,7 +11776,9 @@
 
 <a id="fun-639af5aafb"></a>
 
-#### `apply_input_budget`
+#### FUN-639AF5AAFB
+
+**函数**：`apply_input_budget`
 
 - **ID / 行**：`FUN-639AF5AAFB` / `L123`（源码见本单元概览）
 - **签名 / 返回**：`apply_input_budget(messages: list[dict[str, str]], policy: StagePolicy)` → `tuple[list[dict[str, str]], BudgetAction, dict[str, Any]]`
@@ -10175,7 +11789,9 @@
 
 <a id="fun-e3b03c5e15"></a>
 
-#### `build_routing_strategy`
+#### FUN-E3B03C5E15
+
+**函数**：`build_routing_strategy`
 
 - **ID / 行**：`FUN-E3B03C5E15` / `L179`（源码见本单元概览）
 - **签名 / 返回**：`build_routing_strategy()` → `dict[str, Any]`
@@ -10186,7 +11802,9 @@
 
 <a id="arc-run"></a>
 
-## ARC-RUN — 运行上下文与归档
+## ARC-RUN
+
+**名称**：运行上下文与归档
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -10205,7 +11823,9 @@
 
 <a id="unit-3d26d1ec62"></a>
 
-### src/run/__init__.py — 软件单元详细设计
+### UNIT-3D26D1EC62
+
+**模块**：`src/run/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10225,7 +11845,9 @@
 
 <a id="unit-6c61c7bbf5"></a>
 
-### src/run/archive/__init__.py — 软件单元详细设计
+### UNIT-6C61C7BBF5
+
+**模块**：`src/run/archive/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10245,7 +11867,9 @@
 
 <a id="unit-2f300feed2"></a>
 
-### src/run/archive/compat.py — 软件单元详细设计
+### UNIT-2F300FEED2
+
+**模块**：`src/run/archive/compat.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10265,7 +11889,9 @@
 
 <a id="fun-1bfdad92bb"></a>
 
-#### `_read_json`
+#### FUN-1BFDAD92BB
+
+**函数**：`_read_json`
 
 - **ID / 行**：`FUN-1BFDAD92BB` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`_read_json(path: Path)` → `Any`
@@ -10276,7 +11902,9 @@
 
 <a id="fun-9b86f7a9e8"></a>
 
-#### `synthesize_manifest_from_legacy`
+#### FUN-9B86F7A9E8
+
+**函数**：`synthesize_manifest_from_legacy`
 
 - **ID / 行**：`FUN-9B86F7A9E8` / `L41`（源码见本单元概览）
 - **签名 / 返回**：`synthesize_manifest_from_legacy(run_id: str, directory: Path)` → `dict[str, Any]`
@@ -10287,7 +11915,9 @@
 
 <a id="fun-4abec90c24"></a>
 
-#### `load_manifest`
+#### FUN-4ABEC90C24
+
+**函数**：`load_manifest`
 
 - **ID / 行**：`FUN-4ABEC90C24` / `L62`（源码见本单元概览）
 - **签名 / 返回**：`load_manifest(run_id: str, directory: Path)` → `dict[str, Any]`
@@ -10299,7 +11929,9 @@
 
 <a id="fun-8186a770f5"></a>
 
-#### `inspect_archive`
+#### FUN-8186A770F5
+
+**函数**：`inspect_archive`
 
 - **ID / 行**：`FUN-8186A770F5` / `L76`（源码见本单元概览）
 - **签名 / 返回**：`inspect_archive(run_id: str, directory: Path)` → `ArchiveInspection`
@@ -10311,7 +11943,9 @@
 
 <a id="fun-6792cfea90"></a>
 
-#### `normalize_report`
+#### FUN-6792CFEA90
+
+**函数**：`normalize_report`
 
 - **ID / 行**：`FUN-6792CFEA90` / `L186`（源码见本单元概览）
 - **签名 / 返回**：`normalize_report(report: Any, *, contract_version: int=REPORT_CONTRACT_VERSION)` → `tuple[dict[str, Any], list[str]]`
@@ -10322,7 +11956,9 @@
 
 <a id="fun-e54bdf4478"></a>
 
-#### `migrate_fetch_payload`
+#### FUN-E54BDF4478
+
+**函数**：`migrate_fetch_payload`
 
 - **ID / 行**：`FUN-E54BDF4478` / `L226`（源码见本单元概览）
 - **签名 / 返回**：`migrate_fetch_payload(raw: Any)` → `dict[str, Any]`
@@ -10334,7 +11970,9 @@
 
 <a id="fun-47ef0675a6"></a>
 
-#### `migrate_analyses_payload`
+#### FUN-47EF0675A6
+
+**函数**：`migrate_analyses_payload`
 
 - **ID / 行**：`FUN-47EF0675A6` / `L238`（源码见本单元概览）
 - **签名 / 返回**：`migrate_analyses_payload(raw: Any)` → `dict[str, Any]`
@@ -10345,7 +11983,9 @@
 
 <a id="fun-8a37d9c11c"></a>
 
-#### `migrate_frame_payload`
+#### FUN-8A37D9C11C
+
+**函数**：`migrate_frame_payload`
 
 - **ID / 行**：`FUN-8A37D9C11C` / `L247`（源码见本单元概览）
 - **签名 / 返回**：`migrate_frame_payload(raw: Any)` → `dict[str, Any]`
@@ -10357,7 +11997,9 @@
 
 <a id="fun-5bc6d37ce9"></a>
 
-#### `upgrade_manifest_if_needed`
+#### FUN-5BC6D37CE9
+
+**函数**：`upgrade_manifest_if_needed`
 
 - **ID / 行**：`FUN-5BC6D37CE9` / `L256`（源码见本单元概览）
 - **签名 / 返回**：`upgrade_manifest_if_needed(manifest: dict[str, Any], run_id: str, directory: Path)` → `dict[str, Any]`
@@ -10369,7 +12011,9 @@
 
 <a id="unit-af0b99f0b7"></a>
 
-### src/run/archive/completion.py — 软件单元详细设计
+### UNIT-AF0B99F0B7
+
+**模块**：`src/run/archive/completion.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10389,7 +12033,9 @@
 
 <a id="fun-57dfc7a96b"></a>
 
-#### `generation_step_statuses`
+#### FUN-57DFC7A96B
+
+**函数**：`generation_step_statuses`
 
 - **ID / 行**：`FUN-57DFC7A96B` / `L35`（源码见本单元概览）
 - **签名 / 返回**：`generation_step_statuses(report: dict[str, Any])` → `dict[str, str]`
@@ -10400,7 +12046,9 @@
 
 <a id="fun-d7f6e6e3b1"></a>
 
-#### `pipeline_replay_errors`
+#### FUN-D7F6E6E3B1
+
+**函数**：`pipeline_replay_errors`
 
 - **ID / 行**：`FUN-D7F6E6E3B1` / `L50`（源码见本单元概览）
 - **签名 / 返回**：`pipeline_replay_errors(report: dict[str, Any], manifest: dict[str, Any] | None=None)` → `list[str]`
@@ -10411,7 +12059,9 @@
 
 <a id="fun-0bb8a53ce4"></a>
 
-#### `assert_pipeline_replay_ready`
+#### FUN-0BB8A53CE4
+
+**函数**：`assert_pipeline_replay_ready`
 
 - **ID / 行**：`FUN-0BB8A53CE4` / `L78`（源码见本单元概览）
 - **签名 / 返回**：`assert_pipeline_replay_ready(report: dict[str, Any])` → `None`
@@ -10423,7 +12073,9 @@
 
 <a id="unit-969bf3943a"></a>
 
-### src/run/archive/index.py — 软件单元详细设计
+### UNIT-969BF3943A
+
+**模块**：`src/run/archive/index.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10443,7 +12095,9 @@
 
 <a id="fun-9a9d39921e"></a>
 
-#### `index_path`
+#### FUN-9A9D39921E
+
+**函数**：`index_path`
 
 - **ID / 行**：`FUN-9A9D39921E` / `L19`（源码见本单元概览）
 - **签名 / 返回**：`index_path(root: Path)` → `Path`
@@ -10453,7 +12107,9 @@
 
 <a id="fun-0ecea1344b"></a>
 
-#### `load_index`
+#### FUN-0ECEA1344B
+
+**函数**：`load_index`
 
 - **ID / 行**：`FUN-0ECEA1344B` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`load_index(root: Path)` → `dict[str, Any]`
@@ -10464,7 +12120,9 @@
 
 <a id="fun-c4f5638491"></a>
 
-#### `save_index`
+#### FUN-C4F5638491
+
+**函数**：`save_index`
 
 - **ID / 行**：`FUN-C4F5638491` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`save_index(root: Path, index: dict[str, Any])` → `None`
@@ -10476,7 +12134,9 @@
 
 <a id="fun-081a82e5e4"></a>
 
-#### `upsert_index_entry`
+#### FUN-081A82E5E4
+
+**函数**：`upsert_index_entry`
 
 - **ID / 行**：`FUN-081A82E5E4` / `L48`（源码见本单元概览）
 - **签名 / 返回**：`upsert_index_entry(root: Path, entry: dict[str, Any])` → `None`
@@ -10487,7 +12147,9 @@
 
 <a id="fun-2f44aef037"></a>
 
-#### `remove_index_entries`
+#### FUN-2F44AEF037
+
+**函数**：`remove_index_entries`
 
 - **ID / 行**：`FUN-2F44AEF037` / `L59`（源码见本单元概览）
 - **签名 / 返回**：`remove_index_entries(root: Path, run_ids: set[str])` → `None`
@@ -10498,7 +12160,9 @@
 
 <a id="fun-5115315dfe"></a>
 
-#### `list_index_entries`
+#### FUN-5115315DFE
+
+**函数**：`list_index_entries`
 
 - **ID / 行**：`FUN-5115315DFE` / `L68`（源码见本单元概览）
 - **签名 / 返回**：`list_index_entries(root: Path, *, limit: int=100)` → `list[dict[str, Any]]`
@@ -10509,7 +12173,9 @@
 
 <a id="fun-9b663ef8e0"></a>
 
-#### `rebuild_index_from_disk`
+#### FUN-9B663EF8E0
+
+**函数**：`rebuild_index_from_disk`
 
 - **ID / 行**：`FUN-9B663EF8E0` / `L75`（源码见本单元概览）
 - **签名 / 返回**：`rebuild_index_from_disk(root: Path, rows: list[dict[str, Any]])` → `None`
@@ -10520,7 +12186,9 @@
 
 <a id="unit-038535558b"></a>
 
-### src/run/archive/prune.py — 软件单元详细设计
+### UNIT-038535558B
+
+**模块**：`src/run/archive/prune.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10540,7 +12208,9 @@
 
 <a id="fun-f03125cdf0"></a>
 
-#### `_dir_size_bytes`
+#### FUN-F03125CDF0
+
+**函数**：`_dir_size_bytes`
 
 - **ID / 行**：`FUN-F03125CDF0` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`_dir_size_bytes(path: Path)` → `int`
@@ -10551,7 +12221,9 @@
 
 <a id="fun-a1476b11ab"></a>
 
-#### `prune_archives`
+#### FUN-A1476B11AB
+
+**函数**：`prune_archives`
 
 - **ID / 行**：`FUN-A1476B11AB` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`prune_archives(root: Path, rows: list[dict[str, Any]], *, max_count: int | None=None, max_mb: int | None=None)` → `list[str]`
@@ -10562,7 +12234,9 @@
 
 <a id="unit-ea2375efd1"></a>
 
-### src/run/archive/schema.py — 软件单元详细设计
+### UNIT-EA2375EFD1
+
+**模块**：`src/run/archive/schema.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10582,7 +12256,9 @@
 
 <a id="fun-4d1e837774"></a>
 
-#### `ArchiveInspection.loadable`
+#### FUN-4D1E837774
+
+**函数**：`ArchiveInspection.loadable`
 
 - **ID / 行**：`FUN-4D1E837774` / `L84`（源码见本单元概览）
 - **签名 / 返回**：`ArchiveInspection.loadable(self)` → `bool`
@@ -10592,7 +12268,9 @@
 
 <a id="fun-0fd63f4847"></a>
 
-#### `app_build_version`
+#### FUN-0FD63F4847
+
+**函数**：`app_build_version`
 
 - **ID / 行**：`FUN-0FD63F4847` / `L88`（源码见本单元概览）
 - **签名 / 返回**：`app_build_version()` → `str`
@@ -10604,7 +12282,9 @@
 
 <a id="fun-350588b114"></a>
 
-#### `artifact_envelope`
+#### FUN-350588B114
+
+**函数**：`artifact_envelope`
 
 - **ID / 行**：`FUN-350588B114` / `L106`（源码见本单元概览）
 - **签名 / 返回**：`artifact_envelope(*, kind: str, artifact_version: int, payload: Any)` → `dict[str, Any]`
@@ -10614,7 +12294,9 @@
 
 <a id="fun-9ed5b56457"></a>
 
-#### `unwrap_artifact`
+#### FUN-9ED5B56457
+
+**函数**：`unwrap_artifact`
 
 - **ID / 行**：`FUN-9ED5B56457` / `L114`（源码见本单元概览）
 - **签名 / 返回**：`unwrap_artifact(raw: Any, *, kind: str, default_version: int)` → `tuple[int, Any]`
@@ -10625,7 +12307,9 @@
 
 <a id="fun-a7f6be3e0f"></a>
 
-#### `build_manifest`
+#### FUN-A7F6BE3E0F
+
+**函数**：`build_manifest`
 
 - **ID / 行**：`FUN-A7F6BE3E0F` / `L133`（源码见本单元概览）
 - **签名 / 返回**：`build_manifest(*, run_id: str, saved_at: str | None=None, run_config: dict[str, Any] | None=None, summary: dict[str, Any] | None=None, legacy: dict[str, Any] | None=None)` → `dict[str, Any]`
@@ -10636,7 +12320,9 @@
 
 <a id="unit-d3d34bc712"></a>
 
-### src/run/archive/store.py — 软件单元详细设计
+### UNIT-D3D34BC712
+
+**模块**：`src/run/archive/store.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -10656,7 +12342,9 @@
 
 <a id="fun-1c86ff94a1"></a>
 
-#### `archives_root`
+#### FUN-1C86FF94A1
+
+**函数**：`archives_root`
 
 - **ID / 行**：`FUN-1C86FF94A1` / `L58`（源码见本单元概览）
 - **签名 / 返回**：`archives_root()` → `Path`
@@ -10666,7 +12354,9 @@
 
 <a id="fun-5374bbe5e8"></a>
 
-#### `run_dir`
+#### FUN-5374BBE5E8
+
+**函数**：`run_dir`
 
 - **ID / 行**：`FUN-5374BBE5E8` / `L62`（源码见本单元概览）
 - **签名 / 返回**：`run_dir(run_id: str)` → `Path`
@@ -10677,7 +12367,9 @@
 
 <a id="fun-4433fa9140"></a>
 
-#### `_sanitize_json`
+#### FUN-4433FA9140
+
+**函数**：`_sanitize_json`
 
 - **ID / 行**：`FUN-4433FA9140` / `L66`（源码见本单元概览）
 - **签名 / 返回**：`_sanitize_json(obj: Any)` → `Any`
@@ -10688,7 +12380,9 @@
 
 <a id="fun-681db272f7"></a>
 
-#### `allocate_run_id`
+#### FUN-681DB272F7
+
+**函数**：`allocate_run_id`
 
 - **ID / 行**：`FUN-681DB272F7` / `L78`（源码见本单元概览）
 - **签名 / 返回**：`allocate_run_id()` → `str`
@@ -10699,7 +12393,9 @@
 
 <a id="fun-ed26b4ee99"></a>
 
-#### `inspect_run_archive`
+#### FUN-ED26B4EE99
+
+**函数**：`inspect_run_archive`
 
 - **ID / 行**：`FUN-ED26B4EE99` / `L88`（源码见本单元概览）
 - **签名 / 返回**：`inspect_run_archive(run_id: str)` → `Any`
@@ -10710,7 +12406,9 @@
 
 <a id="fun-c1c36bd8f4"></a>
 
-#### `_archive_row_from_path`
+#### FUN-C1C36BD8F4
+
+**函数**：`_archive_row_from_path`
 
 - **ID / 行**：`FUN-C1C36BD8F4` / `L92`（源码见本单元概览）
 - **签名 / 返回**：`_archive_row_from_path(run_id: str, path: Path)` → `dict[str, Any] | None`
@@ -10721,7 +12419,9 @@
 
 <a id="fun-1ecbdf7dbe"></a>
 
-#### `_scan_archives`
+#### FUN-1ECBDF7DBE
+
+**函数**：`_scan_archives`
 
 - **ID / 行**：`FUN-1ECBDF7DBE` / `L130`（源码见本单元概览）
 - **签名 / 返回**：`_scan_archives(*, limit: int=100)` → `list[dict[str, Any]]`
@@ -10732,7 +12432,9 @@
 
 <a id="fun-9e74461596"></a>
 
-#### `list_archives`
+#### FUN-9E74461596
+
+**函数**：`list_archives`
 
 - **ID / 行**：`FUN-9E74461596` / `L145`（源码见本单元概览）
 - **签名 / 返回**：`list_archives(*, limit: int=100)` → `list[dict[str, Any]]`
@@ -10743,7 +12445,9 @@
 
 <a id="fun-02080aaef3"></a>
 
-#### `archives_exist`
+#### FUN-02080AAEF3
+
+**函数**：`archives_exist`
 
 - **ID / 行**：`FUN-02080AAEF3` / `L158`（源码见本单元概览）
 - **签名 / 返回**：`archives_exist()` → `bool`
@@ -10754,7 +12458,9 @@
 
 <a id="fun-a95b39bc72"></a>
 
-#### `archive_label`
+#### FUN-A95B39BC72
+
+**函数**：`archive_label`
 
 - **ID / 行**：`FUN-A95B39BC72` / `L162`（源码见本单元概览）
 - **签名 / 返回**：`archive_label(meta: dict[str, Any])` → `str`
@@ -10765,7 +12471,9 @@
 
 <a id="fun-9ae985d283"></a>
 
-#### `_ts_to_str`
+#### FUN-9AE985D283
+
+**函数**：`_ts_to_str`
 
 - **ID / 行**：`FUN-9AE985D283` / `L184`（源码见本单元概览）
 - **签名 / 返回**：`_ts_to_str(value: Any)` → `str`
@@ -10776,7 +12484,9 @@
 
 <a id="fun-85ef9fd874"></a>
 
-#### `_ts_from_str`
+#### FUN-85EF9FD874
+
+**函数**：`_ts_from_str`
 
 - **ID / 行**：`FUN-85EF9FD874` / `L188`（源码见本单元概览）
 - **签名 / 返回**：`_ts_from_str(value: str | None)` → `pd.Timestamp | None`
@@ -10787,7 +12497,9 @@
 
 <a id="fun-37471cb30f"></a>
 
-#### `_encode_order_block`
+#### FUN-37471CB30F
+
+**函数**：`_encode_order_block`
 
 - **ID / 行**：`FUN-37471CB30F` / `L194`（源码见本单元概览）
 - **签名 / 返回**：`_encode_order_block(row: OrderBlock)` → `dict[str, Any]`
@@ -10798,7 +12510,9 @@
 
 <a id="fun-aef3d9744a"></a>
 
-#### `_decode_order_block`
+#### FUN-AEF3D9744A
+
+**函数**：`_decode_order_block`
 
 - **ID / 行**：`FUN-AEF3D9744A` / `L204`（源码见本单元概览）
 - **签名 / 返回**：`_decode_order_block(payload: dict[str, Any])` → `OrderBlock`
@@ -10809,7 +12523,9 @@
 
 <a id="fun-b2731107dd"></a>
 
-#### `_encode_fvg`
+#### FUN-B2731107DD
+
+**函数**：`_encode_fvg`
 
 - **ID / 行**：`FUN-B2731107DD` / `L214`（源码见本单元概览）
 - **签名 / 返回**：`_encode_fvg(row: FairValueGap)` → `dict[str, Any]`
@@ -10820,7 +12536,9 @@
 
 <a id="fun-55b5b5693e"></a>
 
-#### `_decode_fvg`
+#### FUN-55B5B5693E
+
+**函数**：`_decode_fvg`
 
 - **ID / 行**：`FUN-55B5B5693E` / `L224`（源码见本单元概览）
 - **签名 / 返回**：`_decode_fvg(payload: dict[str, Any])` → `FairValueGap`
@@ -10831,7 +12549,9 @@
 
 <a id="fun-0b04667d7d"></a>
 
-#### `_encode_structure_event`
+#### FUN-0B04667D7D
+
+**函数**：`_encode_structure_event`
 
 - **ID / 行**：`FUN-0B04667D7D` / `L234`（源码见本单元概览）
 - **签名 / 返回**：`_encode_structure_event(row: StructureEvent)` → `dict[str, Any]`
@@ -10842,7 +12562,9 @@
 
 <a id="fun-5ade499def"></a>
 
-#### `_decode_structure_event`
+#### FUN-5ADE499DEF
+
+**函数**：`_decode_structure_event`
 
 - **ID / 行**：`FUN-5ADE499DEF` / `L245`（源码见本单元概览）
 - **签名 / 返回**：`_decode_structure_event(payload: dict[str, Any])` → `StructureEvent`
@@ -10853,7 +12575,9 @@
 
 <a id="fun-57b7676118"></a>
 
-#### `_encode_liquidity`
+#### FUN-57B7676118
+
+**函数**：`_encode_liquidity`
 
 - **ID / 行**：`FUN-57B7676118` / `L256`（源码见本单元概览）
 - **签名 / 返回**：`_encode_liquidity(row: LiquidityZone)` → `dict[str, Any]`
@@ -10863,7 +12587,9 @@
 
 <a id="fun-ad119574f9"></a>
 
-#### `_decode_liquidity`
+#### FUN-AD119574F9
+
+**函数**：`_decode_liquidity`
 
 - **ID / 行**：`FUN-AD119574F9` / `L266`（源码见本单元概览）
 - **签名 / 返回**：`_decode_liquidity(payload: dict[str, Any])` → `LiquidityZone`
@@ -10874,7 +12600,9 @@
 
 <a id="fun-4982e87c7f"></a>
 
-#### `encode_analysis`
+#### FUN-4982E87C7F
+
+**函数**：`encode_analysis`
 
 - **ID / 行**：`FUN-4982E87C7F` / `L276`（源码见本单元概览）
 - **签名 / 返回**：`encode_analysis(analysis: TimeframeAnalysis)` → `dict[str, Any]`
@@ -10885,7 +12613,9 @@
 
 <a id="fun-6c9f997021"></a>
 
-#### `decode_analysis`
+#### FUN-6C9F997021
+
+**函数**：`decode_analysis`
 
 - **ID / 行**：`FUN-6C9F997021` / `L299`（源码见本单元概览）
 - **签名 / 返回**：`decode_analysis(payload: dict[str, Any])` → `TimeframeAnalysis`
@@ -10896,7 +12626,9 @@
 
 <a id="fun-789e3f37fa"></a>
 
-#### `_frame_to_json`
+#### FUN-789E3F37FA
+
+**函数**：`_frame_to_json`
 
 - **ID / 行**：`FUN-789E3F37FA` / `L322`（源码见本单元概览）
 - **签名 / 返回**：`_frame_to_json(df: pd.DataFrame)` → `dict[str, Any]`
@@ -10907,7 +12639,9 @@
 
 <a id="fun-8a5c077425"></a>
 
-#### `_frame_from_json`
+#### FUN-8A5C077425
+
+**函数**：`_frame_from_json`
 
 - **ID / 行**：`FUN-8A5C077425` / `L334`（源码见本单元概览）
 - **签名 / 返回**：`_frame_from_json(payload: dict[str, Any])` → `pd.DataFrame`
@@ -10918,7 +12652,9 @@
 
 <a id="fun-ff14e13c2d"></a>
 
-#### `_external_to_json`
+#### FUN-FF14E13C2D
+
+**函数**：`_external_to_json`
 
 - **ID / 行**：`FUN-FF14E13C2D` / `L340`（源码见本单元概览）
 - **签名 / 返回**：`_external_to_json(external: ExternalFactors)` → `dict[str, Any]`
@@ -10929,7 +12665,9 @@
 
 <a id="fun-a2a4e2c638"></a>
 
-#### `_external_from_json`
+#### FUN-A2A4E2C638
+
+**函数**：`_external_from_json`
 
 - **ID / 行**：`FUN-A2A4E2C638` / `L355`（源码见本单元概览）
 - **签名 / 返回**：`_external_from_json(payload: dict[str, Any])` → `ExternalFactors`
@@ -10940,7 +12678,9 @@
 
 <a id="fun-31c24783fe"></a>
 
-#### `_fetch_payload`
+#### FUN-31C24783FE
+
+**函数**：`_fetch_payload`
 
 - **ID / 行**：`FUN-31C24783FE` / `L404`（源码见本单元概览）
 - **签名 / 返回**：`_fetch_payload(fetched: DataFetchResult)` → `dict[str, Any]`
@@ -10952,7 +12692,9 @@
 
 <a id="fun-76805b2fc9"></a>
 
-#### `load_fetch`
+#### FUN-76805B2FC9
+
+**函数**：`load_fetch`
 
 - **ID / 行**：`FUN-76805B2FC9` / `L414`（源码见本单元概览）
 - **签名 / 返回**：`load_fetch(run_id: str)` → `DataFetchResult`
@@ -10964,7 +12706,9 @@
 
 <a id="fun-a0b5f157c2"></a>
 
-#### `load_enriched`
+#### FUN-A0B5F157C2
+
+**函数**：`load_enriched`
 
 - **ID / 行**：`FUN-A0B5F157C2` / `L432`（源码见本单元概览）
 - **签名 / 返回**：`load_enriched(run_id: str)` → `dict[str, pd.DataFrame]`
@@ -10976,7 +12720,9 @@
 
 <a id="fun-e23a10f8ee"></a>
 
-#### `load_analyses`
+#### FUN-E23A10F8EE
+
+**函数**：`load_analyses`
 
 - **ID / 行**：`FUN-E23A10F8EE` / `L449`（源码见本单元概览）
 - **签名 / 返回**：`load_analyses(run_id: str, enriched: dict[str, pd.DataFrame])` → `dict[str, TimeframeAnalysis]`
@@ -10987,7 +12733,9 @@
 
 <a id="fun-2c07f0c57c"></a>
 
-#### `load_archive_meta`
+#### FUN-2C07F0C57C
+
+**函数**：`load_archive_meta`
 
 - **ID / 行**：`FUN-2C07F0C57C` / `L468`（源码见本单元概览）
 - **签名 / 返回**：`load_archive_meta(run_id: str)` → `dict[str, Any]`
@@ -10998,7 +12746,9 @@
 
 <a id="fun-426b01b9bc"></a>
 
-#### `load_report`
+#### FUN-426B01B9BC
+
+**函数**：`load_report`
 
 - **ID / 行**：`FUN-426B01B9BC` / `L479`（源码见本单元概览）
 - **签名 / 返回**：`load_report(run_id: str)` → `dict[str, Any]`
@@ -11010,7 +12760,9 @@
 
 <a id="fun-d5f0d013d7"></a>
 
-#### `load_bundle`
+#### FUN-D5F0D013D7
+
+**函数**：`load_bundle`
 
 - **ID / 行**：`FUN-D5F0D013D7` / `L489`（源码见本单元概览）
 - **签名 / 返回**：`load_bundle(run_id: str)` → `tuple[dict[str, Any], dict[str, pd.DataFrame], dict[str, TimeframeAnalysis]]`
@@ -11022,7 +12774,9 @@
 
 <a id="fun-57bbeb8ec6"></a>
 
-#### `load_archive_5m_bars`
+#### FUN-57BBEB8EC6
+
+**函数**：`load_archive_5m_bars`
 
 - **ID / 行**：`FUN-57BBEB8EC6` / `L530`（源码见本单元概览）
 - **签名 / 返回**：`load_archive_5m_bars(run_id: str)` → `pd.DataFrame`
@@ -11034,7 +12788,9 @@
 
 <a id="fun-5b44894270"></a>
 
-#### `_failure_payload`
+#### FUN-5B44894270
+
+**函数**：`_failure_payload`
 
 - **ID / 行**：`FUN-5B44894270` / `L538`（源码见本单元概览）
 - **签名 / 返回**：`_failure_payload(reason: str, *, step: str | None=None)` → `dict[str, Any]`
@@ -11045,7 +12801,9 @@
 
 <a id="fun-8665b343fa"></a>
 
-#### `_stub_failure_report`
+#### FUN-8665B343FA
+
+**函数**：`_stub_failure_report`
 
 - **ID / 行**：`FUN-8665B343FA` / `L546`（源码见本单元概览）
 - **签名 / 返回**：`_stub_failure_report(*, run_config: RunConfig, reason: str, generation_steps: list[dict] | None=None, llm_io: list[dict] | None=None, current_price: float | None=None)` → `dict[str, Any]`
@@ -11056,7 +12814,9 @@
 
 <a id="fun-70ced3edba"></a>
 
-#### `_persist_archive_folder`
+#### FUN-70CED3EDBA
+
+**函数**：`_persist_archive_folder`
 
 - **ID / 行**：`FUN-70CED3EDBA` / `L574`（源码见本单元概览）
 - **签名 / 返回**：`_persist_archive_folder(run_id: str, *, run_config: RunConfig, summary: dict[str, Any], report: dict[str, Any], fetched: DataFetchResult | None=None, enriched: dict[str, pd.DataFrame] | None=None, analyses: dict[str, TimeframeAnalysis] | None=None, failure: dict[str, Any] | None=None)` → `Path`
@@ -11068,7 +12828,9 @@
 
 <a id="fun-b471df422d"></a>
 
-#### `archive_failure_run`
+#### FUN-B471DF422D
+
+**函数**：`archive_failure_run`
 
 - **ID / 行**：`FUN-B471DF422D` / `L678`（源码见本单元概览）
 - **签名 / 返回**：`archive_failure_run(run_id: str, reason: str, *, run_config: RunConfig, elapsed_s: float, fetched: DataFetchResult | None=None, enriched: dict[str, pd.DataFrame] | None=None, analyses: dict[str, TimeframeAnalysis] | None=None, report: dict[str, Any] | None=None, failure_step: str | None=None)` → `Path | None`
@@ -11080,7 +12842,9 @@
 
 <a id="fun-4dda0d21b3"></a>
 
-#### `load_forensic_bundle`
+#### FUN-4DDA0D21B3
+
+**函数**：`load_forensic_bundle`
 
 - **ID / 行**：`FUN-4DDA0D21B3` / `L750`（源码见本单元概览）
 - **签名 / 返回**：`load_forensic_bundle(run_id: str)` → `tuple[dict[str, Any], dict[str, pd.DataFrame], dict[str, TimeframeAnalysis]]`
@@ -11092,7 +12856,9 @@
 
 <a id="fun-7d1305aec2"></a>
 
-#### `archive_run`
+#### FUN-7D1305AEC2
+
+**函数**：`archive_run`
 
 - **ID / 行**：`FUN-7D1305AEC2` / `L809`（源码见本单元概览）
 - **签名 / 返回**：`archive_run(run_id: str, *, fetched: DataFetchResult, report: dict[str, Any], enriched: dict[str, pd.DataFrame], analyses: dict[str, TimeframeAnalysis], run_config: RunConfig, elapsed_s: float)` → `Path`
@@ -11103,7 +12869,9 @@
 
 <a id="unit-3365be69b6"></a>
 
-### src/run/archive/transfer.py — 软件单元详细设计
+### UNIT-3365BE69B6
+
+**模块**：`src/run/archive/transfer.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11123,7 +12891,9 @@
 
 <a id="fun-8992fe197d"></a>
 
-#### `export_archive_zip`
+#### FUN-8992FE197D
+
+**函数**：`export_archive_zip`
 
 - **ID / 行**：`FUN-8992FE197D` / `L22`（源码见本单元概览）
 - **签名 / 返回**：`export_archive_zip(run_id: str)` → `bytes`
@@ -11135,7 +12905,9 @@
 
 <a id="fun-41bb437461"></a>
 
-#### `import_archive_zip`
+#### FUN-41BB437461
+
+**函数**：`import_archive_zip`
 
 - **ID / 行**：`FUN-41BB437461` / `L45`（源码见本单元概览）
 - **签名 / 返回**：`import_archive_zip(data: bytes, *, run_id: str | None=None, overwrite: bool=False)` → `str`
@@ -11147,7 +12919,9 @@
 
 <a id="unit-e124606847"></a>
 
-### src/run/config.py — 软件单元详细设计
+### UNIT-E124606847
+
+**模块**：`src/run/config.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11167,7 +12941,9 @@
 
 <a id="fun-b62302b4ee"></a>
 
-#### `RunConfig.normalized`
+#### FUN-B62302B4EE
+
+**函数**：`RunConfig.normalized`
 
 - **ID / 行**：`FUN-B62302B4EE` / `L49`（源码见本单元概览）
 - **签名 / 返回**：`RunConfig.normalized(self)` → `'RunConfig'`
@@ -11178,7 +12954,9 @@
 
 <a id="fun-f162ed7246"></a>
 
-#### `RunConfig.to_dict`
+#### FUN-F162ED7246
+
+**函数**：`RunConfig.to_dict`
 
 - **ID / 行**：`FUN-F162ED7246` / `L90`（源码见本单元概览）
 - **签名 / 返回**：`RunConfig.to_dict(self)` → `dict[str, object]`
@@ -11189,7 +12967,9 @@
 
 <a id="fun-64a2707a8e"></a>
 
-#### `RunConfig.fingerprint`
+#### FUN-64A2707A8E
+
+**函数**：`RunConfig.fingerprint`
 
 - **ID / 行**：`FUN-64A2707A8E` / `L93`（源码见本单元概览）
 - **签名 / 返回**：`RunConfig.fingerprint(self)` → `str`
@@ -11200,7 +12980,9 @@
 
 <a id="fun-b640f9deec"></a>
 
-#### `RunConfig.from_dict`
+#### FUN-B640F9DEEC
+
+**函数**：`RunConfig.from_dict`
 
 - **ID / 行**：`FUN-B640F9DEEC` / `L102`（源码见本单元概览）
 - **签名 / 返回**：`RunConfig.from_dict(cls, data: dict[str, Any] | None)` → `'RunConfig'`
@@ -11211,7 +12993,9 @@
 
 <a id="fun-f263af19a6"></a>
 
-#### `coerce_run_config`
+#### FUN-F263AF19A6
+
+**函数**：`coerce_run_config`
 
 - **ID / 行**：`FUN-F263AF19A6` / `L110`（源码见本单元概览）
 - **签名 / 返回**：`coerce_run_config(value: object)` → `RunConfig | None`
@@ -11222,7 +13006,9 @@
 
 <a id="fun-bb1b3b8b1f"></a>
 
-#### `run_config_widget_state`
+#### FUN-BB1B3B8B1F
+
+**函数**：`run_config_widget_state`
 
 - **ID / 行**：`FUN-BB1B3B8B1F` / `L126`（源码见本单元概览）
 - **签名 / 返回**：`run_config_widget_state(config: RunConfig)` → `dict[str, object]`
@@ -11233,7 +13019,9 @@
 
 <a id="fun-6f8a6a5aa4"></a>
 
-#### `is_advanced_run_config`
+#### FUN-6F8A6A5AA4
+
+**函数**：`is_advanced_run_config`
 
 - **ID / 行**：`FUN-6F8A6A5AA4` / `L161`（源码见本单元概览）
 - **签名 / 返回**：`is_advanced_run_config(config: RunConfig)` → `bool`
@@ -11244,7 +13032,9 @@
 
 <a id="fun-3913f92b96"></a>
 
-#### `default_panel_run_config`
+#### FUN-3913F92B96
+
+**函数**：`default_panel_run_config`
 
 - **ID / 行**：`FUN-3913F92B96` / `L167`（源码见本单元概览）
 - **签名 / 返回**：`default_panel_run_config()` → `RunConfig`
@@ -11255,7 +13045,9 @@
 
 <a id="fun-168d3dbada"></a>
 
-#### `run_config_from_env`
+#### FUN-168D3DBADA
+
+**函数**：`run_config_from_env`
 
 - **ID / 行**：`FUN-168D3DBADA` / `L172`（源码见本单元概览）
 - **签名 / 返回**：`run_config_from_env()` → `RunConfig`
@@ -11266,7 +13058,9 @@
 
 <a id="fun-529864dac4"></a>
 
-#### `run_config_for_mode`
+#### FUN-529864DAC4
+
+**函数**：`run_config_for_mode`
 
 - **ID / 行**：`FUN-529864DAC4` / `L191`（源码见本单元概览）
 - **签名 / 返回**：`run_config_for_mode(mode: AgentMode, *, llm_enabled: bool=True, llm_analyst_only: str='')` → `RunConfig`
@@ -11277,7 +13071,9 @@
 
 <a id="fun-4a55d80b54"></a>
 
-#### `apply_run_config`
+#### FUN-4A55D80B54
+
+**函数**：`apply_run_config`
 
 - **ID / 行**：`FUN-4A55D80B54` / `L210`（源码见本单元概览）
 - **签名 / 返回**：`apply_run_config(run_config: RunConfig)` → `None`
@@ -11288,7 +13084,9 @@
 
 <a id="unit-8a8bc190aa"></a>
 
-### src/run/context.py — 软件单元详细设计
+### UNIT-8A8BC190AA
+
+**模块**：`src/run/context.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11308,7 +13106,9 @@
 
 <a id="fun-2ed9157cf0"></a>
 
-#### `set_run_config`
+#### FUN-2ED9157CF0
+
+**函数**：`set_run_config`
 
 - **ID / 行**：`FUN-2ED9157CF0` / `L14`（源码见本单元概览）
 - **签名 / 返回**：`set_run_config(config: RunConfig)` → `Token`
@@ -11319,7 +13119,9 @@
 
 <a id="fun-68bfb62aad"></a>
 
-#### `reset_run_config`
+#### FUN-68BFB62AAD
+
+**函数**：`reset_run_config`
 
 - **ID / 行**：`FUN-68BFB62AAD` / `L19`（源码见本单元概览）
 - **签名 / 返回**：`reset_run_config(token: Token)` → `None`
@@ -11330,7 +13132,9 @@
 
 <a id="fun-30b017175d"></a>
 
-#### `get_run_config`
+#### FUN-30B017175D
+
+**函数**：`get_run_config`
 
 - **ID / 行**：`FUN-30B017175D` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`get_run_config()` → `RunConfig`
@@ -11341,7 +13145,9 @@
 
 <a id="fun-d24ed90856"></a>
 
-#### `run_config_scope`
+#### FUN-D24ED90856
+
+**函数**：`run_config_scope`
 
 - **ID / 行**：`FUN-D24ED90856` / `L31`（源码见本单元概览）
 - **签名 / 返回**：`run_config_scope(config: RunConfig)` → `Iterator[RunConfig]`
@@ -11352,7 +13158,9 @@
 
 <a id="fun-7d87b82d39"></a>
 
-#### `agent_mode`
+#### FUN-7D87B82D39
+
+**函数**：`agent_mode`
 
 - **ID / 行**：`FUN-7D87B82D39` / `L40`（源码见本单元概览）
 - **签名 / 返回**：`agent_mode()` → `str`
@@ -11363,7 +13171,9 @@
 
 <a id="fun-9f09ace833"></a>
 
-#### `llm_narrative_enabled`
+#### FUN-9F09ACE833
+
+**函数**：`llm_narrative_enabled`
 
 - **ID / 行**：`FUN-9F09ACE833` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`llm_narrative_enabled()` → `bool`
@@ -11374,7 +13184,9 @@
 
 <a id="unit-7df4993ab3"></a>
 
-### src/run/pipeline_run.py — 软件单元详细设计
+### UNIT-7DF4993AB3
+
+**模块**：`src/run/pipeline_run.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11394,7 +13206,9 @@
 
 <a id="fun-018351c88a"></a>
 
-#### `set_current_run_id`
+#### FUN-018351C88A
+
+**函数**：`set_current_run_id`
 
 - **ID / 行**：`FUN-018351C88A` / `L10`（源码见本单元概览）
 - **签名 / 返回**：`set_current_run_id(run_id: str | None)` → `None`
@@ -11405,7 +13219,9 @@
 
 <a id="fun-7ab49a40bf"></a>
 
-#### `get_current_run_id`
+#### FUN-7AB49A40BF
+
+**函数**：`get_current_run_id`
 
 - **ID / 行**：`FUN-7AB49A40BF` / `L14`（源码见本单元概览）
 - **签名 / 返回**：`get_current_run_id()` → `str | None`
@@ -11416,7 +13232,9 @@
 
 <a id="arc-backtest"></a>
 
-## ARC-BACKTEST — Point-in-time 回测
+## ARC-BACKTEST
+
+**名称**：Point-in-time 回测
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -11429,7 +13247,9 @@
 
 <a id="unit-d4fb321d1e"></a>
 
-### src/backtest/__init__.py — 软件单元详细设计
+### UNIT-D4FB321D1E
+
+**模块**：`src/backtest/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11449,7 +13269,9 @@
 
 <a id="fun-3eb645c6d9"></a>
 
-#### `__getattr__`
+#### FUN-3EB645C6D9
+
+**函数**：`__getattr__`
 
 - **ID / 行**：`FUN-3EB645C6D9` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`__getattr__(name: str)` → `runtime/inferred`
@@ -11461,7 +13283,9 @@
 
 <a id="unit-b336aa1943"></a>
 
-### src/backtest/engine.py — 软件单元详细设计
+### UNIT-B336AA1943
+
+**模块**：`src/backtest/engine.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11481,7 +13305,9 @@
 
 <a id="fun-9b29434b63"></a>
 
-#### `normalize_ohlcv`
+#### FUN-9B29434B63
+
+**函数**：`normalize_ohlcv`
 
 - **ID / 行**：`FUN-9B29434B63` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`normalize_ohlcv(df: pd.DataFrame)` → `pd.DataFrame`
@@ -11493,7 +13319,9 @@
 
 <a id="fun-7de676802f"></a>
 
-#### `resample_ohlcv`
+#### FUN-7DE676802F
+
+**函数**：`resample_ohlcv`
 
 - **ID / 行**：`FUN-7DE676802F` / `L43`（源码见本单元概览）
 - **签名 / 返回**：`resample_ohlcv(df_5m: pd.DataFrame, rule: str)` → `pd.DataFrame`
@@ -11504,7 +13332,9 @@
 
 <a id="fun-a04b254b5f"></a>
 
-#### `make_multitimeframe`
+#### FUN-A04B254B5F
+
+**函数**：`make_multitimeframe`
 
 - **ID / 行**：`FUN-A04B254B5F` / `L50`（源码见本单元概览）
 - **签名 / 返回**：`make_multitimeframe(df_5m: pd.DataFrame)` → `dict[str, pd.DataFrame]`
@@ -11515,7 +13345,9 @@
 
 <a id="fun-18097428b1"></a>
 
-#### `_enough_data`
+#### FUN-18097428B1
+
+**函数**：`_enough_data`
 
 - **ID / 行**：`FUN-18097428B1` / `L60`（源码见本单元概览）
 - **签名 / 返回**：`_enough_data(data: dict[str, pd.DataFrame])` → `bool`
@@ -11526,7 +13358,9 @@
 
 <a id="fun-e547fb0bfe"></a>
 
-#### `_selected_signals`
+#### FUN-E547FB0BFE
+
+**函数**：`_selected_signals`
 
 - **ID / 行**：`FUN-E547FB0BFE` / `L65`（源码见本单元概览）
 - **签名 / 返回**：`_selected_signals(data_5m: pd.DataFrame, *, config: BacktestConfig, dxy_daily: pd.DataFrame | None=None)` → `runtime/inferred`
@@ -11537,7 +13371,9 @@
 
 <a id="fun-0ed117c7ab"></a>
 
-#### `_iter_signal_points`
+#### FUN-0ED117C7AB
+
+**函数**：`_iter_signal_points`
 
 - **ID / 行**：`FUN-0ED117C7AB` / `L169`（源码见本单元概览）
 - **签名 / 返回**：`_iter_signal_points(df_5m: pd.DataFrame, config: BacktestConfig)` → `Iterable[int]`
@@ -11548,7 +13384,9 @@
 
 <a id="fun-f28876ab16"></a>
 
-#### `_macro_data_for_run`
+#### FUN-F28876AB16
+
+**函数**：`_macro_data_for_run`
 
 - **ID / 行**：`FUN-F28876AB16` / `L174`（源码见本单元概览）
 - **签名 / 返回**：`_macro_data_for_run(config: BacktestConfig, dxy_daily: pd.DataFrame | None)` → `tuple[pd.DataFrame | None, str | None]`
@@ -11560,7 +13398,9 @@
 
 <a id="fun-96250d4b68"></a>
 
-#### `run_backtest`
+#### FUN-96250D4B68
+
+**函数**：`run_backtest`
 
 - **ID / 行**：`FUN-96250D4B68` / `L185`（源码见本单元概览）
 - **签名 / 返回**：`run_backtest(df_5m: pd.DataFrame, config: BacktestConfig | None=None, *, dxy_daily: pd.DataFrame | None=None)` → `BacktestResult`
@@ -11571,7 +13411,9 @@
 
 <a id="fun-2ce7bcc851"></a>
 
-#### `run_random_window_backtest`
+#### FUN-2CE7BCC851
+
+**函数**：`run_random_window_backtest`
 
 - **ID / 行**：`FUN-2CE7BCC851` / `L241`（源码见本单元概览）
 - **签名 / 返回**：`run_random_window_backtest(df_5m: pd.DataFrame, config: BacktestConfig | None=None, *, dxy_daily: pd.DataFrame | None=None)` → `BacktestResult`
@@ -11583,7 +13425,9 @@
 
 <a id="fun-ee64e9ff2e"></a>
 
-#### `run_backtest_from_archive`
+#### FUN-EE64E9FF2E
+
+**函数**：`run_backtest_from_archive`
 
 - **ID / 行**：`FUN-EE64E9FF2E` / `L303`（源码见本单元概览）
 - **签名 / 返回**：`run_backtest_from_archive(run_id: str, config: BacktestConfig | None=None, *, dxy_daily: pd.DataFrame | None=None)` → `BacktestResult`
@@ -11595,7 +13439,9 @@
 
 <a id="unit-d40a0640bf"></a>
 
-### src/backtest/macro.py — 软件单元详细设计
+### UNIT-D40A0640BF
+
+**模块**：`src/backtest/macro.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11615,7 +13461,9 @@
 
 <a id="fun-ba325106f2"></a>
 
-#### `fetch_historical_dxy`
+#### FUN-BA325106F2
+
+**函数**：`fetch_historical_dxy`
 
 - **ID / 行**：`FUN-BA325106F2` / `L10`（源码见本单元概览）
 - **签名 / 返回**：`fetch_historical_dxy(n_bars: int=1500)` → `pd.DataFrame`
@@ -11627,7 +13475,9 @@
 
 <a id="fun-0012d514e3"></a>
 
-#### `normalize_macro_ohlcv`
+#### FUN-0012D514E3
+
+**函数**：`normalize_macro_ohlcv`
 
 - **ID / 行**：`FUN-0012D514E3` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`normalize_macro_ohlcv(df: pd.DataFrame)` → `pd.DataFrame`
@@ -11639,7 +13489,9 @@
 
 <a id="fun-3652f686d6"></a>
 
-#### `macro_state_at`
+#### FUN-3652F686D6
+
+**函数**：`macro_state_at`
 
 - **ID / 行**：`FUN-3652F686D6` / `L49`（源码见本单元概览）
 - **签名 / 返回**：`macro_state_at(dxy_daily: pd.DataFrame | None, timestamp: pd.Timestamp)` → `MacroReplayState`
@@ -11650,7 +13502,9 @@
 
 <a id="fun-9797b95972"></a>
 
-#### `macro_state_at.pct_change`
+#### FUN-9797B95972
+
+**函数**：`macro_state_at.pct_change`
 
 - **ID / 行**：`FUN-9797B95972` / `L90`（源码见本单元概览）
 - **签名 / 返回**：`macro_state_at.pct_change(periods: int)` → `float | None`
@@ -11661,7 +13515,9 @@
 
 <a id="fun-d64ad4df14"></a>
 
-#### `apply_macro_to_signals`
+#### FUN-D64AD4DF14
+
+**函数**：`apply_macro_to_signals`
 
 - **ID / 行**：`FUN-D64AD4DF14` / `L135`（源码见本单元概览）
 - **签名 / 返回**：`apply_macro_to_signals(signals: list, state: MacroReplayState, weight: float)` → `list`
@@ -11672,7 +13528,9 @@
 
 <a id="fun-81f066d179"></a>
 
-#### `_grade`
+#### FUN-81F066D179
+
+**函数**：`_grade`
 
 - **ID / 行**：`FUN-81F066D179` / `L159`（源码见本单元概览）
 - **签名 / 返回**：`_grade(score: float)` → `str`
@@ -11682,7 +13540,9 @@
 
 <a id="unit-a92846cf7a"></a>
 
-### src/backtest/metrics.py — 软件单元详细设计
+### UNIT-A92846CF7A
+
+**模块**：`src/backtest/metrics.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11702,7 +13562,9 @@
 
 <a id="fun-b0fc151afd"></a>
 
-#### `_max_drawdown`
+#### FUN-B0FC151AFD
+
+**函数**：`_max_drawdown`
 
 - **ID / 行**：`FUN-B0FC151AFD` / `L11`（源码见本单元概览）
 - **签名 / 返回**：`_max_drawdown(values: list[float])` → `float`
@@ -11713,7 +13575,9 @@
 
 <a id="fun-b1a235a7d0"></a>
 
-#### `summarize_trades`
+#### FUN-B1A235A7D0
+
+**函数**：`summarize_trades`
 
 - **ID / 行**：`FUN-B1A235A7D0` / `L22`（源码见本单元概览）
 - **签名 / 返回**：`summarize_trades(trades: list[TradeResult])` → `dict`
@@ -11724,7 +13588,9 @@
 
 <a id="fun-da4189939e"></a>
 
-#### `group_trades`
+#### FUN-DA4189939E
+
+**函数**：`group_trades`
 
 - **ID / 行**：`FUN-DA4189939E` / `L51`（源码见本单元概览）
 - **签名 / 返回**：`group_trades(trades: Iterable[TradeResult], key: str)` → `list[dict]`
@@ -11735,7 +13601,9 @@
 
 <a id="unit-d6d81aa6c4"></a>
 
-### src/backtest/simulator.py — 软件单元详细设计
+### UNIT-D6D81AA6C4
+
+**模块**：`src/backtest/simulator.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11755,7 +13623,9 @@
 
 <a id="fun-45cf111f4c"></a>
 
-#### `_signal_value`
+#### FUN-45CF111F4C
+
+**函数**：`_signal_value`
 
 - **ID / 行**：`FUN-45CF111F4C` / `L11`（源码见本单元概览）
 - **签名 / 返回**：`_signal_value(signal: TradingSignal | dict, key: str, default=None)` → `runtime/inferred`
@@ -11766,7 +13636,9 @@
 
 <a id="fun-c8726a960a"></a>
 
-#### `_entry_price`
+#### FUN-C8726A960A
+
+**函数**：`_entry_price`
 
 - **ID / 行**：`FUN-C8726A960A` / `L17`（源码见本单元概览）
 - **签名 / 返回**：`_entry_price(signal: TradingSignal | dict, direction: str, slippage: float)` → `float`
@@ -11777,7 +13649,9 @@
 
 <a id="fun-45fe26e9d1"></a>
 
-#### `_fillable`
+#### FUN-45FE26E9D1
+
+**函数**：`_fillable`
 
 - **ID / 行**：`FUN-45FE26E9D1` / `L25`（源码见本单元概览）
 - **签名 / 返回**：`_fillable(row: pd.Series, entry: float)` → `bool`
@@ -11788,7 +13662,9 @@
 
 <a id="fun-49b51b8f5c"></a>
 
-#### `_risk_points`
+#### FUN-49B51B8F5C
+
+**函数**：`_risk_points`
 
 - **ID / 行**：`FUN-49B51B8F5C` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`_risk_points(entry: float, stop: float, direction: str)` → `float`
@@ -11798,7 +13674,9 @@
 
 <a id="fun-fbd39fd99d"></a>
 
-#### `_entered`
+#### FUN-FBD39FD99D
+
+**函数**：`_entered`
 
 - **ID / 行**：`FUN-FBD39FD99D` / `L35`（源码见本单元概览）
 - **签名 / 返回**：`_entered(row: pd.Series, entry: float)` → `bool`
@@ -11809,7 +13687,9 @@
 
 <a id="fun-c957603ed9"></a>
 
-#### `_hit_stop`
+#### FUN-C957603ED9
+
+**函数**：`_hit_stop`
 
 - **ID / 行**：`FUN-C957603ED9` / `L39`（源码见本单元概览）
 - **签名 / 返回**：`_hit_stop(row: pd.Series, stop: float, direction: str)` → `bool`
@@ -11820,7 +13700,9 @@
 
 <a id="fun-082bf9ce12"></a>
 
-#### `_hit_tp`
+#### FUN-082BF9CE12
+
+**函数**：`_hit_tp`
 
 - **ID / 行**：`FUN-082BF9CE12` / `L45`（源码见本单元概览）
 - **签名 / 返回**：`_hit_tp(row: pd.Series, tp: float, direction: str)` → `bool`
@@ -11831,7 +13713,9 @@
 
 <a id="fun-23462233b9"></a>
 
-#### `_pnl_points`
+#### FUN-23462233B9
+
+**函数**：`_pnl_points`
 
 - **ID / 行**：`FUN-23462233B9` / `L51`（源码见本单元概览）
 - **签名 / 返回**：`_pnl_points(entry: float, exit_price: float, direction: str, fee_points: float)` → `float`
@@ -11841,7 +13725,9 @@
 
 <a id="fun-58d5ab9bc5"></a>
 
-#### `_signal_metadata`
+#### FUN-58D5AB9BC5
+
+**函数**：`_signal_metadata`
 
 - **ID / 行**：`FUN-58D5AB9BC5` / `L56`（源码见本单元概览）
 - **签名 / 返回**：`_signal_metadata(signal: TradingSignal | dict)` → `dict`
@@ -11852,7 +13738,9 @@
 
 <a id="fun-203e3a1ea2"></a>
 
-#### `simulate_signal`
+#### FUN-203E3A1EA2
+
+**函数**：`simulate_signal`
 
 - **ID / 行**：`FUN-203E3A1EA2` / `L65`（源码见本单元概览）
 - **签名 / 返回**：`simulate_signal(signal: TradingSignal | dict, future_5m: pd.DataFrame, signal_time: pd.Timestamp, config: BacktestConfig)` → `TradeResult`
@@ -11863,7 +13751,9 @@
 
 <a id="unit-a71e1f8ce9"></a>
 
-### src/backtest/types.py — 软件单元详细设计
+### UNIT-A71E1F8CE9
+
+**模块**：`src/backtest/types.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11883,7 +13773,9 @@
 
 <a id="fun-e85e437686"></a>
 
-#### `MacroReplayState.to_dict`
+#### FUN-E85E437686
+
+**函数**：`MacroReplayState.to_dict`
 
 - **ID / 行**：`FUN-E85E437686` / `L53`（源码见本单元概览）
 - **签名 / 返回**：`MacroReplayState.to_dict(self)` → `dict[str, Any]`
@@ -11894,7 +13786,9 @@
 
 <a id="fun-56d05c06ee"></a>
 
-#### `TradeResult.triggered`
+#### FUN-56D05C06EE
+
+**函数**：`TradeResult.triggered`
 
 - **ID / 行**：`FUN-56D05C06EE` / `L81`（源码见本单元概览）
 - **签名 / 返回**：`TradeResult.triggered(self)` → `bool`
@@ -11904,7 +13798,9 @@
 
 <a id="fun-e8ac0554d3"></a>
 
-#### `TradeResult.won`
+#### FUN-E8AC0554D3
+
+**函数**：`TradeResult.won`
 
 - **ID / 行**：`FUN-E8AC0554D3` / `L85`（源码见本单元概览）
 - **签名 / 返回**：`TradeResult.won(self)` → `bool`
@@ -11914,7 +13810,9 @@
 
 <a id="fun-f9db9c8f7c"></a>
 
-#### `TradeResult.to_dict`
+#### FUN-F9DB9C8F7C
+
+**函数**：`TradeResult.to_dict`
 
 - **ID / 行**：`FUN-F9DB9C8F7C` / `L88`（源码见本单元概览）
 - **签名 / 返回**：`TradeResult.to_dict(self)` → `dict[str, Any]`
@@ -11925,7 +13823,9 @@
 
 <a id="fun-8075ec23fd"></a>
 
-#### `BacktestResult.to_dict`
+#### FUN-8075EC23FD
+
+**函数**：`BacktestResult.to_dict`
 
 - **ID / 行**：`FUN-8075EC23FD` / `L105`（源码见本单元概览）
 - **签名 / 返回**：`BacktestResult.to_dict(self)` → `dict[str, Any]`
@@ -11936,7 +13836,9 @@
 
 <a id="arc-viz"></a>
 
-## ARC-VIZ — Streamlit 展示
+## ARC-VIZ
+
+**名称**：Streamlit 展示
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -11964,7 +13866,9 @@
 
 <a id="unit-3ec85337ca"></a>
 
-### src/viz/__init__.py — 软件单元详细设计
+### UNIT-3EC85337CA
+
+**模块**：`src/viz/__init__.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -11984,7 +13888,9 @@
 
 <a id="unit-986f7077ab"></a>
 
-### src/viz/agent_trace_view.py — 软件单元详细设计
+### UNIT-986F7077AB
+
+**模块**：`src/viz/agent_trace_view.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -12004,7 +13910,9 @@
 
 <a id="fun-1b8f11eeeb"></a>
 
-#### `_badge_md`
+#### FUN-1B8F11EEEB
+
+**函数**：`_badge_md`
 
 - **ID / 行**：`FUN-1B8F11EEEB` / `L26`（源码见本单元概览）
 - **签名 / 返回**：`_badge_md(meta: dict)` → `str`
@@ -12015,7 +13923,9 @@
 
 <a id="fun-f0fee40c1c"></a>
 
-#### `_stage_source_text`
+#### FUN-F0FEE40C1C
+
+**函数**：`_stage_source_text`
 
 - **ID / 行**：`FUN-F0FEE40C1C` / `L33`（源码见本单元概览）
 - **签名 / 返回**：`_stage_source_text(stage_meta: dict, stage: str)` → `str`
@@ -12026,7 +13936,9 @@
 
 <a id="fun-4971a29fae"></a>
 
-#### `_short_text`
+#### FUN-4971A29FAE
+
+**函数**：`_short_text`
 
 - **ID / 行**：`FUN-4971A29FAE` / `L41`（源码见本单元概览）
 - **签名 / 返回**：`_short_text(value: object, limit: int=72)` → `str`
@@ -12037,7 +13949,9 @@
 
 <a id="fun-c7d1fa8bc5"></a>
 
-#### `_stage_card`
+#### FUN-C7D1FA8BC5
+
+**函数**：`_stage_card`
 
 - **ID / 行**：`FUN-C7D1FA8BC5` / `L48`（源码见本单元概览）
 - **签名 / 返回**：`_stage_card(stage: str, meta: dict, main: str, sub: str='')` → `str`
@@ -12048,7 +13962,9 @@
 
 <a id="fun-f93c1a5bee"></a>
 
-#### `_render_stage_summary_grid`
+#### FUN-F93C1A5BEE
+
+**函数**：`_render_stage_summary_grid`
 
 - **ID / 行**：`FUN-F93C1A5BEE` / `L60`（源码见本单元概览）
 - **签名 / 返回**：`_render_stage_summary_grid(report: dict, trace: dict)` → `str`
@@ -12059,7 +13975,9 @@
 
 <a id="fun-d0d9c7226c"></a>
 
-#### `_decision_flow_markdown`
+#### FUN-D0D9C7226C
+
+**函数**：`_decision_flow_markdown`
 
 - **ID / 行**：`FUN-D0D9C7226C` / `L110`（源码见本单元概览）
 - **签名 / 返回**：`_decision_flow_markdown(report: dict, trace: dict)` → `str`
@@ -12070,7 +13988,9 @@
 
 <a id="fun-8765e21451"></a>
 
-#### `render_agent_trace_panel`
+#### FUN-8765E21451
+
+**函数**：`render_agent_trace_panel`
 
 - **ID / 行**：`FUN-8765E21451` / `L190`（源码见本单元概览）
 - **签名 / 返回**：`render_agent_trace_panel(report: dict)` → `None`
@@ -12081,7 +14001,9 @@
 
 <a id="fun-1d4ae30fbd"></a>
 
-#### `render_agent_trace_sidebar`
+#### FUN-1D4AE30FBD
+
+**函数**：`render_agent_trace_sidebar`
 
 - **ID / 行**：`FUN-1D4AE30FBD` / `L458`（源码见本单元概览）
 - **签名 / 返回**：`render_agent_trace_sidebar(report: dict)` → `None`
@@ -12092,7 +14014,9 @@
 
 <a id="unit-6a590d74f1"></a>
 
-### src/viz/archive_config_summary.py — 软件单元详细设计
+### UNIT-6A590D74F1
+
+**模块**：`src/viz/archive_config_summary.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -12112,7 +14036,9 @@
 
 <a id="fun-e73bf3a018"></a>
 
-#### `format_archived_run_config`
+#### FUN-E73BF3A018
+
+**函数**：`format_archived_run_config`
 
 - **ID / 行**：`FUN-E73BF3A018` / `L8`（源码见本单元概览）
 - **签名 / 返回**：`format_archived_run_config(run_config: dict[str, Any] | None)` → `str`
@@ -12123,7 +14049,9 @@
 
 <a id="fun-acfcd5eef4"></a>
 
-#### `pipeline_status_label`
+#### FUN-ACFCD5EEF4
+
+**函数**：`pipeline_status_label`
 
 - **ID / 行**：`FUN-ACFCD5EEF4` / `L32`（源码见本单元概览）
 - **签名 / 返回**：`pipeline_status_label(status: str | None)` → `str`
@@ -12134,7 +14062,9 @@
 
 <a id="unit-7301a06e0a"></a>
 
-### src/viz/charts.py — 软件单元详细设计
+### UNIT-7301A06E0A
+
+**模块**：`src/viz/charts.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -12154,7 +14084,9 @@
 
 <a id="fun-508ae8715d"></a>
 
-#### `build_sentiment_donut`
+#### FUN-508AE8715D
+
+**函数**：`build_sentiment_donut`
 
 - **ID / 行**：`FUN-508AE8715D` / `L10`（源码见本单元概览）
 - **签名 / 返回**：`build_sentiment_donut(sentiment: dict[str, float])` → `go.Figure`
@@ -12165,7 +14097,9 @@
 
 <a id="fun-25d919a083"></a>
 
-#### `build_projection_chart`
+#### FUN-25D919A083
+
+**函数**：`build_projection_chart`
 
 - **ID / 行**：`FUN-25D919A083` / `L36`（源码见本单元概览）
 - **签名 / 返回**：`build_projection_chart(projections: list[dict])` → `go.Figure`
@@ -12176,7 +14110,9 @@
 
 <a id="unit-c8a82e7519"></a>
 
-### src/viz/dashboard_components.py — 软件单元详细设计
+### UNIT-C8A82E7519
+
+**模块**：`src/viz/dashboard_components.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -12196,7 +14132,9 @@
 
 <a id="fun-86e2359125"></a>
 
-#### `_is_placeholder_source`
+#### FUN-86E2359125
+
+**函数**：`_is_placeholder_source`
 
 - **ID / 行**：`FUN-86E2359125` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`_is_placeholder_source(src: str)` → `bool`
@@ -12207,7 +14145,9 @@
 
 <a id="fun-0059ca3d67"></a>
 
-#### `_chg_class`
+#### FUN-0059CA3D67
+
+**函数**：`_chg_class`
 
 - **ID / 行**：`FUN-0059CA3D67` / `L632`（源码见本单元概览）
 - **签名 / 返回**：`_chg_class(change: float)` → `str`
@@ -12217,7 +14157,9 @@
 
 <a id="fun-2d55219a60"></a>
 
-#### `_truncate`
+#### FUN-2D55219A60
+
+**函数**：`_truncate`
 
 - **ID / 行**：`FUN-2D55219A60` / `L636`（源码见本单元概览）
 - **签名 / 返回**：`_truncate(text: str, n: int)` → `str`
@@ -12228,7 +14170,9 @@
 
 <a id="fun-550f755267"></a>
 
-#### `_source_tags`
+#### FUN-550F755267
+
+**函数**：`_source_tags`
 
 - **ID / 行**：`FUN-550F755267` / `L641`（源码见本单元概览）
 - **签名 / 返回**：`_source_tags(sources: list[str])` → `str`
@@ -12239,7 +14183,9 @@
 
 <a id="fun-85e277e655"></a>
 
-#### `render_external_data_panel`
+#### FUN-85E277E655
+
+**函数**：`render_external_data_panel`
 
 - **ID / 行**：`FUN-85E277E655` / `L654`（源码见本单元概览）
 - **签名 / 返回**：`render_external_data_panel(ext: dict[str, Any])` → `str`
@@ -12250,7 +14196,9 @@
 
 <a id="fun-64dfaecbb9"></a>
 
-#### `render_header`
+#### FUN-64DFAECBB9
+
+**函数**：`render_header`
 
 - **ID / 行**：`FUN-64DFAECBB9` / `L718`（源码见本单元概览）
 - **签名 / 返回**：`render_header(report: dict[str, Any])` → `str`
@@ -12261,7 +14209,9 @@
 
 <a id="fun-725d5a8f44"></a>
 
-#### `_fmt_price`
+#### FUN-725D5A8F44
+
+**函数**：`_fmt_price`
 
 - **ID / 行**：`FUN-725D5A8F44` / `L742`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_price(value: Any)` → `str`
@@ -12272,7 +14222,9 @@
 
 <a id="fun-72ca74c7a9"></a>
 
-#### `_primary_signal`
+#### FUN-72CA74C7A9
+
+**函数**：`_primary_signal`
 
 - **ID / 行**：`FUN-72CA74C7A9` / `L749`（源码见本单元概览）
 - **签名 / 返回**：`_primary_signal(signals: list[dict[str, Any]])` → `dict[str, Any] | None`
@@ -12283,7 +14235,9 @@
 
 <a id="fun-389fe568ee"></a>
 
-#### `_status_meta`
+#### FUN-389FE568EE
+
+**函数**：`_status_meta`
 
 - **ID / 行**：`FUN-389FE568EE` / `L758`（源码见本单元概览）
 - **签名 / 返回**：`_status_meta(status: str)` → `tuple[str, str]`
@@ -12294,7 +14248,9 @@
 
 <a id="fun-23bf7fa077"></a>
 
-#### `_direction_class`
+#### FUN-23BF7FA077
+
+**函数**：`_direction_class`
 
 - **ID / 行**：`FUN-23BF7FA077` / `L769`（源码见本单元概览）
 - **签名 / 返回**：`_direction_class(signal: dict[str, Any] | None, conclusion: dict[str, Any])` → `str`
@@ -12305,7 +14261,9 @@
 
 <a id="fun-0010bc2852"></a>
 
-#### `_signal_zone`
+#### FUN-0010BC2852
+
+**函数**：`_signal_zone`
 
 - **ID / 行**：`FUN-0010BC2852` / `L785`（源码见本单元概览）
 - **签名 / 返回**：`_signal_zone(sig: dict[str, Any])` → `str`
@@ -12316,7 +14274,9 @@
 
 <a id="fun-d398c927e4"></a>
 
-#### `_signal_targets`
+#### FUN-D398C927E4
+
+**函数**：`_signal_targets`
 
 - **ID / 行**：`FUN-D398C927E4` / `L789`（源码见本单元概览）
 - **签名 / 返回**：`_signal_targets(sig: dict[str, Any])` → `str`
@@ -12327,7 +14287,9 @@
 
 <a id="fun-133e6e54c6"></a>
 
-#### `_first_text`
+#### FUN-133E6E54C6
+
+**函数**：`_first_text`
 
 - **ID / 行**：`FUN-133E6E54C6` / `L796`（源码见本单元概览）
 - **签名 / 返回**：`_first_text(items: list[Any], fallback: str='—')` → `str`
@@ -12338,7 +14300,9 @@
 
 <a id="fun-e962207ce2"></a>
 
-#### `render_final_decision_banner`
+#### FUN-E962207CE2
+
+**函数**：`render_final_decision_banner`
 
 - **ID / 行**：`FUN-E962207CE2` / `L804`（源码见本单元概览）
 - **签名 / 返回**：`render_final_decision_banner(report: dict[str, Any])` → `str`
@@ -12349,7 +14313,9 @@
 
 <a id="fun-c819f0daf5"></a>
 
-#### `render_decision_summary`
+#### FUN-C819F0DAF5
+
+**函数**：`render_decision_summary`
 
 - **ID / 行**：`FUN-C819F0DAF5` / `L860`（源码见本单元概览）
 - **签名 / 返回**：`render_decision_summary(report: dict[str, Any])` → `str`
@@ -12360,7 +14326,9 @@
 
 <a id="fun-937765293d"></a>
 
-#### `_display_plan_signals`
+#### FUN-937765293D
+
+**函数**：`_display_plan_signals`
 
 - **ID / 行**：`FUN-937765293D` / `L931`（源码见本单元概览）
 - **签名 / 返回**：`_display_plan_signals(signals: list[dict[str, Any]], *, limit: int=3)` → `list[dict[str, Any]]`
@@ -12371,7 +14339,9 @@
 
 <a id="fun-d3d7244ace"></a>
 
-#### `_confidence_text`
+#### FUN-D3D7244ACE
+
+**函数**：`_confidence_text`
 
 - **ID / 行**：`FUN-D3D7244ACE` / `L938`（源码见本单元概览）
 - **签名 / 返回**：`_confidence_text(sig: dict[str, Any])` → `str`
@@ -12382,7 +14352,9 @@
 
 <a id="fun-2f9b45e4cd"></a>
 
-#### `_minify_plan_html`
+#### FUN-2F9B45E4CD
+
+**函数**：`_minify_plan_html`
 
 - **ID / 行**：`FUN-2F9B45E4CD` / `L948`（源码见本单元概览）
 - **签名 / 返回**：`_minify_plan_html(markup: str)` → `str`
@@ -12393,7 +14365,9 @@
 
 <a id="fun-e6d39c08cf"></a>
 
-#### `_render_plan_card`
+#### FUN-E6D39C08CF
+
+**函数**：`_render_plan_card`
 
 - **ID / 行**：`FUN-E6D39C08CF` / `L954`（源码见本单元概览）
 - **签名 / 返回**：`_render_plan_card(sig: dict[str, Any], *, plan_label: str, is_primary: bool=False, unauthorized: bool=False, rejected: bool=False)` → `str`
@@ -12404,7 +14378,9 @@
 
 <a id="fun-9c21a8d1a7"></a>
 
-#### `render_rejected_plan_details`
+#### FUN-9C21A8D1A7
+
+**函数**：`render_rejected_plan_details`
 
 - **ID / 行**：`FUN-9C21A8D1A7` / `L1046`（源码见本单元概览）
 - **签名 / 返回**：`render_rejected_plan_details(signals: list[dict], *, meta: dict | None=None, validated_plans: list[dict] | None=None)` → `str`
@@ -12415,7 +14391,9 @@
 
 <a id="fun-3bfb666a67"></a>
 
-#### `render_primary_plan_focus`
+#### FUN-3BFB666A67
+
+**函数**：`render_primary_plan_focus`
 
 - **ID / 行**：`FUN-3BFB666A67` / `L1106`（源码见本单元概览）
 - **签名 / 返回**：`render_primary_plan_focus(report: dict[str, Any])` → `str`
@@ -12426,7 +14404,9 @@
 
 <a id="fun-1308a20c4f"></a>
 
-#### `render_top_overview_row`
+#### FUN-1308A20C4F
+
+**函数**：`render_top_overview_row`
 
 - **ID / 行**：`FUN-1308A20C4F` / `L1119`（源码见本单元概览）
 - **签名 / 返回**：`render_top_overview_row(report: dict[str, Any])` → `str`
@@ -12437,7 +14417,9 @@
 
 <a id="fun-d69f968c9e"></a>
 
-#### `render_tf_stack`
+#### FUN-D69F968C9E
+
+**函数**：`render_tf_stack`
 
 - **ID / 行**：`FUN-D69F968C9E` / `L1148`（源码见本单元概览）
 - **签名 / 返回**：`render_tf_stack(report: dict[str, Any])` → `str`
@@ -12448,7 +14430,9 @@
 
 <a id="fun-1fb9420507"></a>
 
-#### `render_bottom_row`
+#### FUN-1FB9420507
+
+**函数**：`render_bottom_row`
 
 - **ID / 行**：`FUN-1FB9420507` / `L1156`（源码见本单元概览）
 - **签名 / 返回**：`render_bottom_row(report: dict[str, Any], conclusion: dict[str, Any])` → `str`
@@ -12459,7 +14443,9 @@
 
 <a id="fun-2dd042625f"></a>
 
-#### `_fmt_zone`
+#### FUN-2DD042625F
+
+**函数**：`_fmt_zone`
 
 - **ID / 行**：`FUN-2DD042625F` / `L1186`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_zone(items: list[dict], direction: str | None=None, *, limit: int=5)` → `str`
@@ -12470,7 +14456,9 @@
 
 <a id="fun-eab2c95485"></a>
 
-#### `_fmt_event_list`
+#### FUN-EAB2C95485
+
+**函数**：`_fmt_event_list`
 
 - **ID / 行**：`FUN-EAB2C95485` / `L1193`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_event_list(items: list[dict])` → `str`
@@ -12481,7 +14469,9 @@
 
 <a id="fun-48fc0fd2b1"></a>
 
-#### `_fmt_prices`
+#### FUN-48FC0FD2B1
+
+**函数**：`_fmt_prices`
 
 - **ID / 行**：`FUN-48FC0FD2B1` / `L1199`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_prices(prices: list[float])` → `str`
@@ -12492,7 +14482,9 @@
 
 <a id="fun-6d789b868b"></a>
 
-#### `_fmt_strong_weak`
+#### FUN-6D789B868B
+
+**函数**：`_fmt_strong_weak`
 
 - **ID / 行**：`FUN-6D789B868B` / `L1205`（源码见本单元概览）
 - **签名 / 返回**：`_fmt_strong_weak(info: dict[str, Any])` → `str`
@@ -12503,7 +14495,9 @@
 
 <a id="fun-854dcce0eb"></a>
 
-#### `render_tf_panel`
+#### FUN-854DCCE0EB
+
+**函数**：`render_tf_panel`
 
 - **ID / 行**：`FUN-854DCCE0EB` / `L1218`（源码见本单元概览）
 - **签名 / 返回**：`render_tf_panel(tf: str, info: dict[str, Any], *, compact: bool=False)` → `str`
@@ -12514,7 +14508,9 @@
 
 <a id="fun-ce51fb1d21"></a>
 
-#### `render_narrative_section`
+#### FUN-CE51FB1D21
+
+**函数**：`render_narrative_section`
 
 - **ID / 行**：`FUN-CE51FB1D21` / `L1267`（源码见本单元概览）
 - **签名 / 返回**：`render_narrative_section(section: dict[str, Any] | None)` → `str`
@@ -12525,7 +14521,9 @@
 
 <a id="fun-18e3bf98ae"></a>
 
-#### `_narrative_fallback_hint`
+#### FUN-18E3BF98AE
+
+**函数**：`_narrative_fallback_hint`
 
 - **ID / 行**：`FUN-18E3BF98AE` / `L1298`（源码见本单元概览）
 - **签名 / 返回**：`_narrative_fallback_hint(section: dict[str, Any])` → `str`
@@ -12536,7 +14534,9 @@
 
 <a id="fun-1e810a3b0e"></a>
 
-#### `render_key_levels`
+#### FUN-1E810A3B0E
+
+**函数**：`render_key_levels`
 
 - **ID / 行**：`FUN-1E810A3B0E` / `L1307`（源码见本单元概览）
 - **签名 / 返回**：`render_key_levels(levels: list[dict])` → `str`
@@ -12547,7 +14547,9 @@
 
 <a id="fun-b460f224ca"></a>
 
-#### `render_strategy_sections`
+#### FUN-B460F224CA
+
+**函数**：`render_strategy_sections`
 
 - **ID / 行**：`FUN-B460F224CA` / `L1323`（源码见本单元概览）
 - **签名 / 返回**：`render_strategy_sections(report: dict[str, Any])` → `str`
@@ -12558,7 +14560,9 @@
 
 <a id="fun-60b752029b"></a>
 
-#### `render_path_cards`
+#### FUN-60B752029B
+
+**函数**：`render_path_cards`
 
 - **ID / 行**：`FUN-60B752029B` / `L1340`（源码见本单元概览）
 - **签名 / 返回**：`render_path_cards(paths: list[dict])` → `str`
@@ -12569,7 +14573,9 @@
 
 <a id="fun-f129f84b90"></a>
 
-#### `render_calendar`
+#### FUN-F129F84B90
+
+**函数**：`render_calendar`
 
 - **ID / 行**：`FUN-F129F84B90` / `L1348`（源码见本单元概览）
 - **签名 / 返回**：`render_calendar(events: list[dict])` → `str`
@@ -12580,7 +14586,9 @@
 
 <a id="fun-94c9558228"></a>
 
-#### `render_trading_plans`
+#### FUN-94C9558228
+
+**函数**：`render_trading_plans`
 
 - **ID / 行**：`FUN-94C9558228` / `L1358`（源码见本单元概览）
 - **签名 / 返回**：`render_trading_plans(signals: list[dict], *, meta: dict | None=None, include_primary: bool=True, validated_plans: list[dict] | None=None)` → `str`
@@ -12591,7 +14599,9 @@
 
 <a id="fun-5e89771732"></a>
 
-#### `render_liquidity`
+#### FUN-5E89771732
+
+**函数**：`render_liquidity`
 
 - **ID / 行**：`FUN-5E89771732` / `L1403`（源码见本单元概览）
 - **签名 / 返回**：`render_liquidity(items: list[dict])` → `str`
@@ -12602,7 +14612,9 @@
 
 <a id="fun-aaaaeceb82"></a>
 
-#### `render_footer`
+#### FUN-AAAAECEB82
+
+**函数**：`render_footer`
 
 - **ID / 行**：`FUN-AAAAECEB82` / `L1417`（源码见本单元概览）
 - **签名 / 返回**：`render_footer(report: dict[str, Any])` → `str`
@@ -12613,7 +14625,9 @@
 
 <a id="unit-003f08decb"></a>
 
-### src/viz/decision_page.py — 软件单元详细设计
+### UNIT-003F08DECB
+
+**模块**：`src/viz/decision_page.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -12633,7 +14647,9 @@
 
 <a id="fun-77f3e3eb2d"></a>
 
-#### `_render_generation_and_llm_io`
+#### FUN-77F3E3EB2D
+
+**函数**：`_render_generation_and_llm_io`
 
 - **ID / 行**：`FUN-77F3E3EB2D` / `L20`（源码见本单元概览）
 - **签名 / 返回**：`_render_generation_and_llm_io(*, steps: list[dict], records: list[dict], stage_sources: dict | None=None, expand_last: bool=False, empty_steps_msg: str='暂无生成步骤记录', empty_io_msg: str='暂无 LLM 调用记录', live_streaming: bool=False, show_steps: bool=True)` → `None`
@@ -12645,7 +14661,9 @@
 
 <a id="fun-4d76920cc8"></a>
 
-#### `render_live_generation_panel`
+#### FUN-4D76920CC8
+
+**函数**：`render_live_generation_panel`
 
 - **ID / 行**：`FUN-4D76920CC8` / `L69`（源码见本单元概览）
 - **签名 / 返回**：`render_live_generation_panel(live: dict, *, show_steps: bool=True)` → `None`
@@ -12656,7 +14674,9 @@
 
 <a id="fun-0871294ede"></a>
 
-#### `render_llm_decision_page`
+#### FUN-0871294EDE
+
+**函数**：`render_llm_decision_page`
 
 - **ID / 行**：`FUN-0871294EDE` / `L96`（源码见本单元概览）
 - **签名 / 返回**：`render_llm_decision_page(report: dict)` → `None`
@@ -12667,7 +14687,9 @@
 
 <a id="unit-9b624c52d7"></a>
 
-### src/viz/display_labels.py — 软件单元详细设计
+### UNIT-9B624C52D7
+
+**模块**：`src/viz/display_labels.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -12687,7 +14709,9 @@
 
 <a id="fun-7d9904747d"></a>
 
-#### `format_report_branding`
+#### FUN-7D9904747D
+
+**函数**：`format_report_branding`
 
 - **ID / 行**：`FUN-7D9904747D` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`format_report_branding(text: object)` → `str`
@@ -12699,7 +14723,9 @@
 
 <a id="fun-c22c609a56"></a>
 
-#### `humanize_narrative_fallback`
+#### FUN-C22C609A56
+
+**函数**：`humanize_narrative_fallback`
 
 - **ID / 行**：`FUN-C22C609A56` / `L52`（源码见本单元概览）
 - **签名 / 返回**：`humanize_narrative_fallback(reason: object)` → `str`
@@ -12710,7 +14736,9 @@
 
 <a id="fun-49e5ad57e6"></a>
 
-#### `label_bias`
+#### FUN-49E5AD57E6
+
+**函数**：`label_bias`
 
 - **ID / 行**：`FUN-49E5AD57E6` / `L67`（源码见本单元概览）
 - **签名 / 返回**：`label_bias(value: object)` → `str`
@@ -12721,7 +14749,9 @@
 
 <a id="fun-5a683dd3d4"></a>
 
-#### `label_action`
+#### FUN-5A683DD3D4
+
+**函数**：`label_action`
 
 - **ID / 行**：`FUN-5A683DD3D4` / `L72`（源码见本单元概览）
 - **签名 / 返回**：`label_action(value: object)` → `str`
@@ -12732,7 +14762,9 @@
 
 <a id="fun-32cef2320f"></a>
 
-#### `label_trade_direction`
+#### FUN-32CEF2320F
+
+**函数**：`label_trade_direction`
 
 - **ID / 行**：`FUN-32CEF2320F` / `L77`（源码见本单元概览）
 - **签名 / 返回**：`label_trade_direction(value: object)` → `str`
@@ -12743,7 +14775,9 @@
 
 <a id="fun-3c82dc7efd"></a>
 
-#### `label_risk_profile`
+#### FUN-3C82DC7EFD
+
+**函数**：`label_risk_profile`
 
 - **ID / 行**：`FUN-3C82DC7EFD` / `L82`（源码见本单元概览）
 - **签名 / 返回**：`label_risk_profile(value: object)` → `str`
@@ -12754,7 +14788,9 @@
 
 <a id="fun-32db70ee85"></a>
 
-#### `label_position_scale`
+#### FUN-32DB70EE85
+
+**函数**：`label_position_scale`
 
 - **ID / 行**：`FUN-32DB70EE85` / `L87`（源码见本单元概览）
 - **签名 / 返回**：`label_position_scale(scale: object)` → `str`
@@ -12765,7 +14801,9 @@
 
 <a id="fun-9cdbf9137f"></a>
 
-#### `infer_trade_theme`
+#### FUN-9CDBF9137F
+
+**函数**：`infer_trade_theme`
 
 - **ID / 行**：`FUN-9CDBF9137F` / `L107`（源码见本单元概览）
 - **签名 / 返回**：`infer_trade_theme(*, theme: str='', direction: str='', direction_cn: str='')` → `str`
@@ -12776,7 +14814,9 @@
 
 <a id="fun-1e94d60636"></a>
 
-#### `execution_banner`
+#### FUN-1E94D60636
+
+**函数**：`execution_banner`
 
 - **ID / 行**：`FUN-1E94D60636` / `L125`（源码见本单元概览）
 - **签名 / 返回**：`execution_banner(meta: dict | None)` → `str`
@@ -12787,7 +14827,9 @@
 
 <a id="fun-493ef2091a"></a>
 
-#### `conclusion_display_lines`
+#### FUN-493EF2091A
+
+**函数**：`conclusion_display_lines`
 
 - **ID / 行**：`FUN-493EF2091A` / `L154`（源码见本单元概览）
 - **签名 / 返回**：`conclusion_display_lines(conclusion: dict[str, Any] | None)` → `list[str]`
@@ -12798,7 +14840,9 @@
 
 <a id="unit-8b3827f5ec"></a>
 
-### src/viz/external_data_view.py — 软件单元详细设计
+### UNIT-8B3827F5EC
+
+**模块**：`src/viz/external_data_view.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -12818,7 +14862,9 @@
 
 <a id="fun-1e2febd33e"></a>
 
-#### `external_snapshot_from_fetch`
+#### FUN-1E2FEBD33E
+
+**函数**：`external_snapshot_from_fetch`
 
 - **ID / 行**：`FUN-1E2FEBD33E` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`external_snapshot_from_fetch(fetched: DataFetchResult)` → `dict[str, Any]`
@@ -12829,7 +14875,9 @@
 
 <a id="fun-73c9145028"></a>
 
-#### `external_payload_from_report`
+#### FUN-73C9145028
+
+**函数**：`external_payload_from_report`
 
 - **ID / 行**：`FUN-73C9145028` / `L38`（源码见本单元概览）
 - **签名 / 返回**：`external_payload_from_report(report: dict, data: dict | None=None)` → `dict[str, Any]`
@@ -12840,7 +14888,9 @@
 
 <a id="fun-75474c9286"></a>
 
-#### `_render_headline_list`
+#### FUN-75474C9286
+
+**函数**：`_render_headline_list`
 
 - **ID / 行**：`FUN-75474C9286` / `L54`（源码见本单元概览）
 - **签名 / 返回**：`_render_headline_list(items: list[dict], *, empty: str)` → `str`
@@ -12851,7 +14901,9 @@
 
 <a id="fun-15a26b9540"></a>
 
-#### `_render_calendar_rows`
+#### FUN-15A26B9540
+
+**函数**：`_render_calendar_rows`
 
 - **ID / 行**：`FUN-15A26B9540` / `L68`（源码见本单元概览）
 - **签名 / 返回**：`_render_calendar_rows(payload: dict[str, Any])` → `str`
@@ -12862,7 +14914,9 @@
 
 <a id="fun-6cdbb0b77d"></a>
 
-#### `render_external_data_content`
+#### FUN-6CDBB0B77D
+
+**函数**：`render_external_data_content`
 
 - **ID / 行**：`FUN-6CDBB0B77D` / `L94`（源码见本单元概览）
 - **签名 / 返回**：`render_external_data_content(payload: dict[str, Any])` → `None`
@@ -12873,7 +14927,9 @@
 
 <a id="fun-6b50c51729"></a>
 
-#### `render_external_data_page`
+#### FUN-6B50C51729
+
+**函数**：`render_external_data_page`
 
 - **ID / 行**：`FUN-6B50C51729` / `L190`（源码见本单元概览）
 - **签名 / 返回**：`render_external_data_page(payload: dict[str, Any])` → `None`
@@ -12884,7 +14940,9 @@
 
 <a id="unit-e27519993b"></a>
 
-### src/viz/generation_state.py — 软件单元详细设计
+### UNIT-E27519993B
+
+**模块**：`src/viz/generation_state.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -12904,7 +14962,9 @@
 
 <a id="fun-91dd83b0a6"></a>
 
-#### `GenerationJob.key`
+#### FUN-91DD83B0A6
+
+**函数**：`GenerationJob.key`
 
 - **ID / 行**：`FUN-91DD83B0A6` / `L24`（源码见本单元概览）
 - **签名 / 返回**：`GenerationJob.key(self)` → `str`
@@ -12914,7 +14974,9 @@
 
 <a id="fun-a28f3ce7db"></a>
 
-#### `purge_expired`
+#### FUN-A28F3CE7DB
+
+**函数**：`purge_expired`
 
 - **ID / 行**：`FUN-A28F3CE7DB` / `L32`（源码见本单元概览）
 - **签名 / 返回**：`purge_expired()` → `None`
@@ -12925,7 +14987,9 @@
 
 <a id="fun-fab2a1bb76"></a>
 
-#### `access_job`
+#### FUN-FAB2A1BB76
+
+**函数**：`access_job`
 
 - **ID / 行**：`FUN-FAB2A1BB76` / `L40`（源码见本单元概览）
 - **签名 / 返回**：`access_job(job_key: str)` → `GenerationJob | None`
@@ -12936,7 +15000,9 @@
 
 <a id="fun-bcb1df87b1"></a>
 
-#### `get_job`
+#### FUN-BCB1DF87B1
+
+**函数**：`get_job`
 
 - **ID / 行**：`FUN-BCB1DF87B1` / `L46`（源码见本单元概览）
 - **签名 / 返回**：`get_job(job_key: str, *, session_id: str)` → `GenerationJob | None`
@@ -12947,7 +15013,9 @@
 
 <a id="fun-e4ee868b95"></a>
 
-#### `create_job`
+#### FUN-E4EE868B95
+
+**函数**：`create_job`
 
 - **ID / 行**：`FUN-E4EE868B95` / `L55`（源码见本单元概览）
 - **签名 / 返回**：`create_job(session_id: str, generation_id: str)` → `GenerationJob`
@@ -12958,7 +15026,9 @@
 
 <a id="fun-0d53c85f3b"></a>
 
-#### `drop_job`
+#### FUN-0D53C85F3B
+
+**函数**：`drop_job`
 
 - **ID / 行**：`FUN-0D53C85F3B` / `L63`（源码见本单元概览）
 - **签名 / 返回**：`drop_job(job_key: str, *, session_id: str)` → `None`
@@ -12969,7 +15039,9 @@
 
 <a id="fun-5614348eb6"></a>
 
-#### `update_live`
+#### FUN-5614348EB6
+
+**函数**：`update_live`
 
 - **ID / 行**：`FUN-5614348EB6` / `L70`（源码见本单元概览）
 - **签名 / 返回**：`update_live(job_key: str, snapshot: dict[str, Any])` → `None`
@@ -12980,7 +15052,9 @@
 
 <a id="unit-4c9db5733a"></a>
 
-### src/viz/generation_worker.py — 软件单元详细设计
+### UNIT-4C9DB5733A
+
+**模块**：`src/viz/generation_worker.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -13000,7 +15074,9 @@
 
 <a id="fun-2029e693a6"></a>
 
-#### `_is_streaming_llm_record`
+#### FUN-2029E693A6
+
+**函数**：`_is_streaming_llm_record`
 
 - **ID / 行**：`FUN-2029E693A6` / `L24`（源码见本单元概览）
 - **签名 / 返回**：`_is_streaming_llm_record(rec: dict)` → `bool`
@@ -13011,7 +15087,9 @@
 
 <a id="fun-52fe00a287"></a>
 
-#### `compact_llm_io_for_live`
+#### FUN-52FE00A287
+
+**函数**：`compact_llm_io_for_live`
 
 - **ID / 行**：`FUN-52FE00A287` / `L32`（源码见本单元概览）
 - **签名 / 返回**：`compact_llm_io_for_live(records: list[dict])` → `list[dict]`
@@ -13022,7 +15100,9 @@
 
 <a id="fun-2fae0caf3c"></a>
 
-#### `ModuleSyncProgressReporter.__init__`
+#### FUN-2FAE0CAF3C
+
+**函数**：`ModuleSyncProgressReporter.__init__`
 
 - **ID / 行**：`FUN-2FAE0CAF3C` / `L76`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter.__init__(self, job_key: str)` → `None`
@@ -13033,7 +15113,9 @@
 
 <a id="fun-309bcf8879"></a>
 
-#### `ModuleSyncProgressReporter._sync`
+#### FUN-309BCF8879
+
+**函数**：`ModuleSyncProgressReporter._sync`
 
 - **ID / 行**：`FUN-309BCF8879` / `L82`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter._sync(self)` → `None`
@@ -13044,7 +15126,9 @@
 
 <a id="fun-a85c4e4bb0"></a>
 
-#### `ModuleSyncProgressReporter._headline_from_steps`
+#### FUN-A85C4E4BB0
+
+**函数**：`ModuleSyncProgressReporter._headline_from_steps`
 
 - **ID / 行**：`FUN-A85C4E4BB0` / `L99`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter._headline_from_steps(steps: list[dict])` → `str`
@@ -13056,7 +15140,9 @@
 
 <a id="fun-16cab352ce"></a>
 
-#### `ModuleSyncProgressReporter._on_change`
+#### FUN-16CAB352CE
+
+**函数**：`ModuleSyncProgressReporter._on_change`
 
 - **ID / 行**：`FUN-16CAB352CE` / `L104`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter._on_change(self)` → `None`
@@ -13067,7 +15153,9 @@
 
 <a id="fun-db5d7a17a9"></a>
 
-#### `ModuleSyncProgressReporter._on_llm_chunk`
+#### FUN-DB5D7A17A9
+
+**函数**：`ModuleSyncProgressReporter._on_llm_chunk`
 
 - **ID / 行**：`FUN-DB5D7A17A9` / `L107`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter._on_llm_chunk(self, stage: str, chunk: str)` → `None`
@@ -13078,7 +15166,9 @@
 
 <a id="fun-328cc0f106"></a>
 
-#### `ModuleSyncProgressReporter.llm_begin`
+#### FUN-328CC0F106
+
+**函数**：`ModuleSyncProgressReporter.llm_begin`
 
 - **ID / 行**：`FUN-328CC0F106` / `L114`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter.llm_begin(self, stage: str, model: str, messages: list[dict[str, str]], *, telemetry: dict | None=None)` → `None`
@@ -13089,7 +15179,9 @@
 
 <a id="fun-b1681a5a0b"></a>
 
-#### `ModuleSyncProgressReporter.llm_end`
+#### FUN-B1681A5A0B
+
+**函数**：`ModuleSyncProgressReporter.llm_end`
 
 - **ID / 行**：`FUN-B1681A5A0B` / `L125`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter.llm_end(self, stage: str, output: str, *, error: str | None=None, latency_ms: int | None=None, telemetry: dict | None=None)` → `None`
@@ -13100,7 +15192,9 @@
 
 <a id="fun-40bbcb7294"></a>
 
-#### `ModuleSyncProgressReporter.fail`
+#### FUN-40BBCB7294
+
+**函数**：`ModuleSyncProgressReporter.fail`
 
 - **ID / 行**：`FUN-40BBCB7294` / `L137`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter.fail(self, step_id: str, detail: str='')` → `None`
@@ -13111,7 +15205,9 @@
 
 <a id="fun-00ca768fe8"></a>
 
-#### `ModuleSyncProgressReporter.done`
+#### FUN-00CA768FE8
+
+**函数**：`ModuleSyncProgressReporter.done`
 
 - **ID / 行**：`FUN-00CA768FE8` / `L141`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter.done(self, step_id: str, detail: str='')` → `None`
@@ -13122,7 +15218,9 @@
 
 <a id="fun-f475f6a25b"></a>
 
-#### `ModuleSyncProgressReporter.update`
+#### FUN-F475F6A25B
+
+**函数**：`ModuleSyncProgressReporter.update`
 
 - **ID / 行**：`FUN-F475F6A25B` / `L145`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter.update(self, step_id: str, *, detail: str | None=None, label: str | None=None)` → `None`
@@ -13133,7 +15231,9 @@
 
 <a id="fun-b77c2c5b77"></a>
 
-#### `ModuleSyncProgressReporter.stage_io`
+#### FUN-B77C2C5B77
+
+**函数**：`ModuleSyncProgressReporter.stage_io`
 
 - **ID / 行**：`FUN-B77C2C5B77` / `L149`（源码见本单元概览）
 - **签名 / 返回**：`ModuleSyncProgressReporter.stage_io(self, stage: str, *, input_text: str, output_text: str, latency_ms: int | None=None, label: str | None=None)` → `None`
@@ -13144,7 +15244,9 @@
 
 <a id="fun-4adbbae6f8"></a>
 
-#### `format_generation_error`
+#### FUN-4ADBBAE6F8
+
+**函数**：`format_generation_error`
 
 - **ID / 行**：`FUN-4ADBBAE6F8` / `L168`（源码见本单元概览）
 - **签名 / 返回**：`format_generation_error(exc: BaseException)` → `str`
@@ -13156,7 +15258,9 @@
 
 <a id="fun-de0806140c"></a>
 
-#### `start_generation`
+#### FUN-DE0806140C
+
+**函数**：`start_generation`
 
 - **ID / 行**：`FUN-DE0806140C` / `L190`（源码见本单元概览）
 - **签名 / 返回**：`start_generation(job_key: str, run_config: RunConfig, *, session_id: str)` → `None`
@@ -13168,7 +15272,9 @@
 
 <a id="fun-eadc84cc44"></a>
 
-#### `start_generation.worker`
+#### FUN-EADC84CC44
+
+**函数**：`start_generation.worker`
 
 - **ID / 行**：`FUN-EADC84CC44` / `L217`（源码见本单元概览）
 - **签名 / 返回**：`start_generation.worker()` → `None`
@@ -13180,7 +15286,9 @@
 
 <a id="unit-abbedfd349"></a>
 
-### src/viz/lightweight_chart.py — 软件单元详细设计
+### UNIT-ABBEDFD349
+
+**模块**：`src/viz/lightweight_chart.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -13200,7 +15308,9 @@
 
 <a id="fun-092ce9f86b"></a>
 
-#### `_tf_short`
+#### FUN-092CE9F86B
+
+**函数**：`_tf_short`
 
 - **ID / 行**：`FUN-092CE9F86B` / `L115`（源码见本单元概览）
 - **签名 / 返回**：`_tf_short(timeframe: str)` → `str`
@@ -13211,7 +15321,9 @@
 
 <a id="fun-f95e2508fa"></a>
 
-#### `_zone_title`
+#### FUN-F95E2508FA
+
+**函数**：`_zone_title`
 
 - **ID / 行**：`FUN-F95E2508FA` / `L119`（源码见本单元概览）
 - **签名 / 返回**：`_zone_title(kind: str, direction: str, low: float, high: float, *, half: str | None=None, source_tf: str | None=None)` → `str`
@@ -13222,7 +15334,9 @@
 
 <a id="fun-3733752cf4"></a>
 
-#### `_align_ts`
+#### FUN-3733752CF4
+
+**函数**：`_align_ts`
 
 - **ID / 行**：`FUN-3733752CF4` / `L142`（源码见本单元概览）
 - **签名 / 返回**：`_align_ts(ts: pd.Timestamp, ref_index: pd.DatetimeIndex)` → `pd.Timestamp`
@@ -13233,7 +15347,9 @@
 
 <a id="fun-8e3f539bdd"></a>
 
-#### `_to_unix`
+#### FUN-8E3F539BDD
+
+**函数**：`_to_unix`
 
 - **ID / 行**：`FUN-8E3F539BDD` / `L153`（源码见本单元概览）
 - **签名 / 返回**：`_to_unix(ts: pd.Timestamp)` → `int`
@@ -13244,7 +15360,9 @@
 
 <a id="fun-44a30a06ef"></a>
 
-#### `_bar_delta`
+#### FUN-44A30A06EF
+
+**函数**：`_bar_delta`
 
 - **ID / 行**：`FUN-44A30A06EF` / `L157`（源码见本单元概览）
 - **签名 / 返回**：`_bar_delta(plot_df: pd.DataFrame)` → `pd.Timedelta`
@@ -13255,7 +15373,9 @@
 
 <a id="fun-f4069a84ad"></a>
 
-#### `_zone_future_end`
+#### FUN-F4069A84AD
+
+**函数**：`_zone_future_end`
 
 - **ID / 行**：`FUN-F4069A84AD` / `L163`（源码见本单元概览）
 - **签名 / 返回**：`_zone_future_end(plot_df: pd.DataFrame, start_time: pd.Timestamp)` → `pd.Timestamp`
@@ -13266,7 +15386,9 @@
 
 <a id="fun-fa95eaff48"></a>
 
-#### `_zone_box_data`
+#### FUN-FA95EAFF48
+
+**函数**：`_zone_box_data`
 
 - **ID / 行**：`FUN-FA95EAFF48` / `L170`（源码见本单元概览）
 - **签名 / 返回**：`_zone_box_data(plot_df: pd.DataFrame, start_time: pd.Timestamp, high: float, *, end_time: pd.Timestamp | None=None)` → `list[dict[str, float | int]]`
@@ -13277,7 +15399,9 @@
 
 <a id="fun-19260207ff"></a>
 
-#### `_ob_display_end_time`
+#### FUN-19260207FF
+
+**函数**：`_ob_display_end_time`
 
 - **ID / 行**：`FUN-19260207FF` / `L193`（源码见本单元概览）
 - **签名 / 返回**：`_ob_display_end_time(plot_df: pd.DataFrame)` → `pd.Timestamp`
@@ -13288,7 +15412,9 @@
 
 <a id="fun-ff5b159787"></a>
 
-#### `_append_zone_box`
+#### FUN-FF5B159787
+
+**函数**：`_append_zone_box`
 
 - **ID / 行**：`FUN-FF5B159787` / `L198`（源码见本单元概览）
 - **签名 / 返回**：`_append_zone_box(zones: list[dict[str, Any]], *, kind: str, direction: str, low: float, high: float, start_time: pd.Timestamp, plot_df: pd.DataFrame, source_tf: str, colors: dict[str, str], title: str | None=None, show_label: bool=True, end_time: pd.Timestamp | None=None)` → `None`
@@ -13299,7 +15425,9 @@
 
 <a id="fun-3ce37e5cc0"></a>
 
-#### `_append_lux_fvg`
+#### FUN-3CE37E5CC0
+
+**函数**：`_append_lux_fvg`
 
 - **ID / 行**：`FUN-3CE37E5CC0` / `L229`（源码见本单元概览）
 - **签名 / 返回**：`_append_lux_fvg(zones: list[dict[str, Any]], fvg, plot_df: pd.DataFrame, source_tf: str)` → `None`
@@ -13310,7 +15438,9 @@
 
 <a id="fun-c590a6c0d5"></a>
 
-#### `_append_lux_ob`
+#### FUN-C590A6C0D5
+
+**函数**：`_append_lux_ob`
 
 - **ID / 行**：`FUN-C590A6C0D5` / `L271`（源码见本单元概览）
 - **签名 / 返回**：`_append_lux_ob(zones: list[dict[str, Any]], ob, plot_df: pd.DataFrame, source_tf: str, *, end_time: pd.Timestamp)` → `None`
@@ -13321,7 +15451,9 @@
 
 <a id="fun-af5e00ed83"></a>
 
-#### `_serialize_overlays`
+#### FUN-AF5E00ED83
+
+**函数**：`_serialize_overlays`
 
 - **ID / 行**：`FUN-AF5E00ED83` / `L295`（源码见本单元概览）
 - **签名 / 返回**：`_serialize_overlays(analysis: TimeframeAnalysis, report: dict[str, Any], plot_df: pd.DataFrame, *, timeframe: str='1h', include_projections: bool=True, variant: str='main')` → `dict[str, Any]`
@@ -13332,7 +15464,9 @@
 
 <a id="fun-501852c2a0"></a>
 
-#### `_build_projections`
+#### FUN-501852C2A0
+
+**函数**：`_build_projections`
 
 - **ID / 行**：`FUN-501852C2A0` / `L343`（源码见本单元概览）
 - **签名 / 返回**：`_build_projections(plot_df: pd.DataFrame, report: dict[str, Any] | None, *, timeframe: str='5m')` → `list[dict[str, Any]]`
@@ -13343,7 +15477,9 @@
 
 <a id="fun-540615a0fd"></a>
 
-#### `build_lightweight_chart_html`
+#### FUN-540615A0FD
+
+**函数**：`build_lightweight_chart_html`
 
 - **ID / 行**：`FUN-540615A0FD` / `L372`（源码见本单元概览）
 - **签名 / 返回**：`build_lightweight_chart_html(df: pd.DataFrame, analysis: TimeframeAnalysis | None=None, report: dict[str, Any] | None=None, *, timeframe: str='1h', symbol: str='XAUUSD', symbol_name: str='黄金/美元', exchange: str='OANDA', height: int | None=None, bars: int | None=None, variant: str='main', watermark: str | None=None, show_projections: bool | None=None)` → `str`
@@ -13354,7 +15490,9 @@
 
 <a id="fun-ac67fe2b86"></a>
 
-#### `chart_iframe_height`
+#### FUN-AC67FE2B86
+
+**函数**：`chart_iframe_height`
 
 - **ID / 行**：`FUN-AC67FE2B86` / `L852`（源码见本单元概览）
 - **签名 / 返回**：`chart_iframe_height(variant: str='main', height: int | None=None)` → `int`
@@ -13365,7 +15503,9 @@
 
 <a id="unit-f5c8e9bf82"></a>
 
-### src/viz/llm_meta.py — 软件单元详细设计
+### UNIT-F5C8E9BF82
+
+**模块**：`src/viz/llm_meta.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -13385,7 +15525,9 @@
 
 <a id="fun-58b0856420"></a>
 
-#### `format_latency_ms`
+#### FUN-58B0856420
+
+**函数**：`format_latency_ms`
 
 - **ID / 行**：`FUN-58B0856420` / `L8`（源码见本单元概览）
 - **签名 / 返回**：`format_latency_ms(ms: int | None)` → `str`
@@ -13395,7 +15537,9 @@
 
 <a id="fun-2eacce73e8"></a>
 
-#### `dedupe_llm_io_records`
+#### FUN-2EACCE73E8
+
+**函数**：`dedupe_llm_io_records`
 
 - **ID / 行**：`FUN-2EACCE73E8` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`dedupe_llm_io_records(records: list[dict])` → `list[dict]`
@@ -13406,7 +15550,9 @@
 
 <a id="fun-cfe09c603f"></a>
 
-#### `merge_llm_io_with_stage_sources`
+#### FUN-CFE09C603F
+
+**函数**：`merge_llm_io_with_stage_sources`
 
 - **ID / 行**：`FUN-CFE09C603F` / `L28`（源码见本单元概览）
 - **签名 / 返回**：`merge_llm_io_with_stage_sources(records: list[dict], stage_sources: dict)` → `list[dict]`
@@ -13417,7 +15563,9 @@
 
 <a id="fun-f3a683bcda"></a>
 
-#### `stage_llm_caption`
+#### FUN-F3A683BCDA
+
+**函数**：`stage_llm_caption`
 
 - **ID / 行**：`FUN-F3A683BCDA` / `L43`（源码见本单元概览）
 - **签名 / 返回**：`stage_llm_caption(stage_sources: dict, stage: str)` → `str`
@@ -13428,7 +15576,9 @@
 
 <a id="unit-e782e5b762"></a>
 
-### src/viz/llm_view.py — 软件单元详细设计
+### UNIT-E782E5B762
+
+**模块**：`src/viz/llm_view.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -13448,7 +15598,9 @@
 
 <a id="fun-2bb63dcf3d"></a>
 
-#### `render_llm_panel`
+#### FUN-2BB63DCF3D
+
+**函数**：`render_llm_panel`
 
 - **ID / 行**：`FUN-2BB63DCF3D` / `L10`（源码见本单元概览）
 - **签名 / 返回**：`render_llm_panel(report: dict)` → `None`
@@ -13459,7 +15611,9 @@
 
 <a id="fun-d200c30db1"></a>
 
-#### `render_llm_sidebar`
+#### FUN-D200C30DB1
+
+**函数**：`render_llm_sidebar`
 
 - **ID / 行**：`FUN-D200C30DB1` / `L78`（源码见本单元概览）
 - **签名 / 返回**：`render_llm_sidebar(report: dict)` → `None`
@@ -13470,7 +15624,9 @@
 
 <a id="unit-d8ab5e90b4"></a>
 
-### src/viz/page_layout.py — 软件单元详细设计
+### UNIT-D8AB5E90B4
+
+**模块**：`src/viz/page_layout.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -13490,7 +15646,9 @@
 
 <a id="fun-0e7ecec1bd"></a>
 
-#### `render_page_hero`
+#### FUN-0E7ECEC1BD
+
+**函数**：`render_page_hero`
 
 - **ID / 行**：`FUN-0E7ECEC1BD` / `L8`（源码见本单元概览）
 - **签名 / 返回**：`render_page_hero(title: str, subtitle: str='')` → `None`
@@ -13501,7 +15659,9 @@
 
 <a id="unit-87ec9bc982"></a>
 
-### src/viz/pipeline_progress.py — 软件单元详细设计
+### UNIT-87EC9BC982
+
+**模块**：`src/viz/pipeline_progress.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -13521,7 +15681,9 @@
 
 <a id="fun-0b8c70cae4"></a>
 
-#### `pipeline_progress_headline`
+#### FUN-0B8C70CAE4
+
+**函数**：`pipeline_progress_headline`
 
 - **ID / 行**：`FUN-0B8C70CAE4` / `L21`（源码见本单元概览）
 - **签名 / 返回**：`pipeline_progress_headline(steps: list[dict] | None)` → `str`
@@ -13532,7 +15694,9 @@
 
 <a id="fun-c1629a4de1"></a>
 
-#### `_format_step`
+#### FUN-C1629A4DE1
+
+**函数**：`_format_step`
 
 - **ID / 行**：`FUN-C1629A4DE1` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`_format_step(step: PipelineProgressStep)` → `str`
@@ -13543,7 +15707,9 @@
 
 <a id="fun-311ae39ba2"></a>
 
-#### `render_progress_steps`
+#### FUN-311AE39BA2
+
+**函数**：`render_progress_steps`
 
 - **ID / 行**：`FUN-311AE39BA2` / `L60`（源码见本单元概览）
 - **签名 / 返回**：`render_progress_steps(steps: list[dict], *, title: str='生成步骤')` → `None`
@@ -13555,7 +15721,9 @@
 
 <a id="fun-ad1fa5e595"></a>
 
-#### `_render_llm_io_text`
+#### FUN-AD1FA5E595
+
+**函数**：`_render_llm_io_text`
 
 - **ID / 行**：`FUN-AD1FA5E595` / `L76`（源码见本单元概览）
 - **签名 / 返回**：`_render_llm_io_text(*, label: str, key: str, text: str, height: int=360)` → `None`
@@ -13566,7 +15734,9 @@
 
 <a id="fun-7dcbcf149d"></a>
 
-#### `_render_llm_output_panel`
+#### FUN-7DCBCF149D
+
+**函数**：`_render_llm_output_panel`
 
 - **ID / 行**：`FUN-7DCBCF149D` / `L89`（源码见本单元概览）
 - **签名 / 返回**：`_render_llm_output_panel(*, stage: str, output: str, error: str | None=None, json_height: int=320, widget_key: str | None=None)` → `None`
@@ -13577,7 +15747,9 @@
 
 <a id="fun-17c606facf"></a>
 
-#### `is_streaming_llm_record`
+#### FUN-17C606FACF
+
+**函数**：`is_streaming_llm_record`
 
 - **ID / 行**：`FUN-17C606FACF` / `L113`（源码见本单元概览）
 - **签名 / 返回**：`is_streaming_llm_record(rec: dict)` → `bool`
@@ -13588,7 +15760,9 @@
 
 <a id="fun-d82430a62e"></a>
 
-#### `partition_llm_records_for_live`
+#### FUN-D82430A62E
+
+**函数**：`partition_llm_records_for_live`
 
 - **ID / 行**：`FUN-D82430A62E` / `L122`（源码见本单元概览）
 - **签名 / 返回**：`partition_llm_records_for_live(records: list[dict])` → `tuple[list[dict], list[dict]]`
@@ -13599,7 +15773,9 @@
 
 <a id="fun-4d69bae96d"></a>
 
-#### `render_live_llm_status_lightweight`
+#### FUN-4D69BAE96D
+
+**函数**：`render_live_llm_status_lightweight`
 
 - **ID / 行**：`FUN-4D69BAE96D` / `L130`（源码见本单元概览）
 - **签名 / 返回**：`render_live_llm_status_lightweight(live: dict)` → `None`
@@ -13610,7 +15786,9 @@
 
 <a id="fun-c7365fb901"></a>
 
-#### `render_live_llm_streams`
+#### FUN-C7365FB901
+
+**函数**：`render_live_llm_streams`
 
 - **ID / 行**：`FUN-C7365FB901` / `L150`（源码见本单元概览）
 - **签名 / 返回**：`render_live_llm_streams(active: list[dict])` → `None`
@@ -13621,7 +15799,9 @@
 
 <a id="fun-c8f614ea56"></a>
 
-#### `_filter_llm_io_records`
+#### FUN-C8F614EA56
+
+**函数**：`_filter_llm_io_records`
 
 - **ID / 行**：`FUN-C8F614EA56` / `L186`（源码见本单元概览）
 - **签名 / 返回**：`_filter_llm_io_records(records: list[dict])` → `list[dict]`
@@ -13632,7 +15812,9 @@
 
 <a id="fun-fa5a1c7f41"></a>
 
-#### `render_llm_io_history`
+#### FUN-FA5A1C7F41
+
+**函数**：`render_llm_io_history`
 
 - **ID / 行**：`FUN-FA5A1C7F41` / `L205`（源码见本单元概览）
 - **签名 / 返回**：`render_llm_io_history(records: list[dict], *, title: str='智能体 I/O', expand_last: bool=False)` → `None`
@@ -13643,7 +15825,9 @@
 
 <a id="fun-0d15b0afcc"></a>
 
-#### `StreamlitProgressReporter.__init__`
+#### FUN-0D15B0AFCC
+
+**函数**：`StreamlitProgressReporter.__init__`
 
 - **ID / 行**：`FUN-0D15B0AFCC` / `L258`（源码见本单元概览）
 - **签名 / 返回**：`StreamlitProgressReporter.__init__(self, *, progress_slot=None, llm_slot=None)` → `None`
@@ -13654,7 +15838,9 @@
 
 <a id="fun-cf6dff11c9"></a>
 
-#### `StreamlitProgressReporter._paint`
+#### FUN-CF6DFF11C9
+
+**函数**：`StreamlitProgressReporter._paint`
 
 - **ID / 行**：`FUN-CF6DFF11C9` / `L266`（源码见本单元概览）
 - **签名 / 返回**：`StreamlitProgressReporter._paint(self, headline: str)` → `None`
@@ -13665,7 +15851,9 @@
 
 <a id="fun-518e29c44c"></a>
 
-#### `StreamlitProgressReporter._on_change`
+#### FUN-518E29C44C
+
+**函数**：`StreamlitProgressReporter._on_change`
 
 - **ID / 行**：`FUN-518E29C44C` / `L271`（源码见本单元概览）
 - **签名 / 返回**：`StreamlitProgressReporter._on_change(self)` → `None`
@@ -13676,7 +15864,9 @@
 
 <a id="fun-25b5bbb645"></a>
 
-#### `StreamlitProgressReporter._on_llm_begin`
+#### FUN-25B5BBB645
+
+**函数**：`StreamlitProgressReporter._on_llm_begin`
 
 - **ID / 行**：`FUN-25B5BBB645` / `L283`（源码见本单元概览）
 - **签名 / 返回**：`StreamlitProgressReporter._on_llm_begin(self, stage: str, model: str, messages: list[dict[str, str]], label: str)` → `None`
@@ -13687,7 +15877,9 @@
 
 <a id="fun-4d2f1f7990"></a>
 
-#### `StreamlitProgressReporter.run_llm_stream`
+#### FUN-4D2F1F7990
+
+**函数**：`StreamlitProgressReporter.run_llm_stream`
 
 - **ID / 行**：`FUN-4D2F1F7990` / `L305`（源码见本单元概览）
 - **签名 / 返回**：`StreamlitProgressReporter.run_llm_stream(self, stage: str, chunk_iter)` → `str`
@@ -13698,7 +15890,9 @@
 
 <a id="fun-f822a4e8cf"></a>
 
-#### `StreamlitProgressReporter.run_llm_stream._gen`
+#### FUN-F822A4E8CF
+
+**函数**：`StreamlitProgressReporter.run_llm_stream._gen`
 
 - **ID / 行**：`FUN-F822A4E8CF` / `L310`（源码见本单元概览）
 - **签名 / 返回**：`StreamlitProgressReporter.run_llm_stream._gen()` → `runtime/inferred`
@@ -13708,7 +15902,9 @@
 
 <a id="fun-85e51e2ba9"></a>
 
-#### `StreamlitProgressReporter._on_llm_end`
+#### FUN-85E51E2BA9
+
+**函数**：`StreamlitProgressReporter._on_llm_end`
 
 - **ID / 行**：`FUN-85E51E2BA9` / `L319`（源码见本单元概览）
 - **签名 / 返回**：`StreamlitProgressReporter._on_llm_end(self, stage: str, output: str, *, error: str | None=None)` → `None`
@@ -13719,7 +15915,9 @@
 
 <a id="fun-a18a4822f2"></a>
 
-#### `StreamlitProgressReporter.complete`
+#### FUN-A18A4822F2
+
+**函数**：`StreamlitProgressReporter.complete`
 
 - **ID / 行**：`FUN-A18A4822F2` / `L342`（源码见本单元概览）
 - **签名 / 返回**：`StreamlitProgressReporter.complete(self, *, ok: bool=True)` → `None`
@@ -13730,7 +15928,9 @@
 
 <a id="unit-a63d87a7bb"></a>
 
-### src/viz/replay_loader.py — 软件单元详细设计
+### UNIT-A63D87A7BB
+
+**模块**：`src/viz/replay_loader.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -13750,7 +15950,9 @@
 
 <a id="fun-2838d79653"></a>
 
-#### `load_replay_bundle`
+#### FUN-2838D79653
+
+**函数**：`load_replay_bundle`
 
 - **ID / 行**：`FUN-2838D79653` / `L14`（源码见本单元概览）
 - **签名 / 返回**：`load_replay_bundle(run_config: RunConfig)` → `tuple[dict[str, Any], dict[str, pd.DataFrame], dict[str, Any]]`
@@ -13762,7 +15964,9 @@
 
 <a id="unit-4e47421947"></a>
 
-### src/viz/report_views.py — 软件单元详细设计
+### UNIT-4E47421947
+
+**模块**：`src/viz/report_views.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -13782,7 +15986,9 @@
 
 <a id="fun-6a488ebc85"></a>
 
-#### `_embed_chart`
+#### FUN-6A488EBC85
+
+**函数**：`_embed_chart`
 
 - **ID / 行**：`FUN-6A488EBC85` / `L31`（源码见本单元概览）
 - **签名 / 返回**：`_embed_chart(data, analysis, report, tf, *, variant: str='main', watermark=None, projections=True, show_title: bool=True, iframe_height: int | None=None, chart_height: int | None=None)` → `runtime/inferred`
@@ -13793,7 +15999,9 @@
 
 <a id="fun-d4c3b6faa5"></a>
 
-#### `_top_text_panel`
+#### FUN-D4C3B6FAA5
+
+**函数**：`_top_text_panel`
 
 - **ID / 行**：`FUN-D4C3B6FAA5` / `L72`（源码见本单元概览）
 - **签名 / 返回**：`_top_text_panel(title: str, body_html: str)` → `None`
@@ -13804,7 +16012,9 @@
 
 <a id="fun-c6d32e207c"></a>
 
-#### `render_institutional_report`
+#### FUN-C6D32E207C
+
+**函数**：`render_institutional_report`
 
 - **ID / 行**：`FUN-C6D32E207C` / `L79`（源码见本单元概览）
 - **签名 / 返回**：`render_institutional_report(report, data, analyses, *, hide_title: bool=False)` → `None`
@@ -13815,7 +16025,9 @@
 
 <a id="fun-3c8ba1f22e"></a>
 
-#### `render_strategy_map`
+#### FUN-3C8BA1F22E
+
+**函数**：`render_strategy_map`
 
 - **ID / 行**：`FUN-3C8BA1F22E` / `L234`（源码见本单元概览）
 - **签名 / 返回**：`render_strategy_map(report, data, analyses)` → `None`
@@ -13826,7 +16038,9 @@
 
 <a id="unit-ee18de86b2"></a>
 
-### src/viz/run_config_panel.py — 软件单元详细设计
+### UNIT-EE18DE86B2
+
+**模块**：`src/viz/run_config_panel.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -13846,7 +16060,9 @@
 
 <a id="fun-6478ef0ef9"></a>
 
-#### `mode_label_to_value`
+#### FUN-6478EF0EF9
+
+**函数**：`mode_label_to_value`
 
 - **ID / 行**：`FUN-6478EF0EF9` / `L45`（源码见本单元概览）
 - **签名 / 返回**：`mode_label_to_value(label: str)` → `str`
@@ -13857,7 +16073,9 @@
 
 <a id="fun-9df4825093"></a>
 
-#### `mode_value_to_label`
+#### FUN-9DF4825093
+
+**函数**：`mode_value_to_label`
 
 - **ID / 行**：`FUN-9DF4825093` / `L49`（源码见本单元概览）
 - **签名 / 返回**：`mode_value_to_label(value: str)` → `str`
@@ -13868,7 +16086,9 @@
 
 <a id="fun-a29290a4a9"></a>
 
-#### `_apply_widget_state_from_run_config`
+#### FUN-A29290A4A9
+
+**函数**：`_apply_widget_state_from_run_config`
 
 - **ID / 行**：`FUN-A29290A4A9` / `L53`（源码见本单元概览）
 - **签名 / 返回**：`_apply_widget_state_from_run_config(config: RunConfig)` → `None`
@@ -13879,7 +16099,9 @@
 
 <a id="fun-368d7e0325"></a>
 
-#### `_seed_run_config_widgets_if_needed`
+#### FUN-368D7E0325
+
+**函数**：`_seed_run_config_widgets_if_needed`
 
 - **ID / 行**：`FUN-368D7E0325` / `L58`（源码见本单元概览）
 - **签名 / 返回**：`_seed_run_config_widgets_if_needed(seed: RunConfig, *, force: bool=False)` → `None`
@@ -13891,7 +16113,9 @@
 
 <a id="fun-dfbacecc76"></a>
 
-#### `_ensure_default_replay_run_id`
+#### FUN-DFBACECC76
+
+**函数**：`_ensure_default_replay_run_id`
 
 - **ID / 行**：`FUN-DFBACECC76` / `L73`（源码见本单元概览）
 - **签名 / 返回**：`_ensure_default_replay_run_id()` → `None`
@@ -13903,7 +16127,9 @@
 
 <a id="fun-e60fed8b36"></a>
 
-#### `_set_all_agent_llm_widgets`
+#### FUN-E60FED8B36
+
+**函数**：`_set_all_agent_llm_widgets`
 
 - **ID / 行**：`FUN-E60FED8B36` / `L86`（源码见本单元概览）
 - **签名 / 返回**：`_set_all_agent_llm_widgets(select: bool)` → `None`
@@ -13913,7 +16139,9 @@
 
 <a id="fun-67955d3f49"></a>
 
-#### `_analyst_checkbox_state`
+#### FUN-67955D3F49
+
+**函数**：`_analyst_checkbox_state`
 
 - **ID / 行**：`FUN-67955D3F49` / `L94`（源码见本单元概览）
 - **签名 / 返回**：`_analyst_checkbox_state()` → `tuple[str, int]`
@@ -13925,7 +16153,9 @@
 
 <a id="fun-ac911b85c4"></a>
 
-#### `_sync_stage_widgets_from_mode_preset`
+#### FUN-AC911B85C4
+
+**函数**：`_sync_stage_widgets_from_mode_preset`
 
 - **ID / 行**：`FUN-AC911B85C4` / `L114`（源码见本单元概览）
 - **签名 / 返回**：`_sync_stage_widgets_from_mode_preset()` → `None`
@@ -13937,7 +16167,9 @@
 
 <a id="fun-fc0e4c8d13"></a>
 
-#### `_on_advanced_toggle`
+#### FUN-FC0E4C8D13
+
+**函数**：`_on_advanced_toggle`
 
 - **ID / 行**：`FUN-FC0E4C8D13` / `L127`（源码见本单元概览）
 - **签名 / 返回**：`_on_advanced_toggle()` → `None`
@@ -13949,7 +16181,9 @@
 
 <a id="fun-4562c0a4e8"></a>
 
-#### `_apply_mode_preset_to_widgets`
+#### FUN-4562C0A4E8
+
+**函数**：`_apply_mode_preset_to_widgets`
 
 - **ID / 行**：`FUN-4562C0A4E8` / `L132`（源码见本单元概览）
 - **签名 / 返回**：`_apply_mode_preset_to_widgets(mode: str)` → `None`
@@ -13961,7 +16195,9 @@
 
 <a id="fun-b8de98a787"></a>
 
-#### `_advanced_core_stages_all_off`
+#### FUN-B8DE98A787
+
+**函数**：`_advanced_core_stages_all_off`
 
 - **ID / 行**：`FUN-B8DE98A787` / `L146`（源码见本单元概览）
 - **签名 / 返回**：`_advanced_core_stages_all_off()` → `bool`
@@ -13973,7 +16209,9 @@
 
 <a id="fun-4712d21b11"></a>
 
-#### `selected_run_config`
+#### FUN-4712D21B11
+
+**函数**：`selected_run_config`
 
 - **ID / 行**：`FUN-4712D21B11` / `L150`（源码见本单元概览）
 - **签名 / 返回**：`selected_run_config()` → `RunConfig`
@@ -13985,7 +16223,9 @@
 
 <a id="fun-a56ca0818f"></a>
 
-#### `_render_run_mode_guide`
+#### FUN-A56CA0818F
+
+**函数**：`_render_run_mode_guide`
 
 - **ID / 行**：`FUN-A56CA0818F` / `L212`（源码见本单元概览）
 - **签名 / 返回**：`_render_run_mode_guide()` → `None`
@@ -13996,7 +16236,9 @@
 
 <a id="fun-d6653fc459"></a>
 
-#### `_on_open_replay_config`
+#### FUN-D6653FC459
+
+**函数**：`_on_open_replay_config`
 
 - **ID / 行**：`FUN-D6653FC459` / `L234`（源码见本单元概览）
 - **签名 / 返回**：`_on_open_replay_config()` → `None`
@@ -14008,7 +16250,9 @@
 
 <a id="fun-8d7f136545"></a>
 
-#### `render_sidebar_replay`
+#### FUN-8D7F136545
+
+**函数**：`render_sidebar_replay`
 
 - **ID / 行**：`FUN-8D7F136545` / `L244`（源码见本单元概览）
 - **签名 / 返回**：`render_sidebar_replay()` → `None`
@@ -14019,7 +16263,9 @@
 
 <a id="fun-fea885853a"></a>
 
-#### `_render_replay_controls`
+#### FUN-FEA885853A
+
+**函数**：`_render_replay_controls`
 
 - **ID / 行**：`FUN-FEA885853A` / `L265`（源码见本单元概览）
 - **签名 / 返回**：`_render_replay_controls()` → `None`
@@ -14031,7 +16277,9 @@
 
 <a id="fun-302db0d19b"></a>
 
-#### `_render_archive_import_only`
+#### FUN-302DB0D19B
+
+**函数**：`_render_archive_import_only`
 
 - **ID / 行**：`FUN-302DB0D19B` / `L317`（源码见本单元概览）
 - **签名 / 返回**：`_render_archive_import_only()` → `None`
@@ -14042,7 +16290,9 @@
 
 <a id="fun-c8de0e7538"></a>
 
-#### `_render_archive_transfer_controls`
+#### FUN-C8DE0E7538
+
+**函数**：`_render_archive_transfer_controls`
 
 - **ID / 行**：`FUN-C8DE0E7538` / `L335`（源码见本单元概览）
 - **签名 / 返回**：`_render_archive_transfer_controls(selected_id: str)` → `None`
@@ -14054,7 +16304,9 @@
 
 <a id="fun-5b83f91b90"></a>
 
-#### `_render_run_config_advanced_controls`
+#### FUN-5B83F91B90
+
+**函数**：`_render_run_config_advanced_controls`
 
 - **ID / 行**：`FUN-5B83F91B90` / `L371`（源码见本单元概览）
 - **签名 / 返回**：`_render_run_config_advanced_controls()` → `None`
@@ -14065,7 +16317,9 @@
 
 <a id="fun-de6787dacc"></a>
 
-#### `render_run_config_panel`
+#### FUN-DE6787DACC
+
+**函数**：`render_run_config_panel`
 
 - **ID / 行**：`FUN-DE6787DACC` / `L411`（源码见本单元概览）
 - **签名 / 返回**：`render_run_config_panel()` → `None`
@@ -14077,7 +16331,9 @@
 
 <a id="unit-6fa4e87f8a"></a>
 
-### src/viz/session_keys.py — 软件单元详细设计
+### UNIT-6FA4E87F8A
+
+**模块**：`src/viz/session_keys.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14097,7 +16353,9 @@
 
 <a id="fun-0eec7855b3"></a>
 
-#### `session_id`
+#### FUN-0EEC7855B3
+
+**函数**：`session_id`
 
 - **ID / 行**：`FUN-0EEC7855B3` / `L23`（源码见本单元概览）
 - **签名 / 返回**：`session_id()` → `str`
@@ -14108,7 +16366,9 @@
 
 <a id="fun-ba937173ed"></a>
 
-#### `generation_id`
+#### FUN-BA937173ED
+
+**函数**：`generation_id`
 
 - **ID / 行**：`FUN-BA937173ED` / `L29`（源码见本单元概览）
 - **签名 / 返回**：`generation_id()` → `str`
@@ -14119,7 +16379,9 @@
 
 <a id="fun-4d0107c2b8"></a>
 
-#### `job_key`
+#### FUN-4D0107C2B8
+
+**函数**：`job_key`
 
 - **ID / 行**：`FUN-4D0107C2B8` / `L35`（源码见本单元概览）
 - **签名 / 返回**：`job_key()` → `str`
@@ -14130,7 +16392,9 @@
 
 <a id="fun-47ff82aecf"></a>
 
-#### `rotate_generation_id`
+#### FUN-47FF82AECF
+
+**函数**：`rotate_generation_id`
 
 - **ID / 行**：`FUN-47FF82AECF` / `L39`（源码见本单元概览）
 - **签名 / 返回**：`rotate_generation_id()` → `str`
@@ -14141,7 +16405,9 @@
 
 <a id="fun-35b294ebf2"></a>
 
-#### `invalidate_report_cache`
+#### FUN-35B294EBF2
+
+**函数**：`invalidate_report_cache`
 
 - **ID / 行**：`FUN-35B294EBF2` / `L45`（源码见本单元概览）
 - **签名 / 返回**：`invalidate_report_cache()` → `None`
@@ -14153,7 +16419,9 @@
 
 <a id="unit-f568ea7ece"></a>
 
-### src/viz/source_labels.py — 软件单元详细设计
+### UNIT-F568EA7ECE
+
+**模块**：`src/viz/source_labels.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14173,7 +16441,9 @@
 
 <a id="fun-6c5c91dc85"></a>
 
-#### `is_llm_source`
+#### FUN-6C5C91DC85
+
+**函数**：`is_llm_source`
 
 - **ID / 行**：`FUN-6C5C91DC85` / `L35`（源码见本单元概览）
 - **签名 / 返回**：`is_llm_source(source: str | None)` → `bool`
@@ -14183,7 +16453,9 @@
 
 <a id="fun-198b94558c"></a>
 
-#### `llm_was_invoked`
+#### FUN-198B94558C
+
+**函数**：`llm_was_invoked`
 
 - **ID / 行**：`FUN-198B94558C` / `L39`（源码见本单元概览）
 - **签名 / 返回**：`llm_was_invoked(meta: dict)` → `bool`
@@ -14194,7 +16466,9 @@
 
 <a id="fun-e190f43fff"></a>
 
-#### `stage_meta_label`
+#### FUN-E190F43FFF
+
+**函数**：`stage_meta_label`
 
 - **ID / 行**：`FUN-E190F43FFF` / `L48`（源码见本单元概览）
 - **签名 / 返回**：`stage_meta_label(meta: dict)` → `str`
@@ -14205,7 +16479,9 @@
 
 <a id="fun-7203478796"></a>
 
-#### `source_label`
+#### FUN-7203478796
+
+**函数**：`source_label`
 
 - **ID / 行**：`FUN-7203478796` / `L63`（源码见本单元概览）
 - **签名 / 返回**：`source_label(source: str | None)` → `str`
@@ -14216,7 +16492,9 @@
 
 <a id="fun-154472495a"></a>
 
-#### `stage_source`
+#### FUN-154472495A
+
+**函数**：`stage_source`
 
 - **ID / 行**：`FUN-154472495A` / `L67`（源码见本单元概览）
 - **签名 / 返回**：`stage_source(report: dict, stage: str)` → `str`
@@ -14227,7 +16505,9 @@
 
 <a id="fun-757465430c"></a>
 
-#### `render_source_badge`
+#### FUN-757465430C
+
+**函数**：`render_source_badge`
 
 - **ID / 行**：`FUN-757465430C` / `L73`（源码见本单元概览）
 - **签名 / 返回**：`render_source_badge(source: str | None, *, small: bool=False)` → `str`
@@ -14238,7 +16518,9 @@
 
 <a id="fun-405b8cf26d"></a>
 
-#### `render_stage_meta_badge`
+#### FUN-405B8CF26D
+
+**函数**：`render_stage_meta_badge`
 
 - **ID / 行**：`FUN-405B8CF26D` / `L81`（源码见本单元概览）
 - **签名 / 返回**：`render_stage_meta_badge(meta: dict, *, small: bool=False)` → `str`
@@ -14249,7 +16531,9 @@
 
 <a id="fun-0149440496"></a>
 
-#### `render_agent_source_banner`
+#### FUN-0149440496
+
+**函数**：`render_agent_source_banner`
 
 - **ID / 行**：`FUN-0149440496` / `L89`（源码见本单元概览）
 - **签名 / 返回**：`render_agent_source_banner(report: dict)` → `str`
@@ -14260,7 +16544,9 @@
 
 <a id="unit-202db41fe0"></a>
 
-### src/viz/streamlit_common.py — 软件单元详细设计
+### UNIT-202DB41FE0
+
+**模块**：`src/viz/streamlit_common.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14280,7 +16566,9 @@
 
 <a id="fun-2fd5708c36"></a>
 
-#### `_session_id`
+#### FUN-2FD5708C36
+
+**函数**：`_session_id`
 
 - **ID / 行**：`FUN-2FD5708C36` / `L57`（源码见本单元概览）
 - **签名 / 返回**：`_session_id()` → `str`
@@ -14291,7 +16579,9 @@
 
 <a id="fun-b7dfde89b4"></a>
 
-#### `_generation_id`
+#### FUN-B7DFDE89B4
+
+**函数**：`_generation_id`
 
 - **ID / 行**：`FUN-B7DFDE89B4` / `L63`（源码见本单元概览）
 - **签名 / 返回**：`_generation_id()` → `str`
@@ -14302,7 +16592,9 @@
 
 <a id="fun-675c7168fc"></a>
 
-#### `_job_key`
+#### FUN-675C7168FC
+
+**函数**：`_job_key`
 
 - **ID / 行**：`FUN-675C7168FC` / `L69`（源码见本单元概览）
 - **签名 / 返回**：`_job_key()` → `str`
@@ -14313,7 +16605,9 @@
 
 <a id="fun-4bd443c8f3"></a>
 
-#### `bootstrap_env`
+#### FUN-4BD443C8F3
+
+**函数**：`bootstrap_env`
 
 - **ID / 行**：`FUN-4BD443C8F3` / `L73`（源码见本单元概览）
 - **签名 / 返回**：`bootstrap_env()` → `None`
@@ -14325,7 +16619,9 @@
 
 <a id="fun-cd1e50e1de"></a>
 
-#### `missing_runtime_dependencies`
+#### FUN-CD1E50E1DE
+
+**函数**：`missing_runtime_dependencies`
 
 - **ID / 行**：`FUN-CD1E50E1DE` / `L107`（源码见本单元概览）
 - **签名 / 返回**：`missing_runtime_dependencies()` → `list[str]`
@@ -14336,7 +16632,9 @@
 
 <a id="fun-86e5501024"></a>
 
-#### `render_runtime_dependency_banner`
+#### FUN-86E5501024
+
+**函数**：`render_runtime_dependency_banner`
 
 - **ID / 行**：`FUN-86E5501024` / `L117`（源码见本单元概览）
 - **签名 / 返回**：`render_runtime_dependency_banner()` → `None`
@@ -14347,7 +16645,9 @@
 
 <a id="fun-d2be30af9f"></a>
 
-#### `page_setup`
+#### FUN-D2BE30AF9F
+
+**函数**：`page_setup`
 
 - **ID / 行**：`FUN-D2BE30AF9F` / `L129`（源码见本单元概览）
 - **签名 / 返回**：`page_setup()` → `None`
@@ -14358,7 +16658,9 @@
 
 <a id="fun-aff4dbd771"></a>
 
-#### `init_page`
+#### FUN-AFF4DBD771
+
+**函数**：`init_page`
 
 - **ID / 行**：`FUN-AFF4DBD771` / `L137`（源码见本单元概览）
 - **签名 / 返回**：`init_page(*, title_suffix: str='')` → `None`
@@ -14369,7 +16671,9 @@
 
 <a id="fun-4a59a3158d"></a>
 
-#### `_on_request_reconfigure`
+#### FUN-4A59A3158D
+
+**函数**：`_on_request_reconfigure`
 
 - **ID / 行**：`FUN-4A59A3158D` / `L149`（源码见本单元概览）
 - **签名 / 返回**：`_on_request_reconfigure()` → `None`
@@ -14381,7 +16685,9 @@
 
 <a id="fun-4a02ec5564"></a>
 
-#### `render_sidebar_refresh_button`
+#### FUN-4A02EC5564
+
+**函数**：`render_sidebar_refresh_button`
 
 - **ID / 行**：`FUN-4A02EC5564` / `L158`（源码见本单元概览）
 - **签名 / 返回**：`render_sidebar_refresh_button()` → `None`
@@ -14392,7 +16698,9 @@
 
 <a id="fun-e229df7619"></a>
 
-#### `render_sidebar_header`
+#### FUN-E229DF7619
+
+**函数**：`render_sidebar_header`
 
 - **ID / 行**：`FUN-E229DF7619` / `L167`（源码见本单元概览）
 - **签名 / 返回**：`render_sidebar_header()` → `None`
@@ -14403,7 +16711,9 @@
 
 <a id="fun-943d58e197"></a>
 
-#### `render_sidebar_footer`
+#### FUN-943D58E197
+
+**函数**：`render_sidebar_footer`
 
 - **ID / 行**：`FUN-943D58E197` / `L187`（源码见本单元概览）
 - **签名 / 返回**：`render_sidebar_footer(data: dict | None=None)` → `None`
@@ -14415,7 +16725,9 @@
 
 <a id="fun-460dffdb7c"></a>
 
-#### `_resolve_confirmed_run_config`
+#### FUN-460DFFDB7C
+
+**函数**：`_resolve_confirmed_run_config`
 
 - **ID / 行**：`FUN-460DFFDB7C` / `L200`（源码见本单元概览）
 - **签名 / 返回**：`_resolve_confirmed_run_config()` → `RunConfig | None`
@@ -14427,7 +16739,9 @@
 
 <a id="fun-9a85354a87"></a>
 
-#### `_render_waiting_ui`
+#### FUN-9A85354A87
+
+**函数**：`_render_waiting_ui`
 
 - **ID / 行**：`FUN-9A85354A87` / `L204`（源码见本单元概览）
 - **签名 / 返回**：`_render_waiting_ui(job_key_str: str, *, show_generation_ui: bool)` → `None`
@@ -14439,7 +16753,9 @@
 
 <a id="fun-19d89f3693"></a>
 
-#### `_render_waiting_ui._live_poll`
+#### FUN-19D89F3693
+
+**函数**：`_render_waiting_ui._live_poll`
 
 - **ID / 行**：`FUN-19D89F3693` / `L220`（源码见本单元概览）
 - **签名 / 返回**：`_render_waiting_ui._live_poll()` → `None`
@@ -14451,7 +16767,9 @@
 
 <a id="fun-db56a44e6c"></a>
 
-#### `_render_external_waiting`
+#### FUN-DB56A44E6C
+
+**函数**：`_render_external_waiting`
 
 - **ID / 行**：`FUN-DB56A44E6C` / `L243`（源码见本单元概览）
 - **签名 / 返回**：`_render_external_waiting(job_key_str: str)` → `None`
@@ -14463,7 +16781,9 @@
 
 <a id="fun-4cb4b42e37"></a>
 
-#### `_render_external_waiting._poll`
+#### FUN-4CB4B42E37
+
+**函数**：`_render_external_waiting._poll`
 
 - **ID / 行**：`FUN-4CB4B42E37` / `L258`（源码见本单元概览）
 - **签名 / 返回**：`_render_external_waiting._poll()` → `None`
@@ -14475,7 +16795,9 @@
 
 <a id="fun-cd1636a5b5"></a>
 
-#### `ensure_external_data`
+#### FUN-CD1636A5B5
+
+**函数**：`ensure_external_data`
 
 - **ID / 行**：`FUN-CD1636A5B5` / `L282`（源码见本单元概览）
 - **签名 / 返回**：`ensure_external_data()` → `dict`
@@ -14487,7 +16809,9 @@
 
 <a id="fun-2543fa4f8f"></a>
 
-#### `ensure_report`
+#### FUN-2543FA4F8F
+
+**函数**：`ensure_report`
 
 - **ID / 行**：`FUN-2543FA4F8F` / `L340`（源码见本单元概览）
 - **签名 / 返回**：`ensure_report(*, show_generation_ui: bool=True)` → `tuple[dict, dict, dict]`
@@ -14499,7 +16823,9 @@
 
 <a id="fun-2268bf01ca"></a>
 
-#### `_store_report_bundle`
+#### FUN-2268BF01CA
+
+**函数**：`_store_report_bundle`
 
 - **ID / 行**：`FUN-2268BF01CA` / `L391`（源码见本单元概览）
 - **签名 / 返回**：`_store_report_bundle(job_key_str: str, bundle: tuple[dict, dict, dict], run_config_fingerprint: str)` → `tuple[dict, dict, dict]`
@@ -14510,7 +16836,9 @@
 
 <a id="arc-tools"></a>
 
-## ARC-TOOLS — 开发、审核与运维工具
+## ARC-TOOLS
+
+**名称**：开发、审核与运维工具
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
@@ -14535,7 +16863,9 @@
 
 <a id="unit-670f7f7454"></a>
 
-### scripts/chart_compare_test.py — 软件单元详细设计
+### UNIT-670F7F7454
+
+**模块**：`scripts/chart_compare_test.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14555,7 +16885,9 @@
 
 <a id="unit-de82d6e44b"></a>
 
-### scripts/check_aspice_assets.py — 软件单元详细设计
+### UNIT-DE82D6E44B
+
+**模块**：`scripts/check_aspice_assets.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14575,7 +16907,9 @@
 
 <a id="fun-be28bb75d8"></a>
 
-#### `stable_id`
+#### FUN-BE28BB75D8
+
+**函数**：`stable_id`
 
 - **ID / 行**：`FUN-BE28BB75D8` / `L55`（源码见本单元概览）
 - **签名 / 返回**：`stable_id(prefix: str, value: str)` → `str`
@@ -14586,7 +16920,9 @@
 
 <a id="fun-04a944fece"></a>
 
-#### `read_yaml`
+#### FUN-04A944FECE
+
+**函数**：`read_yaml`
 
 - **ID / 行**：`FUN-04A944FECE` / `L60`（源码见本单元概览）
 - **签名 / 返回**：`read_yaml(path: Path)` → `dict[str, Any]`
@@ -14598,7 +16934,9 @@
 
 <a id="fun-6d47944494"></a>
 
-#### `rel`
+#### FUN-6D47944494
+
+**函数**：`rel`
 
 - **ID / 行**：`FUN-6D47944494` / `L67`（源码见本单元概览）
 - **签名 / 返回**：`rel(path: Path)` → `str`
@@ -14609,7 +16947,9 @@
 
 <a id="fun-6175ef47cc"></a>
 
-#### `source_files`
+#### FUN-6175EF47CC
+
+**函数**：`source_files`
 
 - **ID / 行**：`FUN-6175EF47CC` / `L71`（源码见本单元概览）
 - **签名 / 返回**：`source_files()` → `list[Path]`
@@ -14620,7 +16960,9 @@
 
 <a id="fun-7b527c5c90"></a>
 
-#### `document_files`
+#### FUN-7B527C5C90
+
+**函数**：`document_files`
 
 - **ID / 行**：`FUN-7B527C5C90` / `L82`（源码见本单元概览）
 - **签名 / 返回**：`document_files()` → `list[Path]`
@@ -14631,20 +16973,24 @@
 
 <a id="fun-5ae4fdb3fc"></a>
 
-#### `document_classification`
+#### FUN-5AE4FDB3FC
+
+**函数**：`document_classification`
 
 - **ID / 行**：`FUN-5AE4FDB3FC` / `L91`（源码见本单元概览）
 - **签名 / 返回**：`document_classification(path: Path)` → `tuple[str, str, str, str]`
 - **职责**：As-built responsibility derived from `document_classification` and its owning unit.
 - **依赖**：path_str.startswith、rel
-- **复杂度 / 风险**：分支 23；跨度 65 行；medium
+- **复杂度 / 风险**：分支 24；跨度 67 行；medium
 - **测试 / 验证**：— · static-and-component
 
 <a id="fun-64eed0d566"></a>
 
-#### `document_title`
+#### FUN-64EED0D566
 
-- **ID / 行**：`FUN-64EED0D566` / `L158`（源码见本单元概览）
+**函数**：`document_title`
+
+- **ID / 行**：`FUN-64EED0D566` / `L160`（源码见本单元概览）
 - **签名 / 返回**：`document_title(path: Path)` → `str`
 - **职责**：As-built responsibility derived from `document_title` and its owning unit.
 - **异常 / 副作用 / 并发**：none-explicit / filesystem / caller-thread
@@ -14654,9 +17000,11 @@
 
 <a id="fun-fc561d92db"></a>
 
-#### `build_document_register`
+#### FUN-FC561D92DB
 
-- **ID / 行**：`FUN-FC561D92DB` / `L167`（源码见本单元概览）
+**函数**：`build_document_register`
+
+- **ID / 行**：`FUN-FC561D92DB` / `L169`（源码见本单元概览）
 - **签名 / 返回**：`build_document_register()` → `list[dict[str, str]]`
 - **职责**：As-built responsibility derived from `build_document_register` and its owning unit.
 - **依赖**：document_classification、document_files、document_title、rel、rows.append、stable_id
@@ -14665,9 +17013,11 @@
 
 <a id="fun-3c97caee46"></a>
 
-#### `component_for`
+#### FUN-3C97CAEE46
 
-- **ID / 行**：`FUN-3C97CAEE46` / `L189`（源码见本单元概览）
+**函数**：`component_for`
+
+- **ID / 行**：`FUN-3C97CAEE46` / `L191`（源码见本单元概览）
 - **签名 / 返回**：`component_for(path: Path)` → `str`
 - **职责**：As-built responsibility derived from `component_for` and its owning unit.
 - **依赖**：rel、value.startswith
@@ -14676,9 +17026,11 @@
 
 <a id="fun-f9f01026c2"></a>
 
-#### `module_doc`
+#### FUN-F9F01026C2
 
-- **ID / 行**：`FUN-F9F01026C2` / `L214`（源码见本单元概览）
+**函数**：`module_doc`
+
+- **ID / 行**：`FUN-F9F01026C2` / `L216`（源码见本单元概览）
 - **签名 / 返回**：`module_doc(tree: ast.AST, component_name: str)` → `str`
 - **职责**：As-built responsibility derived from `module_doc` and its owning unit.
 - **依赖**：ast.get_docstring、doc.splitlines
@@ -14687,9 +17039,11 @@
 
 <a id="fun-d410be7a27"></a>
 
-#### `build_units`
+#### FUN-D410BE7A27
 
-- **ID / 行**：`FUN-D410BE7A27` / `L219`（源码见本单元概览）
+**函数**：`build_units`
+
+- **ID / 行**：`FUN-D410BE7A27` / `L221`（源码见本单元概览）
 - **签名 / 返回**：`build_units(arch: dict[str, Any])` → `tuple[list[dict[str, str]], list[dict[str, str]]]`
 - **职责**：As-built responsibility derived from `build_units` and its owning unit.
 - **依赖**：ast.iter_child_nodes、ast.parse、ast.walk、component_for、functions.append、int、isinstance、join、module_doc、node.name.startswith、owners.append、parents.get、path.read_text、rel、reversed、sorted、source_files、stable_id、str、units.append
@@ -14698,9 +17052,11 @@
 
 <a id="fun-2ceb1f60f7"></a>
 
-#### `build_trace_rows`
+#### FUN-2CEB1F60F7
 
-- **ID / 行**：`FUN-2CEB1F60F7` / `L278`（源码见本单元概览）
+**函数**：`build_trace_rows`
+
+- **ID / 行**：`FUN-2CEB1F60F7` / `L280`（源码见本单元概览）
 - **签名 / 返回**：`build_trace_rows(reqs: dict[str, Any], units: list[dict[str, str]])` → `list[dict[str, str]]`
 - **职责**：As-built responsibility derived from `build_trace_rows` and its owning unit.
 - **依赖**：append、defaultdict、join、rows.append、sorted
@@ -14709,9 +17065,11 @@
 
 <a id="fun-beae13cf69"></a>
 
-#### `dependency_outputs`
+#### FUN-BEAE13CF69
 
-- **ID / 行**：`FUN-BEAE13CF69` / `L299`（源码见本单元概览）
+**函数**：`dependency_outputs`
+
+- **ID / 行**：`FUN-BEAE13CF69` / `L301`（源码见本单元概览）
 - **签名 / 返回**：`dependency_outputs(report: dict[str, Any])` → `tuple[str, str]`
 - **职责**：As-built responsibility derived from `dependency_outputs` and its owning unit.
 - **异常 / 副作用 / 并发**：none-explicit / filesystem / caller-thread
@@ -14721,9 +17079,11 @@
 
 <a id="fun-c861d95e3c"></a>
 
-#### `csv_text`
+#### FUN-C861D95E3C
 
-- **ID / 行**：`FUN-C861D95E3C` / `L336`（源码见本单元概览）
+**函数**：`csv_text`
+
+- **ID / 行**：`FUN-C861D95E3C` / `L338`（源码见本单元概览）
 - **签名 / 返回**：`csv_text(rows: list[dict[str, str]])` → `str`
 - **职责**：As-built responsibility derived from `csv_text` and its owning unit.
 - **异常 / 副作用 / 并发**：ValueError / none-detected / caller-thread
@@ -14733,20 +17093,24 @@
 
 <a id="fun-cee22c60cc"></a>
 
-#### `process_index`
+#### FUN-CEE22C60CC
 
-- **ID / 行**：`FUN-CEE22C60CC` / `L346`（源码见本单元概览）
+**函数**：`process_index`
+
+- **ID / 行**：`FUN-CEE22C60CC` / `L348`（源码见本单元概览）
 - **签名 / 返回**：`process_index(rows: list[dict[str, str]])` → `str`
 - **职责**：As-built responsibility derived from `process_index` and its owning unit.
 - **依赖**：append、defaultdict、join、lines.append、lines.extend、removeprefix、sorted、startswith
-- **复杂度 / 风险**：分支 5；跨度 24 行；medium
+- **复杂度 / 风险**：分支 6；跨度 26 行；medium
 - **测试 / 验证**：— · static-and-component
 
 <a id="fun-e18bb2dfa3"></a>
 
-#### `expected_outputs`
+#### FUN-E18BB2DFA3
 
-- **ID / 行**：`FUN-E18BB2DFA3` / `L372`（源码见本单元概览）
+**函数**：`expected_outputs`
+
+- **ID / 行**：`FUN-E18BB2DFA3` / `L376`（源码见本单元概览）
 - **签名 / 返回**：`expected_outputs()` → `dict[Path, str]`
 - **职责**：As-built responsibility derived from `expected_outputs` and its owning unit.
 - **异常 / 副作用 / 并发**：ValueError / none-detected / caller-thread
@@ -14756,9 +17120,11 @@
 
 <a id="fun-3c81471a20"></a>
 
-#### `validate_model`
+#### FUN-3C81471A20
 
-- **ID / 行**：`FUN-3C81471A20` / `L397`（源码见本单元概览）
+**函数**：`validate_model`
+
+- **ID / 行**：`FUN-3C81471A20` / `L401`（源码见本单元概览）
 - **签名 / 返回**：`validate_model(*, allow_generated_missing: bool=False)` → `list[str]`
 - **职责**：As-built responsibility derived from `validate_model` and its owning unit.
 - **依赖**：arch.get、arch_map.items、cm.get、component.get、errors.append、get、item_path.exists、len、read_yaml、req.get、req_map.items、reqs.get、reverse_ver.get、reverse_ver.items、ver.get
@@ -14767,9 +17133,11 @@
 
 <a id="fun-f855325a7a"></a>
 
-#### `write_outputs`
+#### FUN-F855325A7A
 
-- **ID / 行**：`FUN-F855325A7A` / `L445`（源码见本单元概览）
+**函数**：`write_outputs`
+
+- **ID / 行**：`FUN-F855325A7A` / `L449`（源码见本单元概览）
 - **签名 / 返回**：`write_outputs(outputs: dict[Path, str])` → `None`
 - **职责**：As-built responsibility derived from `write_outputs` and its owning unit.
 - **异常 / 副作用 / 并发**：none-explicit / filesystem / caller-thread
@@ -14779,9 +17147,11 @@
 
 <a id="fun-e57502a017"></a>
 
-#### `check_outputs`
+#### FUN-E57502A017
 
-- **ID / 行**：`FUN-E57502A017` / `L452`（源码见本单元概览）
+**函数**：`check_outputs`
+
+- **ID / 行**：`FUN-E57502A017` / `L456`（源码见本单元概览）
 - **签名 / 返回**：`check_outputs(outputs: dict[Path, str])` → `list[str]`
 - **职责**：As-built responsibility derived from `check_outputs` and its owning unit.
 - **依赖**：build_document_register、document_files、errors.append、outputs.items、path.exists、path.read_text、rel
@@ -14790,9 +17160,11 @@
 
 <a id="fun-4aa307b1b4"></a>
 
-#### `main`
+#### FUN-4AA307B1B4
 
-- **ID / 行**：`FUN-4AA307B1B4` / `L468`（源码见本单元概览）
+**函数**：`main`
+
+- **ID / 行**：`FUN-4AA307B1B4` / `L472`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
 - **职责**：As-built responsibility derived from `main` and its owning unit.
 - **依赖**：argparse.ArgumentParser、build_units、check_outputs、document_files、errors.extend、expected_outputs、group.add_argument、join、len、parser.add_mutually_exclusive_group、parser.parse_args、print、read_yaml、validate_model、write_outputs
@@ -14801,7 +17173,9 @@
 
 <a id="unit-d4b396b36e"></a>
 
-### scripts/check_mt5_connection.py — 软件单元详细设计
+### UNIT-D4B396B36E
+
+**模块**：`scripts/check_mt5_connection.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14821,7 +17195,9 @@
 
 <a id="fun-8efe0f5793"></a>
 
-#### `main`
+#### FUN-8EFE0F5793
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-8EFE0F5793` / `L19`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
@@ -14832,7 +17208,9 @@
 
 <a id="unit-9572f90802"></a>
 
-### scripts/close_fixed_issues.py — 软件单元详细设计
+### UNIT-9572F90802
+
+**模块**：`scripts/close_fixed_issues.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14852,7 +17230,9 @@
 
 <a id="unit-b4a1accfa2"></a>
 
-### scripts/compare_pa_5m_tv.py — 软件单元详细设计
+### UNIT-B4A1ACCFA2
+
+**模块**：`scripts/compare_pa_5m_tv.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14872,7 +17252,9 @@
 
 <a id="fun-406938ab22"></a>
 
-#### `main`
+#### FUN-406938AB22
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-406938AB22` / `L26`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `None`
@@ -14884,7 +17266,9 @@
 
 <a id="unit-8e5050cae9"></a>
 
-### scripts/compare_pa_tv.py — 软件单元详细设计
+### UNIT-8E5050CAE9
+
+**模块**：`scripts/compare_pa_tv.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14904,7 +17288,9 @@
 
 <a id="fun-818471ea1d"></a>
 
-#### `_delta`
+#### FUN-818471EA1D
+
+**函数**：`_delta`
 
 - **ID / 行**：`FUN-818471EA1D` / `L26`（源码见本单元概览）
 - **签名 / 返回**：`_delta(ours: float | None, tv: float)` → `str`
@@ -14914,7 +17300,9 @@
 
 <a id="fun-d24395608c"></a>
 
-#### `main`
+#### FUN-D24395608C
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-D24395608C` / `L32`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `None`
@@ -14926,7 +17314,9 @@
 
 <a id="unit-eefb367071"></a>
 
-### scripts/create_system_test_issues.py — 软件单元详细设计
+### UNIT-EEFB367071
+
+**模块**：`scripts/create_system_test_issues.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14946,7 +17336,9 @@
 
 <a id="unit-3fa67ae3bf"></a>
 
-### scripts/estimate_llm_tokens.py — 软件单元详细设计
+### UNIT-3FA67AE3BF
+
+**模块**：`scripts/estimate_llm_tokens.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -14966,7 +17358,9 @@
 
 <a id="fun-85a3e4b3a3"></a>
 
-#### `_sys`
+#### FUN-85A3E4B3A3
+
+**函数**：`_sys`
 
 - **ID / 行**：`FUN-85A3E4B3A3` / `L39`（源码见本单元概览）
 - **签名 / 返回**：`_sys(mod: str)` → `str`
@@ -14977,7 +17371,9 @@
 
 <a id="fun-487ef18d78"></a>
 
-#### `_est`
+#### FUN-487EF18D78
+
+**函数**：`_est`
 
 - **ID / 行**：`FUN-487EF18D78` / `L43`（源码见本单元概览）
 - **签名 / 返回**：`_est(chars: int)` → `int`
@@ -14988,7 +17384,9 @@
 
 <a id="fun-7143a40322"></a>
 
-#### `main`
+#### FUN-7143A40322
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-7143A40322` / `L47`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
@@ -14999,7 +17397,9 @@
 
 <a id="unit-2781538ff5"></a>
 
-### scripts/export_sample_report.py — 软件单元详细设计
+### UNIT-2781538FF5
+
+**模块**：`scripts/export_sample_report.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -15019,7 +17419,9 @@
 
 <a id="fun-a27c77a1d3"></a>
 
-#### `_sanitize`
+#### FUN-A27C77A1D3
+
+**函数**：`_sanitize`
 
 - **ID / 行**：`FUN-A27C77A1D3` / `L43`（源码见本单元概览）
 - **签名 / 返回**：`_sanitize(obj)` → `runtime/inferred`
@@ -15030,7 +17432,9 @@
 
 <a id="fun-b0ffdeb50d"></a>
 
-#### `_sample_context`
+#### FUN-B0FFDEB50D
+
+**函数**：`_sample_context`
 
 - **ID / 行**：`FUN-B0FFDEB50D` / `L55`（源码见本单元概览）
 - **签名 / 返回**：`_sample_context()` → `MarketContext`
@@ -15041,7 +17445,9 @@
 
 <a id="fun-8b24cef8e4"></a>
 
-#### `main`
+#### FUN-8B24CEF8E4
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-8B24CEF8E4` / `L118`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
@@ -15053,7 +17459,9 @@
 
 <a id="unit-44da65110b"></a>
 
-### scripts/generate_aspice_readable_docs.py — 软件单元详细设计
+### UNIT-44DA65110B
+
+**模块**：`scripts/generate_aspice_readable_docs.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -15073,7 +17481,9 @@
 
 <a id="fun-8e0ae30e6f"></a>
 
-#### `_yaml`
+#### FUN-8E0AE30E6F
+
+**函数**：`_yaml`
 
 - **ID / 行**：`FUN-8E0AE30E6F` / `L27`（源码见本单元概览）
 - **签名 / 返回**：`_yaml(name: str)` → `dict[str, Any]`
@@ -15085,7 +17495,9 @@
 
 <a id="fun-b8135ddcb1"></a>
 
-#### `_csv`
+#### FUN-B8135DDCB1
+
+**函数**：`_csv`
 
 - **ID / 行**：`FUN-B8135DDCB1` / `L34`（源码见本单元概览）
 - **签名 / 返回**：`_csv(name: str)` → `list[dict[str, str]]`
@@ -15096,7 +17508,9 @@
 
 <a id="fun-211336c6ae"></a>
 
-#### `_cell`
+#### FUN-211336C6AE
+
+**函数**：`_cell`
 
 - **ID / 行**：`FUN-211336C6AE` / `L39`（源码见本单元概览）
 - **签名 / 返回**：`_cell(value: object)` → `str`
@@ -15108,7 +17522,9 @@
 
 <a id="fun-36e6a8909a"></a>
 
-#### `_list`
+#### FUN-36E6A8909A
+
+**函数**：`_list`
 
 - **ID / 行**：`FUN-36E6A8909A` / `L48`（源码见本单元概览）
 - **签名 / 返回**：`_list(value: str)` → `str`
@@ -15119,7 +17535,9 @@
 
 <a id="fun-0ad419ab09"></a>
 
-#### `_anchor`
+#### FUN-0AD419AB09
+
+**函数**：`_anchor`
 
 - **ID / 行**：`FUN-0AD419AB09` / `L52`（源码见本单元概览）
 - **签名 / 返回**：`_anchor(value: str)` → `str`
@@ -15131,7 +17549,9 @@
 
 <a id="fun-2631f769a2"></a>
 
-#### `_req_links`
+#### FUN-2631F769A2
+
+**函数**：`_req_links`
 
 - **ID / 行**：`FUN-2631F769A2` / `L56`（源码见本单元概览）
 - **签名 / 返回**：`_req_links(values: list[str] | str)` → `str`
@@ -15142,7 +17562,9 @@
 
 <a id="fun-532ec35635"></a>
 
-#### `_arch_links`
+#### FUN-532EC35635
+
+**函数**：`_arch_links`
 
 - **ID / 行**：`FUN-532EC35635` / `L61`（源码见本单元概览）
 - **签名 / 返回**：`_arch_links(values: list[str] | str)` → `str`
@@ -15153,7 +17575,9 @@
 
 <a id="fun-a9d2621b2a"></a>
 
-#### `_measure_links`
+#### FUN-A9D2621B2A
+
+**函数**：`_measure_links`
 
 - **ID / 行**：`FUN-A9D2621B2A` / `L66`（源码见本单元概览）
 - **签名 / 返回**：`_measure_links(values: list[str] | str)` → `str`
@@ -15164,7 +17588,9 @@
 
 <a id="fun-0aee39f96b"></a>
 
-#### `_test_links`
+#### FUN-0AEE39F96B
+
+**函数**：`_test_links`
 
 - **ID / 行**：`FUN-0AEE39F96B` / `L77`（源码见本单元概览）
 - **签名 / 返回**：`_test_links(value: list[str] | str)` → `str`
@@ -15175,7 +17601,9 @@
 
 <a id="fun-84d7ee0257"></a>
 
-#### `_table`
+#### FUN-84D7EE0257
+
+**函数**：`_table`
 
 - **ID / 行**：`FUN-84D7EE0257` / `L82`（源码见本单元概览）
 - **签名 / 返回**：`_table(headers: list[str], rows: list[list[object]])` → `list[str]`
@@ -15186,7 +17614,9 @@
 
 <a id="fun-6a04465af3"></a>
 
-#### `_front`
+#### FUN-6A04465AF3
+
+**函数**：`_front`
 
 - **ID / 行**：`FUN-6A04465AF3` / `L91`（源码见本单元概览）
 - **签名 / 返回**：`_front(title: str, process: str, purpose: str)` → `list[str]`
@@ -15196,20 +17626,24 @@
 
 <a id="fun-1839614189"></a>
 
-#### `_requirements_doc`
+#### FUN-1839614189
+
+**函数**：`_requirements_doc`
 
 - **ID / 行**：`FUN-1839614189` / `L107`（源码见本单元概览）
 - **签名 / 返回**：`_requirements_doc(reqs: dict[str, Any])` → `str`
 - **职责**：As-built responsibility derived from `_requirements_doc` and its owning unit.
 - **依赖**：_anchor、_arch_links、_front、_measure_links、_table、defaultdict、join、len、lower、sorted
-- **复杂度 / 风险**：分支 2；跨度 40 行；medium
+- **复杂度 / 风险**：分支 2；跨度 42 行；medium
 - **测试 / 验证**：— · static-and-component
 
 <a id="fun-73cd1d7b70"></a>
 
-#### `_architecture_doc`
+#### FUN-73CD1D7B70
 
-- **ID / 行**：`FUN-73CD1D7B70` / `L149`（源码见本单元概览）
+**函数**：`_architecture_doc`
+
+- **ID / 行**：`FUN-73CD1D7B70` / `L151`（源码见本单元概览）
 - **签名 / 返回**：`_architecture_doc(arch: dict[str, Any], units: list[dict[str, str]])` → `str`
 - **职责**：As-built responsibility derived from `_architecture_doc` and its owning unit.
 - **依赖**：_anchor、_front、_req_links、_table、append、defaultdict、join、len、lower
@@ -15218,9 +17652,11 @@
 
 <a id="fun-aa8fad0df6"></a>
 
-#### `_design_doc`
+#### FUN-AA8FAD0DF6
 
-- **ID / 行**：`FUN-AA8FAD0DF6` / `L181`（源码见本单元概览）
+**函数**：`_design_doc`
+
+- **ID / 行**：`FUN-AA8FAD0DF6` / `L183`（源码见本单元概览）
 - **签名 / 返回**：`_design_doc(arch: dict[str, Any], units: list[dict[str, str]], functions: list[dict[str, str]], verification: dict[str, dict[str, str]])` → `str`
 - **职责**：As-built responsibility derived from `_design_doc` and its owning unit.
 - **依赖**：_anchor、_front、_measure_links、_table、_unit_section、append、casefold、defaultdict、int、join、len、sorted
@@ -15229,20 +17665,24 @@
 
 <a id="fun-4e2eb68af0"></a>
 
-#### `_unit_section`
+#### FUN-4E2EB68AF0
 
-- **ID / 行**：`FUN-4E2EB68AF0` / `L239`（源码见本单元概览）
+**函数**：`_unit_section`
+
+- **ID / 行**：`FUN-4E2EB68AF0` / `L241`（源码见本单元概览）
 - **签名 / 返回**：`_unit_section(unit: dict[str, str], functions: list[dict[str, str]], verification: dict[str, str], component_name: str)` → `list[str]`
 - **职责**：As-built responsibility derived from `_unit_section` and its owning unit.
 - **依赖**：_anchor、_list、_measure_links、_req_links、_table、_test_links、card.append、join、lines.append
-- **复杂度 / 风险**：分支 4；跨度 58 行；medium
+- **复杂度 / 风险**：分支 4；跨度 62 行；medium
 - **测试 / 验证**：— · static-and-component
 
 <a id="fun-34bbf83058"></a>
 
-#### `_unit_verification_doc`
+#### FUN-34BBF83058
 
-- **ID / 行**：`FUN-34BBF83058` / `L299`（源码见本单元概览）
+**函数**：`_unit_verification_doc`
+
+- **ID / 行**：`FUN-34BBF83058` / `L305`（源码见本单元概览）
 - **签名 / 返回**：`_unit_verification_doc(arch: dict[str, Any], rows: list[dict[str, str]])` → `str`
 - **职责**：As-built responsibility derived from `_unit_verification_doc` and its owning unit.
 - **依赖**：_anchor、_front、_measure_links、_table、_test_links、append、casefold、defaultdict、int、join、len、sorted、sum
@@ -15251,31 +17691,37 @@
 
 <a id="fun-be2fd65386"></a>
 
-#### `_integration_doc`
+#### FUN-BE2FD65386
 
-- **ID / 行**：`FUN-BE2FD65386` / `L325`（源码见本单元概览）
+**函数**：`_integration_doc`
+
+- **ID / 行**：`FUN-BE2FD65386` / `L331`（源码见本单元概览）
 - **签名 / 返回**：`_integration_doc(plan: dict[str, Any])` → `str`
 - **职责**：As-built responsibility derived from `_integration_doc` and its owning unit.
-- **依赖**：_anchor、_front、_measure_links、_req_links、_table、_test_links、enumerate、join
-- **复杂度 / 风险**：分支 1；跨度 24 行；low
+- **依赖**：_anchor、_front、_measure_links、_req_links、_table、_test_links、append、defaultdict、enumerate、join、measure_items.items
+- **复杂度 / 风险**：分支 4；跨度 30 行；low
 - **测试 / 验证**：— · static-and-component
 
 <a id="fun-2336ffb14c"></a>
 
-#### `_qualification_doc`
+#### FUN-2336FFB14C
 
-- **ID / 行**：`FUN-2336FFB14C` / `L351`（源码见本单元概览）
+**函数**：`_qualification_doc`
+
+- **ID / 行**：`FUN-2336FFB14C` / `L363`（源码见本单元概览）
 - **签名 / 返回**：`_qualification_doc(measures: dict[str, Any], coverage: list[dict[str, str]])` → `str`
 - **职责**：As-built responsibility derived from `_qualification_doc` and its owning unit.
 - **依赖**：_anchor、_arch_links、_front、_measure_links、_req_links、_table、join、len、policy.items、sum
-- **复杂度 / 风险**：分支 0；跨度 20 行；low
+- **复杂度 / 风险**：分支 1；跨度 24 行；low
 - **测试 / 验证**：— · static-and-component
 
 <a id="fun-009efeb3d5"></a>
 
-#### `_configuration_doc`
+#### FUN-009EFEB3D5
 
-- **ID / 行**：`FUN-009EFEB3D5` / `L373`（源码见本单元概览）
+**函数**：`_configuration_doc`
+
+- **ID / 行**：`FUN-009EFEB3D5` / `L389`（源码见本单元概览）
 - **签名 / 返回**：`_configuration_doc(cm: dict[str, Any])` → `str`
 - **职责**：As-built responsibility derived from `_configuration_doc` and its owning unit.
 - **依赖**：_front、_table、item.get、items、join、json.loads、len、read_text、sbom.get
@@ -15284,9 +17730,11 @@
 
 <a id="fun-48fe08d05f"></a>
 
-#### `_traceability_doc`
+#### FUN-48FE08D05F
 
-- **ID / 行**：`FUN-48FE08D05F` / `L391`（源码见本单元概览）
+**函数**：`_traceability_doc`
+
+- **ID / 行**：`FUN-48FE08D05F` / `L407`（源码见本单元概览）
 - **签名 / 返回**：`_traceability_doc(reqs: dict[str, Any], coverage: list[dict[str, str]])` → `str`
 - **职责**：As-built responsibility derived from `_traceability_doc` and its owning unit.
 - **依赖**：_arch_links、_front、_measure_links、_req_links、_table、join
@@ -15295,9 +17743,11 @@
 
 <a id="fun-a614f5b1a4"></a>
 
-#### `expected_outputs`
+#### FUN-A614F5B1A4
 
-- **ID / 行**：`FUN-A614F5B1A4` / `L401`（源码见本单元概览）
+**函数**：`expected_outputs`
+
+- **ID / 行**：`FUN-A614F5B1A4` / `L417`（源码见本单元概览）
 - **签名 / 返回**：`expected_outputs()` → `dict[Path, str]`
 - **职责**：As-built responsibility derived from `expected_outputs` and its owning unit.
 - **依赖**：_architecture_doc、_configuration_doc、_csv、_design_doc、_integration_doc、_qualification_doc、_requirements_doc、_traceability_doc、_unit_verification_doc、_yaml
@@ -15306,9 +17756,11 @@
 
 <a id="fun-1ea9f2053e"></a>
 
-#### `main`
+#### FUN-1EA9F2053E
 
-- **ID / 行**：`FUN-1EA9F2053E` / `L425`（源码见本单元概览）
+**函数**：`main`
+
+- **ID / 行**：`FUN-1EA9F2053E` / `L441`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
 - **职责**：As-built responsibility derived from `main` and its owning unit.
 - **异常 / 副作用 / 并发**：none-explicit / filesystem / caller-thread
@@ -15318,7 +17770,9 @@
 
 <a id="unit-70ee096332"></a>
 
-### scripts/generate_aspice_software_evidence.py — 软件单元详细设计
+### UNIT-70EE096332
+
+**模块**：`scripts/generate_aspice_software_evidence.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -15338,7 +17792,9 @@
 
 <a id="fun-39773424a2"></a>
 
-#### `_rel`
+#### FUN-39773424A2
+
+**函数**：`_rel`
 
 - **ID / 行**：`FUN-39773424A2` / `L41`（源码见本单元概览）
 - **签名 / 返回**：`_rel(path: Path)` → `str`
@@ -15349,7 +17805,9 @@
 
 <a id="fun-dd062cff6e"></a>
 
-#### `_stable_id`
+#### FUN-DD062CFF6E
+
+**函数**：`_stable_id`
 
 - **ID / 行**：`FUN-DD062CFF6E` / `L45`（源码见本单元概览）
 - **签名 / 返回**：`_stable_id(prefix: str, value: str)` → `str`
@@ -15360,7 +17818,9 @@
 
 <a id="fun-bed0de409d"></a>
 
-#### `_source_files`
+#### FUN-BED0DE409D
+
+**函数**：`_source_files`
 
 - **ID / 行**：`FUN-BED0DE409D` / `L50`（源码见本单元概览）
 - **签名 / 返回**：`_source_files()` → `list[Path]`
@@ -15371,7 +17831,9 @@
 
 <a id="fun-86730c4fbc"></a>
 
-#### `_test_corpus`
+#### FUN-86730C4FBC
+
+**函数**：`_test_corpus`
 
 - **ID / 行**：`FUN-86730C4FBC` / `L61`（源码见本单元概览）
 - **签名 / 返回**：`_test_corpus()` → `dict[str, str]`
@@ -15382,7 +17844,9 @@
 
 <a id="fun-d937d4a0bb"></a>
 
-#### `_token_references`
+#### FUN-D937D4A0BB
+
+**函数**：`_token_references`
 
 - **ID / 行**：`FUN-D937D4A0BB` / `L71`（源码见本单元概览）
 - **签名 / 返回**：`_token_references(token: str, corpus: dict[str, str])` → `list[str]`
@@ -15393,7 +17857,9 @@
 
 <a id="fun-c81b19f40e"></a>
 
-#### `_component_for`
+#### FUN-C81B19F40E
+
+**函数**：`_component_for`
 
 - **ID / 行**：`FUN-C81B19F40E` / `L76`（源码见本单元概览）
 - **签名 / 返回**：`_component_for(path: str)` → `str`
@@ -15404,7 +17870,9 @@
 
 <a id="fun-6e9b981dfb"></a>
 
-#### `_qualname`
+#### FUN-6E9B981DFB
+
+**函数**：`_qualname`
 
 - **ID / 行**：`FUN-6E9B981DFB` / `L95`（源码见本单元概览）
 - **签名 / 返回**：`_qualname(node: ast.FunctionDef | ast.AsyncFunctionDef, parents: dict[ast.AST, ast.AST])` → `str`
@@ -15415,7 +17883,9 @@
 
 <a id="fun-97fbbac4cf"></a>
 
-#### `_call_name`
+#### FUN-97FBBAC4CF
+
+**函数**：`_call_name`
 
 - **ID / 行**：`FUN-97FBBAC4CF` / `L105`（源码见本单元概览）
 - **签名 / 返回**：`_call_name(call: ast.Call)` → `str`
@@ -15426,7 +17896,9 @@
 
 <a id="fun-df98642acc"></a>
 
-#### `_node_contract`
+#### FUN-DF98642ACC
+
+**函数**：`_node_contract`
 
 - **ID / 行**：`FUN-DF98642ACC` / `L116`（源码见本单元概览）
 - **签名 / 返回**：`_node_contract(node: ast.FunctionDef | ast.AsyncFunctionDef)` → `dict[str, str | int]`
@@ -15437,7 +17909,9 @@
 
 <a id="fun-966d638362"></a>
 
-#### `_risk`
+#### FUN-966D638362
+
+**函数**：`_risk`
 
 - **ID / 行**：`FUN-966D638362` / `L159`（源码见本单元概览）
 - **签名 / 返回**：`_risk(path: str, name: str, contract: dict[str, str | int])` → `str`
@@ -15448,7 +17922,9 @@
 
 <a id="fun-840dd814ad"></a>
 
-#### `_csv`
+#### FUN-840DD814AD
+
+**函数**：`_csv`
 
 - **ID / 行**：`FUN-840DD814AD` / `L169`（源码见本单元概览）
 - **签名 / 返回**：`_csv(rows: list[dict[str, object]])` → `str`
@@ -15459,7 +17935,9 @@
 
 <a id="fun-6b5f339e4d"></a>
 
-#### `expected_outputs`
+#### FUN-6B5F339E4D
+
+**函数**：`expected_outputs`
 
 - **ID / 行**：`FUN-6B5F339E4D` / `L177`（源码见本单元概览）
 - **签名 / 返回**：`expected_outputs()` → `tuple[dict[Path, str], dict[str, int]]`
@@ -15471,7 +17949,9 @@
 
 <a id="fun-9c060dbc51"></a>
 
-#### `main`
+#### FUN-9C060DBC51
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-9C060DBC51` / `L318`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
@@ -15483,7 +17963,9 @@
 
 <a id="unit-37e036c51b"></a>
 
-### scripts/inspect_archive.py — 软件单元详细设计
+### UNIT-37E036C51B
+
+**模块**：`scripts/inspect_archive.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -15503,7 +17985,9 @@
 
 <a id="fun-000d721083"></a>
 
-#### `_cmd_list`
+#### FUN-000D721083
+
+**函数**：`_cmd_list`
 
 - **ID / 行**：`FUN-000D721083` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`_cmd_list(args: argparse.Namespace)` → `int`
@@ -15514,7 +17998,9 @@
 
 <a id="fun-747a7a71ca"></a>
 
-#### `_cmd_inspect`
+#### FUN-747A7A71CA
+
+**函数**：`_cmd_inspect`
 
 - **ID / 行**：`FUN-747A7A71CA` / `L28`（源码见本单元概览）
 - **签名 / 返回**：`_cmd_inspect(args: argparse.Namespace)` → `int`
@@ -15525,7 +18011,9 @@
 
 <a id="fun-63ae1e91d4"></a>
 
-#### `_cmd_validate`
+#### FUN-63AE1E91D4
+
+**函数**：`_cmd_validate`
 
 - **ID / 行**：`FUN-63AE1E91D4` / `L44`（源码见本单元概览）
 - **签名 / 返回**：`_cmd_validate(args: argparse.Namespace)` → `int`
@@ -15536,7 +18024,9 @@
 
 <a id="fun-e505b92782"></a>
 
-#### `_cmd_export`
+#### FUN-E505B92782
+
+**函数**：`_cmd_export`
 
 - **ID / 行**：`FUN-E505B92782` / `L67`（源码见本单元概览）
 - **签名 / 返回**：`_cmd_export(args: argparse.Namespace)` → `int`
@@ -15548,7 +18038,9 @@
 
 <a id="fun-ca79779a11"></a>
 
-#### `_cmd_import`
+#### FUN-CA79779A11
+
+**函数**：`_cmd_import`
 
 - **ID / 行**：`FUN-CA79779A11` / `L77`（源码见本单元概览）
 - **签名 / 返回**：`_cmd_import(args: argparse.Namespace)` → `int`
@@ -15559,7 +18051,9 @@
 
 <a id="fun-80a2a844ca"></a>
 
-#### `main`
+#### FUN-80A2A844CA
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-80A2A844CA` / `L86`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
@@ -15570,7 +18064,9 @@
 
 <a id="unit-ebde8e6443"></a>
 
-### scripts/regression_test.py — 软件单元详细设计
+### UNIT-EBDE8E6443
+
+**模块**：`scripts/regression_test.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -15590,7 +18086,9 @@
 
 <a id="unit-3960e281ab"></a>
 
-### scripts/replay_llm_narrative.py — 软件单元详细设计
+### UNIT-3960E281AB
+
+**模块**：`scripts/replay_llm_narrative.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -15610,7 +18108,9 @@
 
 <a id="fun-2a9ad18e99"></a>
 
-#### `_load_json`
+#### FUN-2A9AD18E99
+
+**函数**：`_load_json`
 
 - **ID / 行**：`FUN-2A9AD18E99` / `L18`（源码见本单元概览）
 - **签名 / 返回**：`_load_json(path: Path)` → `dict`
@@ -15621,7 +18121,9 @@
 
 <a id="fun-0b702bf5f4"></a>
 
-#### `_load_llm_payload`
+#### FUN-0B702BF5F4
+
+**函数**：`_load_llm_payload`
 
 - **ID / 行**：`FUN-0B702BF5F4` / `L22`（源码见本单元概览）
 - **签名 / 返回**：`_load_llm_payload(report: dict, llm_path: Path | None)` → `dict`
@@ -15633,7 +18135,9 @@
 
 <a id="fun-89b0c24609"></a>
 
-#### `_print_audit`
+#### FUN-89B0C24609
+
+**函数**：`_print_audit`
 
 - **ID / 行**：`FUN-89B0C24609` / `L37`（源码见本单元概览）
 - **签名 / 返回**：`_print_audit(result)` → `None`
@@ -15644,7 +18148,9 @@
 
 <a id="fun-06a7e09133"></a>
 
-#### `main`
+#### FUN-06A7E09133
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-06A7E09133` / `L66`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `None`
@@ -15655,7 +18161,9 @@
 
 <a id="unit-d538889607"></a>
 
-### scripts/run_pipeline_test.py — 软件单元详细设计
+### UNIT-D538889607
+
+**模块**：`scripts/run_pipeline_test.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -15675,7 +18183,9 @@
 
 <a id="unit-8f71f01664"></a>
 
-### scripts/show_utf8.py — 软件单元详细设计
+### UNIT-8F71F01664
+
+**模块**：`scripts/show_utf8.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -15695,7 +18205,9 @@
 
 <a id="fun-fdec2f3b6b"></a>
 
-#### `parse_args`
+#### FUN-FDEC2F3B6B
+
+**函数**：`parse_args`
 
 - **ID / 行**：`FUN-FDEC2F3B6B` / `L16`（源码见本单元概览）
 - **签名 / 返回**：`parse_args()` → `argparse.Namespace`
@@ -15706,7 +18218,9 @@
 
 <a id="fun-9302f1289e"></a>
 
-#### `main`
+#### FUN-9302F1289E
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-9302F1289E` / `L24`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
@@ -15717,7 +18231,9 @@
 
 <a id="unit-c913c2495c"></a>
 
-### scripts/test_live_fetch.py — 软件单元详细设计
+### UNIT-C913C2495C
+
+**模块**：`scripts/test_live_fetch.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|
@@ -15737,7 +18253,9 @@
 
 <a id="fun-2e85c86a01"></a>
 
-#### `_block`
+#### FUN-2E85C86A01
+
+**函数**：`_block`
 
 - **ID / 行**：`FUN-2E85C86A01` / `L20`（源码见本单元概览）
 - **签名 / 返回**：`_block(title: str, body: object)` → `None`
@@ -15748,7 +18266,9 @@
 
 <a id="fun-9c22b2b4e5"></a>
 
-#### `main`
+#### FUN-9C22B2B4E5
+
+**函数**：`main`
 
 - **ID / 行**：`FUN-9C22B2B4E5` / `L30`（源码见本单元概览）
 - **签名 / 返回**：`main()` → `int`
@@ -15760,7 +18280,9 @@
 
 <a id="unit-76c5f6645c"></a>
 
-### scripts/test_llm_json_fix.py — 软件单元详细设计
+### UNIT-76C5F6645C
+
+**模块**：`scripts/test_llm_json_fix.py`（软件单元详细设计）
 
 | 属性 | 内容 |
 |---|---|

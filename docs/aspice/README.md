@@ -42,11 +42,13 @@ SWE.6 验证测试（VT）
 - [软件域范围与关闭准则](./supporting/software-domain-scope-and-closure.md)
 - [最新验证结果](./verification-results/latest.md)
 - [文档控制规则](./supporting/document-control.md)
-- [软件域关闭审核报告](../reviews/aspice/software-domain-closure-review-2026-07-18.md)
+- [软件域关闭审核报告](./supporting/reviews/software-domain-closure-review-2026-07-18.md)
+- [软件域初始差距审核](./supporting/reviews/software-domain-document-audit-2026-07-17.md)
 
 ## 维护规则
 
 - 人工评审以本目录的 Markdown 主文档为准。
+- `_machine/` 仅用于自动生成、追溯一致性检查、配置锁定和 CI 校验；人工阅读无需进入该目录。
 - `_machine/` 是同一证据的结构化镜像，用于 CI 一致性、双向追溯和数量校验。
 - 函数设计来自受控源码 AST；修改业务函数后必须重新生成 SWE.3 和相关 UT 选择证据。
 - `--write` 只更新 ASPICE 文档和机器附录，不修改 `src/`、`views/`、`app.py` 或 `run_app.py`。

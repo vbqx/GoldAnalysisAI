@@ -280,7 +280,7 @@ SWE.1 的核心输出 `17-00 Requirement`、`17-54 Requirement Attribute`、`15-
 
 ## 13. 交付物
 
-- 本报告：`docs/reviews/aspice/software-domain-document-audit-2026-07-17.md`
-- 逐函数附录：`docs/reviews/aspice/software-function-audit-2026-07-17.csv`
-- 机器摘要：`docs/reviews/aspice/software-function-audit-summary-2026-07-17.json`
+- 本报告：`docs/aspice/supporting/reviews/software-domain-document-audit-2026-07-17.md`
+- 逐函数附录：`docs/aspice/supporting/reviews/software-function-audit-2026-07-17.csv`
+- 机器摘要：`docs/aspice/supporting/reviews/software-function-audit-summary-2026-07-17.json`
 - 可重复生成工具：`tests/tools/generate_aspice_function_audit.py`
