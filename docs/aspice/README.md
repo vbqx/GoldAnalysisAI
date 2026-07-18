@@ -42,6 +42,8 @@ SWE.6 验证测试（VT）
 - [软件域范围与关闭准则](./supporting/software-domain-scope-and-closure.md)
 - [最新验证结果](./verification-results/latest.md)
 - [文档控制规则](./supporting/document-control.md)
+- [文档体系与 ASPICE 过程归属](./supporting/document-architecture.md)
+- [全部文档的 ASPICE 过程索引](./supporting/process-document-index.md)
 - [软件域关闭审核报告](./supporting/reviews/software-domain-closure-review-2026-07-18.md)
 - [软件域初始差距审核](./supporting/reviews/software-domain-document-audit-2026-07-17.md)
 

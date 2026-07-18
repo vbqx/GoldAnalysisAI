@@ -150,8 +150,15 @@ def _requirements_doc(reqs: dict[str, Any]) -> str:
 
 def _architecture_doc(arch: dict[str, Any], units: list[dict[str, str]]) -> str:
     by_component: dict[str, list[dict[str, str]]] = defaultdict(list)
+    interfaces_by_component: dict[str, list[dict[str, str]]] = defaultdict(list)
+    interface_kind_names = {
+        "command": "命令行接口", "state": "会话状态接口", "data": "数据接口", "function": "函数接口",
+        "protocol": "协议接口", "service": "服务接口", "presentation": "展示接口", "document": "文档接口",
+    }
     for unit in units:
         by_component[unit["architecture_id"]].append(unit)
+    for interface in arch["component_interfaces"]:
+        interfaces_by_component[interface["component_id"]].append(interface)
     lines = _front("SWE.2 软件架构设计", "SWE.2", "评审组件职责、接口和运行模式")
     lines += ["## 架构总览", ""]
     lines += _table(
@@ -162,21 +169,48 @@ def _architecture_doc(arch: dict[str, Any], units: list[dict[str, str]]) -> str:
     lines += _table(["模式", "行为"], [[item["id"], item["behavior"]] for item in arch["modes"]])
     for item in arch["components"]:
         lines += ["", f"<a id=\"{_anchor(item['id'])}\"></a>", "", f"## {item['id']}", "", f"**名称**：{item['name']}", ""]
+        interface_links = "、".join(
+            f"[{spec['name']}](#{_anchor(item['id'])}-if-{index:02d})"
+            for index, spec in enumerate(interfaces_by_component[item["id"]], 1)
+        )
         lines += _table(
             ["属性", "内容"],
             [
                 ["源码范围", "、".join(item["source_globs"])],
-                ["静态接口", "、".join(item["static_interfaces"])],
+                ["接口规格", interface_links],
                 ["动态行为", item["dynamic_behavior"]],
                 ["关联需求", _req_links(item["requirements"])],
                 ["详细设计", f"[查看 {len(by_component[item['id']])} 个软件单元](./SWE.3-software-detailed-design.md#{item['id'].lower()})"],
             ],
         )
+        for index, spec in enumerate(interfaces_by_component[item["id"]], 1):
+            interface_id = f"{item['id']}-IF-{index:02d}"
+            lines += ["", f"<a id=\"{_anchor(interface_id)}\"></a>", "", f"### {interface_id}", "", f"**接口名称**：`{spec['name']}`", ""]
+            lines += _table(
+                ["属性", "说明"],
+                [
+                    ["接口类型", interface_kind_names.get(spec["kind"], spec["kind"])],
+                    ["作用", spec["purpose"]],
+                    ["输入参数", spec["parameters"]],
+                    ["输出 / 返回", spec["returns"]],
+                    ["失败 / 异常行为", spec["failures"]],
+                ],
+            )
     lines += ["", "## 组件接口", ""]
-    lines += _table(
-        ["接口", "提供者", "消费者", "契约"],
-        [[item["id"], "、".join(item["providers"]), "、".join(item["consumers"]), item["contract"]] for item in arch["interfaces"]],
-    )
+    for item in arch["interfaces"]:
+        lines += ["", f"<a id=\"{_anchor(item['id'])}\"></a>", "", f"## {item['id']}", ""]
+        lines += _table(
+            ["属性", "说明"],
+            [
+                ["提供者", "、".join(item["providers"])],
+                ["消费者", "、".join(item["consumers"])],
+                ["作用", item["purpose"]],
+                ["输入参数", item["parameters"]],
+                ["输出 / 返回", item["returns"]],
+                ["失败 / 异常行为", item["failures"]],
+                ["数据与行为契约", item["contract"]],
+            ],
+        )
     return "\n".join(lines) + "\n"
 
 
@@ -205,7 +239,7 @@ def _design_doc(
         "",
         "- 前置条件：调用方满足函数签名、所属单元状态和关联需求约束。",
         "- 后置条件：正常返回满足返回契约；副作用不得超出函数卡片记录的类别。",
-        "- 未单列运行约束时，默认值为：显式异常 `none-explicit`、副作用 `none-detected`、并发 `caller-thread`；这不代表底层依赖绝不会抛出异常。",
+        "- 未发现显式 `raise` 或直接副作用，只表示静态扫描未在函数体内识别到对应行为；这不代表底层依赖绝不会抛出异常或产生间接副作用。",
         "",
     ]
     for component in arch["components"]:
@@ -268,6 +302,21 @@ def _unit_section(
             ["验证状态", verification["verification_status"]],
         ],
     )
+    high_risk_functions = [item for item in functions if item["risk"] == "high"]
+    if high_risk_functions:
+        lines += ["", "#### 高风险设计评审清单", ""]
+        lines += _table(
+            ["函数", "职责", "副作用", "验证"],
+            [
+                [
+                    f"[{item['qualified_name']}](#{_anchor(item['function_id'])})",
+                    item["responsibility"],
+                    item["side_effects"],
+                    _test_links(item["test_references"]),
+                ]
+                for item in high_risk_functions
+            ],
+        )
     lines += ["", "#### 函数导航", ""]
     if functions:
         lines.append(" · ".join(f"[{item['qualified_name']}](#{_anchor(item['function_id'])})" for item in functions))
@@ -283,19 +332,18 @@ def _unit_section(
             f"**函数**：`{item['qualified_name']}`",
             "",
             f"- **ID / 行**：`{item['function_id']}` / `L{item['line']}`（源码见本单元概览）",
-            f"- **签名 / 返回**：`{item['qualified_name']}{item['signature']}` → `{item['return_contract']}`",
+            f"- **签名 / 返回**：`{item['qualified_name']}{item['signature']}` → {item['return_contract']}",
+            f"- **参数说明**：{item['parameter_contract']}",
             f"- **职责**：{item['responsibility']}",
+            f"- **处理逻辑**：{item['algorithm_summary']}",
+            f"- **前置条件**：{item['preconditions']}",
+            f"- **后置条件**：{item['postconditions']}",
         ]
-        if (item["explicit_exceptions"], item["side_effects"], item["concurrency"]) != (
-            "none-explicit",
-            "none-detected",
-            "caller-thread",
-        ):
-            card.append(f"- **异常 / 副作用 / 并发**：{item['explicit_exceptions']} / {item['side_effects']} / {item['concurrency']}")
+        card.append(f"- **异常 / 副作用 / 并发**：{item['explicit_exceptions']} / {item['side_effects']} / {item['concurrency']}")
         if item["call_dependencies"] != "none":
             card.append(f"- **依赖**：{_list(item['call_dependencies'])}")
         card += [
-            f"- **复杂度 / 风险**：分支 {item['branch_points']}；跨度 {item['line_span']} 行；{item['risk']}",
+            f"- **复杂度 / 风险**：分支 {item['branch_points']}；跨度 {item['line_span']} 行；{({'high': '高', 'medium': '中', 'low': '低'}).get(item['risk'], item['risk'])}",
             f"- **测试 / 验证**：{_test_links(item['test_references'])} · {item['verification_disposition']}",
         ]
         lines += card

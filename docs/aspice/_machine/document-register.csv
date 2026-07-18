@@ -31,6 +31,7 @@ DOC-008F72883C,docs/aspice/_machine/traceability-matrix.csv,traceability matrix,
 DOC-74AB022BB4,docs/aspice/_machine/verification-measures.yaml,verification measures,SWE.4-SWE.6,08-60/15-52 Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-25617018A5,docs/aspice/README.md,Automotive SPICE 软件域,SWE.1-SWE.6,Software Domain Navigation,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-A03BEC2965,docs/aspice/SUP.8-configuration-management.md,SUP.8 软件配置管理,SUP.8,Configuration Status/Baseline,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-AE2D7DB471,docs/aspice/supporting/document-architecture.md,文档体系与 ASPICE 过程归属,SUP.8,Document Control,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-D79A2CBE7A,docs/aspice/supporting/document-control.md,ASPICE 文档控制与归类规则,SUP.8,Document Control,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-0F45201476,docs/aspice/supporting/key-unit-detailed-designs.md,关键软件单元详细设计,SWE.3,04-05 Software Detailed Design,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-25952074B6,docs/aspice/supporting/process-document-index.md,ASPICE 过程文档索引,SUP.8,Configuration Status Record,generated,generated,document-owner,ASPICE-DOC-2026-07-17,,until-superseded

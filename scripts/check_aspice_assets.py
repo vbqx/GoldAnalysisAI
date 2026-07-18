@@ -213,9 +213,18 @@ def component_for(path: Path) -> str:
     return "ARC-CORE"
 
 
-def module_doc(tree: ast.AST, component_name: str) -> str:
+def module_doc(tree: ast.AST, component_name: str, source_path: str) -> str:
     doc = ast.get_docstring(tree, clean=True) or ""
-    return doc.splitlines()[0] if doc else f"继承 {component_name} 组件设计；模块职责由公开符号和调用关系约束"
+    first_line = doc.splitlines()[0].rstrip("。.") if doc else ""
+    if first_line and re.search(r"[\u4e00-\u9fff]", first_line):
+        return first_line + "。"
+    public_symbols = [
+        node.name
+        for node in getattr(tree, "body", [])
+        if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)) and not node.name.startswith("_")
+    ]
+    symbol_text = "、".join(f"`{name}`" for name in public_symbols[:8]) or "模块内部实现"
+    return f"实现“{component_name}”组件中 `{source_path}` 的职责，通过 {symbol_text} 提供该模块的公开能力。"
 
 
 def build_units(arch: dict[str, Any]) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
@@ -242,7 +251,7 @@ def build_units(arch: dict[str, Any]) -> tuple[list[dict[str, str]], list[dict[s
                 "source_path": path_rel,
                 "architecture_id": component_id,
                 "design_profile": component["name"],
-                "responsibility": module_doc(tree, component["name"]),
+                "responsibility": module_doc(tree, component["name"], path_rel),
                 "static_interface_basis": "AST public symbols + Python type annotations",
                 "dynamic_behavior_basis": "software-architecture.yaml component behavior",
                 "requirement_ids": requirements,
@@ -431,6 +440,24 @@ def validate_model(*, allow_generated_missing: bool = False) -> list[str]:
                 errors.append(f"{arch_id} references missing requirement {req_id}")
             elif arch_id not in req_map[req_id].get("architecture_ids", []):
                 errors.append(f"{arch_id}<->{req_id} is not bidirectional")
+    interface_fields = {"purpose", "parameters", "returns", "failures"}
+    declared_interfaces = {
+        (component["id"], name)
+        for component in arch_map.values()
+        for name in component.get("static_interfaces", [])
+    }
+    specified_interfaces = {
+        (item.get("component_id"), item.get("name"))
+        for item in arch.get("component_interfaces", [])
+    }
+    if declared_interfaces != specified_interfaces:
+        errors.append("component static interfaces and reviewable specifications differ")
+    for item in arch.get("component_interfaces", []):
+        if not item.get("kind") or any(not item.get(field) for field in interface_fields):
+            errors.append(f"incomplete component interface specification: {item.get('name', '<missing>')}")
+    for item in arch.get("interfaces", []):
+        if any(not item.get(field) for field in interface_fields):
+            errors.append(f"incomplete architecture interface specification: {item.get('id', '<missing>')}")
     for measure_id, linked in reverse_ver.items():
         if measure_id not in measures:
             errors.append(f"verification mapping references missing measure {measure_id}")

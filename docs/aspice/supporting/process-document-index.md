@@ -39,6 +39,7 @@
 | [pip resolution](../_machine/pip-resolution.json) | Configuration Item/Baseline | agreed | normative |
 | [sbom](../_machine/sbom.json) | Configuration Item/Baseline | agreed | normative |
 | [SUP.8 软件配置管理](../SUP.8-configuration-management.md) | Configuration Status/Baseline | agreed | normative |
+| [文档体系与 ASPICE 过程归属](./document-architecture.md) | Document Control | agreed | normative |
 | [ASPICE 文档控制与归类规则](./document-control.md) | Document Control | agreed | normative |
 | [ASPICE 过程文档索引](./process-document-index.md) | Configuration Status Record | generated | generated |
 | [GoldAnalysisAI 文档中心](../../README.md) | Document/Automation Guidance | reviewed | supporting |

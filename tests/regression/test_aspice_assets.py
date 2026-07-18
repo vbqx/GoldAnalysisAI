@@ -64,6 +64,7 @@ def test_every_function_and_document_has_an_aspice_mapping() -> None:
     assert documents
     assert all(row["software_unit_id"] and row["architecture_id"] and row["requirement_ids"] for row in functions)
     assert all(row["primary_process"] and row["information_item"] and row["lifecycle_status"] for row in documents)
+    assert not any(row["information_item"] == "Registered Supporting Document" for row in documents)
     assert {row["path"] for row in documents} >= {
         "README.md",
         "AGENTS.md",
@@ -97,8 +98,10 @@ def test_software_domain_design_and_verification_are_closed() -> None:
     assert {row["software_unit_id"] for row in verification} == {row["software_unit_id"] for row in units}
     required_design = {
         "signature",
+        "parameter_contract",
         "return_contract",
         "responsibility",
+        "algorithm_summary",
         "preconditions",
         "postconditions",
         "explicit_exceptions",
@@ -110,6 +113,9 @@ def test_software_domain_design_and_verification_are_closed() -> None:
         "verification_disposition",
     }
     assert all(all(row[field] for field in required_design) for row in designs)
+    assert not any("As-built responsibility" in row["responsibility"] for row in designs)
+    assert not any("相关业务对象或状态" in row["responsibility"] for row in designs)
+    assert all(any("\u4e00" <= char <= "\u9fff" for char in row["responsibility"]) for row in designs)
     assert all(row["verification_measure_ids"] for row in verification)
     assert not [row for row in verification if row["verification_status"] == "blocking-gap"]
     assert {row["requirement_id"] for row in requirement_coverage} == {
@@ -128,6 +134,25 @@ def test_swe5_plan_covers_every_architecture_interface() -> None:
     assert architecture_interfaces <= planned_interfaces
     assert plan["integration_order"] == [item["id"] for item in plan["items"]]
     assert all(item["tests"] and item["verification_measure_ids"] and item["result"] for item in plan["items"])
+
+
+@pytest.mark.regression
+def test_architecture_interfaces_are_reviewable() -> None:
+    architecture = yaml.safe_load((ROOT / "docs/aspice/_machine/software-architecture.yaml").read_text(encoding="utf-8-sig"))
+    specifications = architecture["component_interfaces"]
+    spec_names = {(item["component_id"], item["name"]) for item in specifications}
+    declared_names = {
+        (component["id"], name)
+        for component in architecture["components"]
+        for name in component["static_interfaces"]
+    }
+    assert spec_names == declared_names
+    required = {"kind", "purpose", "parameters", "returns", "failures"}
+    assert all(all(item.get(field) for field in required) for item in specifications)
+    assert all(all(item.get(field) for field in required - {"kind"}) for item in architecture["interfaces"])
+    readable = (ROOT / "docs/aspice/SWE.2-software-architecture.md").read_text(encoding="utf-8-sig")
+    assert all(f"### {component['id']}-IF-01" in readable for component in architecture["components"])
+    assert "| 输入参数 |" in readable and "| 失败 / 异常行为 |" in readable
 
 
 @pytest.mark.regression
