@@ -2,8 +2,8 @@
 """Render the ASPICE software-domain evidence as reviewable Markdown.
 
 Machine-oriented YAML/CSV/JSON stays under ``docs/aspice/_machine`` for
-deterministic validation.  This renderer makes Markdown the normal review
-surface and splits detailed design into one page per software unit.
+deterministic validation. This renderer makes Markdown the normal review
+surface and organizes detailed design into one section per software unit.
 """
 
 from __future__ import annotations
@@ -323,30 +323,36 @@ def _unit_section(
     else:
         lines.append("本模块没有函数或方法定义。")
     for item in functions:
-        card = [
+        risk_name = {"high": "高", "medium": "中", "low": "低"}.get(item["risk"], item["risk"])
+        parameter_text = item["parameter_contract"].replace("；`", "<br>`")
+        dependency_text = _list(item["call_dependencies"]) if item["call_dependencies"] != "none" else "无直接调用依赖"
+        lines += [
             "",
             f"<a id=\"{_anchor(item['function_id'])}\"></a>",
             "",
             f"#### {item['function_id']}",
             "",
-            f"**函数**：`{item['qualified_name']}`",
-            "",
-            f"- **ID / 行**：`{item['function_id']}` / `L{item['line']}`（源码见本单元概览）",
-            f"- **签名 / 返回**：`{item['qualified_name']}{item['signature']}` → {item['return_contract']}",
-            f"- **参数说明**：{item['parameter_contract']}",
-            f"- **职责**：{item['responsibility']}",
-            f"- **处理逻辑**：{item['algorithm_summary']}",
-            f"- **前置条件**：{item['preconditions']}",
-            f"- **后置条件**：{item['postconditions']}",
         ]
-        card.append(f"- **异常 / 副作用 / 并发**：{item['explicit_exceptions']} / {item['side_effects']} / {item['concurrency']}")
-        if item["call_dependencies"] != "none":
-            card.append(f"- **依赖**：{_list(item['call_dependencies'])}")
-        card += [
-            f"- **复杂度 / 风险**：分支 {item['branch_points']}；跨度 {item['line_span']} 行；{({'high': '高', 'medium': '中', 'low': '低'}).get(item['risk'], item['risk'])}",
-            f"- **测试 / 验证**：{_test_links(item['test_references'])} · {item['verification_disposition']}",
-        ]
-        lines += card
+        lines += _table(
+            ["设计项", "说明"],
+            [
+                ["函数", f"`{item['qualified_name']}`"],
+                ["源码位置", f"[{item['source_path']}](../../{item['source_path']}) · `L{item['line']}`"],
+                ["签名", f"`{item['qualified_name']}{item['signature']}`"],
+                ["参数", parameter_text],
+                ["返回", item["return_contract"]],
+                ["职责", item["responsibility"]],
+                ["处理逻辑", item["algorithm_summary"]],
+                ["前置条件", item["preconditions"]],
+                ["后置条件", item["postconditions"]],
+                ["显式异常", item["explicit_exceptions"]],
+                ["副作用", item["side_effects"]],
+                ["并发约束", item["concurrency"]],
+                ["调用依赖", dependency_text],
+                ["复杂度 / 风险", f"分支 {item['branch_points']}；跨度 {item['line_span']} 行；{risk_name}"],
+                ["测试 / 验证", f"{_test_links(item['test_references'])} · {item['verification_disposition']}"],
+            ],
+        )
     return lines
 
 

@@ -178,6 +178,9 @@ def test_readable_aspice_navigation_covers_requirement_to_vt_chain() -> None:
     assert all(f'## {row["id"]}\n' in documents[names[0]] for row in requirements["requirements"])
     assert all(f'## {row["id"]}\n' in documents[names[1]] for row in architecture["components"])
     assert all(f'#### {row["function_id"]}\n' in documents[names[2]] for row in functions)
+    assert documents[names[2]].count("| 函数 | `") == len(functions)
+    assert "| 设计项 | 说明 |" in documents[names[2]]
+    assert "| 参数 |" in documents[names[2]] and "| 处理逻辑 |" in documents[names[2]]
     assert "[SWR-CORE-001](#swr-core-001)" in documents[names[0]]
     assert "SWE.2-software-architecture.md" in documents[names[0]]
     assert "SWE.3-software-detailed-design.md" in documents[names[1]]
