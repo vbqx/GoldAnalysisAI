@@ -176,8 +176,8 @@ flowchart LR
 | 源码范围 | app.py、run_app.py、views/** |
 | 接口规格 | [run_app.py CLI](#arc-app-if-01)、[Streamlit session](#arc-app-if-02)、[RunConfig](#arc-app-if-03) |
 | 动态行为 | 解析配置，启动 Streamlit，页面复用会话报告。 |
-| 关联需求 | [SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001) |
-| 详细设计 | [查看 6 个软件单元](./SWE.3-software-detailed-design.md#arc-app) |
+| 关联需求 | [SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001) |
+| 详细设计 | [查看 6 个软件单元](SWE.3-software-detailed-design.md#arc-app) |
 
 <a id="arc-app-if-01"></a>
 
@@ -232,8 +232,8 @@ flowchart LR
 | 源码范围 | src/core/**、src/pipeline.py |
 | 接口规格 | [run_trade_agent_pipeline](#arc-core-if-01)、[ProgressReporter](#arc-core-if-02)、[core dataclasses](#arc-core-if-03) |
 | 动态行为 | 按配置驱动 fetch、analysis、agents、report、archive，并发布阶段状态。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
-| 详细设计 | [查看 12 个软件单元](./SWE.3-software-detailed-design.md#arc-core) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
+| 详细设计 | [查看 12 个软件单元](SWE.3-software-detailed-design.md#arc-core) |
 
 <a id="arc-core-if-01"></a>
 
@@ -288,8 +288,8 @@ flowchart LR
 | 源码范围 | src/data/** |
 | 接口规格 | [DataFetchResult](#arc-data-if-01)、[MarketContext](#arc-data-if-02)、[DataSource](#arc-data-if-03)、[archive payload](#arc-data-if-04) |
 | 动态行为 | 拉取、标准化、合并、标记来源与失败，并计算 as-of。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
-| 详细设计 | [查看 30 个软件单元](./SWE.3-software-detailed-design.md#arc-data) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
+| 详细设计 | [查看 30 个软件单元](SWE.3-software-detailed-design.md#arc-data) |
 
 <a id="arc-data-if-01"></a>
 
@@ -358,8 +358,8 @@ flowchart LR
 | 源码范围 | src/indicators/** |
 | 接口规格 | [enriched OHLCV](#arc-indicators-if-01)、[indicator snapshot](#arc-indicators-if-02) |
 | 动态行为 | 从冻结 OHLCV 计算技术指标并报告输入质量。 |
-| 关联需求 | [SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001) |
-| 详细设计 | [查看 3 个软件单元](./SWE.3-software-detailed-design.md#arc-indicators) |
+| 关联需求 | [SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001) |
+| 详细设计 | [查看 3 个软件单元](SWE.3-software-detailed-design.md#arc-indicators) |
 
 <a id="arc-indicators-if-01"></a>
 
@@ -400,8 +400,8 @@ flowchart LR
 | 源码范围 | src/analysis/** |
 | 接口规格 | [TimeframeAnalysis](#arc-analysis-if-01)、[TradingSignal](#arc-analysis-if-02)、[FactRegistry](#arc-analysis-if-03)、[invariant result](#arc-analysis-if-04) |
 | 动态行为 | 计算 point-in-time 事实、计划、授权门禁、叙事和可靠度。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
-| 详细设计 | [查看 29 个软件单元](./SWE.3-software-detailed-design.md#arc-analysis) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
+| 详细设计 | [查看 29 个软件单元](SWE.3-software-detailed-design.md#arc-analysis) |
 
 <a id="arc-analysis-if-01"></a>
 
@@ -470,8 +470,8 @@ flowchart LR
 | 源码范围 | src/agents/** |
 | 接口规格 | [AnalystTeam](#arc-agents-if-01)、[AgentEvidence](#arc-agents-if-02)、[TransactionProposal](#arc-agents-if-03)、[RiskReview](#arc-agents-if-04)、[ManagerDecision](#arc-agents-if-05) |
 | 动态行为 | 运行 Analyst、Research、Debate、Levels、Trader、Risk、Manager 并保留来源。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
-| 详细设计 | [查看 36 个软件单元](./SWE.3-software-detailed-design.md#arc-agents) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
+| 详细设计 | [查看 36 个软件单元](SWE.3-software-detailed-design.md#arc-agents) |
 
 <a id="arc-agents-if-01"></a>
 
@@ -554,8 +554,8 @@ flowchart LR
 | 源码范围 | src/llm/** |
 | 接口规格 | [LLMClient](#arc-llm-if-01)、[stage payload](#arc-llm-if-02)、[JSON schema parser](#arc-llm-if-03) |
 | 动态行为 | 路由模型、构造上下文、传输/重试、解析并记录 I/O。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
-| 详细设计 | [查看 9 个软件单元](./SWE.3-software-detailed-design.md#arc-llm) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
+| 详细设计 | [查看 9 个软件单元](SWE.3-software-detailed-design.md#arc-llm) |
 
 <a id="arc-llm-if-01"></a>
 
@@ -610,8 +610,8 @@ flowchart LR
 | 源码范围 | src/run/** |
 | 接口规格 | [RunContext](#arc-run-if-01)、[manifest](#arc-run-if-02)、[archive schema/index](#arc-run-if-03) |
 | 动态行为 | 建立运行 ID，原子保存成功/失败归档，验证兼容并加载回放。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
-| 详细设计 | [查看 12 个软件单元](./SWE.3-software-detailed-design.md#arc-run) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
+| 详细设计 | [查看 12 个软件单元](SWE.3-software-detailed-design.md#arc-run) |
 
 <a id="arc-run-if-01"></a>
 
@@ -666,8 +666,8 @@ flowchart LR
 | 源码范围 | src/backtest/** |
 | 接口规格 | [BacktestConfig](#arc-backtest-if-01)、[BacktestResult](#arc-backtest-if-02)、[TradeResult](#arc-backtest-if-03) |
 | 动态行为 | 截取历史数据、生成规则信号、应用宏观状态、模拟成交并汇总指标。 |
-| 关联需求 | [SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001) |
-| 详细设计 | [查看 6 个软件单元](./SWE.3-software-detailed-design.md#arc-backtest) |
+| 关联需求 | [SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001) |
+| 详细设计 | [查看 6 个软件单元](SWE.3-software-detailed-design.md#arc-backtest) |
 
 <a id="arc-backtest-if-01"></a>
 
@@ -722,8 +722,8 @@ flowchart LR
 | 源码范围 | src/viz/** |
 | 接口规格 | [report dict](#arc-viz-if-01)、[chart HTML](#arc-viz-if-02)、[Streamlit widgets/session](#arc-viz-if-03) |
 | 动态行为 | 展示报告、图表、外部数据、决策链、拒绝原因、回放和配置。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
-| 详细设计 | [查看 21 个软件单元](./SWE.3-software-detailed-design.md#arc-viz) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
+| 详细设计 | [查看 21 个软件单元](SWE.3-software-detailed-design.md#arc-viz) |
 
 <a id="arc-viz-if-01"></a>
 
@@ -778,8 +778,8 @@ flowchart LR
 | 源码范围 | scripts/** |
 | 接口规格 | [CLI commands](#arc-tools-if-01)、[audit artifacts](#arc-tools-if-02) |
 | 动态行为 | 校验连接、检查归档、生成样例和执行 ASPICE 一致性检查。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
-| 详细设计 | [查看 18 个软件单元](./SWE.3-software-detailed-design.md#arc-tools) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
+| 详细设计 | [查看 18 个软件单元](SWE.3-software-detailed-design.md#arc-tools) |
 
 <a id="arc-tools-if-01"></a>
 

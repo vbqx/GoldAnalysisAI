@@ -30,12 +30,12 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [app.py](#unit-13cce7fd07) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [run_app.py](#unit-b2a1584dad) | 13 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [views/1_机构级分析报告.py](#unit-02d5d8e12e) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [views/2_短线策略.py](#unit-0e03ccecca) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [views/3_LLM决策链.py](#unit-74cd83898f) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [views/4_外部数据.py](#unit-1fe6319d7a) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [app.py](#unit-13cce7fd07) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [run_app.py](#unit-b2a1584dad) | 13 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [views/1_机构级分析报告.py](#unit-02d5d8e12e) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [views/2_短线策略.py](#unit-0e03ccecca) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [views/3_LLM决策链.py](#unit-74cd83898f) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [views/4_外部数据.py](#unit-1fe6319d7a) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
 
 <a id="unit-13cce7fd07"></a>
 
@@ -49,9 +49,9 @@
 | 源码 | [app.py](../../app.py) |
 | 架构组件 | ARC-APP — 应用入口与运行配置 |
 | 职责 | GoldAnalysisAI — Streamlit 入口（纯导航，不显示为侧边栏页面）。 |
-| 关联需求 | [SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001) |
+| 关联需求 | [SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
@@ -93,9 +93,9 @@
 | 源码 | [run_app.py](../../run_app.py) |
 | 架构组件 | ARC-APP — 应用入口与运行配置 |
 | 职责 | 实现“应用入口与运行配置”组件中 `run_app.py` 的职责，通过 `load_dotenv`、`init_dev_env`、`ensure_streamlit_config`、`resolve_python`、`stop_stale_streamlit`、`parse_args`、`main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001) |
+| 关联需求 | [SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 13 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -401,9 +401,9 @@
 | 源码 | [views/1_机构级分析报告.py](../../views/1_机构级分析报告.py) |
 | 架构组件 | ARC-APP — 应用入口与运行配置 |
 | 职责 | 机构级分析报告 — 主页面。 |
-| 关联需求 | [SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001) |
+| 关联需求 | [SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -423,9 +423,9 @@
 | 源码 | [views/2_短线策略.py](../../views/2_短线策略.py) |
 | 架构组件 | ARC-APP — 应用入口与运行配置 |
 | 职责 | 短线策略图 — 独立页面。 |
-| 关联需求 | [SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001) |
+| 关联需求 | [SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -445,9 +445,9 @@
 | 源码 | [views/3_LLM决策链.py](../../views/3_LLM决策链.py) |
 | 架构组件 | ARC-APP — 应用入口与运行配置 |
 | 职责 | LLM 决策链 — 独立页面。 |
-| 关联需求 | [SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001) |
+| 关联需求 | [SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -467,9 +467,9 @@
 | 源码 | [views/4_外部数据.py](../../views/4_外部数据.py) |
 | 架构组件 | ARC-APP — 应用入口与运行配置 |
 | 职责 | 外部数据 — 新闻、日历、DXY、社媒；fetch 完成后即可查看。 |
-| 关联需求 | [SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001) |
+| 关联需求 | [SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -485,18 +485,18 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [src/__init__.py](#unit-b141e8a708) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/config.py](#unit-f43788fe2b) | 5 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/__init__.py](#unit-21570b9deb) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/orchestrator.py](#unit-aa59bf5421) | 1 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/orchestrator_hooks.py](#unit-d0bec20560) | 4 | 3 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/parallel.py](#unit-d85010dca2) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/progress.py](#unit-0dc607ab64) | 31 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/run_config.py](#unit-4bd152d87b) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/run_context.py](#unit-338f795d63) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/types.py](#unit-d5eb6e2a98) | 21 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/log.py](#unit-a91501b8ca) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/pipeline.py](#unit-ba3f06e87a) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/__init__.py](#unit-b141e8a708) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/config.py](#unit-f43788fe2b) | 5 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/__init__.py](#unit-21570b9deb) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/orchestrator.py](#unit-aa59bf5421) | 1 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/orchestrator_hooks.py](#unit-d0bec20560) | 4 | 3 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/parallel.py](#unit-d85010dca2) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/progress.py](#unit-0dc607ab64) | 31 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/run_config.py](#unit-4bd152d87b) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/run_context.py](#unit-338f795d63) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/types.py](#unit-d5eb6e2a98) | 21 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/log.py](#unit-a91501b8ca) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/pipeline.py](#unit-ba3f06e87a) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 
 <a id="unit-b141e8a708"></a>
 
@@ -510,9 +510,9 @@
 | 源码 | [src/__init__.py](../../src/__init__.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -532,9 +532,9 @@
 | 源码 | [src/config.py](../../src/config.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/config.py` 的职责，通过 `short_model_name`、`llm_sidebar_models` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 5 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../tests/integration/test_external_apis.py)、[tests/regression/test_fixes.py](../../tests/regression/test_fixes.py)、[tests/unit/test_llm_client_timeouts.py](../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_stage_policy.py](../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_mt5_provider.py](../../tests/unit/test_mt5_provider.py) |
 | 验证状态 | selected |
 
@@ -664,9 +664,9 @@
 | 源码 | [src/core/__init__.py](../../src/core/__init__.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/core/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -686,9 +686,9 @@
 | 源码 | [src/core/orchestrator.py](../../src/core/orchestrator.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/core/orchestrator.py` 的职责，通过 `run_trade_agent_pipeline` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 1 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py) |
 | 验证状态 | selected |
 
@@ -736,9 +736,9 @@
 | 源码 | [src/core/orchestrator_hooks.py](../../src/core/orchestrator_hooks.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/core/orchestrator_hooks.py` 的职责，通过 `begin_pipeline_run`、`fetch_market_data`、`publish_external_snapshot`、`finalize_pipeline_archive` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 4 / 3 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py) |
 | 验证状态 | selected |
 
@@ -854,9 +854,9 @@
 | 源码 | [src/core/parallel.py](../../src/core/parallel.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/core/parallel.py` 的职责，通过 `ParallelTaskError`、`run_parallel` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_parallel.py](../../tests/unit/test_parallel.py) |
 | 验证状态 | selected |
 
@@ -942,9 +942,9 @@
 | 源码 | [src/core/progress.py](../../src/core/progress.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/core/progress.py` 的职责，通过 `PipelineProgressStep`、`PipelineProgressState`、`LLMIORecord`、`ProgressReporter`、`NoOpProgressReporter`、`get_progress`、`set_progress`、`reset_progress` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 31 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/integration/test_coherence.py](../../tests/integration/test_coherence.py)、[tests/integration/test_external_apis.py](../../tests/integration/test_external_apis.py)、[tests/integration/test_pipeline.py](../../tests/integration/test_pipeline.py)、[tests/regression/test_doc_pipeline_sync.py](../../tests/regression/test_doc_pipeline_sync.py)、[tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py)、[tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_golden_report_benchmark.py](../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_indicators.py](../../tests/unit/test_indicators.py)、[tests/unit/test_live_progress_ui.py](../../tests/unit/test_live_progress_ui.py)、[tests/unit/test_llm_stage_policy.py](../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_llm_transport.py](../../tests/unit/test_llm_transport.py)、[tests/unit/test_manager_authorization.py](../../tests/unit/test_manager_authorization.py)、[tests/unit/test_module_sync_telemetry.py](../../tests/unit/test_module_sync_telemetry.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_pipeline_progress_headline.py](../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_progress.py](../../tests/unit/test_progress.py)、[tests/unit/test_report_invariants.py](../../tests/unit/test_report_invariants.py)、[tests/unit/test_risk_gates.py](../../tests/unit/test_risk_gates.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../tests/unit/test_run_config.py)、[tests/unit/test_streamlit_ensure_report.py](../../tests/unit/test_streamlit_ensure_report.py)、[tests/unit/test_tradingview_retry.py](../../tests/unit/test_tradingview_retry.py) |
 | 验证状态 | selected |
 
@@ -1652,9 +1652,9 @@
 | 源码 | [src/core/run_config.py](../../src/core/run_config.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/core/run_config.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../tests/unit/test_run_config_panel.py)、[tests/unit/test_streamlit_ensure_report.py](../../tests/unit/test_streamlit_ensure_report.py) |
 | 验证状态 | selected |
 
@@ -1674,9 +1674,9 @@
 | 源码 | [src/core/run_context.py](../../src/core/run_context.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/core/run_context.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_run_config.py](../../tests/unit/test_run_config.py) |
 | 验证状态 | selected |
 
@@ -1696,9 +1696,9 @@
 | 源码 | [src/core/types.py](../../src/core/types.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/core/types.py` 的职责，通过 `EvidenceItem`、`AnalystReport`、`AnalystTeam`、`AgentEvidence`、`ResearchDebate`、`LevelProposal`、`TransactionProposal`、`RiskReview` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 21 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/integration/test_coherence.py](../../tests/integration/test_coherence.py)、[tests/regression/test_docs_structure.py](../../tests/regression/test_docs_structure.py)、[tests/unit/test_agent_chain.py](../../tests/unit/test_agent_chain.py)、[tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_audit_summary.py](../../tests/unit/test_audit_summary.py)、[tests/unit/test_calendar_empty.py](../../tests/unit/test_calendar_empty.py)、[tests/unit/test_claim_eligibility.py](../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_debate_coherence.py](../../tests/unit/test_debate_coherence.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_evidence_provenance.py](../../tests/unit/test_evidence_provenance.py)、[tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py)、[tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py)、[tests/unit/test_llm_context_compact.py](../../tests/unit/test_llm_context_compact.py)、[tests/unit/test_llm_context_fact_refs.py](../../tests/unit/test_llm_context_fact_refs.py)、[tests/unit/test_llm_levels.py](../../tests/unit/test_llm_levels.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_manager_authorization.py](../../tests/unit/test_manager_authorization.py)、[tests/unit/test_narrative_authorization.py](../../tests/unit/test_narrative_authorization.py)、[tests/unit/test_narrative_facts.py](../../tests/unit/test_narrative_facts.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py)、[tests/unit/test_risk_gates.py](../../tests/unit/test_risk_gates.py)、[tests/unit/test_risk_gates_trigger.py](../../tests/unit/test_risk_gates_trigger.py)、[tests/unit/test_rule_chain_stability.py](../../tests/unit/test_rule_chain_stability.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../tests/unit/test_run_config.py)、[tests/unit/test_signal_dedup.py](../../tests/unit/test_signal_dedup.py)、[tests/unit/test_source_labels.py](../../tests/unit/test_source_labels.py)、[tests/unit/test_technical_context_lux.py](../../tests/unit/test_technical_context_lux.py)、[tests/unit/test_trader_sentiment.py](../../tests/unit/test_trader_sentiment.py) |
 | 验证状态 | selected |
 
@@ -2187,9 +2187,9 @@
 | 源码 | [src/log.py](../../src/log.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/log.py` 的职责，通过 `setup_logging`、`get_logger` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -2253,9 +2253,9 @@
 | 源码 | [src/pipeline.py](../../src/pipeline.py) |
 | 架构组件 | ARC-CORE — 主编排与进度 |
 | 职责 | 实现“主编排与进度”组件中 `src/pipeline.py` 的职责，通过 `run_analysis` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/integration/test_pipeline.py](../../tests/integration/test_pipeline.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py) |
 | 验证状态 | selected |
 
@@ -2293,36 +2293,36 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [src/data/__init__.py](#unit-5c9ecc73e4) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/aggregator.py](#unit-d3b9beaac0) | 4 | 3 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/calendar_utils.py](#unit-f5d8bd410b) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/context_builder.py](#unit-24843ac961) | 10 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/external_format.py](#unit-05079ecc27) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/fetch_pipeline.py](#unit-2b33a302fc) | 7 | 5 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/fetcher.py](#unit-5c3b60e30a) | 7 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/mt5.py](#unit-52888d723d) | 13 | 5 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/news_topics.py](#unit-c335b8f5cf) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/proxy_env.py](#unit-0f842b8ece) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/run_archive.py](#unit-ea7e4f88fe) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/run_archive_compat.py](#unit-023a37a1e9) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/run_archive_index.py](#unit-7bfc490988) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/run_archive_prune.py](#unit-dad8bc5b0f) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/run_archive_schema.py](#unit-767bf49f25) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/__init__.py](#unit-c3952c43cb) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/_http.py](#unit-c590fce576) | 3 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/base.py](#unit-0df4638d5e) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/dxy.py](#unit-1fa1bdf5ba) | 1 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/fundamentals.py](#unit-ec9b21793d) | 4 | 3 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/gold_relevance.py](#unit-4d4d8a02c7) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/jin10_feed.py](#unit-7020937074) | 23 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/jin10_mcp_client.py](#unit-927bb1749d) | 10 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/macro.py](#unit-fe5c27c113) | 5 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/market.py](#unit-603339624c) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/news.py](#unit-58d6f95301) | 4 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/social.py](#unit-ba8df8a829) | 3 | 3 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/sources/social_feed.py](#unit-b05f7affa4) | 11 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/tradingview.py](#unit-c1711535ca) | 15 | 4 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/url_redact.py](#unit-62a1aff305) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/__init__.py](#unit-5c9ecc73e4) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/aggregator.py](#unit-d3b9beaac0) | 4 | 3 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/calendar_utils.py](#unit-f5d8bd410b) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/context_builder.py](#unit-24843ac961) | 10 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/external_format.py](#unit-05079ecc27) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/fetch_pipeline.py](#unit-2b33a302fc) | 7 | 5 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/fetcher.py](#unit-5c3b60e30a) | 7 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/mt5.py](#unit-52888d723d) | 13 | 5 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/news_topics.py](#unit-c335b8f5cf) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/proxy_env.py](#unit-0f842b8ece) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/run_archive.py](#unit-ea7e4f88fe) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/run_archive_compat.py](#unit-023a37a1e9) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/run_archive_index.py](#unit-7bfc490988) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/run_archive_prune.py](#unit-dad8bc5b0f) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/run_archive_schema.py](#unit-767bf49f25) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/__init__.py](#unit-c3952c43cb) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/_http.py](#unit-c590fce576) | 3 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/base.py](#unit-0df4638d5e) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/dxy.py](#unit-1fa1bdf5ba) | 1 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/fundamentals.py](#unit-ec9b21793d) | 4 | 3 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/gold_relevance.py](#unit-4d4d8a02c7) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/jin10_feed.py](#unit-7020937074) | 23 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/jin10_mcp_client.py](#unit-927bb1749d) | 10 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/macro.py](#unit-fe5c27c113) | 5 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/market.py](#unit-603339624c) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/news.py](#unit-58d6f95301) | 4 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/social.py](#unit-ba8df8a829) | 3 | 3 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/sources/social_feed.py](#unit-b05f7affa4) | 11 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/tradingview.py](#unit-c1711535ca) | 15 | 4 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/url_redact.py](#unit-62a1aff305) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) | selected |
 
 <a id="unit-5c9ecc73e4"></a>
 
@@ -2336,9 +2336,9 @@
 | 源码 | [src/data/__init__.py](../../src/data/__init__.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -2358,9 +2358,9 @@
 | 源码 | [src/data/aggregator.py](../../src/data/aggregator.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/aggregator.py` 的职责，通过 `merge_external`、`collect_evidence`、`assemble_market_context`、`build_market_context` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 4 / 3 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../tests/integration/test_external_apis.py) |
 | 验证状态 | selected |
 
@@ -2476,9 +2476,9 @@
 | 源码 | [src/data/calendar_utils.py](../../src/data/calendar_utils.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/calendar_utils.py` 的职责，通过 `parse_event_time`、`filter_upcoming_calendar_events`、`calendar_to_risk_text` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_narrative_authorization.py](../../tests/unit/test_narrative_authorization.py) |
 | 验证状态 | selected |
 
@@ -2564,9 +2564,9 @@
 | 源码 | [src/data/context_builder.py](../../src/data/context_builder.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/context_builder.py` 的职责，通过 `build_market_position`、`build_spot_cross_check`、`build_event_countdown`、`build_jin10_kline_summary`、`build_derived_context`、`compute_context_stats`、`finalize_market_context` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 10 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_narrative_authorization.py](../../tests/unit/test_narrative_authorization.py) |
 | 验证状态 | selected |
 
@@ -2812,9 +2812,9 @@
 | 源码 | [src/data/external_format.py](../../src/data/external_format.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/external_format.py` 的职责，通过 `headlines_to_strings`、`sync_external_legacy_fields` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_narrative_authorization.py](../../tests/unit/test_narrative_authorization.py) |
 | 验证状态 | selected |
 
@@ -2878,9 +2878,9 @@
 | 源码 | [src/data/fetch_pipeline.py](../../src/data/fetch_pipeline.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/fetch_pipeline.py` 的职责，通过 `DataFetchResult`、`fetch_external_bundle`、`fetch_all_data` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 7 / 5 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
@@ -3064,9 +3064,9 @@
 | 源码 | [src/data/fetcher.py](../../src/data/fetcher.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/fetcher.py` 的职责，通过 `clear_cache`、`get_active_source`、`fetch_multi_timeframe`、`fetch_all`、`daily_metrics`、`utc8_now`、`format_utc8` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 7 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_indicators.py](../../tests/unit/test_indicators.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
@@ -3247,9 +3247,9 @@
 | 源码 | [src/data/mt5.py](../../src/data/mt5.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/mt5.py` 的职责，通过 `MT5Config`、`MT5Provider`、`MT5UnavailableError`、`DisabledMT5Provider`、`MetaTrader5Provider`、`get_mt5_provider` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 13 / 5 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_mt5_provider.py](../../tests/unit/test_mt5_provider.py) |
 | 验证状态 | selected |
 
@@ -3565,9 +3565,9 @@
 | 源码 | [src/data/news_topics.py](../../src/data/news_topics.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/news_topics.py` 的职责，通过 `cluster_headline_topics` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py) |
 | 验证状态 | selected |
 
@@ -3609,9 +3609,9 @@
 | 源码 | [src/data/proxy_env.py](../../src/data/proxy_env.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/proxy_env.py` 的职责，通过 `read_system_proxy`、`apply_system_proxy` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -3675,9 +3675,9 @@
 | 源码 | [src/data/run_archive.py](../../src/data/run_archive.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
@@ -3697,9 +3697,9 @@
 | 源码 | [src/data/run_archive_compat.py](../../src/data/run_archive_compat.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive_compat.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -3719,9 +3719,9 @@
 | 源码 | [src/data/run_archive_index.py](../../src/data/run_archive_index.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive_index.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py) |
 | 验证状态 | selected |
 
@@ -3741,9 +3741,9 @@
 | 源码 | [src/data/run_archive_prune.py](../../src/data/run_archive_prune.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive_prune.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py) |
 | 验证状态 | selected |
 
@@ -3763,9 +3763,9 @@
 | 源码 | [src/data/run_archive_schema.py](../../src/data/run_archive_schema.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive_schema.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
@@ -3785,9 +3785,9 @@
 | 源码 | [src/data/sources/__init__.py](../../src/data/sources/__init__.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -3807,9 +3807,9 @@
 | 源码 | [src/data/sources/_http.py](../../src/data/sources/_http.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/_http.py` 的职责，通过 `post_json`、`get_json`、`get_text` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 3 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_http_helpers.py](../../tests/unit/test_http_helpers.py) |
 | 验证状态 | selected |
 
@@ -3902,9 +3902,9 @@
 | 源码 | [src/data/sources/base.py](../../src/data/sources/base.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/base.py` 的职责，通过 `DataSource` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_pipeline_progress_headline.py](../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_tradingview_retry.py](../../tests/unit/test_tradingview_retry.py) |
 | 验证状态 | selected |
 
@@ -3946,9 +3946,9 @@
 | 源码 | [src/data/sources/dxy.py](../../src/data/sources/dxy.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/dxy.py` 的职责，通过 `fetch_dxy_impact` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 1 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../tests/integration/test_external_apis.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
@@ -3996,9 +3996,9 @@
 | 源码 | [src/data/sources/fundamentals.py](../../src/data/sources/fundamentals.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/fundamentals.py` 的职责，通过 `FundamentalsDataSource`、`macro_quotes_to_evidence`、`external_macro_evidence` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 4 / 3 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../tests/integration/test_external_apis.py)、[tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
@@ -4114,9 +4114,9 @@
 | 源码 | [src/data/sources/gold_relevance.py](../../src/data/sources/gold_relevance.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/gold_relevance.py` 的职责，通过 `matches_gold_headline`、`is_gold_macro_event` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
@@ -4180,9 +4180,9 @@
 | 源码 | [src/data/sources/jin10_feed.py](../../src/data/sources/jin10_feed.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/jin10_feed.py` 的职责，通过 `Jin10NewsBundle`、`fetch_jin10_flash`、`fetch_jin10_articles`、`fetch_jin10_calendar`、`fetch_jin10_risk_events`、`fetch_jin10_bundle`、`fetch_jin10_quote`、`fetch_jin10_kline` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 23 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../tests/integration/test_external_apis.py)、[tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py)、[tests/unit/test_fact_registry.py](../../tests/unit/test_fact_registry.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
@@ -4715,9 +4715,9 @@
 | 源码 | [src/data/sources/jin10_mcp_client.py](../../src/data/sources/jin10_mcp_client.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | Jin10 (金十数据) official MCP client — JSON-RPC over SSE。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 10 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py)、[tests/unit/test_llm_client_timeouts.py](../../tests/unit/test_llm_client_timeouts.py) |
 | 验证状态 | selected |
 
@@ -4964,9 +4964,9 @@
 | 源码 | [src/data/sources/macro.py](../../src/data/sources/macro.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/macro.py` 的职责，通过 `fetch_dxy_quote`、`fetch_us10y_quote`、`fetch_macro_quotes` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 5 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
@@ -5103,9 +5103,9 @@
 | 源码 | [src/data/sources/market.py](../../src/data/sources/market.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/market.py` 的职责，通过 `MarketDataSource` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
@@ -5169,9 +5169,9 @@
 | 源码 | [src/data/sources/news.py](../../src/data/sources/news.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/news.py` 的职责，通过 `external_to_evidence`、`NewsDataSource` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 4 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../tests/integration/test_external_apis.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
@@ -5286,9 +5286,9 @@
 | 源码 | [src/data/sources/social.py](../../src/data/sources/social.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/social.py` 的职责，通过 `SocialDataSource` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 3 / 3 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../tests/integration/test_external_apis.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
@@ -5382,9 +5382,9 @@
 | 源码 | [src/data/sources/social_feed.py](../../src/data/sources/social_feed.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/sources/social_feed.py` 的职责，通过 `parse_tv_ideas`、`parse_tv_minds`、`fetch_social_sentiment` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 11 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../tests/integration/test_external_apis.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
@@ -5652,9 +5652,9 @@
 | 源码 | [src/data/tradingview.py](../../src/data/tradingview.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/tradingview.py` 的职责，通过 `get_last_error`、`reset_client`、`compute_price_drift_1d`、`fetch_symbol_daily`、`fetch_multi_timeframe`、`source_label` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 15 / 4 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_agent_chain.py](../../tests/unit/test_agent_chain.py)、[tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_claim_eligibility.py](../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/unit/test_external_sources.py](../../tests/unit/test_external_sources.py)、[tests/unit/test_llm_levels.py](../../tests/unit/test_llm_levels.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_authorization.py](../../tests/unit/test_narrative_authorization.py)、[tests/unit/test_narrative_facts.py](../../tests/unit/test_narrative_facts.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_signal_dedup.py](../../tests/unit/test_signal_dedup.py)、[tests/unit/test_technical_context_lux.py](../../tests/unit/test_technical_context_lux.py)、[tests/unit/test_trader_sentiment.py](../../tests/unit/test_trader_sentiment.py)、[tests/unit/test_tradingview_retry.py](../../tests/unit/test_tradingview_retry.py) |
 | 验证状态 | selected |
 
@@ -6013,9 +6013,9 @@
 | 源码 | [src/data/url_redact.py](../../src/data/url_redact.py) |
 | 架构组件 | ARC-DATA — 行情与外部数据 |
 | 职责 | 实现“行情与外部数据”组件中 `src/data/url_redact.py` 的职责，通过 `redact_url` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](./SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](./SWE.5-integration-testing.md#vm-integration-external) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_url_redact.py](../../tests/unit/test_url_redact.py) |
 | 验证状态 | selected |
 
@@ -6053,9 +6053,9 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [src/indicators/__init__.py](#unit-7d2cf26834) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) | selected |
-| [src/indicators/technical.py](#unit-2f8c299c5b) | 10 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [src/indicators/verify.py](#unit-d35a8017fe) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
+| [src/indicators/__init__.py](#unit-7d2cf26834) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) | selected |
+| [src/indicators/technical.py](#unit-2f8c299c5b) | 10 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [src/indicators/verify.py](#unit-d35a8017fe) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
 
 <a id="unit-7d2cf26834"></a>
 
@@ -6069,9 +6069,9 @@
 | 源码 | [src/indicators/__init__.py](../../src/indicators/__init__.py) |
 | 架构组件 | ARC-INDICATORS — 指标计算 |
 | 职责 | 实现“指标计算”组件中 `src/indicators/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001) |
+| 关联需求 | [SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -6091,9 +6091,9 @@
 | 源码 | [src/indicators/technical.py](../../src/indicators/technical.py) |
 | 架构组件 | ARC-INDICATORS — 指标计算 |
 | 职责 | 实现“指标计算”组件中 `src/indicators/technical.py` 的职责，通过 `add_emas`、`add_vwap`、`add_atr`、`add_rsi`、`add_macd`、`add_adx`、`enrich`、`indicator_values` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001) |
+| 关联需求 | [SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001) |
 | 函数 / 高风险函数 | 10 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_facts.py](../../tests/unit/test_narrative_facts.py)、[tests/unit/test_report_facts.py](../../tests/unit/test_report_facts.py)、[tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py)、[tests/unit/test_signal_dedup.py](../../tests/unit/test_signal_dedup.py) |
 | 验证状态 | selected |
 
@@ -6333,9 +6333,9 @@
 | 源码 | [src/indicators/verify.py](../../src/indicators/verify.py) |
 | 架构组件 | ARC-INDICATORS — 指标计算 |
 | 职责 | 实现“指标计算”组件中 `src/indicators/verify.py` 的职责，通过 `indicator_snapshot`、`indicator_table_rows` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001) |
+| 关联需求 | [SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py)、[tests/unit/test_indicators.py](../../tests/unit/test_indicators.py) |
 | 验证状态 | selected |
 
@@ -6395,35 +6395,35 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [src/analysis/__init__.py](#unit-cf43fe46e5) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/audit_summary.py](#unit-9f95d55376) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/chart_sr_filters.py](#unit-271badecbe) | 4 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/chart_zone_filters.py](#unit-070aa8511c) | 8 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/claim_eligibility.py](#unit-67d22a7c31) | 14 | 14 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/data_freshness.py](#unit-3549e9d9b7) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/dgt_price_action.py](#unit-7dfc57faf9) | 10 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/display_labels.py](#unit-3b1598dc1b) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/fact_registry.py](#unit-60e70e7439) | 16 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/field_glossary.py](#unit-c37864f306) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/ict_pa.py](#unit-3962aaac44) | 7 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/level_validator.py](#unit-a9ae5e6696) | 7 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/luxalgo_smc.py](#unit-2f7fedba6f) | 15 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/narrative_combine.py](#unit-4f106aec16) | 15 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/narrative_facts.py](#unit-b5b5d80eb7) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/narrative_sections.py](#unit-0d14c54b60) | 28 | 4 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/plan_signals.py](#unit-406cec1297) | 20 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/price_action_facts.py](#unit-daf97d09e5) | 7 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/proximity.py](#unit-ce01c0290c) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/report_engine.py](#unit-dad8a91ff9) | 44 | 8 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/report_facts.py](#unit-cd6da8c4a3) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/report_invariant_gate.py](#unit-1aecfa1072) | 4 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/report_invariants.py](#unit-70bd327d9d) | 13 | 3 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/report_reliability.py](#unit-07e7315842) | 11 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/risk_gates.py](#unit-0cc0e8d72a) | 6 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/signal_geometry.py](#unit-84723142fa) | 3 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/signal_identity.py](#unit-c8f58d21e1) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/technical_context.py](#unit-7faaa8edca) | 17 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/analysis/tf_snapshot.py](#unit-ebf42549f9) | 4 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/__init__.py](#unit-cf43fe46e5) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/audit_summary.py](#unit-9f95d55376) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/chart_sr_filters.py](#unit-271badecbe) | 4 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/chart_zone_filters.py](#unit-070aa8511c) | 8 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/claim_eligibility.py](#unit-67d22a7c31) | 14 | 14 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/data_freshness.py](#unit-3549e9d9b7) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/dgt_price_action.py](#unit-7dfc57faf9) | 10 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/display_labels.py](#unit-3b1598dc1b) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/fact_registry.py](#unit-60e70e7439) | 16 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/field_glossary.py](#unit-c37864f306) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/ict_pa.py](#unit-3962aaac44) | 7 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/level_validator.py](#unit-a9ae5e6696) | 7 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/luxalgo_smc.py](#unit-2f7fedba6f) | 15 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/narrative_combine.py](#unit-4f106aec16) | 15 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/narrative_facts.py](#unit-b5b5d80eb7) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/narrative_sections.py](#unit-0d14c54b60) | 28 | 4 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/plan_signals.py](#unit-406cec1297) | 20 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/price_action_facts.py](#unit-daf97d09e5) | 7 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/proximity.py](#unit-ce01c0290c) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/report_engine.py](#unit-dad8a91ff9) | 44 | 8 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/report_facts.py](#unit-cd6da8c4a3) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/report_invariant_gate.py](#unit-1aecfa1072) | 4 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/report_invariants.py](#unit-70bd327d9d) | 13 | 3 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/report_reliability.py](#unit-07e7315842) | 11 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/risk_gates.py](#unit-0cc0e8d72a) | 6 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/signal_geometry.py](#unit-84723142fa) | 3 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/signal_identity.py](#unit-c8f58d21e1) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/technical_context.py](#unit-7faaa8edca) | 17 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/analysis/tf_snapshot.py](#unit-ebf42549f9) | 4 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 
 <a id="unit-cf43fe46e5"></a>
 
@@ -6437,9 +6437,9 @@
 | 源码 | [src/analysis/__init__.py](../../src/analysis/__init__.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -6459,9 +6459,9 @@
 | 源码 | [src/analysis/audit_summary.py](../../src/analysis/audit_summary.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/audit_summary.py` 的职责，通过 `build_audit_summary` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_audit_summary.py](../../tests/unit/test_audit_summary.py)、[tests/unit/test_llm_stage_policy.py](../../tests/unit/test_llm_stage_policy.py) |
 | 验证状态 | selected |
 
@@ -6547,9 +6547,9 @@
 | 源码 | [src/analysis/chart_sr_filters.py](../../src/analysis/chart_sr_filters.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/chart_sr_filters.py` 的职责，通过 `visible_sr_price_lines` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 4 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_dgt_price_action.py](../../tests/unit/test_dgt_price_action.py) |
 | 验证状态 | selected |
 
@@ -6657,9 +6657,9 @@
 | 源码 | [src/analysis/chart_zone_filters.py](../../src/analysis/chart_zone_filters.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/chart_zone_filters.py` 的职责，通过 `chart_plot_df`、`chart_price_bounds`、`zone_overlaps_chart_range`、`visible_order_blocks`、`visible_active_fvgs`、`visible_zone_snapshots`、`visible_zones_for_chart` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 8 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -6861,9 +6861,9 @@
 | 源码 | [src/analysis/claim_eligibility.py](../../src/analysis/claim_eligibility.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/claim_eligibility.py` 的职责，通过 `ClaimAudit`、`technical_claim_fact_catalog`、`adjudicate_level_proposal_claim`、`claim_allows_execution_authorization` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 14 / 14 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_claim_eligibility.py](../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_run_config.py](../../tests/unit/test_run_config.py) |
 | 验证状态 | selected |
 
@@ -7210,9 +7210,9 @@
 | 源码 | [src/analysis/data_freshness.py](../../src/analysis/data_freshness.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/data_freshness.py` 的职责，通过 `build_data_as_of` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_data_freshness.py](../../tests/unit/test_data_freshness.py) |
 | 验证状态 | selected |
 
@@ -7276,9 +7276,9 @@
 | 源码 | [src/analysis/dgt_price_action.py](../../src/analysis/dgt_price_action.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/dgt_price_action.py` 的职责，通过 `SrLevel`、`VolumeProfileResult`、`DgtPriceActionResult`、`build_volume_profile`、`analyze_dgt_price_action`、`dgt_result_to_dict` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 10 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_dgt_price_action.py](../../tests/unit/test_dgt_price_action.py) |
 | 验证状态 | selected |
 
@@ -7518,9 +7518,9 @@
 | 源码 | [src/analysis/display_labels.py](../../src/analysis/display_labels.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/display_labels.py` 的职责，通过 `liquidity_label` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -7562,9 +7562,9 @@
 | 源码 | [src/analysis/fact_registry.py](../../src/analysis/fact_registry.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/fact_registry.py` 的职责，通过 `calendar_state`、`build_fact_registry`、`allowed_prices`、`fact_lookup`、`fact_ids_for_signal`、`compact_fact_index` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 16 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/integration/test_offline_report_contract.py](../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_calendar_empty.py](../../tests/unit/test_calendar_empty.py)、[tests/unit/test_fact_registry.py](../../tests/unit/test_fact_registry.py)、[tests/unit/test_golden_report_benchmark.py](../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_llm_context_fact_refs.py](../../tests/unit/test_llm_context_fact_refs.py)、[tests/unit/test_report_invariants.py](../../tests/unit/test_report_invariants.py)、[tests/unit/test_report_reliability.py](../../tests/unit/test_report_reliability.py) |
 | 验证状态 | selected |
 
@@ -7936,9 +7936,9 @@
 | 源码 | [src/analysis/field_glossary.py](../../src/analysis/field_glossary.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/field_glossary.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -7958,9 +7958,9 @@
 | 源码 | [src/analysis/ict_pa.py](../../src/analysis/ict_pa.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/ict_pa.py` 的职责，通过 `SwingPoint`、`OrderBlock`、`FairValueGap`、`LiquidityZone`、`StructureEvent`、`TimeframeAnalysis`、`analyze_timeframe`、`sentiment_score` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 7 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_agent_chain.py](../../tests/unit/test_agent_chain.py)、[tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py)、[tests/unit/test_claim_eligibility.py](../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_debate_coherence.py](../../tests/unit/test_debate_coherence.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py)、[tests/unit/test_llm_levels.py](../../tests/unit/test_llm_levels.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_luxalgo_smc.py](../../tests/unit/test_luxalgo_smc.py)、[tests/unit/test_narrative_facts.py](../../tests/unit/test_narrative_facts.py)、[tests/unit/test_plan_signals.py](../../tests/unit/test_plan_signals.py)、[tests/unit/test_report_facts.py](../../tests/unit/test_report_facts.py)、[tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_signal_dedup.py](../../tests/unit/test_signal_dedup.py)、[tests/unit/test_technical_context_lux.py](../../tests/unit/test_technical_context_lux.py)、[tests/unit/test_tf_snapshot.py](../../tests/unit/test_tf_snapshot.py)、[tests/unit/test_trader_sentiment.py](../../tests/unit/test_trader_sentiment.py) |
 | 验证状态 | selected |
 
@@ -8134,9 +8134,9 @@
 | 源码 | [src/analysis/level_validator.py](../../src/analysis/level_validator.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/level_validator.py` 的职责，通过 `validate_llm_levels` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 7 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_claim_eligibility.py](../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_llm_levels.py](../../tests/unit/test_llm_levels.py) |
 | 验证状态 | selected |
 
@@ -8316,9 +8316,9 @@
 | 源码 | [src/analysis/luxalgo_smc.py](../../src/analysis/luxalgo_smc.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/luxalgo_smc.py` 的职责，通过 `LuxAlgoResult`、`analyze_luxalgo` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 15 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_luxalgo_smc.py](../../tests/unit/test_luxalgo_smc.py) |
 | 验证状态 | selected |
 
@@ -8675,9 +8675,9 @@
 | 源码 | [src/analysis/narrative_combine.py](../../src/analysis/narrative_combine.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/narrative_combine.py` 的职责，通过 `pa_block`、`value_zone_position`、`nearest_pa_sr`、`zone_midpoint`、`resonance_note`、`entry_resonance_text`、`pa_trend_label`、`liquidity_pa_side_text` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 15 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_narrative_combine.py](../../tests/unit/test_narrative_combine.py) |
 | 验证状态 | selected |
 
@@ -9027,9 +9027,9 @@
 | 源码 | [src/analysis/narrative_facts.py](../../src/analysis/narrative_facts.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/narrative_facts.py` 的职责，通过 `build_narrative_facts_for_llm` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_narrative_facts.py](../../tests/unit/test_narrative_facts.py) |
 | 验证状态 | selected |
 
@@ -9071,9 +9071,9 @@
 | 源码 | [src/analysis/narrative_sections.py](../../src/analysis/narrative_sections.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/narrative_sections.py` 的职责，通过 `build_rule_narrative_sections`、`section_to_bullets`、`overview_bullets_from_sections`、`build_narrative_facts`、`validate_and_merge_llm_sections`、`narrative_price_tolerance`、`validate_llm_top_level_fields`、`validate_llm_top_level` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 28 / 4 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_calendar_empty.py](../../tests/unit/test_calendar_empty.py)、[tests/unit/test_narrative_authorization.py](../../tests/unit/test_narrative_authorization.py)、[tests/unit/test_narrative_combine.py](../../tests/unit/test_narrative_combine.py)、[tests/unit/test_narrative_sections.py](../../tests/unit/test_narrative_sections.py)、[tests/unit/test_narrative_top_level.py](../../tests/unit/test_narrative_top_level.py)、[tests/unit/test_replay_llm_narrative.py](../../tests/unit/test_replay_llm_narrative.py) |
 | 验证状态 | selected |
 
@@ -9718,9 +9718,9 @@
 | 源码 | [src/analysis/plan_signals.py](../../src/analysis/plan_signals.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/plan_signals.py` 的职责，通过 `pa_usable`、`build_rule_pa_block`、`smc_filter_adjustment`、`val_sweep_confirmed`、`build_pa_short_aggressive`、`build_pa_short_conservative`、`build_pa_long_sweep` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 20 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_plan_signal_targets.py](../../tests/unit/test_plan_signal_targets.py)、[tests/unit/test_plan_signals.py](../../tests/unit/test_plan_signals.py) |
 | 验证状态 | selected |
 
@@ -10180,9 +10180,9 @@
 | 源码 | [src/analysis/price_action_facts.py](../../src/analysis/price_action_facts.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/price_action_facts.py` 的职责，通过 `build_session_price_action_block`、`build_price_action_summaries`、`chart_sr_levels` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 7 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_dgt_price_action.py](../../tests/unit/test_dgt_price_action.py) |
 | 验证状态 | selected |
 
@@ -10356,9 +10356,9 @@
 | 源码 | [src/analysis/proximity.py](../../src/analysis/proximity.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/proximity.py` 的职责，通过 `proximity_threshold`、`zone_near_price`、`level_near_price` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_proximity.py](../../tests/unit/test_proximity.py) |
 | 验证状态 | selected |
 
@@ -10444,9 +10444,9 @@
 | 源码 | [src/analysis/report_engine.py](../../src/analysis/report_engine.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/report_engine.py` 的职责，通过 `TradingSignal`、`compute_trading_signals`、`generate_trading_signals`、`trend_projections`、`build_conclusion`、`invalidation_rules`、`parse_risk_events_calendar`、`build_calendar_events` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 44 / 8 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_agent_chain.py](../../tests/unit/test_agent_chain.py)、[tests/unit/test_audit_summary.py](../../tests/unit/test_audit_summary.py)、[tests/unit/test_backtest_simulator.py](../../tests/unit/test_backtest_simulator.py)、[tests/unit/test_calendar_empty.py](../../tests/unit/test_calendar_empty.py)、[tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py)、[tests/unit/test_claim_eligibility.py](../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_display_labels.py](../../tests/unit/test_display_labels.py)、[tests/unit/test_evidence_provenance.py](../../tests/unit/test_evidence_provenance.py)、[tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_manager_authorization.py](../../tests/unit/test_manager_authorization.py)、[tests/unit/test_plan_signals.py](../../tests/unit/test_plan_signals.py)、[tests/unit/test_report_invariant_gate.py](../../tests/unit/test_report_invariant_gate.py)、[tests/unit/test_report_invariants.py](../../tests/unit/test_report_invariants.py)、[tests/unit/test_rule_chain_stability.py](../../tests/unit/test_rule_chain_stability.py)、[tests/unit/test_signal_dedup.py](../../tests/unit/test_signal_dedup.py)、[tests/unit/test_trader_sentiment.py](../../tests/unit/test_trader_sentiment.py) |
 | 验证状态 | selected |
 
@@ -11447,9 +11447,9 @@
 | 源码 | [src/analysis/report_facts.py](../../src/analysis/report_facts.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/report_facts.py` 的职责，通过 `build_tf_summaries`、`build_liquidity_entries` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_report_facts.py](../../tests/unit/test_report_facts.py) |
 | 验证状态 | selected |
 
@@ -11535,9 +11535,9 @@
 | 源码 | [src/analysis/report_invariant_gate.py](../../src/analysis/report_invariant_gate.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/report_invariant_gate.py` 的职责，通过 `apply_report_invariant_gate` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 4 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/integration/test_offline_report_contract.py](../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_report_invariant_gate.py](../../tests/unit/test_report_invariant_gate.py) |
 | 验证状态 | selected |
 
@@ -11651,9 +11651,9 @@
 | 源码 | [src/analysis/report_invariants.py](../../src/analysis/report_invariants.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/report_invariants.py` 的职责，通过 `validate_report_invariants` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 13 / 3 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/integration/test_offline_report_contract.py](../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_claim_eligibility.py](../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_golden_report_benchmark.py](../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_plan_signal_targets.py](../../tests/unit/test_plan_signal_targets.py)、[tests/unit/test_report_invariant_gate.py](../../tests/unit/test_report_invariant_gate.py)、[tests/unit/test_report_invariants.py](../../tests/unit/test_report_invariants.py)、[tests/unit/test_report_reliability.py](../../tests/unit/test_report_reliability.py) |
 | 验证状态 | selected |
 
@@ -11967,9 +11967,9 @@
 | 源码 | [src/analysis/report_reliability.py](../../src/analysis/report_reliability.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/report_reliability.py` 的职责，通过 `compute_report_reliability` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 11 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/integration/test_offline_report_contract.py](../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_golden_report_benchmark.py](../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_report_reliability.py](../../tests/unit/test_report_reliability.py) |
 | 验证状态 | selected |
 
@@ -12231,9 +12231,9 @@
 | 源码 | [src/analysis/risk_gates.py](../../src/analysis/risk_gates.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/risk_gates.py` 的职责，通过 `signal_trigger_ready`、`validate_signal_geometry`、`apply_risk_gates` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 6 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_risk_gates.py](../../tests/unit/test_risk_gates.py)、[tests/unit/test_risk_gates_trigger.py](../../tests/unit/test_risk_gates_trigger.py) |
 | 验证状态 | selected |
 
@@ -12385,9 +12385,9 @@
 | 源码 | [src/analysis/signal_geometry.py](../../src/analysis/signal_geometry.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/signal_geometry.py` 的职责，通过 `normalize_take_profits`、`normalize_signal_take_profits` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 3 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_signal_geometry.py](../../tests/unit/test_signal_geometry.py) |
 | 验证状态 | selected |
 
@@ -12479,9 +12479,9 @@
 | 源码 | [src/analysis/signal_identity.py](../../src/analysis/signal_identity.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/signal_identity.py` 的职责，通过 `stable_signal_id` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_signal_identity.py](../../tests/unit/test_signal_identity.py) |
 | 验证状态 | selected |
 
@@ -12523,9 +12523,9 @@
 | 源码 | [src/analysis/technical_context.py](../../src/analysis/technical_context.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/technical_context.py` 的职责，通过 `distance_pct`、`primary_analysis`、`fibonacci_context`、`support_resistance_context`、`indicator_snapshot`、`structure_narrative`、`timeframe_context`、`technical_quality` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 17 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py)、[tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py)、[tests/unit/test_indicators.py](../../tests/unit/test_indicators.py)、[tests/unit/test_narrative_facts.py](../../tests/unit/test_narrative_facts.py)、[tests/unit/test_technical_context_lux.py](../../tests/unit/test_technical_context_lux.py) |
 | 验证状态 | selected |
 
@@ -12919,9 +12919,9 @@
 | 源码 | [src/analysis/tf_snapshot.py](../../src/analysis/tf_snapshot.py) |
 | 架构组件 | ARC-ANALYSIS — 事实、结构、信号与报告门禁 |
 | 职责 | 实现“事实、结构、信号与报告门禁”组件中 `src/analysis/tf_snapshot.py` 的职责，通过 `build_tf_snapshot` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](./SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](./SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 4 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_technical_context_lux.py](../../tests/unit/test_technical_context_lux.py)、[tests/unit/test_tf_snapshot.py](../../tests/unit/test_tf_snapshot.py) |
 | 验证状态 | selected |
 
@@ -13025,42 +13025,42 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [src/agents/__init__.py](#unit-818fcec908) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/__init__.py](#unit-b6c46ef660) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/base.py](#unit-8110cb5da5) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/evidence_ids.py](#unit-87b2f0bba3) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/evidence_provenance.py](#unit-5e6c877f3b) | 11 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/fundamentals.py](#unit-52003276aa) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/news.py](#unit-3628b84ddf) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/news_bias.py](#unit-b6597d0c34) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/sentiment.py](#unit-8f2897b88a) | 4 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/structure_zones.py](#unit-3363ad337f) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/analysts/technical.py](#unit-8d8fc5eaa1) | 9 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/bearish.py](#unit-8933374b3e) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/bullish.py](#unit-6008a95748) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/debate.py](#unit-34bf03f815) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/factory.py](#unit-f23db48d75) | 20 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/__init__.py](#unit-1606bdc6e2) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/base.py](#unit-3eeb009803) | 5 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/payload.py](#unit-3a49bda3a6) | 25 | 3 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/schemas.py](#unit-9b539edeb6) | 18 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/__init__.py](#unit-7226a2379a) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/analysts/__init__.py](#unit-1df6497ce4) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/analysts/_common.py](#unit-73b0811649) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/analysts/fundamentals.py](#unit-fcd3d48fde) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/analysts/news.py](#unit-25115c1d6f) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/analysts/sentiment.py](#unit-2bf1b61e7e) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/analysts/technical.py](#unit-a3445b9493) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/bearish.py](#unit-2ccd7c4dcb) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/bullish.py](#unit-12bf07eb04) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/debate.py](#unit-3970799e39) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/levels.py](#unit-4fbc2b73a8) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/manager.py](#unit-5ed826be60) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/risk.py](#unit-9038f74287) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/llm/stages/trader.py](#unit-a996419c04) | 2 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/manager.py](#unit-cc665640c2) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/risk.py](#unit-c1468c2396) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/agents/trader.py](#unit-6340c2c541) | 1 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/__init__.py](#unit-818fcec908) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/__init__.py](#unit-b6c46ef660) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/base.py](#unit-8110cb5da5) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/evidence_ids.py](#unit-87b2f0bba3) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/evidence_provenance.py](#unit-5e6c877f3b) | 11 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/fundamentals.py](#unit-52003276aa) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/news.py](#unit-3628b84ddf) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/news_bias.py](#unit-b6597d0c34) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/sentiment.py](#unit-8f2897b88a) | 4 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/structure_zones.py](#unit-3363ad337f) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/analysts/technical.py](#unit-8d8fc5eaa1) | 9 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/bearish.py](#unit-8933374b3e) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/bullish.py](#unit-6008a95748) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/debate.py](#unit-34bf03f815) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/factory.py](#unit-f23db48d75) | 20 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/__init__.py](#unit-1606bdc6e2) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/base.py](#unit-3eeb009803) | 5 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/payload.py](#unit-3a49bda3a6) | 25 | 3 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/schemas.py](#unit-9b539edeb6) | 18 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/__init__.py](#unit-7226a2379a) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/analysts/__init__.py](#unit-1df6497ce4) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/analysts/_common.py](#unit-73b0811649) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/analysts/fundamentals.py](#unit-fcd3d48fde) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/analysts/news.py](#unit-25115c1d6f) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/analysts/sentiment.py](#unit-2bf1b61e7e) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/analysts/technical.py](#unit-a3445b9493) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/bearish.py](#unit-2ccd7c4dcb) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/bullish.py](#unit-12bf07eb04) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/debate.py](#unit-3970799e39) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/levels.py](#unit-4fbc2b73a8) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/manager.py](#unit-5ed826be60) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/risk.py](#unit-9038f74287) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/llm/stages/trader.py](#unit-a996419c04) | 2 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/manager.py](#unit-cc665640c2) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/risk.py](#unit-c1468c2396) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/agents/trader.py](#unit-6340c2c541) | 1 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 
 <a id="unit-818fcec908"></a>
 
@@ -13074,9 +13074,9 @@
 | 源码 | [src/agents/__init__.py](../../src/agents/__init__.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -13096,9 +13096,9 @@
 | 源码 | [src/agents/analysts/__init__.py](../../src/agents/analysts/__init__.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/__init__.py` 的职责，通过 `run_analyst_team` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py) |
 | 验证状态 | selected |
 
@@ -13140,9 +13140,9 @@
 | 源码 | [src/agents/analysts/base.py](../../src/agents/analysts/base.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/base.py` 的职责，通过 `confidence_from_items`、`build_report`、`items_for_direction` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_evidence_provenance.py](../../tests/unit/test_evidence_provenance.py)、[tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py)、[tests/unit/test_signal_dedup.py](../../tests/unit/test_signal_dedup.py) |
 | 验证状态 | selected |
 
@@ -13228,9 +13228,9 @@
 | 源码 | [src/agents/analysts/evidence_ids.py](../../src/agents/analysts/evidence_ids.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/evidence_ids.py` 的职责，通过 `assign_evidence_ids` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -13272,9 +13272,9 @@
 | 源码 | [src/agents/analysts/evidence_provenance.py](../../src/agents/analysts/evidence_provenance.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/evidence_provenance.py` 的职责，通过 `analyst_evidence_ids`、`evidence_registry`、`is_new_structure_id`、`dedupe_evidence_items`、`parse_research_items`、`build_research_provenance_meta`、`blend_research_confidence`、`build_debate_provenance_meta` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 11 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_evidence_provenance.py](../../tests/unit/test_evidence_provenance.py) |
 | 验证状态 | selected |
 
@@ -13536,9 +13536,9 @@
 | 源码 | [src/agents/analysts/fundamentals.py](../../src/agents/analysts/fundamentals.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/fundamentals.py` 的职责，通过 `run_fundamentals_analyst` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py) |
 | 验证状态 | selected |
 
@@ -13624,9 +13624,9 @@
 | 源码 | [src/agents/analysts/news.py](../../src/agents/analysts/news.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/news.py` 的职责，通过 `run_news_analyst` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py) |
 | 验证状态 | selected |
 
@@ -13690,9 +13690,9 @@
 | 源码 | [src/agents/analysts/news_bias.py](../../src/agents/analysts/news_bias.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/news_bias.py` 的职责，通过 `infer_news_bias` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -13734,9 +13734,9 @@
 | 源码 | [src/agents/analysts/sentiment.py](../../src/agents/analysts/sentiment.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/sentiment.py` 的职责，通过 `run_sentiment_analyst` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 4 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py) |
 | 验证状态 | selected |
 
@@ -13844,9 +13844,9 @@
 | 源码 | [src/agents/analysts/structure_zones.py](../../src/agents/analysts/structure_zones.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/structure_zones.py` 的职责，通过 `ict_zone_evidence` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -13888,9 +13888,9 @@
 | 源码 | [src/agents/analysts/technical.py](../../src/agents/analysts/technical.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/analysts/technical.py` 的职责，通过 `run_technical_analyst` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 9 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py) |
 | 验证状态 | selected |
 
@@ -14114,9 +14114,9 @@
 | 源码 | [src/agents/bearish.py](../../src/agents/bearish.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/bearish.py` 的职责，通过 `run_bearish_researcher` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py) |
 | 验证状态 | selected |
 
@@ -14180,9 +14180,9 @@
 | 源码 | [src/agents/bullish.py](../../src/agents/bullish.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/bullish.py` 的职责，通过 `run_bullish_researcher` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py) |
 | 验证状态 | selected |
 
@@ -14246,9 +14246,9 @@
 | 源码 | [src/agents/debate.py](../../src/agents/debate.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/debate.py` 的职责，通过 `run_debate` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_debate_coherence.py](../../tests/unit/test_debate_coherence.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py) |
 | 验证状态 | selected |
 
@@ -14290,9 +14290,9 @@
 | 源码 | [src/agents/factory.py](../../src/agents/factory.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/factory.py` 的职责，通过 `run_analyst_team`、`run_bullish`、`run_bearish`、`research_uses_parallel_llm`、`run_research_team`、`run_debate`、`run_level_proposer`、`run_trader` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 20 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_agent_chain.py](../../tests/unit/test_agent_chain.py)、[tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_debate_coherence.py](../../tests/unit/test_debate_coherence.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_manager_authorization.py](../../tests/unit/test_manager_authorization.py)、[tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py)、[tests/unit/test_rule_chain_stability.py](../../tests/unit/test_rule_chain_stability.py) |
 | 验证状态 | selected |
 
@@ -14758,9 +14758,9 @@
 | 源码 | [src/agents/llm/__init__.py](../../src/agents/llm/__init__.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -14780,9 +14780,9 @@
 | 源码 | [src/agents/llm/base.py](../../src/agents/llm/base.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/base.py` 的职责，通过 `stream_llm_json`、`run_llm_stage` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 5 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py)、[tests/unit/test_llm_json.py](../../tests/unit/test_llm_json.py)、[tests/unit/test_llm_stage_policy.py](../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../tests/unit/test_llm_transport.py) |
 | 验证状态 | selected |
 
@@ -14918,9 +14918,9 @@
 | 源码 | [src/agents/llm/payload.py](../../src/agents/llm/payload.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/payload.py` 的职责，通过 `technical_level_reactions_payload`、`analyst_team_payload`、`analyst_team_summaries_payload`、`analyst_team_input_payload`、`market_payload`、`research_payload`、`technical_analyst_payload`、`fundamentals_analyst_payload` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 25 / 3 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_authorization.py](../../tests/unit/test_narrative_authorization.py) |
 | 验证状态 | selected |
 
@@ -15498,9 +15498,9 @@
 | 源码 | [src/agents/llm/schemas.py](../../src/agents/llm/schemas.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/schemas.py` 的职责，通过 `parse_analyst_report`、`parse_agent_evidence`、`parse_research_debate`、`parse_level_proposals`、`parse_transaction_proposal`、`parse_risk_reviews`、`parse_manager_decision` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 18 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_evidence_provenance.py](../../tests/unit/test_evidence_provenance.py)、[tests/unit/test_llm_levels.py](../../tests/unit/test_llm_levels.py)、[tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py) |
 | 验证状态 | selected |
 
@@ -15916,9 +15916,9 @@
 | 源码 | [src/agents/llm/stages/__init__.py](../../src/agents/llm/stages/__init__.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -15938,9 +15938,9 @@
 | 源码 | [src/agents/llm/stages/analysts/__init__.py](../../src/agents/llm/stages/analysts/__init__.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/analysts/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -15960,9 +15960,9 @@
 | 源码 | [src/agents/llm/stages/analysts/_common.py](../../src/agents/llm/stages/analysts/_common.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/analysts/_common.py` 的职责，通过 `run_specialist_llm` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -16004,9 +16004,9 @@
 | 源码 | [src/agents/llm/stages/analysts/fundamentals.py](../../src/agents/llm/stages/analysts/fundamentals.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/analysts/fundamentals.py` 的职责，通过 `run_llm_fundamentals_analyst` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py) |
 | 验证状态 | selected |
 
@@ -16048,9 +16048,9 @@
 | 源码 | [src/agents/llm/stages/analysts/news.py](../../src/agents/llm/stages/analysts/news.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/analysts/news.py` 的职责，通过 `run_llm_news_analyst` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py) |
 | 验证状态 | selected |
 
@@ -16092,9 +16092,9 @@
 | 源码 | [src/agents/llm/stages/analysts/sentiment.py](../../src/agents/llm/stages/analysts/sentiment.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/analysts/sentiment.py` 的职责，通过 `run_llm_sentiment_analyst` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py) |
 | 验证状态 | selected |
 
@@ -16136,9 +16136,9 @@
 | 源码 | [src/agents/llm/stages/analysts/technical.py](../../src/agents/llm/stages/analysts/technical.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/analysts/technical.py` 的职责，通过 `run_llm_technical_analyst` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py) |
 | 验证状态 | selected |
 
@@ -16180,9 +16180,9 @@
 | 源码 | [src/agents/llm/stages/bearish.py](../../src/agents/llm/stages/bearish.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/bearish.py` 的职责，通过 `run_llm_bearish` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py) |
 | 验证状态 | selected |
 
@@ -16224,9 +16224,9 @@
 | 源码 | [src/agents/llm/stages/bullish.py](../../src/agents/llm/stages/bullish.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/bullish.py` 的职责，通过 `run_llm_bullish` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py) |
 | 验证状态 | selected |
 
@@ -16268,9 +16268,9 @@
 | 源码 | [src/agents/llm/stages/debate.py](../../src/agents/llm/stages/debate.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/debate.py` 的职责，通过 `run_llm_debate` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py) |
 | 验证状态 | selected |
 
@@ -16312,9 +16312,9 @@
 | 源码 | [src/agents/llm/stages/levels.py](../../src/agents/llm/stages/levels.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/levels.py` 的职责，通过 `run_llm_level_proposer` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py) |
 | 验证状态 | selected |
 
@@ -16356,9 +16356,9 @@
 | 源码 | [src/agents/llm/stages/manager.py](../../src/agents/llm/stages/manager.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/manager.py` 的职责，通过 `run_llm_manager` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py) |
 | 验证状态 | selected |
 
@@ -16400,9 +16400,9 @@
 | 源码 | [src/agents/llm/stages/risk.py](../../src/agents/llm/stages/risk.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/risk.py` 的职责，通过 `run_llm_risk` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py) |
 | 验证状态 | selected |
 
@@ -16466,9 +16466,9 @@
 | 源码 | [src/agents/llm/stages/trader.py](../../src/agents/llm/stages/trader.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/llm/stages/trader.py` 的职责，通过 `run_llm_trader` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 2 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py) |
 | 验证状态 | selected |
 
@@ -16539,9 +16539,9 @@
 | 源码 | [src/agents/manager.py](../../src/agents/manager.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/manager.py` 的职责，通过 `run_manager` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_agent_chain.py](../../tests/unit/test_agent_chain.py)、[tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_manager_authorization.py](../../tests/unit/test_manager_authorization.py)、[tests/unit/test_rule_chain_stability.py](../../tests/unit/test_rule_chain_stability.py) |
 | 验证状态 | selected |
 
@@ -16627,9 +16627,9 @@
 | 源码 | [src/agents/risk.py](../../src/agents/risk.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/risk.py` 的职责，通过 `run_risk_team` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_agent_chain.py](../../tests/unit/test_agent_chain.py)、[tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py)、[tests/unit/test_rule_chain_stability.py](../../tests/unit/test_rule_chain_stability.py) |
 | 验证状态 | selected |
 
@@ -16693,9 +16693,9 @@
 | 源码 | [src/agents/trader.py](../../src/agents/trader.py) |
 | 架构组件 | ARC-AGENTS — 规则/LLM Agent 编排 |
 | 职责 | 实现“规则/LLM Agent 编排”组件中 `src/agents/trader.py` 的职责，通过 `run_trader_agent` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](./SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](./SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](./SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 1 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_agent_chain.py](../../tests/unit/test_agent_chain.py)、[tests/unit/test_signal_dedup.py](../../tests/unit/test_signal_dedup.py)、[tests/unit/test_trader_sentiment.py](../../tests/unit/test_trader_sentiment.py) |
 | 验证状态 | selected |
 
@@ -16739,15 +16739,15 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [src/llm/__init__.py](#unit-598812089b) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/llm/analyst.py](#unit-f5cb9d3f8c) | 7 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/llm/client.py](#unit-d7fd07af44) | 8 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/llm/context.py](#unit-6c3fd6c2e5) | 6 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/llm/format_io.py](#unit-deb0d517c6) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/llm/narrative_output.py](#unit-fbf77b94fb) | 11 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/llm/prompts.py](#unit-a605fcb3a9) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/llm/router.py](#unit-6568b95afa) | 7 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/llm/stage_policy.py](#unit-e488978a91) | 8 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/__init__.py](#unit-598812089b) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/analyst.py](#unit-f5cb9d3f8c) | 7 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/client.py](#unit-d7fd07af44) | 8 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/context.py](#unit-6c3fd6c2e5) | 6 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/format_io.py](#unit-deb0d517c6) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/narrative_output.py](#unit-fbf77b94fb) | 11 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/prompts.py](#unit-a605fcb3a9) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/router.py](#unit-6568b95afa) | 7 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/stage_policy.py](#unit-e488978a91) | 8 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 
 <a id="unit-598812089b"></a>
 
@@ -16761,9 +16761,9 @@
 | 源码 | [src/llm/__init__.py](../../src/llm/__init__.py) |
 | 架构组件 | ARC-LLM — LLM 传输、上下文和策略 |
 | 职责 | 实现“LLM 传输、上下文和策略”组件中 `src/llm/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -16783,9 +16783,9 @@
 | 源码 | [src/llm/analyst.py](../../src/llm/analyst.py) |
 | 架构组件 | ARC-LLM — LLM 传输、上下文和策略 |
 | 职责 | 实现“LLM 传输、上下文和策略”组件中 `src/llm/analyst.py` 的职责，通过 `validate_llm_payload`、`run_llm_analysis`、`apply_llm_to_report` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 7 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_narrative_sections.py](../../tests/unit/test_narrative_sections.py)、[tests/unit/test_replay_llm_narrative.py](../../tests/unit/test_replay_llm_narrative.py) |
 | 验证状态 | selected |
 
@@ -16959,9 +16959,9 @@
 | 源码 | [src/llm/client.py](../../src/llm/client.py) |
 | 架构组件 | ARC-LLM — LLM 传输、上下文和策略 |
 | 职责 | 实现“LLM 传输、上下文和策略”组件中 `src/llm/client.py` 的职责，通过 `LLMClientError`、`LLMClient` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 8 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/regression/test_aspice_assets.py](../../tests/regression/test_aspice_assets.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_http_helpers.py](../../tests/unit/test_http_helpers.py)、[tests/unit/test_llm_client_timeouts.py](../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_stage_policy.py](../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../tests/unit/test_llm_transport.py)、[tests/unit/test_narrative_sections.py](../../tests/unit/test_narrative_sections.py)、[tests/unit/test_pipeline_progress_live.py](../../tests/unit/test_pipeline_progress_live.py)、[tests/unit/test_source_labels.py](../../tests/unit/test_source_labels.py) |
 | 验证状态 | selected |
 
@@ -17163,9 +17163,9 @@
 | 源码 | [src/llm/context.py](../../src/llm/context.py) |
 | 架构组件 | ARC-LLM — LLM 传输、上下文和策略 |
 | 职责 | 实现“LLM 传输、上下文和策略”组件中 `src/llm/context.py` 的职责，通过 `estimate_payload_size`、`build_llm_context` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 6 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_llm_context_compact.py](../../tests/unit/test_llm_context_compact.py)、[tests/unit/test_llm_context_fact_refs.py](../../tests/unit/test_llm_context_fact_refs.py) |
 | 验证状态 | selected |
 
@@ -17317,9 +17317,9 @@
 | 源码 | [src/llm/format_io.py](../../src/llm/format_io.py) |
 | 架构组件 | ARC-LLM — LLM 传输、上下文和策略 |
 | 职责 | 实现“LLM 传输、上下文和策略”组件中 `src/llm/format_io.py` 的职责，通过 `format_llm_output`、`format_messages`、`messages_to_dict` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -17405,9 +17405,9 @@
 | 源码 | [src/llm/narrative_output.py](../../src/llm/narrative_output.py) |
 | 架构组件 | ARC-LLM — LLM 传输、上下文和策略 |
 | 职责 | 实现“LLM 传输、上下文和策略”组件中 `src/llm/narrative_output.py` 的职责，通过 `format_llm_narrative` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 11 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_narrative_output.py](../../tests/unit/test_narrative_output.py) |
 | 验证状态 | selected |
 
@@ -17669,9 +17669,9 @@
 | 源码 | [src/llm/prompts.py](../../src/llm/prompts.py) |
 | 架构组件 | ARC-LLM — LLM 传输、上下文和策略 |
 | 职责 | 实现“LLM 传输、上下文和策略”组件中 `src/llm/prompts.py` 的职责，通过 `build_messages` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -17735,9 +17735,9 @@
 | 源码 | [src/llm/router.py](../../src/llm/router.py) |
 | 架构组件 | ARC-LLM — LLM 传输、上下文和策略 |
 | 职责 | 实现“LLM 传输、上下文和策略”组件中 `src/llm/router.py` 的职责，通过 `client_for_model`、`get_fast_client`、`get_strong_client`、`get_debate_client`、`client_for_stage`、`routing_meta`、`llm_configured` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 7 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py) |
 | 验证状态 | selected |
 
@@ -17911,9 +17911,9 @@
 | 源码 | [src/llm/stage_policy.py](../../src/llm/stage_policy.py) |
 | 架构组件 | ARC-LLM — LLM 传输、上下文和策略 |
 | 职责 | 实现“LLM 传输、上下文和策略”组件中 `src/llm/stage_policy.py` 的职责，通过 `StagePolicy`、`get_stage_policy`、`estimate_messages_size`、`estimate_text_size`、`apply_input_budget`、`build_routing_strategy` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-LLM-001](./SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](./SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](./SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](./SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](./SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-LLM-001](SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](SWE.1-software-requirements.md#swr-llm-003)、[SWR-CFG-001](SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 8 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py)、[tests/unit/test_llm_client_timeouts.py](../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_stage_policy.py](../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_run_config.py](../../tests/unit/test_run_config.py) |
 | 验证状态 | selected |
 
@@ -18105,18 +18105,18 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [src/run/__init__.py](#unit-3d26d1ec62) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/archive/__init__.py](#unit-6c61c7bbf5) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/archive/compat.py](#unit-2f300feed2) | 9 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/archive/completion.py](#unit-af0b99f0b7) | 3 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/archive/index.py](#unit-969bf3943a) | 7 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/archive/prune.py](#unit-038535558b) | 2 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/archive/schema.py](#unit-ea2375efd1) | 5 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/archive/store.py](#unit-d3d34bc712) | 40 | 15 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/archive/transfer.py](#unit-3365be69b6) | 2 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/config.py](#unit-e124606847) | 11 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/context.py](#unit-8a8bc190aa) | 6 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/pipeline_run.py](#unit-7df4993ab3) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/__init__.py](#unit-3d26d1ec62) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/archive/__init__.py](#unit-6c61c7bbf5) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/archive/compat.py](#unit-2f300feed2) | 9 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/archive/completion.py](#unit-af0b99f0b7) | 3 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/archive/index.py](#unit-969bf3943a) | 7 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/archive/prune.py](#unit-038535558b) | 2 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/archive/schema.py](#unit-ea2375efd1) | 5 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/archive/store.py](#unit-d3d34bc712) | 40 | 15 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/archive/transfer.py](#unit-3365be69b6) | 2 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/config.py](#unit-e124606847) | 11 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/context.py](#unit-8a8bc190aa) | 6 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/pipeline_run.py](#unit-7df4993ab3) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 
 <a id="unit-3d26d1ec62"></a>
 
@@ -18130,9 +18130,9 @@
 | 源码 | [src/run/__init__.py](../../src/run/__init__.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -18152,9 +18152,9 @@
 | 源码 | [src/run/archive/__init__.py](../../src/run/archive/__init__.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -18174,9 +18174,9 @@
 | 源码 | [src/run/archive/compat.py](../../src/run/archive/compat.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/compat.py` 的职责，通过 `synthesize_manifest_from_legacy`、`load_manifest`、`inspect_archive`、`normalize_report`、`migrate_fetch_payload`、`migrate_analyses_payload`、`migrate_frame_payload`、`upgrade_manifest_if_needed` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 9 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py) |
 | 验证状态 | selected |
 
@@ -18400,9 +18400,9 @@
 | 源码 | [src/run/archive/completion.py](../../src/run/archive/completion.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/completion.py` 的职责，通过 `generation_step_statuses`、`pipeline_replay_errors`、`assert_pipeline_replay_ready` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 3 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py) |
 | 验证状态 | selected |
 
@@ -18495,9 +18495,9 @@
 | 源码 | [src/run/archive/index.py](../../src/run/archive/index.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/index.py` 的职责，通过 `index_path`、`load_index`、`save_index`、`upsert_index_entry`、`remove_index_entries`、`list_index_entries`、`rebuild_index_from_disk` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 7 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py) |
 | 验证状态 | selected |
 
@@ -18671,9 +18671,9 @@
 | 源码 | [src/run/archive/prune.py](../../src/run/archive/prune.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/prune.py` 的职责，通过 `prune_archives` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py) |
 | 验证状态 | selected |
 
@@ -18743,9 +18743,9 @@
 | 源码 | [src/run/archive/schema.py](../../src/run/archive/schema.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/schema.py` 的职责，通过 `CompatibilityLevel`、`ArchiveInspection`、`app_build_version`、`artifact_envelope`、`unwrap_artifact`、`build_manifest` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 5 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
@@ -18881,9 +18881,9 @@
 | 源码 | [src/run/archive/store.py](../../src/run/archive/store.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/store.py` 的职责，通过 `archives_root`、`run_dir`、`allocate_run_id`、`inspect_run_archive`、`list_archives`、`archives_exist`、`archive_label`、`encode_analysis` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 40 / 15 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
@@ -19803,9 +19803,9 @@
 | 源码 | [src/run/archive/transfer.py](../../src/run/archive/transfer.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/transfer.py` 的职责，通过 `export_archive_zip`、`import_archive_zip` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py) |
 | 验证状态 | selected |
 
@@ -19876,9 +19876,9 @@
 | 源码 | [src/run/config.py](../../src/run/config.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/config.py` 的职责，通过 `RunConfig`、`coerce_run_config`、`run_config_widget_state`、`is_advanced_run_config`、`default_panel_run_config`、`run_config_from_env`、`run_config_for_mode`、`apply_run_config` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 11 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py)、[tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../tests/unit/test_run_config_panel.py)、[tests/unit/test_streamlit_ensure_report.py](../../tests/unit/test_streamlit_ensure_report.py) |
 | 验证状态 | selected |
 
@@ -20140,9 +20140,9 @@
 | 源码 | [src/run/context.py](../../src/run/context.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/context.py` 的职责，通过 `set_run_config`、`reset_run_config`、`get_run_config`、`run_config_scope`、`agent_mode`、`llm_narrative_enabled` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 6 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_config_summary.py](../../tests/unit/test_archive_config_summary.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_audit_summary.py](../../tests/unit/test_audit_summary.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_llm_trade_stages.py](../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_report_invariant_gate.py](../../tests/unit/test_report_invariant_gate.py)、[tests/unit/test_report_invariants.py](../../tests/unit/test_report_invariants.py)、[tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../tests/unit/test_run_config_panel.py) |
 | 验证状态 | selected |
 
@@ -20294,9 +20294,9 @@
 | 源码 | [src/run/pipeline_run.py](../../src/run/pipeline_run.py) |
 | 架构组件 | ARC-RUN — 运行上下文与归档 |
 | 职责 | 实现“运行上下文与归档”组件中 `src/run/pipeline_run.py` 的职责，通过 `set_current_run_id`、`get_current_run_id` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](./SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](./SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](./SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](./SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](./SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](./SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](./SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-CORE-001](SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](./SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](./SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -20356,12 +20356,12 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [src/backtest/__init__.py](#unit-d4fb321d1e) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) | selected |
-| [src/backtest/engine.py](#unit-b336aa1943) | 10 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) | selected |
-| [src/backtest/macro.py](#unit-d40a0640bf) | 6 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) | selected |
-| [src/backtest/metrics.py](#unit-a92846cf7a) | 3 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) | selected |
-| [src/backtest/simulator.py](#unit-d6d81aa6c4) | 10 | 10 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) | selected |
-| [src/backtest/types.py](#unit-a71e1f8ce9) | 5 | 3 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) | selected |
+| [src/backtest/__init__.py](#unit-d4fb321d1e) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) | selected |
+| [src/backtest/engine.py](#unit-b336aa1943) | 10 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) | selected |
+| [src/backtest/macro.py](#unit-d40a0640bf) | 6 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) | selected |
+| [src/backtest/metrics.py](#unit-a92846cf7a) | 3 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) | selected |
+| [src/backtest/simulator.py](#unit-d6d81aa6c4) | 10 | 10 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) | selected |
+| [src/backtest/types.py](#unit-a71e1f8ce9) | 5 | 3 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) | selected |
 
 <a id="unit-d4fb321d1e"></a>
 
@@ -20375,9 +20375,9 @@
 | 源码 | [src/backtest/__init__.py](../../src/backtest/__init__.py) |
 | 架构组件 | ARC-BACKTEST — Point-in-time 回测 |
 | 职责 | 实现“Point-in-time 回测”组件中 `src/backtest/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001) |
+| 关联需求 | [SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -20419,9 +20419,9 @@
 | 源码 | [src/backtest/engine.py](../../src/backtest/engine.py) |
 | 架构组件 | ARC-BACKTEST — Point-in-time 回测 |
 | 职责 | 实现“Point-in-time 回测”组件中 `src/backtest/engine.py` 的职责，通过 `normalize_ohlcv`、`resample_ohlcv`、`make_multitimeframe`、`run_backtest`、`run_random_window_backtest`、`run_backtest_from_archive` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001) |
+| 关联需求 | [SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001) |
 | 函数 / 高风险函数 | 10 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_backtest_engine.py](../../tests/unit/test_backtest_engine.py) |
 | 验证状态 | selected |
 
@@ -20668,9 +20668,9 @@
 | 源码 | [src/backtest/macro.py](../../src/backtest/macro.py) |
 | 架构组件 | ARC-BACKTEST — Point-in-time 回测 |
 | 职责 | 实现“Point-in-time 回测”组件中 `src/backtest/macro.py` 的职责，通过 `fetch_historical_dxy`、`normalize_macro_ohlcv`、`macro_state_at`、`apply_macro_to_signals` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001) |
+| 关联需求 | [SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001) |
 | 函数 / 高风险函数 | 6 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) |
 | 动态测试 | [tests/unit/test_backtest_macro.py](../../tests/unit/test_backtest_macro.py) |
 | 验证状态 | selected |
 
@@ -20828,9 +20828,9 @@
 | 源码 | [src/backtest/metrics.py](../../src/backtest/metrics.py) |
 | 架构组件 | ARC-BACKTEST — Point-in-time 回测 |
 | 职责 | 实现“Point-in-time 回测”组件中 `src/backtest/metrics.py` 的职责，通过 `summarize_trades`、`group_trades` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001) |
+| 关联需求 | [SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001) |
 | 函数 / 高风险函数 | 3 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) |
 | 动态测试 | [tests/unit/test_backtest_metrics.py](../../tests/unit/test_backtest_metrics.py) |
 | 验证状态 | selected |
 
@@ -20923,9 +20923,9 @@
 | 源码 | [src/backtest/simulator.py](../../src/backtest/simulator.py) |
 | 架构组件 | ARC-BACKTEST — Point-in-time 回测 |
 | 职责 | 实现“Point-in-time 回测”组件中 `src/backtest/simulator.py` 的职责，通过 `simulate_signal` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001) |
+| 关联需求 | [SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001) |
 | 函数 / 高风险函数 | 10 / 10 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) |
 | 动态测试 | [tests/unit/test_backtest_simulator.py](../../tests/unit/test_backtest_simulator.py) |
 | 验证状态 | selected |
 
@@ -21180,9 +21180,9 @@
 | 源码 | [src/backtest/types.py](../../src/backtest/types.py) |
 | 架构组件 | ARC-BACKTEST — Point-in-time 回测 |
 | 职责 | 实现“Point-in-time 回测”组件中 `src/backtest/types.py` 的职责，通过 `BacktestMode`、`BacktestConfig`、`MacroReplayState`、`TradeResult`、`BacktestResult` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-BT-001](./SWE.1-software-requirements.md#swr-bt-001) |
+| 关联需求 | [SWR-BT-001](SWE.1-software-requirements.md#swr-bt-001) |
 | 函数 / 高风险函数 | 5 / 3 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](./SWE.5-integration-testing.md#vm-backtest) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-BACKTEST](SWE.5-integration-testing.md#vm-backtest) |
 | 动态测试 | [tests/unit/test_backtest_metrics.py](../../tests/unit/test_backtest_metrics.py)、[tests/unit/test_backtest_simulator.py](../../tests/unit/test_backtest_simulator.py)、[tests/unit/test_run_config.py](../../tests/unit/test_run_config.py) |
 | 验证状态 | selected |
 
@@ -21316,27 +21316,27 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [src/viz/__init__.py](#unit-3ec85337ca) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/agent_trace_view.py](#unit-986f7077ab) | 8 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/archive_config_summary.py](#unit-6a590d74f1) | 2 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/charts.py](#unit-7301a06e0a) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/dashboard_components.py](#unit-c8a82e7519) | 38 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/decision_page.py](#unit-003f08decb) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/display_labels.py](#unit-9b624c52d7) | 10 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/external_data_view.py](#unit-8b3827f5ec) | 6 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/generation_state.py](#unit-e27519993b) | 7 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/generation_worker.py](#unit-4c9db5733a) | 16 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/lightweight_chart.py](#unit-abbedfd349) | 15 | 15 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/llm_meta.py](#unit-f5c8e9bf82) | 4 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/llm_view.py](#unit-e782e5b762) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/page_layout.py](#unit-d8ab5e90b4) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/pipeline_progress.py](#unit-87ec9bc982) | 19 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/replay_loader.py](#unit-a63d87a7bb) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/report_views.py](#unit-4e47421947) | 4 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/run_config_panel.py](#unit-ee18de86b2) | 20 | 2 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/session_keys.py](#unit-6fa4e87f8a) | 5 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/source_labels.py](#unit-f568ea7ece) | 8 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [src/viz/streamlit_common.py](#unit-202db41fe0) | 20 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/__init__.py](#unit-3ec85337ca) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/agent_trace_view.py](#unit-986f7077ab) | 8 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/archive_config_summary.py](#unit-6a590d74f1) | 2 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/charts.py](#unit-7301a06e0a) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/dashboard_components.py](#unit-c8a82e7519) | 38 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/decision_page.py](#unit-003f08decb) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/display_labels.py](#unit-9b624c52d7) | 10 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/external_data_view.py](#unit-8b3827f5ec) | 6 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/generation_state.py](#unit-e27519993b) | 7 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/generation_worker.py](#unit-4c9db5733a) | 16 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/lightweight_chart.py](#unit-abbedfd349) | 15 | 15 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/llm_meta.py](#unit-f5c8e9bf82) | 4 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/llm_view.py](#unit-e782e5b762) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/page_layout.py](#unit-d8ab5e90b4) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/pipeline_progress.py](#unit-87ec9bc982) | 19 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/replay_loader.py](#unit-a63d87a7bb) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/report_views.py](#unit-4e47421947) | 4 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/run_config_panel.py](#unit-ee18de86b2) | 20 | 2 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/session_keys.py](#unit-6fa4e87f8a) | 5 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/source_labels.py](#unit-f568ea7ece) | 8 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/streamlit_common.py](#unit-202db41fe0) | 20 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) | selected |
 
 <a id="unit-3ec85337ca"></a>
 
@@ -21350,9 +21350,9 @@
 | 源码 | [src/viz/__init__.py](../../src/viz/__init__.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -21372,9 +21372,9 @@
 | 源码 | [src/viz/agent_trace_view.py](../../src/viz/agent_trace_view.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/agent_trace_view.py` 的职责，通过 `render_agent_trace_panel`、`render_agent_trace_sidebar` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 8 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py) |
 | 验证状态 | selected |
 
@@ -21576,9 +21576,9 @@
 | 源码 | [src/viz/archive_config_summary.py](../../src/viz/archive_config_summary.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/archive_config_summary.py` 的职责，通过 `format_archived_run_config`、`pipeline_status_label` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 2 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_archive_config_summary.py](../../tests/unit/test_archive_config_summary.py) |
 | 验证状态 | selected |
 
@@ -21649,9 +21649,9 @@
 | 源码 | [src/viz/charts.py](../../src/viz/charts.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/charts.py` 的职责，通过 `build_sentiment_donut`、`build_projection_chart` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py) |
 | 验证状态 | selected |
 
@@ -21715,9 +21715,9 @@
 | 源码 | [src/viz/dashboard_components.py](../../src/viz/dashboard_components.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/dashboard_components.py` 的职责，通过 `render_external_data_panel`、`render_header`、`render_final_decision_banner`、`render_decision_summary`、`render_rejected_plan_details`、`render_primary_plan_focus`、`render_top_overview_row`、`render_tf_stack` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 38 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_display_labels.py](../../tests/unit/test_display_labels.py)、[tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/unit/test_financial_review.py](../../tests/unit/test_financial_review.py) |
 | 验证状态 | selected |
 
@@ -22573,9 +22573,9 @@
 | 源码 | [src/viz/decision_page.py](../../src/viz/decision_page.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/decision_page.py` 的职责，通过 `render_live_generation_panel`、`render_llm_decision_page` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py) |
 | 验证状态 | selected |
 
@@ -22661,9 +22661,9 @@
 | 源码 | [src/viz/display_labels.py](../../src/viz/display_labels.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/display_labels.py` 的职责，通过 `format_report_branding`、`humanize_narrative_fallback`、`label_bias`、`label_action`、`label_trade_direction`、`label_risk_profile`、`label_position_scale`、`infer_trade_theme` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 10 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_display_labels.py](../../tests/unit/test_display_labels.py) |
 | 验证状态 | selected |
 
@@ -22910,9 +22910,9 @@
 | 源码 | [src/viz/external_data_view.py](../../src/viz/external_data_view.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/external_data_view.py` 的职责，通过 `external_snapshot_from_fetch`、`external_payload_from_report`、`render_external_data_content`、`render_external_data_page` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 6 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py) |
 | 验证状态 | selected |
 
@@ -23064,9 +23064,9 @@
 | 源码 | [src/viz/generation_state.py](../../src/viz/generation_state.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/generation_state.py` 的职责，通过 `GenerationJob`、`purge_expired`、`access_job`、`get_job`、`create_job`、`drop_job`、`update_live` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 7 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/integration/test_pipeline.py](../../tests/integration/test_pipeline.py)、[tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_fact_registry.py](../../tests/unit/test_fact_registry.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_indicators.py](../../tests/unit/test_indicators.py)、[tests/unit/test_module_sync_telemetry.py](../../tests/unit/test_module_sync_telemetry.py)、[tests/unit/test_narrative_sections.py](../../tests/unit/test_narrative_sections.py)、[tests/unit/test_replay_llm_narrative.py](../../tests/unit/test_replay_llm_narrative.py)、[tests/unit/test_run_config_panel.py](../../tests/unit/test_run_config_panel.py)、[tests/unit/test_streamlit_ensure_report.py](../../tests/unit/test_streamlit_ensure_report.py) |
 | 验证状态 | selected |
 
@@ -23240,9 +23240,9 @@
 | 源码 | [src/viz/generation_worker.py](../../src/viz/generation_worker.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/generation_worker.py` 的职责，通过 `compact_llm_io_for_live`、`ModuleSyncProgressReporter`、`format_generation_error`、`start_generation` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 16 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/integration/test_pipeline.py](../../tests/integration/test_pipeline.py)、[tests/regression/test_doc_pipeline_sync.py](../../tests/regression/test_doc_pipeline_sync.py)、[tests/regression/test_fixes.py](../../tests/regression/test_fixes.py)、[tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_golden_report_benchmark.py](../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_live_progress_ui.py](../../tests/unit/test_live_progress_ui.py)、[tests/unit/test_llm_stage_policy.py](../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_module_sync_telemetry.py](../../tests/unit/test_module_sync_telemetry.py)、[tests/unit/test_pipeline_progress_headline.py](../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_progress.py](../../tests/unit/test_progress.py)、[tests/unit/test_report_invariants.py](../../tests/unit/test_report_invariants.py)、[tests/unit/test_risk_gates.py](../../tests/unit/test_risk_gates.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_streamlit_ensure_report.py](../../tests/unit/test_streamlit_ensure_report.py) |
 | 验证状态 | selected |
 
@@ -23614,9 +23614,9 @@
 | 源码 | [src/viz/lightweight_chart.py](../../src/viz/lightweight_chart.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/lightweight_chart.py` 的职责，通过 `build_lightweight_chart_html`、`chart_iframe_height` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 15 / 15 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -23986,9 +23986,9 @@
 | 源码 | [src/viz/llm_meta.py](../../src/viz/llm_meta.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/llm_meta.py` 的职责，通过 `format_latency_ms`、`dedupe_llm_io_records`、`merge_llm_io_with_stage_sources`、`stage_llm_caption` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 4 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -24096,9 +24096,9 @@
 | 源码 | [src/viz/llm_view.py](../../src/viz/llm_view.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/llm_view.py` 的职责，通过 `render_llm_panel`、`render_llm_sidebar` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -24162,9 +24162,9 @@
 | 源码 | [src/viz/page_layout.py](../../src/viz/page_layout.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/page_layout.py` 的职责，通过 `render_page_hero` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py) |
 | 验证状态 | selected |
 
@@ -24206,9 +24206,9 @@
 | 源码 | [src/viz/pipeline_progress.py](../../src/viz/pipeline_progress.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/pipeline_progress.py` 的职责，通过 `pipeline_progress_headline`、`render_progress_steps`、`is_streaming_llm_record`、`partition_llm_records_for_live`、`render_live_llm_status_lightweight`、`render_live_llm_streams`、`render_llm_io_history`、`StreamlitProgressReporter` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 19 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py)、[tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_pipeline_progress_headline.py](../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_pipeline_progress_live.py](../../tests/unit/test_pipeline_progress_live.py)、[tests/unit/test_report_invariant_gate.py](../../tests/unit/test_report_invariant_gate.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
@@ -24652,9 +24652,9 @@
 | 源码 | [src/viz/replay_loader.py](../../src/viz/replay_loader.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/replay_loader.py` 的职责，通过 `load_replay_bundle` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py) |
 | 验证状态 | selected |
 
@@ -24696,9 +24696,9 @@
 | 源码 | [src/viz/report_views.py](../../src/viz/report_views.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/report_views.py` 的职责，通过 `render_institutional_report`、`render_strategy_map` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 4 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../tests/unit/test_aspice_high_risk_contracts.py) |
 | 验证状态 | selected |
 
@@ -24812,9 +24812,9 @@
 | 源码 | [src/viz/run_config_panel.py](../../src/viz/run_config_panel.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/run_config_panel.py` 的职责，通过 `mode_label_to_value`、`mode_value_to_label`、`selected_run_config`、`render_sidebar_replay`、`render_run_config_panel` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 20 / 2 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py)、[tests/unit/test_run_config_panel.py](../../tests/unit/test_run_config_panel.py) |
 | 验证状态 | selected |
 
@@ -25281,9 +25281,9 @@
 | 源码 | [src/viz/session_keys.py](../../src/viz/session_keys.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/session_keys.py` 的职责，通过 `session_id`、`generation_id`、`job_key`、`rotate_generation_id`、`invalidate_report_cache` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 5 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_generation_worker.py](../../tests/unit/test_generation_worker.py)、[tests/unit/test_streamlit_ensure_report.py](../../tests/unit/test_streamlit_ensure_report.py) |
 | 验证状态 | selected |
 
@@ -25413,9 +25413,9 @@
 | 源码 | [src/viz/source_labels.py](../../src/viz/source_labels.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/source_labels.py` 的职责，通过 `is_llm_source`、`llm_was_invoked`、`stage_meta_label`、`source_label`、`stage_source`、`render_source_badge`、`render_stage_meta_badge`、`render_agent_source_banner` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 8 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/unit/test_agent_chain.py](../../tests/unit/test_agent_chain.py)、[tests/unit/test_analyst_input_density.py](../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/unit/test_claim_eligibility.py](../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/unit/test_llm_levels.py](../../tests/unit/test_llm_levels.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_authorization.py](../../tests/unit/test_narrative_authorization.py)、[tests/unit/test_narrative_facts.py](../../tests/unit/test_narrative_facts.py)、[tests/unit/test_orchestrator_hooks.py](../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py)、[tests/unit/test_run_archive.py](../../tests/unit/test_run_archive.py)、[tests/unit/test_signal_dedup.py](../../tests/unit/test_signal_dedup.py)、[tests/unit/test_source_labels.py](../../tests/unit/test_source_labels.py)、[tests/unit/test_technical_context_lux.py](../../tests/unit/test_technical_context_lux.py)、[tests/unit/test_trader_sentiment.py](../../tests/unit/test_trader_sentiment.py) |
 | 验证状态 | selected |
 
@@ -25611,9 +25611,9 @@
 | 源码 | [src/viz/streamlit_common.py](../../src/viz/streamlit_common.py) |
 | 架构组件 | ARC-VIZ — Streamlit 展示 |
 | 职责 | 实现“Streamlit 展示”组件中 `src/viz/streamlit_common.py` 的职责，通过 `bootstrap_env`、`missing_runtime_dependencies`、`render_runtime_dependency_banner`、`page_setup`、`init_page`、`render_sidebar_refresh_button`、`render_sidebar_header`、`render_sidebar_footer` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-REP-004](./SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](./SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](./SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](./SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](./SWE.1-software-requirements.md#swr-nfr-002) |
+| 关联需求 | [SWR-REP-004](SWE.1-software-requirements.md#swr-rep-004)、[SWR-ARC-002](SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-002](SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 20 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](./SWE.6-validation-testing.md#vm-manual-ui) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 动态测试 | [tests/regression/test_fixes.py](../../tests/regression/test_fixes.py)、[tests/unit/test_streamlit_ensure_report.py](../../tests/unit/test_streamlit_ensure_report.py) |
 | 验证状态 | selected |
 
@@ -26069,24 +26069,24 @@
 
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
-| [scripts/chart_compare_test.py](#unit-670f7f7454) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) | selected |
-| [scripts/check_aspice_assets.py](#unit-de82d6e44b) | 20 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/check_mt5_connection.py](#unit-d4b396b36e) | 1 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/close_fixed_issues.py](#unit-9572f90802) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) | selected |
-| [scripts/compare_pa_5m_tv.py](#unit-b4a1accfa2) | 1 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/compare_pa_tv.py](#unit-8e5050cae9) | 2 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/create_system_test_issues.py](#unit-eefb367071) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) | selected |
-| [scripts/estimate_llm_tokens.py](#unit-3fa67ae3bf) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/export_sample_report.py](#unit-2781538ff5) | 3 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/generate_aspice_readable_docs.py](#unit-44da65110b) | 23 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/generate_aspice_software_evidence.py](#unit-70ee096332) | 23 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/inspect_archive.py](#unit-37e036c51b) | 6 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/regression_test.py](#unit-ebde8e6443) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) | selected |
-| [scripts/replay_llm_narrative.py](#unit-3960e281ab) | 4 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/run_pipeline_test.py](#unit-d538889607) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) | selected |
-| [scripts/show_utf8.py](#unit-8f71f01664) | 2 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/test_live_fetch.py](#unit-c913c2495c) | 2 | 1 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/test_llm_json_fix.py](#unit-76c5f6645c) | 0 | 0 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) | selected |
+| [scripts/chart_compare_test.py](#unit-670f7f7454) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) | selected |
+| [scripts/check_aspice_assets.py](#unit-de82d6e44b) | 22 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/check_mt5_connection.py](#unit-d4b396b36e) | 1 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/close_fixed_issues.py](#unit-9572f90802) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) | selected |
+| [scripts/compare_pa_5m_tv.py](#unit-b4a1accfa2) | 1 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/compare_pa_tv.py](#unit-8e5050cae9) | 2 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/create_system_test_issues.py](#unit-eefb367071) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) | selected |
+| [scripts/estimate_llm_tokens.py](#unit-3fa67ae3bf) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/export_sample_report.py](#unit-2781538ff5) | 3 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/generate_aspice_readable_docs.py](#unit-44da65110b) | 23 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/generate_aspice_software_evidence.py](#unit-70ee096332) | 23 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/inspect_archive.py](#unit-37e036c51b) | 6 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/regression_test.py](#unit-ebde8e6443) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) | selected |
+| [scripts/replay_llm_narrative.py](#unit-3960e281ab) | 4 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/run_pipeline_test.py](#unit-d538889607) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) | selected |
+| [scripts/show_utf8.py](#unit-8f71f01664) | 2 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/test_live_fetch.py](#unit-c913c2495c) | 2 | 1 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/test_llm_json_fix.py](#unit-76c5f6645c) | 0 | 0 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) | selected |
 
 <a id="unit-670f7f7454"></a>
 
@@ -26100,9 +26100,9 @@
 | 源码 | [scripts/chart_compare_test.py](../../scripts/chart_compare_test.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/chart_compare_test.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -26121,16 +26121,16 @@
 | 软件单元 ID | UNIT-DE82D6E44B |
 | 源码 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/check_aspice_assets.py` 的职责，通过 `stable_id`、`read_yaml`、`rel`、`source_files`、`document_files`、`document_classification`、`document_title`、`build_document_register` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
-| 函数 / 高风险函数 | 20 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/check_aspice_assets.py` 的职责，通过 `stable_id`、`read_yaml`、`rel`、`source_files`、`document_files`、`document_classification`、`document_title`、`markdown_anchors` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
+| 函数 / 高风险函数 | 22 / 0 |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/regression/test_aspice_assets.py](../../tests/regression/test_aspice_assets.py)、[tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py)、[tests/unit/test_golden_report_benchmark.py](../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_report_reliability.py](../../tests/unit/test_report_reliability.py) |
 | 验证状态 | selected |
 
 #### 函数导航
 
-[stable_id](#fun-be28bb75d8) · [read_yaml](#fun-04a944fece) · [rel](#fun-6d47944494) · [source_files](#fun-6175ef47cc) · [document_files](#fun-7b527c5c90) · [document_classification](#fun-5ae4fdb3fc) · [document_title](#fun-64eed0d566) · [build_document_register](#fun-fc561d92db) · [component_for](#fun-3c97caee46) · [module_doc](#fun-f9f01026c2) · [build_units](#fun-d410be7a27) · [build_trace_rows](#fun-2ceb1f60f7) · [dependency_outputs](#fun-beae13cf69) · [csv_text](#fun-c861d95e3c) · [process_index](#fun-cee22c60cc) · [expected_outputs](#fun-e18bb2dfa3) · [validate_model](#fun-3c81471a20) · [write_outputs](#fun-f855325a7a) · [check_outputs](#fun-e57502a017) · [main](#fun-4aa307b1b4)
+[stable_id](#fun-be28bb75d8) · [read_yaml](#fun-04a944fece) · [rel](#fun-6d47944494) · [source_files](#fun-6175ef47cc) · [document_files](#fun-7b527c5c90) · [document_classification](#fun-5ae4fdb3fc) · [document_title](#fun-64eed0d566) · [markdown_anchors](#fun-3f6353d53b) · [validate_aspice_markdown_links](#fun-9be0df4ff5) · [build_document_register](#fun-fc561d92db) · [component_for](#fun-3c97caee46) · [module_doc](#fun-f9f01026c2) · [build_units](#fun-d410be7a27) · [build_trace_rows](#fun-2ceb1f60f7) · [dependency_outputs](#fun-beae13cf69) · [csv_text](#fun-c861d95e3c) · [process_index](#fun-cee22c60cc) · [expected_outputs](#fun-e18bb2dfa3) · [validate_model](#fun-3c81471a20) · [write_outputs](#fun-f855325a7a) · [check_outputs](#fun-e57502a017) · [main](#fun-4aa307b1b4)
 
 <a id="fun-be28bb75d8"></a>
 
@@ -26139,7 +26139,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `stable_id` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L55` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L59` |
 | 签名 | `stable_id(prefix: str, value: str)` |
 | 参数 | `prefix`（str）：由 `prefix` 表示的文本或标识<br>`value`（str）：待处理值 |
 | 返回 | 返回 `str` 类型结果 |
@@ -26161,7 +26161,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `read_yaml` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L60` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L64` |
 | 签名 | `read_yaml(path: Path)` |
 | 参数 | `path`（Path）：文件或目录路径 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -26183,7 +26183,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `rel` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L67` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L71` |
 | 签名 | `rel(path: Path)` |
 | 参数 | `path`（Path）：文件或目录路径 |
 | 返回 | 返回 `str` 类型结果 |
@@ -26205,7 +26205,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `source_files` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L71` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L75` |
 | 签名 | `source_files()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `list[Path]` 类型结果 |
@@ -26227,7 +26227,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `document_files` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L82` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L86` |
 | 签名 | `document_files()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `list[Path]` 类型结果 |
@@ -26249,7 +26249,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `document_classification` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L91` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L95` |
 | 签名 | `document_classification(path: Path)` |
 | 参数 | `path`（Path）：文件或目录路径 |
 | 返回 | 返回 `tuple[str, str, str, str]` 类型结果 |
@@ -26271,7 +26271,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `document_title` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L160` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L164` |
 | 签名 | `document_title(path: Path)` |
 | 参数 | `path`（Path）：文件或目录路径 |
 | 返回 | 返回 `str` 类型结果 |
@@ -26286,6 +26286,50 @@
 | 复杂度 / 风险 | 分支 2；跨度 7 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
+<a id="fun-3f6353d53b"></a>
+
+#### FUN-3F6353D53B
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `markdown_anchors` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L173` |
+| 签名 | `markdown_anchors(path: Path)` |
+| 参数 | `path`（Path）：文件或目录路径 |
+| 返回 | 返回 `set[str]` 类型结果 |
+| 职责 | 构建`markdown_anchors`；返回 `set[str]` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `path.read_text` → `match.group` → `EXPLICIT_ANCHOR_RE.finditer` → `defaultdict` → `HEADING_RE.finditer` → `lower` → `strip` → `re.sub`；包含 3 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `set[str]` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | path.read_text、match.group、EXPLICIT_ANCHOR_RE.finditer、defaultdict、HEADING_RE.finditer、lower、strip、re.sub、anchors.add |
+| 复杂度 / 风险 | 分支 3；跨度 15 行；中 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-9be0df4ff5"></a>
+
+#### FUN-9BE0DF4FF5
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `validate_aspice_markdown_links` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L190` |
+| 签名 | `validate_aspice_markdown_links()` |
+| 参数 | 无显式输入参数 |
+| 返回 | 返回 `list[str]` 类型结果 |
+| 职责 | 验证`aspice_markdown_links`；可能影响共享状态；返回 `list[str]` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `sorted` → `ASPICE.rglob` → `source.read_text` → `MARKDOWN_LINK_RE.finditer` → `strip` → `split` → `match.group` → `raw_target.startswith`；包含 7 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `list[str]` 类型结果；可观察变化限于共享状态 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 共享状态变更 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | sorted、ASPICE.rglob、source.read_text、MARKDOWN_LINK_RE.finditer、strip、split、match.group、raw_target.startswith、raw_target.partition、resolve、unquote、text.count、match.start、target.exists、errors.append、rel、target.suffix.lower、anchor_cache.setdefault、markdown_anchors |
+| 复杂度 / 风险 | 分支 7；跨度 24 行；中 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
 <a id="fun-fc561d92db"></a>
 
 #### FUN-FC561D92DB
@@ -26293,7 +26337,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_document_register` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L169` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L216` |
 | 签名 | `build_document_register()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `list[dict[str, str]]` 类型结果 |
@@ -26315,7 +26359,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `component_for` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L191` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L238` |
 | 签名 | `component_for(path: Path)` |
 | 参数 | `path`（Path）：文件或目录路径 |
 | 返回 | 返回 `str` 类型结果 |
@@ -26337,7 +26381,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `module_doc` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L216` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L263` |
 | 签名 | `module_doc(tree: ast.AST, component_name: str, source_path: str)` |
 | 参数 | `tree`（ast.AST）：由调用方提供的 `tree` 输入对象<br>`component_name`（str）：对象名称<br>`source_path`（str）：文件或目录路径 |
 | 返回 | 返回 `str` 类型结果 |
@@ -26359,7 +26403,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_units` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L230` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L277` |
 | 签名 | `build_units(arch: dict[str, Any])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型 |
 | 返回 | 返回 `tuple[list[dict[str, str]], list[dict[str, str]]]` 类型结果 |
@@ -26381,7 +26425,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_trace_rows` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L289` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L336` |
 | 签名 | `build_trace_rows(reqs: dict[str, Any], units: list[dict[str, str]])` |
 | 参数 | `reqs`（dict[str, Any]）：由 `reqs` 表示的键值映射<br>`units`（list[dict[str, str]]）：由 `units` 表示的输入集合 |
 | 返回 | 返回 `list[dict[str, str]]` 类型结果 |
@@ -26403,7 +26447,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `dependency_outputs` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L310` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L357` |
 | 签名 | `dependency_outputs(report: dict[str, Any])` |
 | 参数 | `report`（dict[str, Any]）：分析报告 |
 | 返回 | 返回 `tuple[str, str]` 类型结果 |
@@ -26425,7 +26469,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `csv_text` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L347` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L394` |
 | 签名 | `csv_text(rows: list[dict[str, str]])` |
 | 参数 | `rows`（list[dict[str, str]]）：记录行集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -26447,7 +26491,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `process_index` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L357` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L404` |
 | 签名 | `process_index(rows: list[dict[str, str]])` |
 | 参数 | `rows`（list[dict[str, str]]）：记录行集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -26469,7 +26513,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `expected_outputs` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L385` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L432` |
 | 签名 | `expected_outputs()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[Path, str]` 类型结果 |
@@ -26491,7 +26535,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `validate_model` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L410` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L457` |
 | 签名 | `validate_model(*, allow_generated_missing: bool=False)` |
 | 参数 | `allow_generated_missing`（bool）：控制对应行为是否启用的布尔值；默认值 `False` |
 | 返回 | 返回 `list[str]` 类型结果 |
@@ -26513,7 +26557,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `write_outputs` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L476` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L523` |
 | 签名 | `write_outputs(outputs: dict[Path, str])` |
 | 参数 | `outputs`（dict[Path, str]）：由 `outputs` 表示的键值映射 |
 | 返回 | 无返回值（None） |
@@ -26535,19 +26579,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `check_outputs` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L483` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L530` |
 | 签名 | `check_outputs(outputs: dict[Path, str])` |
 | 参数 | `outputs`（dict[Path, str]）：由 `outputs` 表示的键值映射 |
 | 返回 | 返回 `list[str]` 类型结果 |
 | 职责 | 检查生成产物；返回 `list[str]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `outputs.items` → `path.exists` → `errors.append` → `rel` → `path.read_text` → `build_document_register` → `document_files`；包含 4 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `outputs.items` → `path.exists` → `errors.append` → `rel` → `path.read_text` → `build_document_register` → `document_files` → `errors.extend`；包含 4 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `list[str]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | outputs.items、path.exists、errors.append、rel、path.read_text、build_document_register、document_files |
-| 复杂度 / 风险 | 分支 4；跨度 14 行；中 |
+| 调用依赖 | outputs.items、path.exists、errors.append、rel、path.read_text、build_document_register、document_files、errors.extend、validate_aspice_markdown_links |
+| 复杂度 / 风险 | 分支 4；跨度 15 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-4aa307b1b4"></a>
@@ -26557,7 +26601,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `main` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L499` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../scripts/check_aspice_assets.py) · `L547` |
 | 签名 | `main()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `int` 类型结果 |
@@ -26584,9 +26628,9 @@
 | 源码 | [scripts/check_mt5_connection.py](../../scripts/check_mt5_connection.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/check_mt5_connection.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -26628,9 +26672,9 @@
 | 源码 | [scripts/close_fixed_issues.py](../../scripts/close_fixed_issues.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/close_fixed_issues.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -26650,9 +26694,9 @@
 | 源码 | [scripts/compare_pa_5m_tv.py](../../scripts/compare_pa_5m_tv.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/compare_pa_5m_tv.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 1 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -26700,9 +26744,9 @@
 | 源码 | [scripts/compare_pa_tv.py](../../scripts/compare_pa_tv.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/compare_pa_tv.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -26772,9 +26816,9 @@
 | 源码 | [scripts/create_system_test_issues.py](../../scripts/create_system_test_issues.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/create_system_test_issues.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -26794,9 +26838,9 @@
 | 源码 | [scripts/estimate_llm_tokens.py](../../scripts/estimate_llm_tokens.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/estimate_llm_tokens.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -26882,9 +26926,9 @@
 | 源码 | [scripts/export_sample_report.py](../../scripts/export_sample_report.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | Export a脱敏 sample report JSON for docs/reference/examples/ (no network)。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_analyst_team.py](../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py)、[tests/unit/test_debate_parallel.py](../../tests/unit/test_debate_parallel.py)、[tests/unit/test_llm_payload_funnel.py](../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_facts.py](../../tests/unit/test_narrative_facts.py)、[tests/unit/test_research_parallel.py](../../tests/unit/test_research_parallel.py)、[tests/unit/test_signal_dedup.py](../../tests/unit/test_signal_dedup.py) |
 | 验证状态 | selected |
 
@@ -26970,9 +27014,9 @@
 | 源码 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/generate_aspice_readable_docs.py` 的职责，通过 `expected_outputs`、`main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 23 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/regression/test_aspice_assets.py](../../tests/regression/test_aspice_assets.py)、[tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -27362,18 +27406,18 @@
 |---|---|
 | 函数 | `_integration_doc` |
 | 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L521` |
-| 签名 | `_integration_doc(plan: dict[str, Any])` |
-| 参数 | `plan`（dict[str, Any]）：由 `plan` 表示的键值映射 |
+| 签名 | `_integration_doc(plan: dict[str, Any], measures: dict[str, Any])` |
+| 参数 | `plan`（dict[str, Any]）：由 `plan` 表示的键值映射<br>`measures`（dict[str, Any]）：由 `measures` 表示的键值映射 |
 | 返回 | 返回 `str` 类型结果 |
 | 职责 | 生成`integration_doc`文本；返回 `str` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `_front` → `defaultdict` → `append` → `measure_items.items` → `join` → `_anchor` → `enumerate` → `_table`；包含 4 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `_front` → `defaultdict` → `append` → `measure_items.setdefault` → `measure_items.items` → `join` → `_anchor` → `enumerate`；包含 7 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | _front、defaultdict、append、measure_items.items、join、_anchor、enumerate、_table、_req_links、_test_links、_measure_links |
-| 复杂度 / 风险 | 分支 4；跨度 30 行；低 |
+| 调用依赖 | _front、defaultdict、append、measure_items.setdefault、measure_items.items、join、_anchor、enumerate、_table、_req_links、_test_links、_measure_links |
+| 复杂度 / 风险 | 分支 7；跨度 34 行；低 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-2336ffb14c"></a>
@@ -27383,7 +27427,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_qualification_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L553` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L557` |
 | 签名 | `_qualification_doc(measures: dict[str, Any], coverage: list[dict[str, str]])` |
 | 参数 | `measures`（dict[str, Any]）：由 `measures` 表示的键值映射<br>`coverage`（list[dict[str, str]]）：由 `coverage` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27405,7 +27449,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_configuration_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L579` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L583` |
 | 签名 | `_configuration_doc(cm: dict[str, Any])` |
 | 参数 | `cm`（dict[str, Any]）：由 `cm` 表示的键值映射 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27427,7 +27471,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_traceability_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L597` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L601` |
 | 签名 | `_traceability_doc(reqs: dict[str, Any], coverage: list[dict[str, str]])` |
 | 参数 | `reqs`（dict[str, Any]）：由 `reqs` 表示的键值映射<br>`coverage`（list[dict[str, str]]）：由 `coverage` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27449,7 +27493,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `expected_outputs` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L607` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L611` |
 | 签名 | `expected_outputs()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[Path, str]` 类型结果 |
@@ -27471,7 +27515,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `main` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L631` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L635` |
 | 签名 | `main()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `int` 类型结果 |
@@ -27498,9 +27542,9 @@
 | 源码 | [scripts/generate_aspice_software_evidence.py](../../scripts/generate_aspice_software_evidence.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/generate_aspice_software_evidence.py` 的职责，通过 `expected_outputs`、`main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 23 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/regression/test_aspice_assets.py](../../tests/regression/test_aspice_assets.py)、[tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -28026,9 +28070,9 @@
 | 源码 | [scripts/inspect_archive.py](../../scripts/inspect_archive.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/inspect_archive.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 6 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -28180,9 +28224,9 @@
 | 源码 | [scripts/regression_test.py](../../scripts/regression_test.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/regression_test.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -28202,9 +28246,9 @@
 | 源码 | [scripts/replay_llm_narrative.py](../../scripts/replay_llm_narrative.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/replay_llm_narrative.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 4 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py)、[tests/unit/test_replay_llm_narrative.py](../../tests/unit/test_replay_llm_narrative.py) |
 | 验证状态 | selected |
 
@@ -28312,9 +28356,9 @@
 | 源码 | [scripts/run_pipeline_test.py](../../scripts/run_pipeline_test.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/run_pipeline_test.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) |
 | 动态测试 | — |
 | 验证状态 | selected |
 
@@ -28334,9 +28378,9 @@
 | 源码 | [scripts/show_utf8.py](../../scripts/show_utf8.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/show_utf8.py` 的职责，通过 `parse_args`、`main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -28400,9 +28444,9 @@
 | 源码 | [scripts/test_live_fetch.py](../../scripts/test_live_fetch.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/test_live_fetch.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 1 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static)、[VM-UNIT](./SWE.4-unit-testing.md#vm-unit) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static)、[VM-UNIT](SWE.4-unit-testing.md#vm-unit) |
 | 动态测试 | [tests/unit/test_chart_projections.py](../../tests/unit/test_chart_projections.py) |
 | 验证状态 | selected |
 
@@ -28472,9 +28516,9 @@
 | 源码 | [scripts/test_llm_json_fix.py](../../scripts/test_llm_json_fix.py) |
 | 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
 | 职责 | 实现“开发、审核与运维工具”组件中 `scripts/test_llm_json_fix.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](./SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](./SWE.1-software-requirements.md#swr-nfr-004) |
+| 关联需求 | [SWR-NFR-003](SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](./SWE.6-validation-testing.md#vm-static) |
+| 验证措施 | [VM-STATIC](SWE.6-validation-testing.md#vm-static) |
 | 动态测试 | — |
 | 验证状态 | selected |
 

@@ -27,12 +27,12 @@ SWE.6 验证测试（VT）
 
 | 顺序 | 过程域 | 文档 | 主要内容 |
 |---|---|---|---|
-| 1 | SWE.1 | [软件需求分析](./SWE.1-software-requirements.md) | 26 条需求、来源、优先级、接受准则、架构与验证链接 |
-| 2 | SWE.2 | [软件架构设计](./SWE.2-software-architecture.md) | 组件、运行模式、静态接口、动态行为和组件接口 |
-| 3 | SWE.3 | [软件详细设计](./SWE.3-software-detailed-design.md) | 按组件 → 模块 → 函数组织的完整详细设计 |
-| 4 | SWE.4 | [单元测试（UT）](./SWE.4-unit-testing.md) | 每个软件单元的风险、测试选择、动态测试和结果 |
-| 5 | SWE.5 | [集成测试（IT）](./SWE.5-integration-testing.md) | 集成顺序、接口、桩、资源、超时、用例和结果 |
-| 6 | SWE.6 | [验证测试（VT）](./SWE.6-validation-testing.md) | 验证策略、需求覆盖、接受结果和发布结论 |
+| 1 | SWE.1 | [软件需求分析](SWE.1-software-requirements.md) | 26 条需求、来源、优先级、接受准则、架构与验证链接 |
+| 2 | SWE.2 | [软件架构设计](SWE.2-software-architecture.md) | 组件、运行模式、静态接口、动态行为和组件接口 |
+| 3 | SWE.3 | [软件详细设计](SWE.3-software-detailed-design.md) | 按组件 → 模块 → 函数组织的完整详细设计 |
+| 4 | SWE.4 | [单元测试（UT）](SWE.4-unit-testing.md) | 每个软件单元的风险、测试选择、动态测试和结果 |
+| 5 | SWE.5 | [集成测试（IT）](SWE.5-integration-testing.md) | 集成顺序、接口、桩、资源、超时、用例和结果 |
+| 6 | SWE.6 | [验证测试（VT）](SWE.6-validation-testing.md) | 验证策略、需求覆盖、接受结果和发布结论 |
 
 跨过程查看：[需求—架构—验证双向追溯](./traceability.md)。
 

@@ -195,3 +195,5 @@ def test_readable_aspice_navigation_covers_requirement_to_vt_chain() -> None:
     assert "SWE.3-software-detailed-design.md" in documents[names[3]]
     assert "SWE.1-software-requirements.md" in documents[names[4]]
     assert "SWE.1-software-requirements.md" in documents[names[5]]
+    assert all("](./SWE." not in text for text in documents.values())
+    assert "[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004)" in documents[names[5]]

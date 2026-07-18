@@ -19,6 +19,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote
 
 import yaml
 
@@ -50,6 +51,9 @@ GENERATED_PATHS = {
 DOC_ROOT_FILES = [ROOT / "README.md", ROOT / "AGENTS.md", ROOT / "tests" / "README.md"]
 DOC_EXTRA_GLOBS = ["tests/cases/*.md", "tests/cases/*.yaml"]
 SOURCE_EXCLUDES = {".git", ".venv", ".cache", ".pytest_cache", "__pycache__", "tests"}
+MARKDOWN_LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
+EXPLICIT_ANCHOR_RE = re.compile(r"<a\s+(?:id|name)=[\"']([^\"']+)[\"']", re.IGNORECASE)
+HEADING_RE = re.compile(r"(?m)^#{1,6}\s+(.+?)\s*$")
 
 
 def stable_id(prefix: str, value: str) -> str:
@@ -164,6 +168,49 @@ def document_title(path: Path) -> str:
         if match:
             return match.group(1).strip()
     return path.stem.replace("-", " ").replace("_", " ")
+
+
+def markdown_anchors(path: Path) -> set[str]:
+    """Return explicit and GitHub-style heading anchors from one Markdown file."""
+    text = path.read_text(encoding="utf-8-sig", errors="replace")
+    anchors = {match.group(1) for match in EXPLICIT_ANCHOR_RE.finditer(text)}
+    heading_counts: dict[str, int] = defaultdict(int)
+    for match in HEADING_RE.finditer(text):
+        heading = re.sub(r"<[^>]+>", "", match.group(1)).strip().lower()
+        slug = re.sub(r"[^\w\-\s]", "", heading, flags=re.UNICODE)
+        slug = re.sub(r"\s+", "-", slug).strip("-")
+        if not slug:
+            continue
+        duplicate = heading_counts[slug]
+        heading_counts[slug] += 1
+        anchors.add(f"{slug}-{duplicate}" if duplicate else slug)
+    return anchors
+
+
+def validate_aspice_markdown_links() -> list[str]:
+    """Validate every local Markdown file and fragment link in the ASPICE tree."""
+    errors: list[str] = []
+    anchor_cache: dict[Path, set[str]] = {}
+    for source in sorted(ASPICE.rglob("*.md")):
+        text = source.read_text(encoding="utf-8-sig", errors="replace")
+        for match in MARKDOWN_LINK_RE.finditer(text):
+            raw_target = match.group(1).strip().split(maxsplit=1)[0].strip("<>")
+            if not raw_target or raw_target.startswith(("http://", "https://", "mailto:")):
+                continue
+            path_part, separator, fragment = raw_target.partition("#")
+            target = source if not path_part else (source.parent / unquote(path_part)).resolve()
+            line = text.count("\n", 0, match.start()) + 1
+            if not target.exists():
+                errors.append(f"{rel(source)}:{line} links to missing file {raw_target}")
+                continue
+            if separator and fragment and target.suffix.lower() == ".md":
+                anchors = anchor_cache.setdefault(target, markdown_anchors(target))
+                decoded_fragment = unquote(fragment)
+                if decoded_fragment not in anchors:
+                    errors.append(
+                        f"{rel(source)}:{line} links to missing anchor #{decoded_fragment} in {rel(target)}"
+                    )
+    return errors
 
 
 def build_document_register() -> list[dict[str, str]]:
@@ -493,6 +540,7 @@ def check_outputs(outputs: dict[Path, str]) -> list[str]:
     actual_docs = {rel(path) for path in document_files()}
     if registered != actual_docs:
         errors.append("document register does not cover every document")
+    errors.extend(validate_aspice_markdown_links())
     return errors
 
 

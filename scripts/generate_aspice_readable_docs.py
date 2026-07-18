@@ -55,12 +55,12 @@ def _anchor(value: str) -> str:
 
 def _req_links(values: list[str] | str) -> str:
     items = values.split(";") if isinstance(values, str) else values
-    return "、".join(f"[{item}](./SWE.1-software-requirements.md#{_anchor(item)})" for item in items if item) or "—"
+    return "、".join(f"[{item}](SWE.1-software-requirements.md#{_anchor(item)})" for item in items if item) or "—"
 
 
 def _arch_links(values: list[str] | str) -> str:
     items = values.split(";") if isinstance(values, str) else values
-    return "、".join(f"[{item}](./SWE.2-software-architecture.md#{_anchor(item)})" for item in items if item) or "—"
+    return "、".join(f"[{item}](SWE.2-software-architecture.md#{_anchor(item)})" for item in items if item) or "—"
 
 
 def _measure_links(values: list[str] | str) -> str:
@@ -70,7 +70,7 @@ def _measure_links(values: list[str] | str) -> str:
         if not item:
             continue
         target = "SWE.4-unit-testing.md" if item == "VM-UNIT" else "SWE.5-integration-testing.md" if item.startswith("VM-INTEGRATION") or item == "VM-BACKTEST" else "SWE.6-validation-testing.md"
-        rendered.append(f"[{item}](./{target}#{_anchor(item)})")
+        rendered.append(f"[{item}]({target}#{_anchor(item)})")
     return "、".join(rendered) or "—"
 
 
@@ -316,7 +316,7 @@ def _architecture_doc(arch: dict[str, Any], units: list[dict[str, str]]) -> str:
                 ["接口规格", interface_links],
                 ["动态行为", item["dynamic_behavior"]],
                 ["关联需求", _req_links(item["requirements"])],
-                ["详细设计", f"[查看 {len(by_component[item['id']])} 个软件单元](./SWE.3-software-detailed-design.md#{item['id'].lower()})"],
+                ["详细设计", f"[查看 {len(by_component[item['id']])} 个软件单元](SWE.3-software-detailed-design.md#{item['id'].lower()})"],
             ],
         )
         for index, spec in enumerate(interfaces_by_component[item["id"]], 1):
@@ -508,7 +508,7 @@ def _unit_verification_doc(arch: dict[str, Any], rows: list[dict[str, str]]) -> 
             ["软件单元", "函数", "高风险", "措施", "动态测试", "状态"],
             [
                 [
-                    f"[{row['source_path']}](./SWE.3-software-detailed-design.md#{_anchor(row['software_unit_id'])})",
+                    f"[{row['source_path']}](SWE.3-software-detailed-design.md#{_anchor(row['software_unit_id'])})",
                     row["function_count"], row["high_risk_function_count"], _measure_links(row["verification_measure_ids"]),
                     _test_links(row["dynamic_test_references"]), row["verification_status"],
                 ]
@@ -518,15 +518,19 @@ def _unit_verification_doc(arch: dict[str, Any], rows: list[dict[str, str]]) -> 
     return "\n".join(lines) + "\n"
 
 
-def _integration_doc(plan: dict[str, Any]) -> str:
+def _integration_doc(plan: dict[str, Any], measures: dict[str, Any]) -> str:
     lines = _front("SWE.5 集成测试（IT）", "SWE.5", "评审集成顺序、接口、桩、资源和 IT 结果")
     measure_items: dict[str, list[str]] = defaultdict(list)
     for item in plan["items"]:
         for measure_id in item["verification_measure_ids"]:
             measure_items[measure_id].append(item["id"])
+    for measure in measures["measures"]:
+        if measure["level"] == "SWE.5":
+            measure_items.setdefault(measure["id"], [])
     for measure_id, item_ids in measure_items.items():
         links = "、".join(f"[{item_id}](#{_anchor(item_id)})" for item_id in item_ids)
-        lines += [f'<a id="{_anchor(measure_id)}"></a>', "", f"## {measure_id}", "", f"关联集成项：{links}", ""]
+        association = f"关联集成项：{links}" if links else "关联集成项：独立回测验证措施，不绑定跨组件集成步骤。"
+        lines += [f'<a id="{_anchor(measure_id)}"></a>', "", f"## {measure_id}", "", association, ""]
     lines += ["## 准入与退出", "", "### 准入条件", ""]
     lines += [f"- {item}" for item in plan["entry_criteria"]]
     lines += ["", "### 退出条件", ""] + [f"- {item}" for item in plan["exit_criteria"]]
@@ -620,7 +624,7 @@ def expected_outputs() -> dict[Path, str]:
         ASPICE / "SWE.2-software-architecture.md": _architecture_doc(arch, units),
         ASPICE / "SWE.3-software-detailed-design.md": _design_doc(arch, units, functions, unit_verification),
         ASPICE / "SWE.4-unit-testing.md": _unit_verification_doc(arch, unit_rows),
-        ASPICE / "SWE.5-integration-testing.md": _integration_doc(integration),
+        ASPICE / "SWE.5-integration-testing.md": _integration_doc(integration, measures),
         ASPICE / "SWE.6-validation-testing.md": _qualification_doc(measures, coverage),
         ASPICE / "SUP.8-configuration-management.md": _configuration_doc(cm),
         ASPICE / "traceability.md": _traceability_doc(reqs, coverage),
