@@ -1,4 +1,4 @@
-﻿# 开发者上手指南
+# 开发者上手指南
 
 > 目标：在 **15 分钟内** 建立心智模型，弄清「点刷新后发生了什么」「该读哪些文件」「改功能该改哪里」。
 > 项目能跑但难懂，通常是因为三层概念叠在一起：**金融方法论（ICT/PA）**、**多智能体流水线（TradingAgents）**、**大模型双轨调度（规则 / 纯 LLM / 混合）**。
@@ -57,7 +57,7 @@
 
 首次进入页面时，`src/viz/streamlit_common.py` 中的 `ensure_report()` 会先显示 **生成前配置** 面板；用户选择规则 / LLM / 混合模式并点击 **「开始生成报告」** 后，后台线程才会调用 `run_analysis()`。已有报告后点击 **「重新配置 / 刷新报告」** 会清空缓存并回到配置面板。
 
-> 步骤 ID 权威列表见 [pipeline-steps.yaml](../reference/pipeline-steps.yaml)（与 `orchestrator.py`、`fetch_pipeline.py` 在 CI 中同步校验）
+> 步骤 ID 权威列表见 [pipeline-steps.yaml](../aspice/SWE.3-detailed-design/reference/pipeline-steps.yaml)（与 `orchestrator.py`、`fetch_pipeline.py` 在 CI 中同步校验）
 
 | 步骤 ID | 代码位置 | 产出 | 是否用大模型 |
 |---------|----------|------|--------------|
@@ -77,7 +77,7 @@
 
 **切换页面不会重跑流水线** — 三页共享 `st.session_state` 中缓存的同一份 `(report, data, analyses)`。
 
-**历史回放**（配置页勾选）：`viz/replay_loader.load_replay_bundle()` 直接读归档，**0 token、不重跑 LLM**。契约见 [run-archive-schema.md](../reference/run-archive-schema.md)。
+**历史回放**（配置页勾选）：`viz/replay_loader.load_replay_bundle()` 直接读归档，**0 token、不重跑 LLM**。契约见 [run-archive-schema.md](../aspice/SWE.3-detailed-design/reference/run-archive-schema.md)。
 
 ---
 
@@ -190,7 +190,7 @@ LOG_LEVEL=DEBUG
 
 ### 完整大模型体验
 
-见根目录 [README.md](../../README.md) 或 [llm-agents.md](../architecture/llm-agents.md) 中的环境变量说明。
+见根目录 [README.md](../../README.md) 或 [llm-agents.md](../aspice/SWE.2-architecture/llm-agents.md) 中的环境变量说明。
 
 ### 启动 Streamlit（官方方式）
 
@@ -211,13 +211,13 @@ python run_app.py
 | 开了 LLM 但没效果 | 检查 `LLM_API_KEY`、`AGENT_MODE`、`LLM_STAGE_*`；看 `stage_sources` |
 | 生成要 5 分钟 | 全流程多次 API 调用属正常；`AGENT_MODE=rule` 可降到约 30 秒 |
 | 文档与代码不一致 | 以 `orchestrator.py` 调用顺序为准 |
-| 胜率 62% 是回测吗？ | **不是**；见 [financial-review.md](../reviews/financial/static-code-review.md) F-002 |
+| 胜率 62% 是回测吗？ | **不是**；见 [financial-review.md](../aspice/records/reviews/financial/static-code-review.md) F-002 |
 
 ---
 
 ## 9. 改功能该动哪里
 
-完整速查见 **[cheat-sheet.md](../reference/cheat-sheet.md)**。
+完整速查见 **[cheat-sheet.md](../aspice/SWE.3-detailed-design/reference/cheat-sheet.md)**。
 
 | 我想… | 改这里 |
 |-------|--------|
@@ -227,7 +227,7 @@ python run_app.py
 | 接入新 LLM 阶段 | `agents/llm/stages/` + `factory.py` |
 | 改 Streamlit 布局 | `viz/report_views.py` |
 | 改缓存/刷新 | `viz/streamlit_common.py` |
-| 改流水线步骤 | `orchestrator.py` + **`../reference/pipeline-steps.yaml`** |
+| 改流水线步骤 | `orchestrator.py` + **`../aspice/SWE.3-detailed-design/reference/pipeline-steps.yaml`** |
 
 ---
 
@@ -244,10 +244,10 @@ examples/report-schema.md + sample-report.json（理解输出）
     ↓
 llm-agents.md（启用大模型时）
     ↓
-[reviews/financial/static-code-review.md](../reviews/financial/static-code-review.md)（改信号/风控前必读）
+[reviews/financial/static-code-review.md](../aspice/records/reviews/financial/static-code-review.md)（改信号/风控前必读）
 ```
 
-**不要**一开始通读 [handbook.md](../reference/handbook.md)（600+ 行）——那是**参考手册**，不是**入门教程**。
+**不要**一开始通读 [handbook.md](../aspice/SWE.3-detailed-design/reference/handbook.md)（600+ 行）——那是**参考手册**，不是**入门教程**。
 
 ---
 
@@ -256,8 +256,8 @@ llm-agents.md（启用大模型时）
 | 层级 | 文档 | 用途 |
 |------|------|------|
 | 教程层 | 本文 + [walkthrough.md](./walkthrough.md) | 心智模型 + 界面动线 |
-| 参考层 | [handbook.md](../reference/handbook.md) · [glossary.md](../reference/glossary.md) · [examples/report-schema.md](../reference/examples/report-schema.md) | 函数链 · 术语 · JSON |
-| 速查层 | [cheat-sheet.md](../reference/cheat-sheet.md) · [pipeline-steps.yaml](../reference/pipeline-steps.yaml) | 改功能 · CI 步骤校验 |
+| 参考层 | [handbook.md](../aspice/SWE.3-detailed-design/reference/handbook.md) · [glossary.md](../aspice/SWE.3-detailed-design/reference/glossary.md) · [examples/report-schema.md](../aspice/SWE.3-detailed-design/reference/examples/report-schema.md) | 函数链 · 术语 · JSON |
+| 速查层 | [cheat-sheet.md](../aspice/SWE.3-detailed-design/reference/cheat-sheet.md) · [pipeline-steps.yaml](../aspice/SWE.3-detailed-design/reference/pipeline-steps.yaml) | 改功能 · CI 步骤校验 |
 | 演示层 | [walkthrough.md](./walkthrough.md) 流程图 | 可另录演示视频 |
 
 ---
@@ -267,8 +267,8 @@ llm-agents.md（启用大模型时）
 | 文档 | 何时读 |
 |------|--------|
 | [README.md](../README.md) | 文档索引 |
-| [cheat-sheet.md](../reference/cheat-sheet.md) | 改功能速查 |
-| [glossary.md](../reference/glossary.md) | 不懂术语 |
+| [cheat-sheet.md](../aspice/SWE.3-detailed-design/reference/cheat-sheet.md) | 改功能速查 |
+| [glossary.md](../aspice/SWE.3-detailed-design/reference/glossary.md) | 不懂术语 |
 | [setup.md](./setup.md) | 环境搭建入口 |
 | [walkthrough.md](./walkthrough.md) | 界面操作动线 |
 

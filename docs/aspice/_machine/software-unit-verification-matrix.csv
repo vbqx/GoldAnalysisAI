@@ -2,7 +2,7 @@ software_unit_id,source_path,architecture_id,requirement_ids,function_count,high
 UNIT-13CCE7FD07,app.py,ARC-APP,SWR-CORE-002;SWR-UI-001;SWR-CFG-001,1,0,VM-STATIC;VM-UNIT;VM-MANUAL-UI,tests/unit/test_run_archive.py,direct unit/component evidence,selected,
 UNIT-B2A1584DAD,run_app.py,ARC-APP,SWR-CORE-002;SWR-UI-001;SWR-CFG-001,13,0,VM-STATIC;VM-UNIT;VM-MANUAL-UI,tests/unit/test_chart_projections.py,direct unit/component evidence,selected,
 UNIT-670F7F7454,scripts/chart_compare_test.py,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,0,0,VM-STATIC,,static analysis selected for low/medium-risk unit,selected,
-UNIT-DE82D6E44B,scripts/check_aspice_assets.py,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,22,0,VM-STATIC;VM-UNIT,tests/regression/test_aspice_assets.py;tests/unit/test_chart_projections.py;tests/unit/test_golden_report_benchmark.py;tests/unit/test_report_reliability.py,direct unit/component evidence,selected,
+UNIT-DE82D6E44B,scripts/check_aspice_assets.py,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,23,0,VM-STATIC;VM-UNIT,tests/regression/test_aspice_assets.py;tests/unit/test_chart_projections.py;tests/unit/test_golden_report_benchmark.py;tests/unit/test_report_reliability.py,direct unit/component evidence,selected,
 UNIT-D4B396B36E,scripts/check_mt5_connection.py,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,1,0,VM-STATIC;VM-UNIT,tests/unit/test_chart_projections.py,direct unit/component evidence,selected,
 UNIT-9572F90802,scripts/close_fixed_issues.py,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,0,0,VM-STATIC,,static analysis selected for low/medium-risk unit,selected,
 UNIT-B4A1ACCFA2,scripts/compare_pa_5m_tv.py,ARC-TOOLS,SWR-NFR-003;SWR-NFR-004,1,1,VM-STATIC;VM-UNIT,tests/unit/test_chart_projections.py,direct unit/component evidence,selected,

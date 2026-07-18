@@ -13,7 +13,7 @@ import pytest
 pytestmark = pytest.mark.regression
 
 ROOT = Path(__file__).resolve().parents[2]
-SAMPLE = ROOT / "docs" / "reference" / "examples" / "sample-report.json"
+SAMPLE = ROOT / "docs" / "aspice" / "SWE.3-detailed-design" / "reference" / "examples" / "sample-report.json"
 SAMPLE_REPORT_UPDATED_AT = "2026-06-16 08:39 (UTC+8)"
 
 

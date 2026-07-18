@@ -36,7 +36,7 @@ PIP_REPORT_SOURCE = ROOT / "tests" / "reports" / "aspice-pip-resolution.json"
 
 GENERATED_PATHS = {
     MACHINE / "document-register.csv",
-    ASPICE / "supporting" / "process-document-index.md",
+    MACHINE / "process-document-index.md",
     MACHINE / "software-unit-catalog.csv",
     MACHINE / "software-function-map.csv",
     MACHINE / "software-function-detailed-design.csv",
@@ -51,7 +51,16 @@ GENERATED_PATHS = {
 DOC_ROOT_FILES = [ROOT / "README.md", ROOT / "AGENTS.md", ROOT / "tests" / "README.md"]
 DOC_EXTRA_GLOBS = ["tests/cases/*.md", "tests/cases/*.yaml"]
 SOURCE_EXCLUDES = {".git", ".venv", ".cache", ".pytest_cache", "__pycache__", "tests"}
-MARKDOWN_LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
+MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
+MARKDOWN_EXCLUDES = {".git", ".venv", ".cache", ".pytest_cache", "__pycache__", "node_modules"}
+FORBIDDEN_DOC_DIRECTORIES = {
+    "architecture",
+    "reference",
+    "testing",
+    "reviews",
+    "overview",
+    "planning",
+}
 EXPLICIT_ANCHOR_RE = re.compile(r"<a\s+(?:id|name)=[\"']([^\"']+)[\"']", re.IGNORECASE)
 HEADING_RE = re.compile(r"(?m)^#{1,6}\s+(.+?)\s*$")
 
@@ -96,12 +105,21 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
     path_str = rel(path)
     if path_str.startswith("docs/aspice/"):
         name = path.name
-        if path_str.startswith("docs/aspice/supporting/reviews/"):
+        if path_str.startswith("docs/aspice/records/reviews/"):
             return "SUP.1/SUP.9", "Review/Problem Analysis Evidence", "reviewed", "supporting"
+        if path_str.startswith("docs/aspice/records/verification/"):
+            return "SWE.4-SWE.6", "08-60/15-52 Verification", "agreed", "normative"
+        if path_str.startswith("docs/aspice/SWE.2-architecture/"):
+            authority = "normative" if name == "README.md" else "supporting"
+            status = "agreed" if authority == "normative" else "reviewed"
+            return "SWE.2", "04-04 Software Architecture", status, authority
+        if path_str.startswith("docs/aspice/SWE.3-detailed-design/"):
+            if path.suffix.lower() in {".md", ".yaml", ".yml", ".json"}:
+                return "SWE.3", "04-05 Software Detailed Design", "agreed", "normative"
+        if path_str.startswith("docs/aspice/governance/"):
+            return "SUP.8", "Document Control", "agreed", "normative"
         readable_process_docs = {
             "SWE.1-software-requirements.md": ("SWE.1", "17-00 Software Requirements", "agreed", "normative"),
-            "SWE.2-software-architecture.md": ("SWE.2", "04-04 Software Architecture", "agreed", "normative"),
-            "SWE.3-software-detailed-design.md": ("SWE.3", "04-05 Software Detailed Design", "agreed", "normative"),
             "SWE.4-unit-testing.md": ("SWE.4", "08-50 Unit Verification", "agreed", "normative"),
             "SWE.5-integration-testing.md": ("SWE.5", "08-52 Integration Verification", "agreed", "normative"),
             "SWE.6-validation-testing.md": ("SWE.6", "08-54 Software Qualification Test", "agreed", "normative"),
@@ -120,7 +138,6 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
             "software-unit-catalog.csv",
             "software-function-map.csv",
             "software-function-detailed-design.csv",
-            "key-unit-detailed-designs.md",
         }:
             return "SWE.3", "04-05 Software Detailed Design", "agreed", "normative"
         if name == "software-unit-verification-matrix.csv":
@@ -131,7 +148,7 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
             return "SWE.5", "08-52 Integration Verification Measure", "agreed", "normative"
         if name == "software-domain-scope-and-closure.md":
             return "SWE.1-SWE.6", "15-52 Evaluation Results", "agreed", "normative"
-        if name in {"verification-measures.yaml", "verification-results", "latest.md"} or "verification-results" in path_str:
+        if name == "verification-measures.yaml":
             return "SWE.4-SWE.6", "08-60/15-52 Verification", "agreed", "normative"
         if name == "traceability-matrix.csv":
             return "SWE.1-SWE.6", "13-51 Consistency Evidence", "generated", "generated"
@@ -140,19 +157,15 @@ def document_classification(path: Path) -> tuple[str, str, str, str]:
         if name in {"document-register.csv", "process-document-index.md"}:
             return "SUP.8", "Configuration Status Record", "generated", "generated"
         return "SUP.8", "Document Control", "agreed", "normative"
-    if path_str.startswith("docs/reviews/"):
+    if path_str.startswith("docs/aspice/records/reviews/"):
         return "SUP.1/SUP.9", "Review/Problem Analysis Evidence", "reviewed", "supporting"
-    if path_str.startswith("docs/planning/"):
+    if path_str.startswith("docs/management/"):
         return "MAN.3/MAN.5", "Project/Risk Plan", "reviewed", "supporting"
-    if path_str.startswith("docs/architecture/"):
-        return "SWE.2", "04-04 Software Architecture", "reviewed", "supporting"
-    if path_str.startswith("docs/testing/") or path_str.startswith("tests/cases/") or path_str == "tests/README.md":
+    if path_str.startswith("tests/cases/") or path_str == "tests/README.md":
         return "SWE.4-SWE.6", "Verification Strategy/Measure", "reviewed", "supporting"
-    if path_str.startswith("docs/reference/"):
-        return "SWE.3", "Detailed Design/Interface Reference", "reviewed", "supporting"
     if path_str.startswith("docs/operations/"):
         return "SUP.8/MAN.3", "Operation/Configuration Guidance", "reviewed", "supporting"
-    if path_str.startswith("docs/overview/") or path_str == "README.md":
+    if path_str == "README.md":
         return "SWE.1", "Stakeholder/Software Context", "reviewed", "supporting"
     if path_str.startswith("docs/archive/"):
         return "SUP.8", "Historical Record", "historical", "historical"
@@ -187,19 +200,31 @@ def markdown_anchors(path: Path) -> set[str]:
     return anchors
 
 
-def validate_aspice_markdown_links() -> list[str]:
-    """Validate every local Markdown file and fragment link in the ASPICE tree."""
+def markdown_files() -> list[Path]:
+    """Return maintained Markdown files, excluding tool and environment caches."""
+    return sorted(
+        path
+        for path in ROOT.rglob("*.md")
+        if not any(part in MARKDOWN_EXCLUDES for part in path.relative_to(ROOT).parts)
+    )
+
+
+def validate_markdown_links() -> list[str]:
+    """Validate every local Markdown file, image, and fragment link in the repository."""
     errors: list[str] = []
     anchor_cache: dict[Path, set[str]] = {}
-    for source in sorted(ASPICE.rglob("*.md")):
+    for source in markdown_files():
         text = source.read_text(encoding="utf-8-sig", errors="replace")
         for match in MARKDOWN_LINK_RE.finditer(text):
             raw_target = match.group(1).strip().split(maxsplit=1)[0].strip("<>")
-            if not raw_target or raw_target.startswith(("http://", "https://", "mailto:")):
+            if not raw_target or raw_target.startswith(("http://", "https://", "mailto:", "data:")):
                 continue
             path_part, separator, fragment = raw_target.partition("#")
             target = source if not path_part else (source.parent / unquote(path_part)).resolve()
             line = text.count("\n", 0, match.start()) + 1
+            if not target.is_relative_to(ROOT):
+                errors.append(f"{rel(source)}:{line} links outside repository {raw_target}")
+                continue
             if not target.exists():
                 errors.append(f"{rel(source)}:{line} links to missing file {raw_target}")
                 continue
@@ -414,9 +439,7 @@ def process_index(rows: list[dict[str, str]]) -> str:
     for process in sorted(grouped):
         lines.extend([f"## {process}", "", "| 文档 | 信息项 | 状态 | 权威性 |", "|---|---|---|---|"])
         for row in grouped[process]:
-            if row["path"].startswith("docs/aspice/supporting/"):
-                target = "./" + row["path"].removeprefix("docs/aspice/supporting/")
-            elif row["path"].startswith("docs/aspice/"):
+            if row["path"].startswith("docs/aspice/"):
                 target = "../" + row["path"].removeprefix("docs/aspice/")
             elif row["path"].startswith("docs/"):
                 target = "../../" + row["path"].removeprefix("docs/")
@@ -442,7 +465,7 @@ def expected_outputs() -> dict[Path, str]:
     lock, sbom = dependency_outputs(pip_report)
     outputs = {
         MACHINE / "document-register.csv": csv_text(documents),
-        ASPICE / "supporting" / "process-document-index.md": process_index(documents),
+        MACHINE / "process-document-index.md": process_index(documents),
         MACHINE / "software-unit-catalog.csv": csv_text(units),
         MACHINE / "software-function-map.csv": csv_text(functions),
         MACHINE / "traceability-matrix.csv": csv_text(trace),
@@ -540,7 +563,15 @@ def check_outputs(outputs: dict[Path, str]) -> list[str]:
     actual_docs = {rel(path) for path in document_files()}
     if registered != actual_docs:
         errors.append("document register does not cover every document")
-    errors.extend(validate_aspice_markdown_links())
+    forbidden = [
+        f"docs/{name}"
+        for name in sorted(FORBIDDEN_DOC_DIRECTORIES)
+        if (ROOT / "docs" / name).exists()
+    ]
+    errors.extend(f"obsolete documentation directory still exists: {path}" for path in forbidden)
+    if (ASPICE / "SWE.3-software-detailed-design.md").exists():
+        errors.append("obsolete monolithic SWE.3 document still exists")
+    errors.extend(validate_markdown_links())
     return errors
 
 

@@ -150,7 +150,7 @@ def test_architecture_interfaces_are_reviewable() -> None:
     required = {"kind", "purpose", "parameters", "returns", "failures"}
     assert all(all(item.get(field) for field in required) for item in specifications)
     assert all(all(item.get(field) for field in required - {"kind"}) for item in architecture["interfaces"])
-    readable = (ROOT / "docs/aspice/SWE.2-software-architecture.md").read_text(encoding="utf-8-sig")
+    readable = (ROOT / "docs/aspice/SWE.2-architecture/README.md").read_text(encoding="utf-8-sig")
     assert all(f"### {component['id']}-IF-01" in readable for component in architecture["components"])
     assert "| 输入参数 |" in readable and "| 失败 / 异常行为 |" in readable
     assert readable.count("```mermaid") == 5
@@ -165,35 +165,50 @@ def test_architecture_interfaces_are_reviewable() -> None:
 
 @pytest.mark.regression
 def test_readable_aspice_navigation_covers_requirement_to_vt_chain() -> None:
-    names = [
-        "SWE.1-software-requirements.md",
-        "SWE.2-software-architecture.md",
-        "SWE.3-software-detailed-design.md",
-        "SWE.4-unit-testing.md",
-        "SWE.5-integration-testing.md",
-        "SWE.6-validation-testing.md",
-        "traceability.md",
-    ]
-    documents = {name: (ROOT / "docs/aspice" / name).read_text(encoding="utf-8-sig") for name in names}
+    aspice = ROOT / "docs" / "aspice"
+    documents = {
+        "requirements": (aspice / "SWE.1-software-requirements.md").read_text(encoding="utf-8-sig"),
+        "architecture": (aspice / "SWE.2-architecture" / "README.md").read_text(encoding="utf-8-sig"),
+        "unit_test": (aspice / "SWE.4-unit-testing.md").read_text(encoding="utf-8-sig"),
+        "integration_test": (aspice / "SWE.5-integration-testing.md").read_text(encoding="utf-8-sig"),
+        "validation_test": (aspice / "SWE.6-validation-testing.md").read_text(encoding="utf-8-sig"),
+        "traceability": (aspice / "traceability.md").read_text(encoding="utf-8-sig"),
+    }
+    design_files = sorted((aspice / "SWE.3-detailed-design").glob("ARC-*.md"))
+    design = "\n".join(path.read_text(encoding="utf-8-sig") for path in design_files)
     requirements = yaml.safe_load((ROOT / "docs/aspice/_machine/software-requirements.yaml").read_text(encoding="utf-8-sig"))
     architecture = yaml.safe_load((ROOT / "docs/aspice/_machine/software-architecture.yaml").read_text(encoding="utf-8-sig"))
     with (ROOT / "docs/aspice/_machine/software-function-detailed-design.csv").open(encoding="utf-8-sig", newline="") as handle:
         functions = list(csv.DictReader(handle))
 
-    assert all(f'id="{row["id"].lower().replace(".", "-")}"' in documents[names[0]] for row in requirements["requirements"])
-    assert all(f'id="{row["id"].lower()}"' in documents[names[1]] for row in architecture["components"])
-    assert all(f'id="{row["function_id"].lower()}"' in documents[names[2]] for row in functions)
-    assert all(f'## {row["id"]}\n' in documents[names[0]] for row in requirements["requirements"])
-    assert all(f'## {row["id"]}\n' in documents[names[1]] for row in architecture["components"])
-    assert all(f'#### {row["function_id"]}\n' in documents[names[2]] for row in functions)
-    assert documents[names[2]].count("| 函数 | `") == len(functions)
-    assert "| 设计项 | 说明 |" in documents[names[2]]
-    assert "| 参数 |" in documents[names[2]] and "| 处理逻辑 |" in documents[names[2]]
-    assert "[SWR-CORE-001](#swr-core-001)" in documents[names[0]]
-    assert "SWE.2-software-architecture.md" in documents[names[0]]
-    assert "SWE.3-software-detailed-design.md" in documents[names[1]]
-    assert "SWE.3-software-detailed-design.md" in documents[names[3]]
-    assert "SWE.1-software-requirements.md" in documents[names[4]]
-    assert "SWE.1-software-requirements.md" in documents[names[5]]
+    assert len(design_files) == len(architecture["components"])
+    assert all(f'id="{row["id"].lower().replace(".", "-")}"' in documents["requirements"] for row in requirements["requirements"])
+    assert all(f'id="{row["id"].lower()}"' in documents["architecture"] for row in architecture["components"])
+    assert all(f'id="{row["function_id"].lower()}"' in design for row in functions)
+    assert all(f'## {row["id"]}\n' in documents["requirements"] for row in requirements["requirements"])
+    assert all(f'## {row["id"]}\n' in documents["architecture"] for row in architecture["components"])
+    assert all(f'#### {row["function_id"]}\n' in design for row in functions)
+    assert design.count("| 函数 | `") == len(functions)
+    assert "| 设计项 | 说明 |" in design
+    assert "| 参数 |" in design and "| 处理逻辑 |" in design
+    assert "[SWR-CORE-001](#swr-core-001)" in documents["requirements"]
+    assert "SWE.2-architecture/README.md" in documents["requirements"]
+    assert "SWE.3-detailed-design/" in documents["architecture"]
+    assert "SWE.3-detailed-design/" in documents["unit_test"]
+    assert "SWE.1-software-requirements.md" in documents["integration_test"]
+    assert "SWE.1-software-requirements.md" in documents["validation_test"]
     assert all("](./SWE." not in text for text in documents.values())
-    assert "[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004)" in documents[names[5]]
+    assert "[SWR-NFR-004](SWE.1-software-requirements.md#swr-nfr-004)" in documents["validation_test"]
+
+
+@pytest.mark.regression
+def test_detailed_design_is_split_into_reviewable_component_volumes() -> None:
+    design_dir = ROOT / "docs" / "aspice" / "SWE.3-detailed-design"
+    components = yaml.safe_load(
+        (ROOT / "docs/aspice/_machine/software-architecture.yaml").read_text(encoding="utf-8-sig")
+    )["components"]
+    missing = [item["id"] for item in components if not (design_dir / f"{item['id']}.md").is_file()]
+    oversized = [path.name for path in design_dir.glob("ARC-*.md") if path.stat().st_size > 500_000]
+    assert not (ROOT / "docs/aspice/SWE.3-software-detailed-design.md").exists()
+    assert not missing, "Missing component design volumes: " + ", ".join(missing)
+    assert not oversized, "Component design volumes exceed 500 KB: " + ", ".join(oversized)

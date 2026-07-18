@@ -57,7 +57,7 @@ MVP: `ict_pa.analyze_timeframe()` → `luxalgo_smc.analyze_luxalgo()`
 - BOS/CHoCH 标记（5m + 15m 事件）
 - **不绘制** EMA/VWAP 曲线、MACD/RSI/ADX 副图、路径预测虚线
 
-分层说明见 `docs/architecture/chart-layers.md`
+分层说明见 `docs/aspice/SWE.2-architecture/chart-layers.md`
 - 路径推演见底栏 **未来走势推演**（`report["path_summary"]`，源自 `trend_projections()`）
 
 技术指标仍在 `enrich()` 管道计算，供 agent/LLM 使用，并在侧边栏 **指标校验** 表展示（含 RSI14、MACD、ADX14、ATR14 等）。
@@ -144,7 +144,7 @@ MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；
 
 ## 5. 文档边界
 
-本文只做报告结构与算法反推，不维护后续迭代。当前路线图见 [roadmap.md](../../planning/roadmap.md)。
+本文只做报告结构与算法反推，不维护后续迭代。当前路线图见 [roadmap.md](../../management/roadmap.md)。
 
 ---
 
@@ -153,5 +153,5 @@ MVP: `report_engine.compute_trading_signals(ctx)`（orchestrator 唯一入口；
 | 文档 | 内容 |
 |------|------|
 | [README.md](../../README.md) | 文档中心索引 |
-| [handbook.md](../../reference/handbook.md) | 模块实现与数据流 |
-| [static-code-review.md](../../reviews/financial/static-code-review.md) | 金融逻辑评审 |
+| [handbook.md](../../aspice/SWE.3-detailed-design/reference/handbook.md) | 模块实现与数据流 |
+| [static-code-review.md](../../aspice/records/reviews/financial/static-code-review.md) | 金融逻辑评审 |

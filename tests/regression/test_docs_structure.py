@@ -10,19 +10,19 @@ pytestmark = pytest.mark.regression
 ROOT = Path(__file__).resolve().parents[2]
 
 KEY_DOCS = [
-    "docs/overview/project.md",
-    "docs/overview/status.md",
-    "docs/overview/codex-autonomy.md",
-    "docs/architecture/README.md",
-    "docs/architecture/architecture.md",
-    "docs/architecture/review.md",
-    "docs/architecture/backtesting.md",
-    "docs/operations/setup.md",
-    "docs/testing/strategy.md",
-    "docs/reference/handbook.md",
-    "docs/reference/examples/report-schema.md",
-    "docs/reviews/README.md",
-    "docs/reviews/findings-status.md",
+    "docs/README.md",
+    "docs/aspice/README.md",
+    "docs/aspice/SWE.1-software-requirements.md",
+    "docs/aspice/SWE.2-architecture/README.md",
+    "docs/aspice/SWE.3-detailed-design/README.md",
+    "docs/aspice/SWE.4-unit-testing.md",
+    "docs/aspice/SWE.5-integration-testing.md",
+    "docs/aspice/SWE.6-validation-testing.md",
+    "docs/operations/README.md",
+    "docs/management/README.md",
+    "docs/aspice/governance/verification-strategy.md",
+    "docs/aspice/SWE.3-detailed-design/reference/handbook.md",
+    "docs/aspice/records/reviews/README.md",
     "docs/archive/README.md",
 ]
 
@@ -32,6 +32,12 @@ OLD_DOC_FRAGMENTS = [
     "docs/domain/",
     "docs/examples/",
     "docs/integrations/",
+    "docs/architecture/",
+    "docs/reference/",
+    "docs/testing/",
+    "docs/reviews/",
+    "docs/overview/",
+    "docs/planning/",
 ]
 
 
@@ -62,6 +68,12 @@ def test_removed_doc_directories_stay_removed() -> None:
         ROOT / "docs" / "domain",
         ROOT / "docs" / "examples",
         ROOT / "docs" / "integrations",
+        ROOT / "docs" / "architecture",
+        ROOT / "docs" / "reference",
+        ROOT / "docs" / "testing",
+        ROOT / "docs" / "reviews",
+        ROOT / "docs" / "overview",
+        ROOT / "docs" / "planning",
     ]
     existing = [str(path.relative_to(ROOT)) for path in removed if path.exists()]
     assert not existing, "Old docs directories should not return:\n" + "\n".join(existing)
@@ -91,18 +103,18 @@ def test_cases_catalog_points_to_existing_test_files() -> None:
 
 def test_architecture_docs_keep_human_readable_visual_flows() -> None:
     required_mermaid_counts = {
-        "README.md": 1,
-        "architecture.md": 2,
+        "README.md": 5,
+        "system-overview.md": 2,
         "analyst-context.md": 1,
         "backtesting.md": 3,
         "chart-layers.md": 1,
         "llm-agents.md": 2,
         "report-trust.md": 1,
-        "review.md": 1,
+        "health-review.md": 1,
         "smc-pa-narrative.md": 1,
         "technical-analysis.md": 1,
     }
-    architecture_dir = ROOT / "docs" / "architecture"
+    architecture_dir = ROOT / "docs" / "aspice" / "SWE.2-architecture"
     problems: list[str] = []
 
     for filename, minimum in required_mermaid_counts.items():

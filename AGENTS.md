@@ -40,4 +40,4 @@ python scripts/inspect_archive.py list # list saved run archives (replay bundles
 
 - [docs/operations/setup.md](docs/operations/setup.md) — install & config
 - [docs/operations/onboarding.md](docs/operations/onboarding.md) — 15-minute developer onboarding
-- [docs/reference/cheat-sheet.md](docs/reference/cheat-sheet.md) — where to change features
+- [docs/aspice/SWE.3-detailed-design/reference/cheat-sheet.md](docs/aspice/SWE.3-detailed-design/reference/cheat-sheet.md) — where to change features

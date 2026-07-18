@@ -1634,7 +1634,7 @@ cases:
 
     maps_to: [FN-30]
 
-  # ── 金融 Review（FIN）docs/reviews/financial/static-code-review.md ────────────
+  # ── 金融 Review（FIN）docs/aspice/records/reviews/financial/static-code-review.md ────────────
   - id: FIN-01
     suite: unit
     layer: financial

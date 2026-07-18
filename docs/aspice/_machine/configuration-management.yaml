@@ -14,10 +14,10 @@ configuration_items:
     path: docs/aspice/SWE.1-software-requirements.md
     process: SWE.1
   - id: CI-SAD
-    path: docs/aspice/SWE.2-software-architecture.md
+    path: docs/aspice/SWE.2-architecture/README.md
     process: SWE.2
   - id: CI-SDD
-    path: docs/aspice/SWE.3-software-detailed-design.md
+    path: docs/aspice/SWE.3-detailed-design/README.md
     process: SWE.3
   - id: CI-FUNCTION-MAP
     path: docs/aspice/_machine/software-function-map.csv
@@ -59,16 +59,16 @@ configuration_items:
     path: .env.example
     process: SUP.8
   - id: CI-ARCHIVE-SCHEMA
-    path: docs/reference/run-archive-schema.md
+    path: docs/aspice/SWE.3-detailed-design/reference/run-archive-schema.md
     process: SWE.2
   - id: CI-REPORT-SCHEMA
-    path: docs/reference/examples/report-schema.md
+    path: docs/aspice/SWE.3-detailed-design/reference/examples/report-schema.md
     process: SWE.2
   - id: CI-VERIFICATION-RESULT
-    path: docs/aspice/verification-results/latest.md
+    path: docs/aspice/records/verification/latest.md
     process: SWE.4-SWE.6
   - id: CI-SOFTWARE-CLOSURE
-    path: docs/aspice/supporting/software-domain-scope-and-closure.md
+    path: docs/aspice/governance/scope-and-closure.md
     process: SWE.1-SWE.6
 dependency_baseline:
   resolution_source: docs/aspice/_machine/pip-resolution.json

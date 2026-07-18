@@ -41,10 +41,10 @@ copy .env.example .env          # Windows
 | `MT5_ACCOUNT` / `MT5_PASSWORD` / `MT5_SERVER` | 空 | MT5 模拟/实盘账户；只写入本机 `.env` |
 | `MT5_PATH` / `MT5_TIMEOUT_MS` | 空 / `10000` | 可选；指定 `terminal64.exe` 路径与 IPC 初始化超时 |
 | `JIN10_API_TOKEN` | 空 | 金十 MCP（[申请](https://mcp.jin10.com/app)） |
-| `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](../architecture/llm-agents.md) |
+| `AGENT_MODE` | `rule` | `rule` / `llm` / `hybrid`，见 [llm-agents.md](../aspice/SWE.2-architecture/llm-agents.md) |
 | `LLM_*` | 见 `.env.example` | 硅基流动 / OpenAI 兼容 API |
 
-完整变量表见 [handbook.md §2.3](../reference/handbook.md#23-配置env)。
+完整变量表见 [handbook.md §2.3](../aspice/SWE.3-detailed-design/reference/handbook.md#配置速查)。
 
 ### MT5 账号连接自检
 
@@ -126,7 +126,7 @@ report, data, analyses = run_analysis()
 | `data` | `dict[str, DataFrame]` | 各周期 K 线 + 指标列 |
 | `analyses` | `dict[str, TimeframeAnalysis]` | 各周期结构分析结果 |
 
-流水线步骤权威列表：[pipeline-steps.yaml](../reference/pipeline-steps.yaml)（与 `orchestrator.py` 在 CI 中同步）
+流水线步骤权威列表：[pipeline-steps.yaml](../aspice/SWE.3-detailed-design/reference/pipeline-steps.yaml)（与 `orchestrator.py` 在 CI 中同步）
 
 ---
 
@@ -135,8 +135,8 @@ report, data, analyses = run_analysis()
 | 文档 | 内容 |
 |------|------|
 | [onboarding.md](./onboarding.md) | 15 分钟开发者入门 |
-| [handbook.md](../reference/handbook.md) | 完整数据流与模块参考 |
-| [cheat-sheet.md](../reference/cheat-sheet.md) | 改功能速查 |
+| [handbook.md](../aspice/SWE.3-detailed-design/reference/handbook.md) | 完整数据流与模块参考 |
+| [cheat-sheet.md](../aspice/SWE.3-detailed-design/reference/cheat-sheet.md) | 改功能速查 |
 | [../README.md](../README.md) | 文档中心索引 |
 
 ---

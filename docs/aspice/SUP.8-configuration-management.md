@@ -32,8 +32,8 @@
 | ID | 路径 | 过程 |
 |---|---|---|
 | CI-SWR | docs/aspice/SWE.1-software-requirements.md | SWE.1 |
-| CI-SAD | docs/aspice/SWE.2-software-architecture.md | SWE.2 |
-| CI-SDD | docs/aspice/SWE.3-software-detailed-design.md | SWE.3 |
+| CI-SAD | docs/aspice/SWE.2-architecture/README.md | SWE.2 |
+| CI-SDD | docs/aspice/SWE.3-detailed-design/README.md | SWE.3 |
 | CI-FUNCTION-MAP | docs/aspice/_machine/software-function-map.csv | SWE.3 |
 | CI-FUNCTION-DESIGN | docs/aspice/_machine/software-function-detailed-design.csv | SWE.3 |
 | CI-UNIT-VERIFICATION | docs/aspice/SWE.4-unit-testing.md | SWE.4 |
@@ -47,10 +47,10 @@
 | CI-RUNTIME-DEPS | docs/aspice/_machine/dependency-lock.txt | SUP.8 |
 | CI-SBOM | docs/aspice/_machine/sbom.json | SUP.8 |
 | CI-CONFIG-TEMPLATE | .env.example | SUP.8 |
-| CI-ARCHIVE-SCHEMA | docs/reference/run-archive-schema.md | SWE.2 |
-| CI-REPORT-SCHEMA | docs/reference/examples/report-schema.md | SWE.2 |
-| CI-VERIFICATION-RESULT | docs/aspice/verification-results/latest.md | SWE.4-SWE.6 |
-| CI-SOFTWARE-CLOSURE | docs/aspice/supporting/software-domain-scope-and-closure.md | SWE.1-SWE.6 |
+| CI-ARCHIVE-SCHEMA | docs/aspice/SWE.3-detailed-design/reference/run-archive-schema.md | SWE.2 |
+| CI-REPORT-SCHEMA | docs/aspice/SWE.3-detailed-design/reference/examples/report-schema.md | SWE.2 |
+| CI-VERIFICATION-RESULT | docs/aspice/records/verification/latest.md | SWE.4-SWE.6 |
+| CI-SOFTWARE-CLOSURE | docs/aspice/governance/scope-and-closure.md | SWE.1-SWE.6 |
 
 ## 依赖基线
 

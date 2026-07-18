@@ -47,12 +47,12 @@ flowchart LR
 生成开始后：
 
 1. 页面显示 **「正在生成报告…」** 及进度
-2. 步骤条按 [pipeline-steps.yaml](../reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative` → `archive`）
+2. 步骤条按 [pipeline-steps.yaml](../aspice/SWE.3-detailed-design/reference/pipeline-steps.yaml) 顺序推进（`fetch` → `indicators` → `ict` → `analyst_team` → `bullish` → `bearish` → `debate` → `trader` → `risk` → `manager` → `report` → `llm_narrative` → `archive`）
    中文含义：数据拉取 → 技术指标 → ICT 结构 → 分析师团队 → 看多/看空 → 辩论 → 交易 → 风控 → 经理 → 报告 →（可选）LLM 文案 → **运行归档**
 3. 等待期间主内容区显示 **当前进度** 与 **LLM 状态**（阶段名 + 已输出字符数）；完整 Prompt / JSON 在生成完成后于 **LLM决策链 → 生成与 I/O 审计** 查看
 4. 完成后渲染机构报告，主图为 **5 分钟 K 线**（叠加近位 5 个 Internal OB 与可见范围 active FVG；远位多周期结构在关键流动性/市场总览；路径推演见底栏）
 
-主图与多周期决策分层见 **[chart-layers.md](../architecture/chart-layers.md)**。
+主图与多周期决策分层见 **[chart-layers.md](../aspice/SWE.2-architecture/chart-layers.md)**。
 
 | 模式 | 典型耗时 |
 |------|----------|
@@ -60,7 +60,7 @@ flowchart LR
 | `AGENT_MODE=hybrid` 且全开 LLM | 约 5～6 分钟 |
 | `AGENT_MODE=llm` 且全开 LLM + 报告文案 | 约 5～8 分钟（视模型与网络） |
 
-超时与重试见 [llm-agents.md §3.4](../architecture/llm-agents.md#34-传输重试与规则兜底)（`LLM_READ_TIMEOUT`、`LLM_MAX_RETRIES` 等）。
+超时与重试见 [llm-agents.md §3.4](../aspice/SWE.2-architecture/llm-agents.md#34-传输重试预算与遥测)（`LLM_READ_TIMEOUT`、`LLM_MAX_RETRIES` 等）。
 
 ### 历史回放（0 token）
 
@@ -84,7 +84,7 @@ CLI 校验：`python scripts/inspect_archive.py list|validate <run_id>`
 |------|----------|------|
 | 顶栏指标 | `report.metrics` | 现价、日涨跌、日高/低、情绪摘要 |
 | 顶栏四格 | `market_overview` / `liquidity` / `conclusion` / `sentiment` | 市场总览、流动性、结论要点、多空结构权重饼图（最右） |
-| 多周期结构 | `data` + `report.timeframes` | 三列 4H/1H/15M 条带 K 线 + 结构文字（背景结构，见 [chart-layers.md](../architecture/chart-layers.md)） |
+| 多周期结构 | `data` + `report.timeframes` | 三列 4H/1H/15M 条带 K 线 + 结构文字（背景结构，见 [chart-layers.md](../aspice/SWE.2-architecture/chart-layers.md)） |
 | 5 分钟主图 | `data["5m"]` + `analyses["5m"]` | K 线 + 成交量 + 近位 5 个 Internal OB / 可见范围 active FVG |
 | 关键流动性 | `report.liquidity` | 近位执行区 + `参考·` 远位 swing（如不画在主图的 4H 需求区） |
 | 交易计划 | `report.signals` | 右侧栏，最多 3 条计划卡片 |
@@ -209,7 +209,7 @@ sequenceDiagram
 - [ ] `meta.stage_sources` 与顶栏来源条一致
 - [ ] 切换「外部数据」页在 fetch 完成后展示新闻/日历（无需等完整报告）
 - [ ] 切换「短线策略」页在 2 秒内打开（缓存生效）
-- [ ] 饼图/信号区有 **非回测** 相关说明（见 [findings-status.md](../reviews/findings-status.md) FIN-UI-01）
+- [ ] 饼图/信号区有 **非回测** 相关说明（见 [findings-status.md](../aspice/records/reviews/findings-status.md) FIN-UI-01）
 
 ---
 
@@ -233,9 +233,9 @@ python run_app.py
 | 文档 | 内容 |
 |------|------|
 | [onboarding.md](./onboarding.md) | 代码层心智模型 |
-| [examples/report-schema.md](../reference/examples/report-schema.md) | 报告 JSON 字段 |
-| [cheat-sheet.md](../reference/cheat-sheet.md) | 改界面/流水线速查 |
-| [pipeline-steps.yaml](../reference/pipeline-steps.yaml) | 步骤 ID 权威列表 |
+| [examples/report-schema.md](../aspice/SWE.3-detailed-design/reference/examples/report-schema.md) | 报告 JSON 字段 |
+| [cheat-sheet.md](../aspice/SWE.3-detailed-design/reference/cheat-sheet.md) | 改界面/流水线速查 |
+| [pipeline-steps.yaml](../aspice/SWE.3-detailed-design/reference/pipeline-steps.yaml) | 步骤 ID 权威列表 |
 
 ---
 

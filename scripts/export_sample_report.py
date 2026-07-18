@@ -1,5 +1,5 @@
-﻿#!/usr/bin/env python3
-"""Export a脱敏 sample report JSON for docs/reference/examples/ (no network)."""
+#!/usr/bin/env python3
+"""Export a脱敏 sample report JSON for docs/aspice/SWE.3-detailed-design/reference/examples/ (no network)."""
 
 from __future__ import annotations
 
@@ -34,7 +34,7 @@ from src.core.types import (
 )
 from src.indicators.technical import enrich
 
-OUT = ROOT / "docs" / "reference" / "examples" / "sample-report.json"
+OUT = ROOT / "docs" / "aspice" / "SWE.3-detailed-design" / "reference" / "examples" / "sample-report.json"
 
 # Fictional report time aligned with the synthetic sample context (not wall clock).
 SAMPLE_REPORT_UPDATED_AT = "2026-06-16 08:39 (UTC+8)"

@@ -53,30 +53,30 @@ def _anchor(value: str) -> str:
     return value.lower().replace(".", "-").replace("_", "-")
 
 
-def _req_links(values: list[str] | str) -> str:
+def _req_links(values: list[str] | str, prefix: str = "") -> str:
     items = values.split(";") if isinstance(values, str) else values
-    return "、".join(f"[{item}](SWE.1-software-requirements.md#{_anchor(item)})" for item in items if item) or "—"
+    return "、".join(f"[{item}]({prefix}SWE.1-software-requirements.md#{_anchor(item)})" for item in items if item) or "—"
 
 
-def _arch_links(values: list[str] | str) -> str:
+def _arch_links(values: list[str] | str, prefix: str = "") -> str:
     items = values.split(";") if isinstance(values, str) else values
-    return "、".join(f"[{item}](SWE.2-software-architecture.md#{_anchor(item)})" for item in items if item) or "—"
+    return "、".join(f"[{item}]({prefix}SWE.2-architecture/README.md#{_anchor(item)})" for item in items if item) or "—"
 
 
-def _measure_links(values: list[str] | str) -> str:
+def _measure_links(values: list[str] | str, prefix: str = "") -> str:
     items = values.split(";") if isinstance(values, str) else values
     rendered: list[str] = []
     for item in items:
         if not item:
             continue
         target = "SWE.4-unit-testing.md" if item == "VM-UNIT" else "SWE.5-integration-testing.md" if item.startswith("VM-INTEGRATION") or item == "VM-BACKTEST" else "SWE.6-validation-testing.md"
-        rendered.append(f"[{item}]({target}#{_anchor(item)})")
+        rendered.append(f"[{item}]({prefix}{target}#{_anchor(item)})")
     return "、".join(rendered) or "—"
 
 
-def _test_links(value: list[str] | str) -> str:
+def _test_links(value: list[str] | str, root_prefix: str = "../../") -> str:
     items = value.split(";") if isinstance(value, str) else value
-    return "、".join(f"[{item}](../../{item})" for item in items if item) or "—"
+    return "、".join(f"[{item}]({root_prefix}{item})" for item in items if item) or "—"
 
 
 def _table(headers: list[str], rows: list[list[object]]) -> list[str]:
@@ -316,7 +316,7 @@ def _architecture_doc(arch: dict[str, Any], units: list[dict[str, str]]) -> str:
                 ["接口规格", interface_links],
                 ["动态行为", item["dynamic_behavior"]],
                 ["关联需求", _req_links(item["requirements"])],
-                ["详细设计", f"[查看 {len(by_component[item['id']])} 个软件单元](SWE.3-software-detailed-design.md#{item['id'].lower()})"],
+                ["详细设计", f"[查看 {len(by_component[item['id']])} 个软件单元](SWE.3-detailed-design/{item['id']}.md)"],
             ],
         )
         for index, spec in enumerate(interfaces_by_component[item["id"]], 1):
@@ -350,38 +350,59 @@ def _architecture_doc(arch: dict[str, Any], units: list[dict[str, str]]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _design_doc(
+def _design_outputs(
     arch: dict[str, Any],
     units: list[dict[str, str]],
     functions: list[dict[str, str]],
     verification: dict[str, dict[str, str]],
-) -> str:
+) -> dict[Path, str]:
+    """Render one readable SWE.3 entry plus one bounded document per component."""
     by_component: dict[str, list[dict[str, str]]] = defaultdict(list)
     for unit in units:
         by_component[unit["architecture_id"]].append(unit)
     unit_functions: dict[str, list[dict[str, str]]] = defaultdict(list)
     for function in functions:
         unit_functions[function["software_unit_id"]].append(function)
-    names = {item["id"]: item["name"] for item in arch["components"]}
-    lines = _front("SWE.3 软件详细设计", "SWE.3", "在一个文档内按组件、模块和函数阅读完整详细设计")
-    lines += [
-        "## 阅读方式",
+
+    index = _front("SWE.3 软件详细设计", "SWE.3", "按架构组件进入模块与逐函数详细设计")
+    index += [
+        "## 阅读规则",
         "",
-        "一个 Python 模块对应一个 software unit。本文件按组件、模块、函数三级组织；目录链接使用稳定 ID。",
+        "SWE.3 采用“一个过程入口、一个组件一份文档”。本页只负责导航，避免把全部函数塞入单个巨型文件。",
         "",
-        f"当前覆盖 **{len(units)} 个软件单元**。全部函数详细设计均在本文件内，SWE.4 汇总 UT 选择与结果。",
+        f"当前覆盖 **{len(units)} 个软件单元**、**{len(functions)} 个函数或方法**。函数卡片由受控源码和验证映射生成，不在生成文件中手工修改。",
         "",
-        "### 全部函数的共同契约",
+        "人工维护的关键单元补充设计见 [关键单元设计](./critical-units.md)，接口与 schema 参考见 [详细设计参考](./reference/README.md)。",
         "",
-        "- 前置条件：调用方满足函数签名、所属单元状态和关联需求约束。",
-        "- 后置条件：正常返回满足返回契约；副作用不得超出函数卡片记录的类别。",
-        "- 未发现显式 `raise` 或直接副作用，只表示静态扫描未在函数体内识别到对应行为；这不代表底层依赖绝不会抛出异常或产生间接副作用。",
+        "## 组件导航",
         "",
     ]
+    component_rows: list[list[object]] = []
+    outputs: dict[Path, str] = {}
     for component in arch["components"]:
         component_id = component["id"]
-        rows = sorted(by_component[component_id], key=lambda item: item["source_path"].casefold())
-        lines += ["", f"<a id=\"{_anchor(component_id)}\"></a>", "", f"## {component_id}", "", f"**名称**：{names[component_id]}", ""]
+        component_units = sorted(by_component[component_id], key=lambda item: item["source_path"].casefold())
+        function_count = sum(len(unit_functions[unit["software_unit_id"]]) for unit in component_units)
+        component_rows.append(
+            [
+                f"[{component_id} — {component['name']}](./{component_id}.md)",
+                len(component_units),
+                function_count,
+                _req_links(component["requirements"], "../"),
+            ]
+        )
+
+        lines = _front(
+            f"{component_id} — {component['name']}",
+            "SWE.3",
+            "阅读该架构组件的软件单元、函数职责、契约、风险与验证引用",
+        )
+        lines += [
+            f"[返回 SWE.3 组件导航](./README.md) · [返回 SWE.2 架构组件](../SWE.2-architecture/README.md#{_anchor(component_id)})",
+            "",
+            "## 组件概览",
+            "",
+        ]
         lines += _table(
             ["模块", "函数", "高风险", "验证措施", "状态"],
             [
@@ -389,13 +410,13 @@ def _design_doc(
                     f"[{unit['source_path']}](#{_anchor(unit['software_unit_id'])})",
                     verification[unit["software_unit_id"]]["function_count"],
                     verification[unit["software_unit_id"]]["high_risk_function_count"],
-                    _measure_links(verification[unit["software_unit_id"]]["verification_measure_ids"]),
+                    _measure_links(verification[unit["software_unit_id"]]["verification_measure_ids"], "../"),
                     verification[unit["software_unit_id"]]["verification_status"],
                 ]
-                for unit in rows
+                for unit in component_units
             ],
         )
-        for unit in rows:
+        for unit in component_units:
             lines += _unit_section(
                 unit,
                 sorted(
@@ -403,9 +424,23 @@ def _design_doc(
                     key=lambda item: (int(item["line"]), item["qualified_name"]),
                 ),
                 verification[unit["software_unit_id"]],
-                names[component_id],
+                component["name"],
+                root_prefix="../../../",
+                aspice_prefix="../",
             )
-    return "\n".join(lines) + "\n"
+        outputs[ASPICE / "SWE.3-detailed-design" / f"{component_id}.md"] = "\n".join(lines) + "\n"
+
+    index += _table(["架构组件", "软件单元", "函数", "关联需求"], component_rows)
+    index += [
+        "",
+        "## 共同契约",
+        "",
+        "- 前置条件：调用方满足函数签名、所属单元状态和关联需求约束。",
+        "- 后置条件：正常返回满足返回契约；副作用不得超出函数卡片记录的类别。",
+        "- 静态扫描未发现显式异常或副作用，不代表底层依赖绝不会产生间接行为。",
+    ]
+    outputs[ASPICE / "SWE.3-detailed-design" / "README.md"] = "\n".join(index) + "\n"
+    return outputs
 
 
 def _unit_section(
@@ -413,8 +448,11 @@ def _unit_section(
     functions: list[dict[str, str]],
     verification: dict[str, str],
     component_name: str,
+    *,
+    root_prefix: str = "../../",
+    aspice_prefix: str = "",
 ) -> list[str]:
-    source_link = "../../" + unit["source_path"]
+    source_link = root_prefix + unit["source_path"]
     lines = [
         "",
         f"<a id=\"{_anchor(unit['software_unit_id'])}\"></a>",
@@ -431,10 +469,10 @@ def _unit_section(
             ["源码", f"[{unit['source_path']}]({source_link})"],
             ["架构组件", f"{unit['architecture_id']} — {component_name}"],
             ["职责", unit["responsibility"]],
-            ["关联需求", _req_links(unit["requirement_ids"])],
+            ["关联需求", _req_links(unit["requirement_ids"], aspice_prefix)],
             ["函数 / 高风险函数", f"{verification['function_count']} / {verification['high_risk_function_count']}"],
-            ["验证措施", _measure_links(verification["verification_measure_ids"])],
-            ["动态测试", _test_links(verification["dynamic_test_references"])],
+            ["验证措施", _measure_links(verification["verification_measure_ids"], aspice_prefix)],
+            ["动态测试", _test_links(verification["dynamic_test_references"], root_prefix)],
             ["验证状态", verification["verification_status"]],
         ],
     )
@@ -448,7 +486,7 @@ def _unit_section(
                     f"[{item['qualified_name']}](#{_anchor(item['function_id'])})",
                     item["responsibility"],
                     item["side_effects"],
-                    _test_links(item["test_references"]),
+                    _test_links(item["test_references"], root_prefix),
                 ]
                 for item in high_risk_functions
             ],
@@ -473,7 +511,7 @@ def _unit_section(
             ["设计项", "说明"],
             [
                 ["函数", f"`{item['qualified_name']}`"],
-                ["源码位置", f"[{item['source_path']}](../../{item['source_path']}) · `L{item['line']}`"],
+                ["源码位置", f"[{item['source_path']}]({root_prefix}{item['source_path']}) · `L{item['line']}`"],
                 ["签名", f"`{item['qualified_name']}{item['signature']}`"],
                 ["参数", parameter_text],
                 ["返回", item["return_contract"]],
@@ -486,7 +524,7 @@ def _unit_section(
                 ["并发约束", item["concurrency"]],
                 ["调用依赖", dependency_text],
                 ["复杂度 / 风险", f"分支 {item['branch_points']}；跨度 {item['line_span']} 行；{risk_name}"],
-                ["测试 / 验证", f"{_test_links(item['test_references'])} · {item['verification_disposition']}"],
+                ["测试 / 验证", f"{_test_links(item['test_references'], root_prefix)} · {item['verification_disposition']}"],
             ],
         )
     return lines
@@ -508,7 +546,7 @@ def _unit_verification_doc(arch: dict[str, Any], rows: list[dict[str, str]]) -> 
             ["软件单元", "函数", "高风险", "措施", "动态测试", "状态"],
             [
                 [
-                    f"[{row['source_path']}](SWE.3-software-detailed-design.md#{_anchor(row['software_unit_id'])})",
+                    f"[{row['source_path']}](SWE.3-detailed-design/{row['architecture_id']}.md#{_anchor(row['software_unit_id'])})",
                     row["function_count"], row["high_risk_function_count"], _measure_links(row["verification_measure_ids"]),
                     _test_links(row["dynamic_test_references"]), row["verification_status"],
                 ]
@@ -576,7 +614,7 @@ def _qualification_doc(measures: dict[str, Any], coverage: list[dict[str, str]])
         ["需求", "架构", "验证措施", "接受结果", "状态"],
         [[_req_links([row["requirement_id"]]), _arch_links(row["architecture_ids"]), _measure_links(row["verification_measure_ids"]), _measure_links(row["accepted_result_ids"]), row["coverage_status"]] for row in coverage],
     )
-    lines += ["", "## 最新结果", "", "详见 [软件域验证结果](./verification-results/latest.md)。"]
+    lines += ["", "## 最新结果", "", "详见 [软件域验证结果](./records/verification/latest.md)。"]
     return "\n".join(lines) + "\n"
 
 
@@ -619,16 +657,7 @@ def expected_outputs() -> dict[Path, str]:
     unit_rows = _csv("software-unit-verification-matrix.csv")
     coverage = _csv("software-requirement-verification-coverage.csv")
     unit_verification = {row["software_unit_id"]: row for row in unit_rows}
-    outputs: dict[Path, str] = {
-        ASPICE / "SWE.1-software-requirements.md": _requirements_doc(reqs),
-        ASPICE / "SWE.2-software-architecture.md": _architecture_doc(arch, units),
-        ASPICE / "SWE.3-software-detailed-design.md": _design_doc(arch, units, functions, unit_verification),
-        ASPICE / "SWE.4-unit-testing.md": _unit_verification_doc(arch, unit_rows),
-        ASPICE / "SWE.5-integration-testing.md": _integration_doc(integration, measures),
-        ASPICE / "SWE.6-validation-testing.md": _qualification_doc(measures, coverage),
-        ASPICE / "SUP.8-configuration-management.md": _configuration_doc(cm),
-        ASPICE / "traceability.md": _traceability_doc(reqs, coverage),
-    }
+    outputs = _design_outputs(arch, units, functions, unit_verification)
     return outputs
 
 

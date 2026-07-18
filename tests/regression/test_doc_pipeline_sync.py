@@ -11,15 +11,16 @@ import yaml
 pytestmark = pytest.mark.regression
 
 ROOT = Path(__file__).resolve().parents[2]
-PIPELINE_YAML = ROOT / "docs" / "reference" / "pipeline-steps.yaml"
+REFERENCE = ROOT / "docs" / "aspice" / "SWE.3-detailed-design" / "reference"
+PIPELINE_YAML = REFERENCE / "pipeline-steps.yaml"
 ORCHESTRATOR = ROOT / "src" / "core" / "orchestrator.py"
 FETCH_PIPELINE = ROOT / "src" / "data" / "fetch_pipeline.py"
 
 DOC_FILES = [
     ROOT / "docs" / "operations" / "onboarding.md",
-    ROOT / "docs" / "reference" / "handbook.md",
+    REFERENCE / "handbook.md",
     ROOT / "docs" / "operations" / "walkthrough.md",
-    ROOT / "docs" / "reference" / "cheat-sheet.md",
+    REFERENCE / "cheat-sheet.md",
 ]
 
 

@@ -1,6 +1,6 @@
 # GoldAnalysisAI 测试体系
 
-测试代码、用例目录与开发工具与业务代码 (`src/`) 分离，统一放在 `tests/` 下。测试分层的权威说明见 [docs/testing/strategy.md](../docs/testing/strategy.md)。
+测试代码、用例目录与开发工具与业务代码 (`src/`) 分离，统一放在 `tests/` 下。测试分层的权威说明见 [docs/aspice/governance/verification-strategy.md](../docs/aspice/governance/verification-strategy.md)。
 
 ## 目录结构
 
@@ -79,7 +79,7 @@ streamlit run tests/dashboard.py --server.port 8502
 | scenario | `python tests/run.py --financial` / `--external` / 指定 pytest | 本轮触及模块专项 |
 | release | `python tests/run.py --full` + UI 冒烟 + 外部 API | 发版前完整验收 |
 
-金融 Review 的历史修复路径已归档：[docs/reviews/financial/static-code-review.md §7](../docs/reviews/financial/static-code-review.md#7-修复路径规划2026-06-20)。
+金融 Review 的历史修复路径已归档：[docs/aspice/records/reviews/financial/static-code-review.md §7](../docs/aspice/records/reviews/financial/static-code-review.md#7-修复路径规划2026-06-20)。
 
 ## 用例维护
 

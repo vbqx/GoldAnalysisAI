@@ -1,71 +1,51 @@
 # Automotive SPICE 软件域
 
-这里是 GoldAnalysisAI 软件域的人工阅读、评审和变更入口。主文档全部采用 Markdown，
-并按 Automotive SPICE 软件工程过程排列；CSV、YAML、JSON 和依赖锁仅作为自动校验附录，
-集中存放在 [`_machine/`](./_machine/) 中。
+本目录是软件需求、架构、详细设计和验证证据的唯一权威入口。普通评审只阅读本页列出的主文档，不需要进入 `_machine/`。
 
-## 推荐阅读路径
+## 主追踪链
 
-```text
-SWE.1 软件需求
-   ↓ requirement ID
-SWE.2 软件架构
-   ↓ architecture / interface ID
-SWE.3 函数与详细设计
-   ↓ software unit / function ID
-SWE.4 单元测试（UT）
-   ↓ integration item / test reference
-SWE.5 集成测试（IT）
-   ↓ verification measure / accepted result
-SWE.6 验证测试（VT）
+```mermaid
+flowchart LR
+    R["SWE.1<br/>软件需求"] --> A["SWE.2<br/>软件架构"]
+    A --> D["SWE.3<br/>组件与函数设计"]
+    D --> U["SWE.4<br/>单元测试"]
+    U --> I["SWE.5<br/>集成测试"]
+    I --> V["SWE.6<br/>验证测试"]
 ```
 
-每个 ID 都是稳定链接锚点，可以从需求一路跳转到架构、模块、函数、详细设计和测试证据，
-也可以从 UT/IT/VT 反向返回需求与设计。
-
-## 软件域主文档
-
-| 顺序 | 过程域 | 文档 | 主要内容 |
+| 顺序 | 过程 | 唯一入口 | 主要内容 |
 |---|---|---|---|
-| 1 | SWE.1 | [软件需求分析](SWE.1-software-requirements.md) | 26 条需求、来源、优先级、接受准则、架构与验证链接 |
-| 2 | SWE.2 | [软件架构设计](SWE.2-software-architecture.md) | 组件、运行模式、静态接口、动态行为和组件接口 |
-| 3 | SWE.3 | [软件详细设计](SWE.3-software-detailed-design.md) | 按组件 → 模块 → 函数组织的完整详细设计 |
-| 4 | SWE.4 | [单元测试（UT）](SWE.4-unit-testing.md) | 每个软件单元的风险、测试选择、动态测试和结果 |
-| 5 | SWE.5 | [集成测试（IT）](SWE.5-integration-testing.md) | 集成顺序、接口、桩、资源、超时、用例和结果 |
-| 6 | SWE.6 | [验证测试（VT）](SWE.6-validation-testing.md) | 验证策略、需求覆盖、接受结果和发布结论 |
+| 1 | SWE.1 | [软件需求分析](SWE.1-software-requirements.md) | 需求、来源、优先级、接受准则、架构与验证链接 |
+| 2 | SWE.2 | [软件架构设计](SWE.2-architecture/README.md) | 组件、接口、数据流、运行模式和架构专题 |
+| 3 | SWE.3 | [软件详细设计](SWE.3-detailed-design/README.md) | 按组件拆分的软件单元和逐函数设计 |
+| 4 | SWE.4 | [单元测试](SWE.4-unit-testing.md) | 单元风险、测试选择、动态测试和结果 |
+| 5 | SWE.5 | [集成测试](SWE.5-integration-testing.md) | 集成顺序、接口、桩、资源、用例和结果 |
+| 6 | SWE.6 | [验证测试](SWE.6-validation-testing.md) | 需求覆盖、接受结果和发布结论 |
 
-跨过程查看：[需求—架构—验证双向追溯](./traceability.md)。
+跨过程总览：[需求—架构—验证追溯](traceability.md)。
 
-## 支撑与发布
+## 支撑入口
 
-- [软件配置管理](./SUP.8-configuration-management.md)
-- [软件域范围与关闭准则](./supporting/software-domain-scope-and-closure.md)
-- [最新验证结果](./verification-results/latest.md)
-- [文档控制规则](./supporting/document-control.md)
-- [文档体系与 ASPICE 过程归属](./supporting/document-architecture.md)
-- [全部文档的 ASPICE 过程索引](./supporting/process-document-index.md)
-- [软件域关闭审核报告](./supporting/reviews/software-domain-closure-review-2026-07-18.md)
-- [软件域初始差距审核](./supporting/reviews/software-domain-document-audit-2026-07-17.md)
+| 内容 | 入口 |
+|---|---|
+| 软件配置管理 | [SUP.8 配置管理](SUP.8-configuration-management.md) |
+| 文档维护规则 | [文档治理策略](governance/document-policy.md) |
+| 软件域范围和关闭条件 | [范围与关闭准则](governance/scope-and-closure.md) |
+| 验证策略 | [验证策略](governance/verification-strategy.md) |
+| 最新验证结果 | [当前验证基线](records/verification/latest.md) |
+| 历史审核记录 | [审核记录](records/reviews/README.md) |
 
-## 维护规则
+## 目录边界
 
-- 人工评审以本目录的 Markdown 主文档为准。
-- `_machine/` 仅用于自动生成、追溯一致性检查、配置锁定和 CI 校验；人工阅读无需进入该目录。
-- `_machine/` 是同一证据的结构化镜像，用于 CI 一致性、双向追溯和数量校验。
-- 函数设计来自受控源码 AST；修改业务函数后必须重新生成 SWE.3 和相关 UT 选择证据。
-- `--write` 只更新 ASPICE 文档和机器附录，不修改 `src/`、`views/`、`app.py` 或 `run_app.py`。
+- `SWE.2-architecture/`：当前架构事实及专题，不再维护外部平行架构目录。
+- `SWE.3-detailed-design/`：一个入口、一个组件一份生成型函数设计；`reference/` 保存 schema 和术语参考。
+- `governance/`：人工维护规则，不存放一次性审核结果。
+- `records/`：按日期保存历史审核和验证证据，不作为当前设计事实。
+- `_machine/`：结构化镜像、追溯表、依赖锁和生成索引；仅供自动化使用。
 
-```bash
-python scripts/check_aspice_assets.py --write
-python scripts/generate_aspice_software_evidence.py --write
-python scripts/generate_aspice_readable_docs.py --write
+## 修改方式
 
-python scripts/check_aspice_assets.py --check
-python scripts/generate_aspice_software_evidence.py --check
-python scripts/generate_aspice_readable_docs.py --check
-```
-
-关联问题单：[#39](https://github.com/vbqx/GoldAnalysisAI/issues/39)、
-[#40](https://github.com/vbqx/GoldAnalysisAI/issues/40)、
-[#41](https://github.com/vbqx/GoldAnalysisAI/issues/41)、
-[#42](https://github.com/vbqx/GoldAnalysisAI/issues/42)。
+- 需求、架构和验证策略：修改对应 Markdown，同时维护必要的结构化镜像。
+- 业务函数变化：重新生成 SWE.3 组件文档和验证映射，不手改生成的函数卡片。
+- 新增、删除或移动文档：重新生成文档注册表并执行全仓库链接检查。
+- 正常评审不得从 `_machine/` 开始，也不得直接以 CSV/YAML 代替设计结论。

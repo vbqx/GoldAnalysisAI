@@ -198,7 +198,7 @@ pytest tests/integration -m integration -q       # FN + PERF
 
 ## 8. 金融 Review 用例（FIN）
 
-> 详设：[financial-review-cases.md](./financial-review-cases.md) · 来源 [static-code-review.md](../../docs/reviews/financial/static-code-review.md)
+> 详设：[financial-review-cases.md](./financial-review-cases.md) · 来源 [static-code-review.md](../../docs/aspice/records/reviews/financial/static-code-review.md)
 
 | 前缀 | 范围 | 说明 |
 |------|------|------|

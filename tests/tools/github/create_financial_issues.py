@@ -58,7 +58,7 @@ pytest tests/unit/test_financial_review.py::test_fin_01_neutral_debate_aggressiv
 
 ## 参考
 
-`docs/reviews/financial/static-code-review.md` F-002 · `tests/cases/financial-review-cases.md`
+`docs/aspice/records/reviews/financial/static-code-review.md` F-002 · `tests/cases/financial-review-cases.md`
 """,
     },
     {
@@ -135,7 +135,7 @@ pytest tests/unit/test_financial_review.py::test_fin_09_vwap_zero_volume_should_
 
 def main() -> int:
     for label, color, desc in [
-        ("financial-review", "5319E7", "From docs/reviews/financial/static-code-review.md FIN tests"),
+        ("financial-review", "5319E7", "From docs/aspice/records/reviews/financial/static-code-review.md FIN tests"),
         ("P0", "B60205", "Critical"),
         ("P1", "D93F0B", "High"),
         ("P2", "FBCA04", "Medium"),
