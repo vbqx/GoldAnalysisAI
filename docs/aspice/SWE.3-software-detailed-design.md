@@ -27263,7 +27263,7 @@
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
-| 复杂度 / 风险 | 分支 0；跨度 124 行；中 |
+| 复杂度 / 风险 | 分支 0；跨度 133 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-73cd1d7b70"></a>
@@ -27273,7 +27273,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_architecture_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L277` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L286` |
 | 签名 | `_architecture_doc(arch: dict[str, Any], units: list[dict[str, str]])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型<br>`units`（list[dict[str, str]]）：由 `units` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27295,7 +27295,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_design_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L344` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L353` |
 | 签名 | `_design_doc(arch: dict[str, Any], units: list[dict[str, str]], functions: list[dict[str, str]], verification: dict[str, dict[str, str]])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型<br>`units`（list[dict[str, str]]）：由 `units` 表示的输入集合<br>`functions`（list[dict[str, str]]）：由 `functions` 表示的输入集合<br>`verification`（dict[str, dict[str, str]]）：验证证据或验证配置 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27317,7 +27317,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_unit_section` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L402` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L411` |
 | 签名 | `_unit_section(unit: dict[str, str], functions: list[dict[str, str]], verification: dict[str, str], component_name: str)` |
 | 参数 | `unit`（dict[str, str]）：由 `unit` 表示的键值映射<br>`functions`（list[dict[str, str]]）：由 `functions` 表示的输入集合<br>`verification`（dict[str, str]）：验证证据或验证配置<br>`component_name`（str）：对象名称 |
 | 返回 | 返回 `list[str]` 类型结果 |
@@ -27339,7 +27339,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_unit_verification_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L486` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L495` |
 | 签名 | `_unit_verification_doc(arch: dict[str, Any], rows: list[dict[str, str]])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型<br>`rows`（list[dict[str, str]]）：记录行集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27361,7 +27361,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_integration_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L512` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L521` |
 | 签名 | `_integration_doc(plan: dict[str, Any])` |
 | 参数 | `plan`（dict[str, Any]）：由 `plan` 表示的键值映射 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27383,7 +27383,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_qualification_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L544` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L553` |
 | 签名 | `_qualification_doc(measures: dict[str, Any], coverage: list[dict[str, str]])` |
 | 参数 | `measures`（dict[str, Any]）：由 `measures` 表示的键值映射<br>`coverage`（list[dict[str, str]]）：由 `coverage` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27405,7 +27405,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_configuration_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L570` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L579` |
 | 签名 | `_configuration_doc(cm: dict[str, Any])` |
 | 参数 | `cm`（dict[str, Any]）：由 `cm` 表示的键值映射 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27427,7 +27427,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_traceability_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L588` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L597` |
 | 签名 | `_traceability_doc(reqs: dict[str, Any], coverage: list[dict[str, str]])` |
 | 参数 | `reqs`（dict[str, Any]）：由 `reqs` 表示的键值映射<br>`coverage`（list[dict[str, str]]）：由 `coverage` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -27449,7 +27449,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `expected_outputs` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L598` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L607` |
 | 签名 | `expected_outputs()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[Path, str]` 类型结果 |
@@ -27471,7 +27471,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `main` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L622` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../scripts/generate_aspice_readable_docs.py) · `L631` |
 | 签名 | `main()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `int` 类型结果 |

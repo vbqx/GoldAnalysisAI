@@ -25,49 +25,58 @@
 | ARC-VIZ | Streamlit 展示 | 21 | 展示报告、图表、外部数据、决策链、拒绝原因、回放和配置。 |
 | ARC-TOOLS | 开发、审核与运维工具 | 18 | 校验连接、检查归档、生成样例和执行 ASPICE 一致性检查。 |
 
-## 模块分层与依赖图
+## 模块分层图
 
-箭头表示主要运行时依赖或数据流；虚线表示运维、审核或离线工具关系。组件 ID 可与后续组件章节直接对应。
+本图只表达职责分层，不绘制依赖线；组件 ID 可与后续组件章节直接对应。
 
 ```mermaid
-flowchart LR
-  subgraph ENTRY["入口与展示层"]
-    APP["ARC-APP<br/>应用入口与运行配置"]
-    VIZ["ARC-VIZ<br/>Streamlit 展示"]
+flowchart TB
+  subgraph L1["① 交互层"]
+    direction LR
+    APP["ARC-APP｜应用入口与运行配置"]
+    VIZ["ARC-VIZ｜Streamlit 展示"]
   end
-  subgraph ORCH["编排与决策层"]
-    CORE["ARC-CORE<br/>主编排与进度"]
-    ANALYSIS["ARC-ANALYSIS<br/>事实、信号与报告门禁"]
-    AGENTS["ARC-AGENTS<br/>规则/LLM Agent 编排"]
-    LLM["ARC-LLM<br/>传输、上下文和策略"]
+  subgraph L2["② 编排层"]
+    direction LR
+    CORE["ARC-CORE｜主编排与进度"]
   end
-  subgraph DATA_LAYER["数据与计算层"]
-    DATA["ARC-DATA<br/>行情与外部数据"]
-    IND["ARC-INDICATORS<br/>指标计算"]
-    BACKTEST["ARC-BACKTEST<br/>Point-in-time 回测"]
+  subgraph L3["③ 领域决策层"]
+    direction LR
+    ANALYSIS["ARC-ANALYSIS｜事实、信号与门禁"]
+    AGENTS["ARC-AGENTS｜规则/LLM Agent"]
+    BACKTEST["ARC-BACKTEST｜Point-in-time 回测"]
   end
-  subgraph PERSIST["运行记录与工具层"]
-    RUN["ARC-RUN<br/>运行上下文与归档"]
-    TOOLS["ARC-TOOLS<br/>开发、审核与运维工具"]
+  subgraph L4["④ 技术服务层"]
+    direction LR
+    DATA["ARC-DATA｜行情与外部数据"]
+    IND["ARC-INDICATORS｜指标计算"]
+    LLM["ARC-LLM｜模型传输与策略"]
+    RUN["ARC-RUN｜运行上下文与归档"]
   end
-  APP -->|启动/配置| CORE
-  APP -->|页面交互| VIZ
-  CORE -->|获取请求| DATA
-  DATA -->|标准 OHLCV| IND
-  DATA -->|MarketContext| ANALYSIS
-  IND -->|指标快照| ANALYSIS
-  ANALYSIS -->|事实与候选计划| AGENTS
-  AGENTS -->|阶段载荷| LLM
-  LLM -->|结构化阶段结果| AGENTS
-  AGENTS -->|决策与授权结果| ANALYSIS
-  ANALYSIS -->|门禁后报告| CORE
-  CORE -->|运行快照| RUN
-  RUN -->|加载回放| VIZ
-  ANALYSIS -->|报告与审计| VIZ
-  APP -->|回测配置| BACKTEST
-  DATA -->|历史切片| BACKTEST
-  TOOLS -.->|检查/导入导出| RUN
-  TOOLS -.->|一致性校验| CORE
+  subgraph L5["⑤ 工程支撑"]
+    direction LR
+    TOOLS["ARC-TOOLS｜开发、审核与运维工具"]
+  end
+```
+
+## 核心依赖主干图
+
+仅保留最重要的正向调用和数据主干，返回值、回调及完整接口扇出由后续时序图和接口流向图表达。实线为运行依赖，虚线为工程支撑关系。
+
+```mermaid
+flowchart TB
+  APP["ARC-APP｜入口"] -->|启动分析| CORE["ARC-CORE｜主编排"]
+  CORE ==>|获取数据| DATA["ARC-DATA｜数据"]
+  DATA ==>|标准 OHLCV| IND["ARC-INDICATORS｜指标"]
+  IND ==>|指标快照| ANALYSIS["ARC-ANALYSIS｜分析与门禁"]
+  ANALYSIS ==>|事实与候选计划| AGENTS["ARC-AGENTS｜决策"]
+  AGENTS -->|可选模型阶段| LLM["ARC-LLM｜模型服务"]
+  CORE -->|保存运行快照| RUN["ARC-RUN｜归档/回放"]
+  ANALYSIS -->|门禁后报告| VIZ["ARC-VIZ｜展示"]
+  RUN -->|回放快照| VIZ
+  APP -->|独立入口| BACKTEST["ARC-BACKTEST｜回测"]
+  BACKTEST -->|回测结果| VIZ
+  TOOLS["ARC-TOOLS｜工具"] -.->|检查/导入导出| RUN
 ```
 
 ## 主流水线时序图

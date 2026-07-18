@@ -153,8 +153,9 @@ def test_architecture_interfaces_are_reviewable() -> None:
     readable = (ROOT / "docs/aspice/SWE.2-software-architecture.md").read_text(encoding="utf-8-sig")
     assert all(f"### {component['id']}-IF-01" in readable for component in architecture["components"])
     assert "| 输入参数 |" in readable and "| 失败 / 异常行为 |" in readable
-    assert readable.count("```mermaid") == 4
-    assert "## 模块分层与依赖图" in readable
+    assert readable.count("```mermaid") == 5
+    assert "## 模块分层图" in readable
+    assert "## 核心依赖主干图" in readable
     assert "## 主流水线时序图" in readable
     assert "## 运行模式与回放边界图" in readable
     assert "## 跨组件接口流向图" in readable
