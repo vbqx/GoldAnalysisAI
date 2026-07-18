@@ -30,7 +30,7 @@ DOC-2616A27F3A,docs/aspice/records/reviews/financial/static-code-review.md,GoldA
 DOC-FDBDBF49E1,docs/aspice/records/reviews/findings-status.md,评审发现项 · 完成状态登记,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-77B13CCA5D,docs/aspice/records/reviews/gui/streamlit-acceptance-2026-07-08.md,GUI 验收快照：2026-07-08,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-7431A9B605,docs/aspice/records/reviews/review-index.md,评审文档索引,SUP.1/SUP.9,Review/Problem Analysis Evidence,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-DB5AC2C9EA,docs/aspice/records/verification/latest.md,ASPICE 软件域验证结果,SWE.4-SWE.6,08-60/15-52 Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
+DOC-DB5AC2C9EA,docs/aspice/records/verification/latest.md,ASPICE 软件域当前验证基线,SWE.4-SWE.6,08-60/15-52 Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-2EB7BE3117,docs/aspice/records/verification/software-domain-2026-07-18.yaml,software domain 2026 07 18,SWE.4-SWE.6,08-60/15-52 Verification,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-5F81938F62,docs/aspice/software-domain.md,Automotive SPICE 软件域,SWE.1-SWE.6,Software Domain Navigation,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-A03BEC2965,docs/aspice/SUP.8-configuration-management.md,SUP.8 软件配置管理,SUP.8,Configuration Status/Baseline,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
@@ -76,7 +76,7 @@ DOC-54C8B14687,docs/management/codex-autonomy.md,Codex 自动优化目标模板,
 DOC-A2C443DD18,docs/management/project-management.md,项目管理文档,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-A24A543637,docs/management/project.md,Project Overview,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-255C5ED038,docs/management/roadmap.md,GoldAnalysisAI 路线图,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
-DOC-F4A1FAB263,docs/management/status.md,Current Status,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
+DOC-F4A1FAB263,docs/management/status.md,当前状态,MAN.3/MAN.5,Project/Risk Plan,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-0DA09CBB3D,docs/operations/integrations/cursor-mcp.json.example,cursor mcp.json,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-9DD7202019,docs/operations/integrations/jin10-mcp.md,金十数据 MCP 接入,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-F4C8F2402A,docs/operations/onboarding.md,开发者上手指南,SUP.8/MAN.3,Operation/Configuration Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded

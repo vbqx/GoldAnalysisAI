@@ -160,7 +160,7 @@ CLI 校验：`python scripts/inspect_archive.py list|validate <run_id>`
 **生成中**（任意等待页 / LLM决策链页）：
 
 - **生成步骤** — 各步状态实时刷新
-- **LLM 实时推理** — 当前进行中的 LLM 阶段：Prompt + 流式 JSON（后台 chunk 同步，UI 约 400ms 轮询）
+- **LLM 实时推理** — 当前进行中的 LLM 阶段：Prompt + 流式 JSON（后台 chunk 同步，UI 每 1 秒轮询）
 - **已完成 I/O** — 已结束阶段的历史记录
 
 **生成完成后**：

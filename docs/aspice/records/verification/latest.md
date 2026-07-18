@@ -1,26 +1,44 @@
-# ASPICE 软件域验证结果
+# ASPICE 软件域当前验证基线
 
-**执行日期**：2026-07-18
-**状态**：`released`；可读文档候选的远端 Docs 与 Offline quality gate 均通过
-**发布基线**：`refs/tags/aspice-software-domain-release-2026-07-18`
-**已验证候选**：`08ddc89e9652f38fd4d27bd007cbf48f410fc240`（`refs/tags/aspice-software-domain-readable-baseline-2026-07-18`）
-**源代码基准**：`c9660f1`；本轮业务代码零修改
-**结构化记录**：[software-domain-2026-07-18.yaml](./software-domain-2026-07-18.yaml)
-**环境**：Windows 本地与 Ubuntu GitHub Actions、CPython 3.12；确定性离线门禁不调用付费 LLM、MT5 或 live supplier API。
-**远端证据**：Docs [29608653351](https://github.com/vbqx/GoldAnalysisAI/actions/runs/29608653351)；Offline quality gate [29608653375](https://github.com/vbqx/GoldAnalysisAI/actions/runs/29608653375)，Linux 环境 445 项通过。
+- **执行日期**：2026-07-18
+- **当前状态**：`verified-local`；本文件所在文档一致性修订提交已完成本地确定性门禁，远端门禁将在推送后重新执行
+- **业务代码基准**：`ac0a7a6e7c302f4d466c47c14df344deccdf71f9`
+- **业务代码变更**：无；本候选只修改文档、测试设计资产和生成型文档索引
+- **上一发布快照**：[software-domain-2026-07-18.yaml](./software-domain-2026-07-18.yaml)；该文件是旧发布的不可变历史证据，不代表当前候选统计
+- **验证环境**：Windows、CPython 3.12.13；确定性门禁不调用付费 LLM、MT5 或 live supplier API
 
-| 措施 | 结果 | 证据 |
+## 当前候选本地结果
+
+| 措施 | 结果 | 证据或命令 |
 |---|---|---|
-| VM-UNIT | 通过：417 | `python tests/run.py`，OpenBLAS/OMP 单线程 |
-| VM-REGRESSION | 通过：26 | `python tests/run.py`，含软件域关闭门禁与跨文档锚点检查 |
-| VM-INTEGRATION-PIPELINE | 通过：2 | 冻结报告夹具、零网络 |
-| VM-BACKTEST | 通过：9 | point-in-time 回测测试；3 条非阻断弃用警告 |
-| VM-DOCS | 通过：15 | 文档、追溯、示例、跨域导航和 ASPICE 工作产品回归 |
-| VM-TRACE | 通过 | 26 条需求、182 个单元、1068 个函数、79 份文档；需求和单元阻断项均为 0 |
-| VM-STATIC | 通过 | `compileall` 与 `git diff --check` |
-| VM-CONFIG | 通过 | 配置项、依赖锁、SBOM 和解析结果一致 |
-| VM-INTEGRATION-EXTERNAL | 本次未选择 | 供应商接口业务代码未变；HTTP 边界由确定性 mock 单元测试验证 |
-| VM-MANUAL-UI | 继承通过 | UI/业务代码未变；沿用受控 UI 验收证据并记录影响分析 |
+| VM-UNIT | 通过：417 项；88 条非阻断依赖弃用警告 | `python tests/run.py` 的 unit 阶段 |
+| VM-REGRESSION | 通过：31 项 | `python tests/run.py` 的 regression 阶段 |
+| VM-DOCS | 通过 | 31 项 regression 包含文档结构、链接、锚点、流水线同步和 ASPICE 工作产品检查 |
+| VM-TRACE | 通过 | 26 条需求、182 个软件单元、1082 个函数；157 个高风险函数；需求和单元阻断项均为 0 |
+| VM-STATIC | 通过 | `git diff --check`；业务代码路径差异为空 |
+| VM-CONFIG | 通过 | 配置项、依赖锁、SBOM、文档注册表和生成索引一致 |
+| VM-INTEGRATION-PIPELINE | 本次未选择 | 仅修改文档和测试说明；接口与业务实现未变 |
+| VM-INTEGRATION-EXTERNAL | 本次未选择 | 本候选不修改供应商适配器；实时可用性不属于确定性文档门禁 |
+| VM-MANUAL-UI | 影响分析后未选择 | UI 代码未变；测试资产仅把现有四页实现同步到验收文字 |
 
-发布准入已经完成：三个 ASPICE `--check`、445 项完整离线套件、业务代码路径差异检查和
-当前可读文档候选的远端双门禁均通过。最终发布记录提交通过同一双门禁后关闭软件域问题单。
+执行的 ASPICE 一致性命令：
+
+```bash
+python scripts/check_aspice_assets.py --check
+python scripts/generate_aspice_software_evidence.py --check
+python scripts/generate_aspice_readable_docs.py --check
+```
+
+## 最近一次远端源代码基线
+
+业务代码基准 `ac0a7a6` 的远端门禁已经通过：
+
+- [Docs 29639972034](https://github.com/vbqx/GoldAnalysisAI/actions/runs/29639972034)：成功。
+- [Offline quality gate 29639972058](https://github.com/vbqx/GoldAnalysisAI/actions/runs/29639972058)：成功，450 项通过；26 条需求、182 个单元、1082 个函数、90 份文档，阻断项为 0。
+
+上述远端结果证明本轮业务代码基准可用，但不冒充当前尚未推送的文档候选验证。当前候选提交推送后，必须以该提交的新 Docs 和 Offline quality gate 结果更新本节，才可把状态提升为 `released`。
+
+## 偏差与处置
+
+- `DEV-NUMPY-PANDAS-DEPRECATION`：本地 unit 阶段出现 88 条第三方库/时间单位弃用警告；当前均为非阻断，且本候选不修改业务代码。
+- 首次本地运行使用了不可写的系统 pytest 临时目录，导致 23 项 fixture setup 权限错误；改用受控 `--basetemp` 后相关测试全部通过，判定为环境边界而非产品缺陷。

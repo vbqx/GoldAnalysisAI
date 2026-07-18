@@ -12,10 +12,13 @@ tests/
 ├── runner.py                 # 测试运行引擎（CLI + UI 共用）
 ├── conftest.py               # pytest 配置
 ├── _bootstrap.py             # 路径 / .env 引导
+├── _archive_helpers.py       # 归档测试共享构造器
+├── _run_config_helpers.py    # 运行配置测试共享辅助
 ├── cases/
 │   ├── test-case-guide.md    # 用例维护说明
 │   ├── test-plan.md          # 分层测试设计（UI→指标→功能→性能）
 │   └── catalog.yaml          # 用例目录（ID、优先级、是否自动化）
+├── fixtures/                 # 冻结报告、回放和外部数据样本
 ├── unit/                     # 单元测试（无网络，秒级）
 ├── integration/              # 集成测试（完整流水线，~2–3 分钟）
 ├── regression/               # 回归测试（Issue 修复项、约定检查）

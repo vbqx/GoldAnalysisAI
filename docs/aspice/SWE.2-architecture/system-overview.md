@@ -24,7 +24,7 @@
 | **LLM 报告文案** | `llm/analyst.py` | ✅ 流水线末尾（`LLM_ENABLED`） |
 | **流式 LLM I/O** | `viz/pipeline_progress.py` | ✅ 生成时实时展示 |
 | **Execution** | 券商/MT5 API | MT5 账号连接已接入；模拟/实盘下单未接入 |
-| **Streamlit UI** | `app.py` + `views/*` + `viz/*` | ✅ 三页：机构 / 短线 / LLM 决策 |
+| **Streamlit UI** | `app.py` + `views/*` + `viz/*` | ✅ 四页：机构报告 / 外部数据 / 短线策略 / LLM 决策链 |
 
 ---
 
@@ -126,44 +126,35 @@ flowchart LR
 
 ```
 src/
-├── core/
-│   ├── types.py          # AnalystReport, AnalystTeam, AgentTrace…
-│   ├── progress.py       # 生成步骤 + stage_io / llm_io 记录
-│   └── orchestrator.py   # run_trade_agent_pipeline()
+├── pipeline.py              # 对外 run_analysis() 门面
+├── core/                    # 主编排、并行执行、进度、共享领域类型
+│   ├── orchestrator.py / orchestrator_hooks.py
+│   ├── parallel.py / progress.py
+│   ├── run_context.py / types.py
+│   └── run_config.py        # 兼容重导出；现行实现位于 run/config.py
+├── run/                     # 单次运行配置、上下文和归档边界
+│   ├── config.py / context.py / pipeline_run.py
+│   └── archive/             # 保存、加载、检查、迁移、裁剪和导入导出
+├── data/                    # 行情、外部数据源、清洗和 MarketContext 聚合
+│   ├── fetch_pipeline.py / fetcher.py / aggregator.py / context_builder.py
+│   ├── calendar_utils.py / external_format.py / news_topics.py
+│   ├── tradingview.py / mt5.py / proxy_env.py
+│   ├── sources/             # TradingView、金十、宏观、新闻和社媒适配器
+│   └── run_archive*.py      # 旧导入路径兼容层；不承载现行归档实现
+├── indicators/              # EMA、VWAP 等确定性指标
+├── analysis/                # ICT/SMC、事实注册、信号几何、报告和风险门禁
 ├── agents/
-│   ├── factory.py          # 统一调度 rule / llm / hybrid
-│   ├── analysts/           # ← Analyst Team（新增）
-│   │   ├── technical.py
-│   │   ├── fundamentals.py
-│   │   ├── news.py
-│   │   ├── sentiment.py
-│   │   └── base.py
-│   ├── bullish.py / bearish.py / debate.py
-│   ├── trader.py / risk.py / manager.py
-│   └── llm/stages/         # LLM 各阶段（payload 含 analyst_team）
-├── data/
-│   ├── fetch_pipeline.py   # K 线 + 外部源统一拉取（orchestrator 入口）
-│   ├── context_builder.py  # derived 信号 + context_stats
-│   ├── aggregator.py       # merge_external → MarketContext
-│   └── sources/
-│       ├── jin10_mcp_client.py  # 金十 MCP 传输（JSON-RPC / SSE）
-│       ├── jin10_feed.py        # 快讯 + 资讯 + 日历 bundle
-│       ├── gold_relevance.py    # 黄金相关筛选
-│       ├── macro.py             # DXY + US10Y quotes
-│       ├── news.py              # NewsDataSource
-│       ├── fundamentals.py      # 宏观 DataSource
-│       ├── social_feed.py       # TV Ideas/Minds
-│       └── market.py            # TradingView OHLCV
-├── analysis/
-│   ├── fact_registry.py       # 事实注册表 fr-v2
-│   ├── report_invariants.py   # 跨板块不变量
-│   ├── report_reliability.py  # 确定性可靠度
-│   ├── data_freshness.py      # data_as_of / observation_mode
-│   └── price_action_facts.py  # Session PA（1d open 锚定）
-├── indicators/
-├── viz/
-└── pipeline.py
+│   ├── analysts/            # 技术、基本面、新闻、情绪及证据治理
+│   ├── llm/stages/          # 分析、研究、辩论、点位、交易、风控、经理
+│   ├── factory.py           # rule / llm / hybrid 统一调度
+│   └── bullish.py / bearish.py / debate.py / trader.py / risk.py / manager.py
+├── llm/                     # 模型客户端、路由、上下文、提示词和报告文案
+├── backtest/                # point-in-time 回测、模拟、宏观叠加和指标统计
+└── viz/                     # 四页共享的 Streamlit 状态、组件和渲染层
 ```
+
+该树只描述稳定边界，不枚举每个源码文件。逐文件和逐函数清单以
+[SWE.3 软件详细设计](../SWE.3-detailed-design/software-detailed-design.md) 的受控生成结果为准。
 
 ---
 
@@ -173,7 +164,7 @@ src/
 from src.pipeline import run_analysis
 
 report, data, analyses = run_analysis()
-# 新增可选字段：
+# 主要可选字段：
 # report["agent_trace"]["analyst_team"]  # 四位分析师报告
 # report["agent_trace"]["stage_meta"]    # 各阶段 rule/llm 来源
 # report["meta"]["run_config"]           # UI 选择的本次运行配置

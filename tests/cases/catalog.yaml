@@ -914,7 +914,7 @@ cases:
 
     layer: ui_layout
 
-    title: 应用入口 wide 布局与三页导航
+    title: 应用入口 wide 布局与四页导航
 
     page: app
 
@@ -926,7 +926,7 @@ cases:
 
       - 启动 python run_app.py（勿直接 streamlit run app.py）
 
-      - 确认 layout 宽屏、侧边栏三页链接可见
+      - 确认 layout 宽屏、侧边栏四页链接可见
 
       - 默认页为机构级分析报告
 
@@ -954,7 +954,7 @@ cases:
 
     layer: ui_layout
 
-    title: 三页 page-hero 区域
+    title: 四页页面标题与说明区域
 
     page: all
 
@@ -1372,7 +1372,7 @@ cases:
 
     layer: functional
 
-    title: 三页导航 Session 缓存不重跑
+    title: 四页导航 Session 缓存不重跑
 
     priority: P0
 
@@ -1384,7 +1384,7 @@ cases:
 
       - 首次加载机构报告页并等待完成
 
-      - 切换短线策略 / LLM决策链
+      - 依次切换外部数据 / 短线策略 / LLM决策链
 
       - 确认 updated_at 不变、无重新跑流水线
 
@@ -1592,7 +1592,7 @@ cases:
 
     suite: manual
 
-    title: "[已映射 FN-10] 三页导航与 Session 缓存"
+    title: "[已映射 FN-10] 四页导航与 Session 缓存"
 
     priority: P1
 

@@ -11,7 +11,7 @@
 | [项目管理文档](../../management/project-management.md) | Project/Risk Plan | reviewed | supporting |
 | [Project Overview](../../management/project.md) | Project/Risk Plan | reviewed | supporting |
 | [GoldAnalysisAI 路线图](../../management/roadmap.md) | Project/Risk Plan | reviewed | supporting |
-| [Current Status](../../management/status.md) | Project/Risk Plan | reviewed | supporting |
+| [当前状态](../../management/status.md) | Project/Risk Plan | reviewed | supporting |
 
 ## SUP.1/SUP.9
 
@@ -130,7 +130,7 @@
 | 文档 | 信息项 | 状态 | 权威性 |
 |---|---|---|---|
 | [verification measures](../_machine/verification-measures.yaml) | 08-60/15-52 Verification | agreed | normative |
-| [ASPICE 软件域验证结果](../records/verification/latest.md) | 08-60/15-52 Verification | agreed | normative |
+| [ASPICE 软件域当前验证基线](../records/verification/latest.md) | 08-60/15-52 Verification | agreed | normative |
 | [software domain 2026 07 18](../records/verification/software-domain-2026-07-18.yaml) | 08-60/15-52 Verification | agreed | normative |
 | [catalog](../../../tests/cases/catalog.yaml) | Verification Strategy/Measure | reviewed | supporting |
 | [金融 Review 测试用例设计](../../../tests/cases/financial-review-cases.md) | Verification Strategy/Measure | reviewed | supporting |

@@ -23,7 +23,7 @@
 | `manager` | 经理 | `agents/factory.py` + `agents/manager.py` | 可选 |
 | `report` | 组装报告 | `analysis/report_engine.py` | 否 |
 | `llm_narrative` | LLM 文案 | `llm/analyst.py` | 可选 |
-| `archive` | 运行归档 | `data/run_archive.py` | 否 |
+| `archive` | 运行归档 | `run/archive/` | 否 |
 
 **回放**（不进上表进度条）：`viz/replay_loader.py` → `load_replay_bundle()`，读 `.cache/run_archives/`。
 
@@ -70,7 +70,7 @@
 | **LLM 阶段策略 / 预算 / 遥测（#37）** | `llm/stage_policy.py`, `llm/router.py`, `agents/llm/base.py` | `pytest tests/unit/test_llm_stage_policy.py` |
 | 改 Streamlit 布局 | `viz/report_views.py` + `viz/dashboard_components.py` | 手工界面 / 用例 catalog `UIL-*` |
 | 改外部数据页 | `viz/external_data_view.py` + `views/4_外部数据.py` | `pytest tests/unit/test_external_data_view.py` |
-| 改运行前配置/回放 UI | `viz/run_config_panel.py` + `core/run_config.py` | `pytest tests/unit/test_run_config.py tests/unit/test_streamlit_ensure_report.py` |
+| 改运行前配置/回放 UI | `viz/run_config_panel.py` + `run/config.py` | `pytest tests/unit/test_run_config.py tests/unit/test_streamlit_ensure_report.py` |
 | **评审发现项 / FIN-* 状态** | [reviews/findings-status.md](../../records/reviews/findings-status.md) | 改信号/风控前必读 |
 | 改后台生成/回放加载 | `viz/generation_worker.py`, `viz/replay_loader.py` | 同上 + `pytest tests/unit/test_archive_optimizations.py` |
 | **等待页轻量进度（防白屏）** | `viz/streamlit_common.py`, `viz/generation_worker.py` (`compact_llm_io_for_live`) | `pytest tests/unit/test_live_progress_ui.py` |
@@ -83,7 +83,7 @@
 
 ## 配置速查
 
-| 变量 | 典型值 | 作用 |
+| 变量 | 项目示例/典型值 | 作用 |
 |------|--------|------|
 | `AGENT_MODE` | `rule` / `llm` / `hybrid` | 智能体调度：规则 / 纯 LLM / 混合 |
 | `LLM_ENABLED` | `true` / `false` | 报告文案层开关 |
@@ -105,7 +105,9 @@
 | `JIN10_API_TOKEN` | — | 金十 MCP |
 | `LOG_LEVEL` | `DEBUG` | 跟踪流水线 |
 
-完整列表见 `.env.example` 与 [handbook.md §2.3](./handbook.md#配置速查)。
+本表用于开发调试，不代表代码内建默认值；例如代码和 `.env.example` 的 `LOG_LEVEL` 默认均为
+`INFO`，需要详细日志时才改为 `DEBUG`。完整列表见 `.env.example` 与
+[handbook.md §2.3](./handbook.md#配置速查)。
 
 ---
 

@@ -112,9 +112,9 @@ LLM_ENHANCE_CONCLUSION=true
 
 LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整次请求重打**。
 
-| 环境变量 | 默认 | 含义 |
-|----------|------|------|
-| `LLM_TIMEOUT` | 60 | 遗留总超时；未单独设 connect/read 时 read 取此值 |
+| 环境变量 | 代码回退值 | 含义 |
+|----------|------------|------|
+| `LLM_TIMEOUT` | 60 | 遗留总超时；`.env.example` 推荐配置为 120 秒；未单独设 connect/read 时 read 取此值 |
 | `LLM_CONNECT_TIMEOUT` | `min(30, LLM_TIMEOUT)` | TCP/ TLS 建连超时（秒） |
 | `LLM_READ_TIMEOUT` | `LLM_TIMEOUT` | 流式 **chunk 空闲**超时（秒）；长时间无 SSE 数据则失败 |
 | `LLM_MAX_RETRIES` | 2 | 统一重试次数；**总上游尝试 = 1 + 此值**（传输与 JSON/schema 共享同一计数器） |
@@ -224,6 +224,7 @@ LLM_PIPELINE_STYLE=staged       # 现有默认路径
 | 页面 | 展示内容 |
 |------|----------|
 | `views/1_机构级分析报告.py` | 机构报告 + 生成时实时决策链 Tab |
+| `views/4_外部数据.py` | 外部行情、新闻、日历、宏观和社媒数据审计 |
 | `views/2_短线策略.py` | 短线策略图 |
 | `views/3_LLM决策链.py` | 三 Tab：智能体决策 / LLM 文案 / 生成与 LLM I/O |
 
