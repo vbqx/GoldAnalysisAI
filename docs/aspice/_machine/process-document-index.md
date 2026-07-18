@@ -33,10 +33,7 @@
 |---|---|---|---|
 | [Instructions for AI Agents & Automation](../../../AGENTS.md) | Document/Automation Guidance | reviewed | supporting |
 | [历史归档说明](../../archive/archive-policy.md) | Historical Record | historical | historical |
-| [已迁移](../../archive/domain/financial-review-run-2026-06-20.md) | Historical Record | historical | historical |
-| [已迁移](../../archive/domain/financial-review.md) | Historical Record | historical | historical |
 | [群友黄金分析报告 — 实现反推](../../archive/domain/reverse-engineering.md) | Historical Record | historical | historical |
-| [已迁移](../../archive/gui-acceptance-2026-07-08.md) | Historical Record | historical | historical |
 | [configuration management](../_machine/configuration-management.yaml) | Configuration Item/Baseline | agreed | normative |
 | [dependency lock](../_machine/dependency-lock.txt) | Configuration Item/Baseline | agreed | normative |
 | [document register](../_machine/document-register.csv) | Configuration Status Record | generated | generated |

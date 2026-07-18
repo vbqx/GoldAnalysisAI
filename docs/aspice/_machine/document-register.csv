@@ -1,10 +1,7 @@
 document_id,path,title,primary_process,information_item,lifecycle_status,authority,owner_role,baseline,superseded_by,retention
 DOC-37DD68363F,AGENTS.md,Instructions for AI Agents & Automation,SUP.8,Document/Automation Guidance,reviewed,supporting,document-owner,ASPICE-DOC-2026-07-17,,until-superseded
 DOC-237B1646B3,docs/archive/archive-policy.md,历史归档说明,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
-DOC-17A7063327,docs/archive/domain/financial-review-run-2026-06-20.md,已迁移,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
-DOC-E275804A75,docs/archive/domain/financial-review.md,已迁移,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-820037D420,docs/archive/domain/reverse-engineering.md,群友黄金分析报告 — 实现反推,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
-DOC-6507C6E001,docs/archive/gui-acceptance-2026-07-08.md,已迁移,SUP.8,Historical Record,historical,historical,document-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-A4A3CE2992,docs/aspice/_machine/configuration-management.yaml,configuration management,SUP.8,Configuration Item/Baseline,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-A1E3BF1987,docs/aspice/_machine/dependency-lock.txt,dependency lock,SUP.8,Configuration Item/Baseline,agreed,normative,process-owner,ASPICE-DOC-2026-07-17,,permanent
 DOC-3C11367771,docs/aspice/_machine/document-register.csv,document register,SUP.8,Configuration Status Record,generated,generated,document-owner,ASPICE-DOC-2026-07-17,,until-superseded

@@ -56,6 +56,15 @@ def test_repository_root_is_the_only_readme() -> None:
     assert readmes == ["README.md"]
 
 
+def test_docs_do_not_keep_migration_placeholder_files() -> None:
+    placeholders = [
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / "docs").rglob("*.md")
+        if path.read_text(encoding="utf-8-sig", errors="replace").lstrip().startswith("# 已迁移")
+    ]
+    assert not placeholders, "Migration placeholders should be removed and inbound links rewired:\n" + "\n".join(placeholders)
+
+
 def test_top_level_docs_do_not_link_to_old_doc_paths() -> None:
     checked = [
         ROOT / "README.md",
