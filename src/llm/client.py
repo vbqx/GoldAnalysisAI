@@ -18,6 +18,40 @@ class LLMClientError(RuntimeError):
     pass
 
 
+def normalize_provider_usage(raw: Any) -> dict[str, int] | None:
+    """Normalize OpenAI / SiliconFlow / Anthropic-style usage into archive fields.
+
+    Returns ``None`` when the provider omitted usage (Issue #37 — never invent zeros).
+    """
+    if not isinstance(raw, dict) or not raw:
+        return None
+    prompt = raw.get("prompt_tokens")
+    if prompt is None:
+        prompt = raw.get("input_tokens")
+    completion = raw.get("completion_tokens")
+    if completion is None:
+        completion = raw.get("output_tokens")
+    total = raw.get("total_tokens")
+    try:
+        prompt_i = int(prompt) if prompt is not None else None
+        completion_i = int(completion) if completion is not None else None
+        total_i = int(total) if total is not None else None
+    except (TypeError, ValueError):
+        return None
+    if prompt_i is None and completion_i is None and total_i is None:
+        return None
+    if total_i is None and prompt_i is not None and completion_i is not None:
+        total_i = prompt_i + completion_i
+    out: dict[str, int] = {}
+    if prompt_i is not None:
+        out["prompt_tokens"] = prompt_i
+    if completion_i is not None:
+        out["completion_tokens"] = completion_i
+    if total_i is not None:
+        out["total_tokens"] = total_i
+    return out or None
+
+
 class LLMClient:
     """Minimal client for /v1/chat/completions (OpenAI, DeepSeek, Ollama, etc.)."""
 
@@ -34,6 +68,8 @@ class LLMClient:
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
         self.model = model
+        # Last completed stream's provider usage (Issue #37); None if unavailable.
+        self.last_usage: dict[str, int] | None = None
         from src.config import LLM_CONNECT_TIMEOUT, LLM_READ_TIMEOUT
 
         if connect_timeout is not None:
@@ -64,25 +100,38 @@ class LLMClient:
             "Content-Type": "application/json",
         }
 
-    def _parse_sse_line(self, line: str) -> str | None:
+    def _parse_sse_event(self, line: str) -> tuple[str | None, dict[str, int] | None]:
+        """Parse one SSE data line into optional content chunk and usage."""
         line = line.strip()
         if not line.startswith("data:"):
-            return None
+            return None, None
         payload = line[5:].strip()
         if payload == "[DONE]":
-            return None
+            return None, None
         try:
             data = json.loads(payload)
         except json.JSONDecodeError:
-            return None
-        try:
-            delta = data["choices"][0].get("delta") or {}
-            content = delta.get("content")
-        except (KeyError, IndexError, TypeError):
-            return None
-        if isinstance(content, str) and content:
-            return content
-        return None
+            return None, None
+        if not isinstance(data, dict):
+            return None, None
+
+        usage = normalize_provider_usage(data.get("usage"))
+        content: str | None = None
+        choices = data.get("choices")
+        if isinstance(choices, list) and choices:
+            try:
+                delta = choices[0].get("delta") or {}
+                piece = delta.get("content")
+            except (KeyError, IndexError, TypeError, AttributeError):
+                piece = None
+            if isinstance(piece, str) and piece:
+                content = piece
+        return content, usage
+
+    def _parse_sse_line(self, line: str) -> str | None:
+        """Backward-compatible content-only SSE parse."""
+        content, _usage = self._parse_sse_event(line)
+        return content
 
     def chat_stream(
         self,
@@ -90,8 +139,19 @@ class LLMClient:
         *,
         temperature: float = 0.3,
         response_format: dict[str, str] | None = None,
+        include_usage: bool | None = None,
     ) -> Iterator[str]:
-        """Yield text chunks from an OpenAI-compatible SSE stream."""
+        """Yield text chunks from an OpenAI-compatible SSE stream.
+
+        When ``include_usage`` is true (default from config), requests
+        ``stream_options.include_usage`` and stores normalized provider usage on
+        ``self.last_usage`` after the stream completes. Providers that omit usage
+        leave ``last_usage`` as ``None`` (not zero).
+        """
+        from src.config import LLM_STREAM_INCLUDE_USAGE
+
+        want_usage = LLM_STREAM_INCLUDE_USAGE if include_usage is None else bool(include_usage)
+        self.last_usage = None
         url = f"{self.base_url}/chat/completions"
         payload: dict[str, Any] = {
             "model": self.model,
@@ -101,13 +161,17 @@ class LLMClient:
         }
         if response_format:
             payload["response_format"] = response_format
+        if want_usage:
+            # OpenAI / SiliconFlow / DeepSeek: final SSE chunk carries usage.
+            payload["stream_options"] = {"include_usage": True}
 
         log.debug(
-            "llm stream model=%s url=%s connect=%.1fs read_idle=%.1fs",
+            "llm stream model=%s url=%s connect=%.1fs read_idle=%.1fs include_usage=%s",
             self.model,
             url,
             self.connect_timeout,
             self.read_timeout,
+            want_usage,
         )
         try:
             resp = requests.post(
@@ -132,7 +196,9 @@ class LLMClient:
                 if not raw:
                     continue
                 line = raw.decode("utf-8", errors="replace") if isinstance(raw, bytes) else str(raw)
-                chunk = self._parse_sse_line(line)
+                chunk, usage = self._parse_sse_event(line)
+                if usage is not None:
+                    self.last_usage = usage
                 if chunk:
                     yield chunk
         except Timeout as exc:

@@ -1,0 +1,12 @@
+{
+  "id": "wait_observation",
+  "scenario": "stale_or_wait",
+  "must_appear": ["今日决策：观望", "execution_authorized"],
+  "allowed_prices": [
+    4122.0, 4125.0, 4130.0, 4135.0, 4138.0, 4140.0, 4148.0, 4150.0, 4155.0, 4160.0, 4175.0
+  ],
+  "prohibited_phrases": ["今日决策：执行", "execution_authorized\": true", "已授权执行"],
+  "expected_mode": "wait",
+  "must_conflicts": [],
+  "allowed_directions": ["short", "wait"]
+}

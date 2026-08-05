@@ -86,6 +86,8 @@ LLM_READ_TIMEOUT=120
 # 统一尝试预算：实际上游请求 ≤ 1 + LLM_MAX_RETRIES（传输+JSON 共享，禁止嵌套相乘）
 LLM_MAX_RETRIES=2
 LLM_RETRY_BACKOFF_BASE_S=1.0
+# SSE 请求供应商 usage（stream_options.include_usage）；网关不支持时可设 false
+LLM_STREAM_INCLUDE_USAGE=true
 LLM_OVERRIDE_THRESHOLD=0.65
 
 # 分阶段开关
@@ -119,14 +121,15 @@ LLM 使用 OpenAI 兼容 **SSE 流式**；不支持流内续传，断流时**整
 | `LLM_READ_TIMEOUT` | `LLM_TIMEOUT` | 流式 **chunk 空闲**超时（秒）；长时间无 SSE 数据则失败 |
 | `LLM_MAX_RETRIES` | 2 | 统一重试次数；**总上游尝试 = 1 + 此值**（传输与 JSON/schema 共享同一计数器） |
 | `LLM_RETRY_BACKOFF_BASE_S` | 1.0 | 指数退避基数（1s → 2s → 4s …） |
+| `LLM_STREAM_INCLUDE_USAGE` | true | 请求 `stream_options.include_usage`；最终 SSE chunk 携带供应商 token 时写入归档 |
 
 | 组件 | 行为 |
 |------|------|
-| `llm/client.py` | `requests.post(..., timeout=(connect, read))`；`ChunkedEncodingError`、连接/空闲超时 → `LLMClientError` |
+| `llm/client.py` | `requests.post(..., timeout=(connect, read))`；解析 SSE content + usage；`normalize_provider_usage()`；`last_usage`；`ChunkedEncodingError`/超时 → `LLMClientError` |
 | `llm/stage_policy.py` | 阶段策略表 + 输入软/硬预算；硬超限时可见 `[BUDGET_TRUNCATED]` 降级，不静默截断 |
-| `agents/llm/base.py` `run_llm_stage()` | **统一尝试预算**；每次失败写入 `reason=transport|json_schema`；单阶段一条 `llm_io` 记录 |
-| `core/progress.LLMIORecord` | `input_chars` / token 估算、`attempt(s)`、`budget_action`、`tier`、`same_model_strategy`；供应商 usage 可得时写入 `usage`（SSE 路径暂为 null） |
-| `audit_summary` | `llm_routing` + `llm_usage_summary`（总字符/尝试/重试原因/预算动作） |
+| `agents/llm/base.py` `run_llm_stage()` | **统一尝试预算**；每次失败写入 `reason=transport|json_schema`；成功/失败均持久化 `usage`（可得时） |
+| `core/progress.LLMIORecord` | `input_chars` / token 估算、`attempt(s)`、`budget_action`、`tier`、`same_model_strategy`、`usage`（供应商未返回则为 `null`，不伪造 0） |
+| `audit_summary` | `llm_routing` + `llm_usage_summary`（估算字符/尝试/重试原因/预算动作 + `provider_*_tokens` 聚合） |
 | `factory` hybrid | LLM 失败或置信度不足 → 采用规则版 `bullish`/`bearish`/`debate` |
 | `llm/analyst.py` | 文案层经 `run_llm_stage()`；失败写入 `llm_analysis.error`，不中断 pipeline |
 
@@ -298,12 +301,22 @@ LLM 输入使用 `narrative_facts`：公共行情、质量警告、流动性、�
     "kind": "llm",
     "messages": [{"role": "system", "content": "..."}],
     "output": "{...}",
-    "latency_ms": 2400
+    "latency_ms": 2400,
+    "tier": "fast",
+    "attempt": 1,
+    "attempts": [],
+    "input_chars": 12000,
+    "input_tokens_est": 6667,
+    "output_chars": 800,
+    "output_tokens_est": 444,
+    "budget_action": "none",
+    "policy_version": "llm-stage-v1",
+    "usage": {"prompt_tokens": 6500, "completion_tokens": 420, "total_tokens": 6920}
   }
 ]
 ```
 
-规则阶段由 `ProgressReporter.stage_io()` 写入；LLM 阶段由 `llm_begin` / `llm_end` 写入。
+规则阶段由 `ProgressReporter.stage_io()` 写入；LLM 阶段由 `llm_begin` / `llm_end` 写入。`usage` 仅在供应商经 SSE 返回时非空；无重试时 `attempts` 仍为可审计的空列表。
 
 ---
 

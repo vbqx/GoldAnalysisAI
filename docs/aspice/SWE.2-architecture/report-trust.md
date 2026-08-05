@@ -38,7 +38,7 @@ flowchart TB
 | 不变量门禁 | 授权/几何/时效/触发/主张资格等确定性校验 + 失败降级 | `report_invariants.py` + `report_invariant_gate.py` |
 | 主张资格 | 技术反应质量与反证裁决（#36）；非几何成立即可升格执行 | `analysis/claim_eligibility.py` |
 | 可靠度 | 可解释、代码计算的报告质量分（非 LLM 自报胜率） | `analysis/report_reliability.py` |
-| Golden 基准 | 零 token 确定性回归（starter 3 例，目标扩至 30–50） | `tests/fixtures/golden_reports/` |
+| Golden 基准 | 零 token 确定性回归（3 例已标注，目标扩至 30–50） | `tests/fixtures/golden_reports/` + `*.annotation.json` |
 
 ---
 
@@ -238,9 +238,11 @@ Risk payload（`risk_payload`）在 LLM 路径传入完整几何 + `data_as_of`�
 | 路径 | 用途 |
 |------|------|
 | `tests/fixtures/golden_reports/*.json` | 冻结 point-in-time 报告片段 |
-| `tests/unit/test_golden_report_benchmark.py` | 零 token：fact_registry + invariants + reliability 快照 |
+| `tests/fixtures/golden_reports/*.annotation.json` | 标注：`must_appear` / `allowed_prices` / `prohibited_phrases` / `expected_mode` / `expect_invariant_codes` |
+| `tests/unit/xauusd_snapshot_annotations.py` | 标注契约校验（禁止说法、未授权几何价位、期望模式） |
+| `tests/unit/test_golden_report_benchmark.py` | 零 token：fact_registry + invariants + reliability + 标注子集 |
 
-当前 **3** 个 starter 样本（观望 / 几何错误 / 陈旧急迫措辞）；路线图目标 30–50 个标注场景。
+当前 **3** 个已标注 starter 样本（观望 / 几何错误 / 陈旧急迫措辞）；路线图目标 30–50 个情景。新增样本时成对提交 `*.json` + `*.annotation.json`。
 
 ---
 
@@ -261,6 +263,7 @@ pytest tests/unit/test_risk_gates_trigger.py
 pytest tests/unit/test_claim_eligibility.py
 pytest tests/unit/test_manager_authorization.py
 pytest tests/unit/test_llm_context_compact.py
+pytest tests/unit/test_golden_report_benchmark.py
 ```
 
 ---

@@ -111,6 +111,13 @@ LLM_CONNECT_TIMEOUT = float(os.getenv("LLM_CONNECT_TIMEOUT", str(min(30, LLM_TIM
 LLM_READ_TIMEOUT = float(os.getenv("LLM_READ_TIMEOUT", str(LLM_TIMEOUT)))
 LLM_MAX_RETRIES = max(0, min(5, int(os.getenv("LLM_MAX_RETRIES", "2"))))
 LLM_RETRY_BACKOFF_BASE_S = max(0.1, float(os.getenv("LLM_RETRY_BACKOFF_BASE_S", "1.0")))
+# Request provider token usage on SSE streams (OpenAI stream_options.include_usage).
+# Set false if a gateway rejects the field; archive then keeps usage=null (Issue #37).
+LLM_STREAM_INCLUDE_USAGE = os.getenv("LLM_STREAM_INCLUDE_USAGE", "true").lower() in (
+    "1",
+    "true",
+    "yes",
+)
 LLM_ENHANCE_CONCLUSION = os.getenv("LLM_ENHANCE_CONCLUSION", "true").lower() in ("1", "true", "yes")
 
 # Agent pipeline mode: rule | llm | hybrid

@@ -182,3 +182,5 @@ def test_audit_summary_includes_llm_usage(monkeypatch: pytest.MonkeyPatch) -> No
     assert summary["llm_usage_summary"]["total_attempts"] == 2
     assert summary["llm_usage_summary"]["budget_actions"]["bullish"] == "soft_warn"
     assert summary["llm_usage_summary"]["provider_usage_available"] is False
+    assert summary["llm_usage_summary"]["provider_prompt_tokens"] is None
+    assert summary["llm_usage_summary"]["provider_total_tokens"] is None

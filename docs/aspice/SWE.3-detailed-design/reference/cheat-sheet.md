@@ -66,8 +66,9 @@
 | 接入新外部数据源 | `data/sources/` + `fetch_pipeline.py` | `pytest tests/unit/test_external_sources.py` |
 | 金十 MCP 参数 | `config.py` + `jin10_feed.py` | `python tests/run.py --external` |
 | 新增 LLM 阶段 | `agents/llm/stages/` + `factory.py` | `pytest tests/unit/test_analyst_team_llm.py tests/unit/test_llm_trade_stages.py` |
-| LLM 传输/重试/超时 | `llm/client.py`, `agents/llm/base.py` | `pytest tests/unit/test_llm_transport.py tests/unit/test_llm_client_timeouts.py` |
-| **LLM 阶段策略 / 预算 / 遥测（#37）** | `llm/stage_policy.py`, `llm/router.py`, `agents/llm/base.py` | `pytest tests/unit/test_llm_stage_policy.py` |
+| LLM 传输/重试/超时/usage | `llm/client.py`, `agents/llm/base.py` | `pytest tests/unit/test_llm_transport.py tests/unit/test_llm_client_timeouts.py tests/unit/test_llm_provider_usage.py` |
+| **LLM 阶段策略 / 预算 / 遥测（#37）** | `llm/stage_policy.py`, `llm/client.py`, `agents/llm/base.py`, `analysis/audit_summary.py` | `pytest tests/unit/test_llm_stage_policy.py tests/unit/test_llm_provider_usage.py` |
+| **XAUUSD Golden 标注基准（#32）** | `tests/fixtures/golden_reports/*.annotation.json`, `tests/unit/xauusd_snapshot_annotations.py` | `pytest tests/unit/test_golden_report_benchmark.py`；见 [report-trust.md](../../SWE.2-architecture/report-trust.md) |
 | 改 Streamlit 布局 | `viz/report_views.py` + `viz/dashboard_components.py` | 手工界面 / 用例 catalog `UIL-*` |
 | 改外部数据页 | `viz/external_data_view.py` + `views/4_外部数据.py` | `pytest tests/unit/test_external_data_view.py` |
 | 改运行前配置/回放 UI | `viz/run_config_panel.py` + `run/config.py` | `pytest tests/unit/test_run_config.py tests/unit/test_streamlit_ensure_report.py` |

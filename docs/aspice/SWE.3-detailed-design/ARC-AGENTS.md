@@ -1773,14 +1773,14 @@
 | 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-ANA-002](../SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](../SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](../SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-LLM-003](../SWE.1-software-requirements.md#swr-llm-003) |
 | 函数 / 高风险函数 | 5 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/regression/test_fixes.py](../../../tests/regression/test_fixes.py)、[tests/unit/test_llm_json.py](../../../tests/unit/test_llm_json.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) |
+| 动态测试 | [tests/regression/test_fixes.py](../../../tests/regression/test_fixes.py)、[tests/unit/test_llm_json.py](../../../tests/unit/test_llm_json.py)、[tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [run_llm_stage](#fun-ddb9984fe6) | 执行`llm_stage`；可能影响共享状态；返回 `tuple[T \| None, LLMStageTrace]` 类型结果。 | 共享状态变更 | [tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py) |
+| [run_llm_stage](#fun-ddb9984fe6) | 执行`llm_stage`；可能影响共享状态；返回 `tuple[T \| None, LLMStageTrace]` 类型结果。 | 共享状态变更 | [tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py) |
 
 #### 函数导航
 
@@ -1850,7 +1850,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | get_progress、prog.run_llm_stream、client.chat_stream |
 | 复杂度 / 风险 | 分支 0；跨度 17 行；低 |
-| 测试 / 验证 | [tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) · 直接动态测试 |
 
 <a id="fun-79e9f3d3c1"></a>
 
@@ -1892,9 +1892,9 @@
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 共享状态变更 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | get_stage_policy、build_routing_strategy、apply_input_budget、log.warning、budget_meta.get、get_progress、routing.get、prog.llm_begin、time.perf_counter、range、min、_stream_once、_parse_llm_json、parse、int、estimate_text_size、prog.llm_end、log.info、LLMStageTrace、bool |
-| 复杂度 / 风险 | 分支 9；跨度 189 行；高 |
-| 测试 / 验证 | [tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py) · 直接动态测试 |
+| 调用依赖 | get_stage_policy、build_routing_strategy、apply_input_budget、log.warning、budget_meta.get、get_progress、routing.get、prog.llm_begin、time.perf_counter、range、min、_stream_once、getattr、_parse_llm_json、parse、int、estimate_text_size、prog.llm_end、log.info、LLMStageTrace |
+| 复杂度 / 风险 | 分支 9；跨度 194 行；高 |
+| 测试 / 验证 | [tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py) · 直接动态测试 |
 
 <a id="unit-3a49bda3a6"></a>
 

@@ -29,6 +29,24 @@ def _llm_usage_summary(llm_io: list[dict[str, Any]]) -> dict[str, Any]:
                         "reason": a.get("reason"),
                     }
                 )
+    provider_prompt = 0
+    provider_completion = 0
+    provider_total = 0
+    stages_with_usage = 0
+    for r in rows:
+        usage = r.get("usage")
+        if not isinstance(usage, dict) or not usage:
+            continue
+        stages_with_usage += 1
+        provider_prompt += int(usage.get("prompt_tokens") or 0)
+        provider_completion += int(usage.get("completion_tokens") or 0)
+        provider_total += int(
+            usage.get("total_tokens")
+            or (
+                int(usage.get("prompt_tokens") or 0)
+                + int(usage.get("completion_tokens") or 0)
+            )
+        )
     return {
         "stage_count": len(rows),
         "input_chars": total_in,
@@ -42,7 +60,11 @@ def _llm_usage_summary(llm_io: list[dict[str, Any]]) -> dict[str, Any]:
             if r.get("budget_action") and r.get("budget_action") != "none"
         },
         "retry_reasons": retry_reasons[:40],
-        "provider_usage_available": any(r.get("usage") for r in rows),
+        "provider_usage_available": stages_with_usage > 0,
+        "provider_usage_stage_count": stages_with_usage,
+        "provider_prompt_tokens": provider_prompt if stages_with_usage else None,
+        "provider_completion_tokens": provider_completion if stages_with_usage else None,
+        "provider_total_tokens": provider_total if stages_with_usage else None,
     }
 
 

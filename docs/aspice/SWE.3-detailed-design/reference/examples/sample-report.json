@@ -13,7 +13,7 @@
       "EMA610 仅基于 120 根 K 线，历史不足 610 根时与 TV 长周期 EMA 可能有偏差"
     ],
     "data_source": "OANDA:XAUUSD (sample)",
-    "agent_mode": "hybrid",
+    "agent_mode": "rule",
     "stage_sources": {
       "narrative_sections": {
         "market_overview": {

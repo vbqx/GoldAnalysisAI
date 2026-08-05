@@ -82,7 +82,7 @@
 | 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](../SWE.1-software-requirements.md#swr-ana-001)、[SWR-ANA-002](../SWE.1-software-requirements.md#swr-ana-002)、[SWR-ANA-003](../SWE.1-software-requirements.md#swr-ana-003)、[SWR-AGT-001](../SWE.1-software-requirements.md#swr-agt-001)、[SWR-LLM-003](../SWE.1-software-requirements.md#swr-llm-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-REP-004](../SWE.1-software-requirements.md#swr-rep-004)、[SWR-BT-001](../SWE.1-software-requirements.md#swr-bt-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002) |
 | 函数 / 高风险函数 | 3 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/unit/test_audit_summary.py](../../../tests/unit/test_audit_summary.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py) |
+| 动态测试 | [tests/unit/test_audit_summary.py](../../../tests/unit/test_audit_summary.py)、[tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -123,14 +123,14 @@
 | 参数 | `llm_io`（list[dict[str, Any]]）：由 `llm_io` 表示的输入集合 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
 | 职责 | 构建`llm_usage_summary`；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `r.get` → `sum` → `a.get` → `retry_reasons.append` → `round` → `any`；包含 5 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `r.get` → `sum` → `a.get` → `retry_reasons.append` → `isinstance` → `usage.get` → `round`；包含 10 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | r.get、sum、int、a.get、retry_reasons.append、len、round、any |
-| 复杂度 / 风险 | 分支 5；跨度 32 行；低 |
+| 调用依赖 | r.get、sum、int、a.get、retry_reasons.append、isinstance、usage.get、len、round |
+| 复杂度 / 风险 | 分支 10；跨度 54 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-5b705f2cac"></a>
@@ -140,7 +140,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_audit_summary` |
-| 源码位置 | [src/analysis/audit_summary.py](../../../src/analysis/audit_summary.py) · `L49` |
+| 源码位置 | [src/analysis/audit_summary.py](../../../src/analysis/audit_summary.py) · `L71` |
 | 签名 | `build_audit_summary(report: dict[str, Any], *, decision: Any \| None=None, stage_meta: dict[str, Any] \| None=None)` |
 | 参数 | `report`（dict[str, Any]）：分析报告<br>`decision`（Any \| None）：最终或阶段决策；默认值 `None`<br>`stage_meta`（dict[str, Any] \| None）：审计或处理元数据；默认值 `None` |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -153,7 +153,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | report.get、next、s.get、meta.get、row.get、get、val.get、narrative_audit.items、isinstance、decision.to_dict、hasattr、decision_dict.get、_hash_payload、top_audit.get、_llm_usage_summary、v.get |
 | 复杂度 / 风险 | 分支 1；跨度 59 行；中 |
-| 测试 / 验证 | [tests/unit/test_audit_summary.py](../../../tests/unit/test_audit_summary.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_audit_summary.py](../../../tests/unit/test_audit_summary.py)、[tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py) · 直接动态测试 |
 
 <a id="unit-271badecbe"></a>
 

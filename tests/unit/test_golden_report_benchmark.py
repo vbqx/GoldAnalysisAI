@@ -8,6 +8,10 @@ from pathlib import Path
 from src.analysis.fact_registry import build_fact_registry
 from src.analysis.report_invariants import validate_report_invariants
 from src.analysis.report_reliability import compute_report_reliability
+from tests.unit.xauusd_snapshot_annotations import (
+    check_snapshot_annotation,
+    iter_annotated_snapshots,
+)
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "golden_reports"
 
@@ -59,3 +63,19 @@ def test_golden_report_benchmark_snapshots() -> None:
                 assert code in result["codes"], f"{filename}: missing {code}"
         if "overall_reliability" in expected:
             assert abs(result["overall_reliability"] - expected["overall_reliability"]) < 0.06, filename
+
+
+def test_annotated_snapshots_reject_prohibited_claims() -> None:
+    """Issue #32 — annotated zero-token subset: prohibited phrases / unauthorized prices."""
+    rows = iter_annotated_snapshots()
+    assert len(rows) >= 3
+    scenarios = {ann["scenario"] for _, _, ann in rows}
+    assert "stale_or_wait" in scenarios or "stale_closed" in scenarios
+    for report_name, report, annotation in rows:
+        result = _run_benchmark(report)
+        violations = check_snapshot_annotation(
+            report,
+            annotation,
+            invariant_codes=result["codes"],
+        )
+        assert not violations, f"{report_name}: {violations}"

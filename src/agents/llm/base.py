@@ -159,7 +159,8 @@ def run_llm_stage(
         "budget_action": budget_action,
         "same_model_strategy": routing.get("same_model_strategy"),
         "policy_version": routing.get("policy_version"),
-        "usage": None,  # provider usage not available on SSE path yet
+        # None until a successful SSE completes with stream_options.include_usage.
+        "usage": None,
     }
     prog.llm_begin(stage, model, messages, telemetry=telemetry)
 
@@ -168,12 +169,14 @@ def run_llm_stage(
     attempt_log: list[dict[str, Any]] = []
     max_attempts = policy.max_attempts
     raw = ""
+    last_usage: dict[str, int] | None = None
 
     for attempt in range(max_attempts):
         attempt_t0 = time.perf_counter()
         temp = temperature if attempt == 0 else min(temperature + 0.1, 0.5)
         try:
             raw = _stream_once(client, messages, stage=stage, temperature=temp)
+            last_usage = getattr(client, "last_usage", None)
             data = _parse_llm_json(raw)
             result = parse(data)
             elapsed = int((time.perf_counter() - t0) * 1000)
@@ -182,7 +185,7 @@ def run_llm_stage(
                 **telemetry,
                 "attempt": attempt + 1,
                 **out_size,
-                "usage": None,
+                "usage": last_usage,
             }
             prog.llm_end(stage, raw, latency_ms=elapsed, telemetry=end_tel)
             if elapsed >= policy.soft_latency_ms or elapsed >= LLM_STAGE_WARN_MS:
@@ -208,7 +211,7 @@ def run_llm_stage(
                 output_chars=out_size["output_chars"],
                 output_tokens_est=out_size["output_tokens_est"],
                 budget_action=budget_action,
-                usage=None,
+                usage=last_usage,
                 same_model_strategy=bool(routing.get("same_model_strategy")),
             )
         except LLMClientError as exc:
@@ -295,6 +298,7 @@ def run_llm_stage(
             **telemetry,
             "attempt": len(attempt_log),
             **estimate_text_size(raw),
+            "usage": last_usage,
         },
     )
     log.warning("llm stage %s failed after %d attempts: %s", stage, len(attempt_log), last_exc)
@@ -309,5 +313,6 @@ def run_llm_stage(
         input_chars=int(budget_meta.get("input_chars") or 0),
         input_tokens_est=int(budget_meta.get("input_tokens_est") or 0),
         budget_action=budget_action,
+        usage=last_usage,
         same_model_strategy=bool(routing.get("same_model_strategy")),
     )

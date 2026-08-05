@@ -1,0 +1,11 @@
+{
+  "id": "stale_urgent_narrative",
+  "scenario": "stale_closed",
+  "must_appear": ["data_age_hours", "建议立即入场"],
+  "allowed_prices": [4140.0],
+  "prohibited_phrases": ["execution_authorized\": true"],
+  "expected_mode": "wait",
+  "expect_invariant_codes": ["INV-FRESH-001"],
+  "must_conflicts": ["freshness"],
+  "allowed_directions": ["wait", "short"]
+}
