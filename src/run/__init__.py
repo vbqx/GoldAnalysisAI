@@ -29,9 +29,9 @@ from src.run.config import (
     run_config_widget_state,
 )
 from src.run.context import (
-    agent_mode,
+    generation_mode,
     get_run_config,
-    llm_narrative_enabled,
+    llm_advisor_enabled,
     reset_run_config,
     run_config_scope,
     set_run_config,
@@ -39,7 +39,7 @@ from src.run.context import (
 
 __all__ = [
     "RunConfig",
-    "agent_mode",
+    "generation_mode",
     "allocate_run_id",
     "apply_run_config",
     "archive_label",
@@ -51,7 +51,7 @@ __all__ = [
     "get_run_config",
     "inspect_run_archive",
     "list_archives",
-    "llm_narrative_enabled",
+    "llm_advisor_enabled",
     "load_archive_5m_bars",
     "load_bundle",
     "reset_run_config",

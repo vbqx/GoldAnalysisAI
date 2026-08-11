@@ -7,7 +7,7 @@ import pandas as pd
 from src.analysis.ict_pa import TimeframeAnalysis
 from src.core.progress import get_progress
 from src.core.types import EvidenceItem, ExternalFactors, MarketContext
-from src.data.fetcher import daily_metrics, get_active_source
+from src.data.fetcher import get_active_source, market_metrics
 from src.data.sources import (
     FundamentalsDataSource,
     MarketDataSource,
@@ -59,7 +59,7 @@ def assemble_market_context(
     source_label: str,
 ) -> MarketContext:
     """Bind pre-fetched external data with enriched bars and ICT analyses."""
-    metrics = daily_metrics(enriched["1d"])
+    metrics = market_metrics(enriched["1d"], enriched["5m"])
     ctx = MarketContext(
         enriched=enriched,
         analyses=analyses,

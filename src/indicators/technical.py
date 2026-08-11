@@ -10,7 +10,10 @@ _NAN = float("nan")
 def add_emas(df: pd.DataFrame, periods: tuple[int, ...] = (20, 50, 610)) -> pd.DataFrame:
     out = df.copy()
     for p in periods:
-        out[f"EMA{p}"] = out["Close"].ewm(span=p, adjust=False).mean()
+        # A long-horizon EMA must not look ready while its required history is
+        # absent. Keep the established warm-up behaviour for short EMAs.
+        min_periods = p if p >= 610 else 1
+        out[f"EMA{p}"] = out["Close"].ewm(span=p, adjust=False, min_periods=min_periods).mean()
     return out
 
 
@@ -139,7 +142,9 @@ def fibonacci_levels(swing_high: float, swing_low: float) -> list[dict]:
                 "ratio": ratio,
                 "price": round(level, 2),
                 "significance": significance,
-                "probability": prob,
+                # Static display/ranking heuristic, explicitly not a calibrated
+                # probability or historical win rate (F-007).
+                "display_weight": prob,
             }
         )
     return levels

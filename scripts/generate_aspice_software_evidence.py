@@ -25,16 +25,17 @@ ASPICE = ROOT / "docs" / "aspice"
 MACHINE = ASPICE / "_machine"
 ARCH_PATH = MACHINE / "software-architecture.yaml"
 REQ_PATH = MACHINE / "software-requirements.yaml"
-RESULT_PATH = ASPICE / "records" / "verification" / "software-domain-2026-07-18.yaml"
+RESULT_PATH = ASPICE / "records" / "verification" / "software-domain-2026-08-12.yaml"
 FUNCTION_PATH = MACHINE / "software-function-detailed-design.csv"
 UNIT_VERIFICATION_PATH = MACHINE / "software-unit-verification-matrix.csv"
 REQUIREMENT_COVERAGE_PATH = MACHINE / "software-requirement-verification-coverage.csv"
 SOURCE_EXCLUDES = {".git", ".venv", ".cache", ".pytest_cache", "__pycache__", "tests"}
 CRITICAL_PATHS = {
     "src/core/orchestrator.py",
-    "src/analysis/claim_eligibility.py",
-    "src/backtest/simulator.py",
-    "src/viz/lightweight_chart.py",
+    "src/advice/engine.py",
+    "src/advice/audit.py",
+    "src/advice/llm.py",
+    "src/advice/report.py",
 }
 
 
@@ -80,10 +81,9 @@ def _component_for(path: str) -> str:
         ("src/data/", "ARC-DATA"),
         ("src/indicators/", "ARC-INDICATORS"),
         ("src/analysis/", "ARC-ANALYSIS"),
-        ("src/agents/", "ARC-AGENTS"),
+        ("src/advice/", "ARC-ADVICE"),
         ("src/llm/", "ARC-LLM"),
         ("src/run/", "ARC-RUN"),
-        ("src/backtest/", "ARC-BACKTEST"),
         ("src/viz/", "ARC-VIZ"),
         ("scripts/", "ARC-TOOLS"),
     ):
@@ -531,10 +531,8 @@ def expected_outputs() -> tuple[dict[Path, str], dict[str, int]]:
         methods = ["VM-STATIC"]
         if has_dynamic:
             methods.append("VM-UNIT")
-        if component in {"ARC-CORE", "ARC-ANALYSIS", "ARC-AGENTS", "ARC-LLM", "ARC-RUN"}:
+        if component in {"ARC-CORE", "ARC-ANALYSIS", "ARC-ADVICE", "ARC-LLM", "ARC-RUN"}:
             methods.extend(["VM-REGRESSION", "VM-INTEGRATION-PIPELINE"])
-        elif component == "ARC-BACKTEST":
-            methods.append("VM-BACKTEST")
         elif component == "ARC-DATA":
             methods.append("VM-INTEGRATION-EXTERNAL")
         elif component in {"ARC-APP", "ARC-VIZ"}:

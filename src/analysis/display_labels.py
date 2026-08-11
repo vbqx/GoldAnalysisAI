@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from src.analysis.ict_pa import LiquidityZone
-from src.viz.display_labels import (
-    TF_LABELS,
-    TRADE_COLOR_LONG,
-    TRADE_COLOR_SHORT,
-    infer_trade_theme,
-)
+TF_LABELS = {"4h": "4H", "1h": "1H", "15m": "15M", "5m": "5M", "1d": "1D"}
+TRADE_COLOR_SHORT = "#dc2626"
+TRADE_COLOR_LONG = "#16a34a"
+
+
+def infer_trade_theme(*, theme: str = "", direction: str = "", direction_cn: str = "") -> str:
+    value = f"{theme} {direction} {direction_cn}".lower()
+    return "short" if any(token in value for token in ("short", "sell", "bear", "空", "卖")) else "long"
 
 TREND_CN = {"bullish": "偏多", "bearish": "偏空", "ranging": "震荡"}
 PREMIUM_DISCOUNT_CN = {

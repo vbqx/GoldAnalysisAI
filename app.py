@@ -50,7 +50,7 @@ _ensure_streamlit_runtime()
 import streamlit as st
 
 from src.log import setup_logging
-from src.viz.dashboard_components import DASHBOARD_CSS
+from src.viz.advice_view import ADVICE_CSS
 from src.viz.streamlit_common import bootstrap_env, render_runtime_dependency_banner, render_sidebar_header
 
 bootstrap_env()
@@ -61,7 +61,7 @@ st.set_page_config(
     page_icon="🥇",
     layout="wide",
 )
-st.markdown(DASHBOARD_CSS, unsafe_allow_html=True)
+st.markdown(ADVICE_CSS, unsafe_allow_html=True)
 render_runtime_dependency_banner()
 render_sidebar_header()
 
@@ -69,13 +69,11 @@ pg = st.navigation(
     [
         st.Page(
             "views/1_机构级分析报告.py",
-            title="机构级分析报告",
-            icon="📊",
+            title="人工审核建议",
+            icon="🎯",
             default=True,
         ),
         st.Page("views/4_外部数据.py", title="外部数据", icon="🌐"),
-        st.Page("views/2_短线策略.py", title="短线策略", icon="📈"),
-        st.Page("views/3_LLM决策链.py", title="LLM决策链", icon="🤖"),
     ]
 )
 pg.run()

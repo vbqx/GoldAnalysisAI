@@ -25,12 +25,16 @@ def indicator_snapshot(df: pd.DataFrame, timeframe: str) -> dict:
     }
 
     for col in ("EMA20", "EMA50", "EMA610", "VWAP"):
+        if col == "EMA610" and len(df) < 610:
+            continue
         if col in df.columns and pd.notna(last[col]):
             val = float(last[col])
             row[col] = round(val, 2)
             row[f"{col}_diff"] = round(price - val, 2)
 
     row["ema_relation"] = ema_relation(price, last)
+    if len(df) < 610:
+        row["ema_relation"]["EMA610"] = "N/A"
     row.update(indicator_values(last))
 
     notes: list[str] = []
@@ -42,7 +46,7 @@ def indicator_snapshot(df: pd.DataFrame, timeframe: str) -> dict:
             notes.append(f"Volume 为 0 占比 {zero_vol}/{len(df)}，VWAP 可靠性下降")
 
     if len(df) < 610:
-        notes.append(f"EMA610 仅基于 {len(df)} 根 K 线，历史不足 610 根时与 TV 长周期 EMA 可能有偏差")
+        notes.append(f"EMA610 不可用：仅有 {len(df)} 根 K 线，需要至少 610 根")
 
     if "VWAP" in row:
         vwap = row["VWAP"]

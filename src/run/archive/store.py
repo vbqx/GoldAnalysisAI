@@ -162,7 +162,8 @@ def archives_exist() -> bool:
 def archive_label(meta: dict[str, Any]) -> str:
     run_id = str(meta.get("run_id") or "—")
     saved_at = format_utc8(meta.get("saved_at") or run_id)
-    mode = str((meta.get("run_config") or {}).get("agent_mode") or "—")
+    archived_config = meta.get("run_config") or {}
+    mode = str(archived_config.get("generation_mode") or archived_config.get("agent_mode") or "—")
     price = meta.get("current_price")
     price_text = f"{float(price):.2f}" if isinstance(price, (int, float)) else "—"
     bars = meta.get("bars_summary") or {}
@@ -528,7 +529,7 @@ def load_bundle(run_id: str) -> tuple[dict[str, Any], dict[str, pd.DataFrame], d
 
 
 def load_archive_5m_bars(run_id: str) -> pd.DataFrame:
-    """Load 5m OHLCV from a saved run archive (shared contract with backtest)."""
+    """Load 5m OHLCV from a saved run archive for inspection and replay."""
     fetched = load_fetch(run_id)
     if "5m" not in fetched.raw:
         raise FileNotFoundError(f"run archive {run_id} has no 5m bars")
@@ -560,7 +561,7 @@ def _stub_failure_report(
         "meta": {
             "title": "流水线未完成 — 问题现场快照",
             "updated_at": format_utc8(datetime.now(timezone.utc).isoformat()),
-            "agent_mode": cfg.agent_mode,
+            "generation_mode": cfg.generation_mode,
             "run_config": cfg.to_dict(),
             "run_config_fingerprint": cfg.fingerprint(),
             "pipeline_status": PIPELINE_STATUS_FAILED,

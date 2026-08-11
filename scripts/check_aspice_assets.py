@@ -270,14 +270,12 @@ def component_for(path: Path) -> str:
         return "ARC-INDICATORS"
     if value.startswith("src/analysis/"):
         return "ARC-ANALYSIS"
-    if value.startswith("src/agents/"):
-        return "ARC-AGENTS"
+    if value.startswith("src/advice/"):
+        return "ARC-ADVICE"
     if value.startswith("src/llm/"):
         return "ARC-LLM"
     if value.startswith("src/run/"):
         return "ARC-RUN"
-    if value.startswith("src/backtest/"):
-        return "ARC-BACKTEST"
     if value.startswith("src/viz/"):
         return "ARC-VIZ"
     if value.startswith("scripts/"):
@@ -303,9 +301,10 @@ def build_units(arch: dict[str, Any]) -> tuple[list[dict[str, str]], list[dict[s
     components = {item["id"]: item for item in arch["components"]}
     critical_paths = {
         "src/core/orchestrator.py",
-        "src/analysis/claim_eligibility.py",
-        "src/backtest/simulator.py",
-        "src/viz/lightweight_chart.py",
+        "src/advice/engine.py",
+        "src/advice/audit.py",
+        "src/advice/llm.py",
+        "src/advice/report.py",
     }
     units: list[dict[str, str]] = []
     functions: list[dict[str, str]] = []

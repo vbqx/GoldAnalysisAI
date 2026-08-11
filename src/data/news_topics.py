@@ -1,4 +1,4 @@
-"""Cluster Jin10 headlines into macro themes for debate / derived context."""
+"""Cluster Jin10 headlines into macro themes used as advice background context."""
 
 from __future__ import annotations
 

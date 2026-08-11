@@ -13,7 +13,8 @@ NON_REPLAY_STATUSES = frozenset(
     {PIPELINE_STATUS_PARTIAL, PIPELINE_STATUS_FAILED, PIPELINE_STATUS_DEGRADED}
 )
 
-# Must match docs/reference/pipeline-steps.yaml progress steps.
+# Legacy V1 agent-chain contract.  Keep the public name for archive/test
+# compatibility; V2 reports use the smaller advice pipeline below.
 REPLAY_REQUIRED_STEP_IDS = (
     "fetch",
     "indicators",
@@ -27,6 +28,15 @@ REPLAY_REQUIRED_STEP_IDS = (
     "manager",
     "report",
     "llm_narrative",
+)
+
+# Must match docs/aspice/SWE.3-detailed-design/reference/pipeline-steps.yaml.
+ADVICE_V2_REQUIRED_STEP_IDS = (
+    "fetch",
+    "indicators",
+    "structure",
+    "advice",
+    "report",
 )
 
 TERMINAL_STEP_STATUSES = frozenset({"done", "skipped", "error"})
@@ -47,6 +57,16 @@ def generation_step_statuses(report: dict[str, Any]) -> dict[str, str]:
     return out
 
 
+def required_generation_step_ids(report: dict[str, Any]) -> tuple[str, ...]:
+    """Select the completion contract for the report artifact being checked."""
+    if (
+        report.get("artifact_kind") == "human_review_advice"
+        and report.get("artifact_version") == 2
+    ):
+        return ADVICE_V2_REQUIRED_STEP_IDS
+    return REPLAY_REQUIRED_STEP_IDS
+
+
 def pipeline_replay_errors(
     report: dict[str, Any],
     manifest: dict[str, Any] | None = None,
@@ -64,7 +84,7 @@ def pipeline_replay_errors(
     if not step_map:
         return errors
 
-    for step_id in REPLAY_REQUIRED_STEP_IDS:
+    for step_id in required_generation_step_ids(report):
         step_status = step_map.get(step_id)
         if not step_status:
             errors.append(f"generation_steps missing required step: {step_id}")

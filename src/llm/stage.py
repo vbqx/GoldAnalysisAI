@@ -1,4 +1,4 @@
-"""Shared utilities for LLM agent stages."""
+"""Shared transport and JSON utilities for the optional Advice V2 wording stage."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ log = get_logger(__name__)
 
 T = TypeVar("T")
 
-# Fix #4 [Bug] LLM 阶段 JSON 解析偶发失败，hybrid 模式回退规则引擎
+# LLM JSON 解析失败时回退到未经润色的确定性建议。
 # Issue #37: transport + JSON/schema share one countable attempt budget (no nested 3×3).
 
 
@@ -79,6 +79,20 @@ def _stream_once(
             response_format={"type": "json_object"},
         ),
     )
+
+
+def _add_provider_usage(
+    total: dict[str, int] | None,
+    attempt: dict[str, int] | None,
+) -> dict[str, int] | None:
+    """Accumulate billable usage across every completed retry attempt."""
+    if not attempt:
+        return total
+    merged = dict(total or {})
+    for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
+        if attempt.get(key) is not None:
+            merged[key] = int(merged.get(key, 0)) + int(attempt[key])
+    return merged or None
 
 
 def stream_llm_json(
@@ -169,14 +183,16 @@ def run_llm_stage(
     attempt_log: list[dict[str, Any]] = []
     max_attempts = policy.max_attempts
     raw = ""
-    last_usage: dict[str, int] | None = None
+    cumulative_usage: dict[str, int] | None = None
 
     for attempt in range(max_attempts):
         attempt_t0 = time.perf_counter()
         temp = temperature if attempt == 0 else min(temperature + 0.1, 0.5)
+        attempt_usage: dict[str, int] | None = None
         try:
             raw = _stream_once(client, messages, stage=stage, temperature=temp)
-            last_usage = getattr(client, "last_usage", None)
+            attempt_usage = getattr(client, "last_usage", None)
+            cumulative_usage = _add_provider_usage(cumulative_usage, attempt_usage)
             data = _parse_llm_json(raw)
             result = parse(data)
             elapsed = int((time.perf_counter() - t0) * 1000)
@@ -185,7 +201,7 @@ def run_llm_stage(
                 **telemetry,
                 "attempt": attempt + 1,
                 **out_size,
-                "usage": last_usage,
+                "usage": cumulative_usage,
             }
             prog.llm_end(stage, raw, latency_ms=elapsed, telemetry=end_tel)
             if elapsed >= policy.soft_latency_ms or elapsed >= LLM_STAGE_WARN_MS:
@@ -211,7 +227,7 @@ def run_llm_stage(
                 output_chars=out_size["output_chars"],
                 output_tokens_est=out_size["output_tokens_est"],
                 budget_action=budget_action,
-                usage=last_usage,
+                usage=cumulative_usage,
                 same_model_strategy=bool(routing.get("same_model_strategy")),
             )
         except LLMClientError as exc:
@@ -222,6 +238,10 @@ def run_llm_stage(
                 "error": str(exc),
                 "latency_ms": attempt_ms,
             }
+            attempt_usage = getattr(client, "last_usage", None)
+            if attempt_usage:
+                cumulative_usage = _add_provider_usage(cumulative_usage, attempt_usage)
+                entry["usage"] = attempt_usage
             attempt_log.append(entry)
             prog.llm_note_attempt(
                 stage,
@@ -229,6 +249,7 @@ def run_llm_stage(
                 reason="transport",
                 error=str(exc),
                 latency_ms=attempt_ms,
+                usage=attempt_usage,
             )
             last_exc = exc
             if attempt + 1 >= max_attempts:
@@ -258,6 +279,8 @@ def run_llm_stage(
                 "error": str(exc),
                 "latency_ms": attempt_ms,
             }
+            if attempt_usage:
+                entry["usage"] = attempt_usage
             attempt_log.append(entry)
             prog.llm_note_attempt(
                 stage,
@@ -265,6 +288,7 @@ def run_llm_stage(
                 reason="json_schema",
                 error=str(exc),
                 latency_ms=attempt_ms,
+                usage=attempt_usage,
             )
             last_exc = exc
             if attempt + 1 >= max_attempts:
@@ -298,7 +322,7 @@ def run_llm_stage(
             **telemetry,
             "attempt": len(attempt_log),
             **estimate_text_size(raw),
-            "usage": last_usage,
+            "usage": cumulative_usage,
         },
     )
     log.warning("llm stage %s failed after %d attempts: %s", stage, len(attempt_log), last_exc)
@@ -313,6 +337,6 @@ def run_llm_stage(
         input_chars=int(budget_meta.get("input_chars") or 0),
         input_tokens_est=int(budget_meta.get("input_tokens_est") or 0),
         budget_action=budget_action,
-        usage=last_usage,
+        usage=cumulative_usage,
         same_model_strategy=bool(routing.get("same_model_strategy")),
     )

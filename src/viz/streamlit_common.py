@@ -12,7 +12,7 @@ import streamlit as st
 from src.core.run_config import RunConfig, coerce_run_config
 from src.indicators.verify import indicator_snapshot, indicator_table_rows
 from src.log import get_logger
-from src.viz.dashboard_components import DASHBOARD_CSS
+from src.viz.advice_view import ADVICE_CSS
 from src.viz.generation_state import drop_job, get_job, purge_expired
 from src.viz.generation_worker import format_generation_error, start_generation
 from src.viz.page_layout import render_page_hero
@@ -131,7 +131,7 @@ def page_setup() -> None:
 
     bootstrap_env()
     setup_logging()
-    st.markdown(DASHBOARD_CSS, unsafe_allow_html=True)
+    st.markdown(ADVICE_CSS, unsafe_allow_html=True)
 
 
 def init_page(*, title_suffix: str = "") -> None:
@@ -143,7 +143,7 @@ def init_page(*, title_suffix: str = "") -> None:
     if title_suffix:
         title = f"{title} — {title_suffix}"
     st.set_page_config(page_title=title, page_icon="🥇", layout="wide")
-    st.markdown(DASHBOARD_CSS, unsafe_allow_html=True)
+    st.markdown(ADVICE_CSS, unsafe_allow_html=True)
 
 
 def _on_request_reconfigure() -> None:
@@ -169,17 +169,14 @@ def render_sidebar_header() -> None:
     from src.config import TV_EXCHANGE, TV_SYMBOL
 
     st.sidebar.caption(f"数据源: TradingView · {TV_EXCHANGE}:{TV_SYMBOL}")
-    from src.config import LLM_MODEL, LLM_MODEL_FAST, LLM_MODEL_STRONG, short_model_name
+    from src.config import LLM_MODEL, short_model_name
 
-    fast = short_model_name(LLM_MODEL_FAST)
-    strong = short_model_name(LLM_MODEL_STRONG)
-    report = short_model_name(LLM_MODEL)
+    fast = strong = report = short_model_name(LLM_MODEL)
     if fast == strong == report:
         st.sidebar.caption(f"LLM: {fast}")
     else:
-        st.sidebar.caption(f"LLM 研究: {fast}")
-        st.sidebar.caption(f"LLM 辩论/文案: {strong}" + (f" · 报告 {report}" if report not in (fast, strong) else ""))
-    st.sidebar.caption("先选择运行模式再生成；切换页面不重新生成")
+        st.sidebar.caption(f"LLM 建议解释: {report}")
+    st.sidebar.caption("生成一份供人工审核的交易建议；不会自动执行")
     render_sidebar_replay()
     render_sidebar_refresh_button()
 
@@ -187,7 +184,7 @@ def render_sidebar_header() -> None:
 def render_sidebar_footer(data: dict | None = None) -> None:
     active_config = coerce_run_config(st.session_state.get(RUN_CONFIG_KEY))
     if active_config is not None:
-        mode = mode_value_to_label(active_config.agent_mode)
+        mode = mode_value_to_label(active_config.generation_mode)
         st.sidebar.caption(f"当前模式: {mode} · `{active_config.fingerprint()}`")
     if data:
         with st.sidebar.expander("指标校验", expanded=False):
@@ -208,10 +205,10 @@ def _render_waiting_ui(job_key_str: str, *, show_generation_ui: bool) -> None:
         render_progress_steps,
     )
 
-    title = "正在生成机构级分析报告…" if show_generation_ui else "正在生成报告…"
+    title = "正在生成人工审核建议…" if show_generation_ui else "正在生成建议…"
     render_page_hero(
         title,
-        "约 2–8 分钟 · 下方显示流水线步骤；完整 LLM I/O 生成后见「LLM 决策链」",
+        "正在提取多周期结构、筛选关注区并执行一致性审核",
     )
     steps_slot = st.empty()
     llm_slot = st.empty()

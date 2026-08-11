@@ -91,15 +91,11 @@ class LLMIORecord:
 STAGE_LABELS = {
     "fetch": "数据拉取",
     "context": "数据拉取",
-    "analyst_team": "Analyst Team",
-    "technical": "技术分析师",
-    "fundamentals": "基本面分析师",
-    "news": "新闻分析师",
-    "sentiment": "情绪分析师",
-    "bullish": "看多研究",
-    "bearish": "看空研究",
-    "debate": "多空辩论",
-    "llm_narrative": "报告文案",
+    "indicators": "技术指标",
+    "structure": "市场结构",
+    "advice": "人工审核建议",
+    "advisor": "建议解释",
+    "report": "建议卡",
 }
 
 
@@ -236,20 +232,22 @@ class ProgressReporter:
         reason: str,
         error: str | None = None,
         latency_ms: int | None = None,
+        usage: dict[str, int] | None = None,
     ) -> None:
         with self._lock:
             rec = self._find_llm(stage)
             if not rec:
                 return
             rec.attempt = attempt
-            rec.attempts.append(
-                {
-                    "attempt": attempt,
-                    "reason": reason,
-                    "error": error,
-                    "latency_ms": latency_ms,
-                }
-            )
+            item: dict[str, Any] = {
+                "attempt": attempt,
+                "reason": reason,
+                "error": error,
+                "latency_ms": latency_ms,
+            }
+            if usage:
+                item["usage"] = dict(usage)
+            rec.attempts.append(item)
 
     def run_llm_stream(self, stage: str, chunk_iter) -> str:
         """Consume streamed chunks; Streamlit subclass uses st.write_stream."""

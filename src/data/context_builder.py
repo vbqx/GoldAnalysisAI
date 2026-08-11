@@ -40,6 +40,8 @@ _TECHNICAL_READY_COLUMNS = (
     "MACD_HIST",
 )
 
+_INDICATOR_MIN_BARS = {"EMA610": 610}
+
 
 def build_market_position(enriched: dict[str, pd.DataFrame], price: float) -> dict[str, Any]:
     """EMA / VWAP distances and recent range for technical analyst."""
@@ -211,7 +213,13 @@ def _technical_input_stats(ctx: MarketContext) -> dict[str, Any]:
             indicator_ready[tf] = []
             continue
         last = df.iloc[-1]
-        indicator_ready[tf] = [col for col in _TECHNICAL_READY_COLUMNS if col in last and pd.notna(last[col])]
+        indicator_ready[tf] = [
+            col
+            for col in _TECHNICAL_READY_COLUMNS
+            if len(df) >= _INDICATOR_MIN_BARS.get(col, 1)
+            and col in last
+            and pd.notna(last[col])
+        ]
 
     by_timeframe: dict[str, Any] = {}
     for tf, analysis in ctx.analyses.items():

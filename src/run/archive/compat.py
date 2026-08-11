@@ -197,23 +197,6 @@ def normalize_report(report: Any, *, contract_version: int = REPORT_CONTRACT_VER
             if key not in report:
                 warnings.append(f"report missing '{key}'; filled with default")
 
-    sections = normalized.get("narrative_sections")
-    if not isinstance(sections, dict):
-        sections = {}
-        normalized["narrative_sections"] = sections
-        warnings.append("narrative_sections invalid; reset to empty object")
-    for key in NARRATIVE_SECTION_KEYS:
-        if key not in sections or not isinstance(sections.get(key), dict):
-            sections[key] = {
-                "summary": "（归档回放）该板块在保存时无数据。",
-                "context": [],
-                "levels": [],
-                "conditions": [],
-                "invalidation": "—",
-                "source": "archive",
-            }
-            warnings.append(f"narrative_sections.{key} missing; filled placeholder")
-
     meta = normalized.setdefault("meta", {})
     if not isinstance(meta, dict):
         meta = {}

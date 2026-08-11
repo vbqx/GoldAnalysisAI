@@ -27,7 +27,7 @@ ARTIFACT_ANALYSIS = 1
 ARTIFACT_FRAME = 1
 
 # Report JSON contract — bump when required top-level keys change.
-REPORT_CONTRACT_VERSION = 1
+REPORT_CONTRACT_VERSION = 2
 
 MIN_READER_SCHEMA_VERSION = 1
 MAX_READER_SCHEMA_VERSION = SCHEMA_VERSION
@@ -38,30 +38,17 @@ REQUIRED_REPLAY_ARTIFACTS = ("report", "enriched")
 OPTIONAL_REPLAY_ARTIFACTS = ("fetch", "analyses")
 
 REPORT_TOP_LEVEL_DEFAULTS: dict[str, Any] = {
+    "artifact_kind": "human_review_advice",
+    "artifact_version": 2,
     "meta": {},
     "metrics": {},
-    "sentiment": {},
-    "conclusion": {},
-    "narrative_sections": {},
+    "advice": {},
     "timeframes": {},
-    "signals": [],
-    "projections": [],
-    "fibonacci": [],
+    "levels": {},
     "external": {},
-    "market_overview": [],
-    "liquidity": [],
-    "invalidation": [],
-    "risk_control": [],
-    "path_summary": [],
-    "price_action": {},
-    "agent_trace": {},
-    "llm_analysis": {},
-    "calendar_events": [],
-    "llm_levels": [],
-    "validated_plans": [],
 }
 
-NARRATIVE_SECTION_KEYS = ("market_overview", "liquidity", "4h", "1h", "15m")
+NARRATIVE_SECTION_KEYS: tuple[str, ...] = ()
 
 
 class CompatibilityLevel(str, Enum):

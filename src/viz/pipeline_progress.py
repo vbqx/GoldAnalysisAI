@@ -6,8 +6,14 @@ import streamlit as st
 
 from src.core.progress import PipelineProgressStep, ProgressReporter, StepStatus
 from src.llm.format_io import format_llm_output, format_messages
-from src.llm.narrative_output import format_llm_narrative
-from src.viz.llm_meta import format_latency_ms
+
+
+def format_latency_ms(value: object) -> str:
+    try:
+        ms = int(value or 0)
+    except (TypeError, ValueError):
+        return "—"
+    return f"{ms / 1000:.1f}s" if ms >= 1000 else f"{ms}ms"
 
 _STATUS_ICONS: dict[StepStatus, str] = {
     "pending": "⏳",
@@ -106,8 +112,7 @@ def _render_llm_output_panel(
         text=format_llm_output(raw)[:16000] + ("…" if len(raw) > 16000 else ""),
         height=json_height,
     )
-    st.caption("整理摘要")
-    st.markdown(format_llm_narrative(stage, raw), unsafe_allow_html=True)
+    st.caption("Advice V2 仅允许模型调整文字；方向与数值由确定性建议契约控制。")
 
 
 def is_streaming_llm_record(rec: dict) -> bool:

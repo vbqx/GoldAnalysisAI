@@ -1,9 +1,8 @@
-"""机构级分析报告 — 主页面。"""
+"""Advice V2 — 人工审核建议主页面。"""
 
 from __future__ import annotations
 
-from src.viz.display_labels import format_report_branding
-from src.viz.report_views import render_institutional_report
+from src.viz.advice_view import render_advice_report
 from src.viz.streamlit_common import (
     ensure_report,
     page_setup,
@@ -14,10 +13,9 @@ from src.viz.streamlit_common import (
 page_setup()
 
 report, data, analyses = ensure_report()
-meta = report["meta"]
 render_page_hero(
-    format_report_branding(meta["title"]),
-    f"{meta['updated_at']} · {format_report_branding(meta.get('methodology', 'SMC + PA'))}",
+    "XAUUSD 人工审核交易建议",
+    f"{report['meta']['updated_at']} · 一次只给一个首选建议 · 最终执行由你确认",
 )
-render_institutional_report(report, data, analyses, hide_title=True)
+render_advice_report(report, data, analyses)
 render_sidebar_footer(data)

@@ -37,10 +37,10 @@ def run_config_scope(config: RunConfig) -> Iterator[RunConfig]:
         reset_run_config(token)
 
 
-def agent_mode() -> str:
-    return get_run_config().agent_mode
+def generation_mode() -> str:
+    return get_run_config().generation_mode
 
 
-def llm_narrative_enabled() -> bool:
+def llm_advisor_enabled() -> bool:
     cfg = get_run_config()
-    return bool(cfg.llm_enabled) and cfg.agent_mode in ("llm", "hybrid")
+    return bool(cfg.llm_enabled) and cfg.generation_mode == "llm"

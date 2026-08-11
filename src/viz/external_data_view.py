@@ -7,15 +7,21 @@ from typing import Any
 
 import streamlit as st
 
-from src.analysis.report_engine import parse_risk_events_calendar
 from src.data.fetch_pipeline import DataFetchResult
-from src.viz.dashboard_components import _source_tags
 from src.viz.streamlit_common import render_page_hero
+
+
+def _source_tags(sources: list[str]) -> str:
+    return "".join(
+        f'<span class="source-tag">{html.escape(str(source))}</span>'
+        for source in sources[:8]
+        if source
+    )
 
 
 def external_snapshot_from_fetch(fetched: DataFetchResult) -> dict[str, Any]:
     ext = fetched.external
-    calendar = parse_risk_events_calendar(ext.risk_events) if ext.risk_events != "—" else []
+    calendar = [event.to_dict() for event in ext.calendar_events]
     return {
         "dxy_impact": ext.dxy_impact,
         "risk_events": ext.risk_events,
@@ -77,13 +83,6 @@ def _render_calendar_rows(payload: dict[str, Any]) -> str:
         )
     risk = str(payload.get("risk_events") or "—")
     if risk != "—":
-        parsed = parse_risk_events_calendar(risk)
-        if parsed:
-            return "".join(
-                f'<div class="cal-item">{html.escape(str(e.get("time", "")))} '
-                f'{e.get("flag", "")} {html.escape(str(e.get("event", "")))}</div>'
-                for e in parsed[:24]
-            )
         return f'<div class="cal-item">{html.escape(risk)}</div>'
     count = payload.get("calendar_count")
     if count == 0 or risk in ("—", "", "-"):

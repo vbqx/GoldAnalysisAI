@@ -1,4 +1,4 @@
-"""Shared types for the TradeAgent-style pipeline."""
+"""Shared data contracts for the Advice V2 pipeline."""
 
 from __future__ import annotations
 
@@ -10,170 +10,25 @@ import pandas as pd
 from src.analysis.ict_pa import TimeframeAnalysis
 
 Bias = Literal["bullish", "bearish", "neutral"]
-RiskProfile = Literal["aggressive", "neutral", "conservative"]
-StageSource = Literal["rule", "llm", "hybrid"]
 
 
 @dataclass
 class EvidenceItem:
-    """Single fact derived from a data source or structure engine."""
+    """One source-backed fact produced by a market or external data source."""
 
-    category: str  # market | structure | liquidity | external
+    category: str
     summary: str
-    strength: float  # 0.0 – 1.0
+    strength: float
     timeframe: str | None = None
     refs: dict[str, Any] = field(default_factory=dict)
     evidence_id: str | None = None
 
 
 @dataclass
-class AnalystReport:
-    """Specialist analyst output (TradingAgents-style Analyst Team)."""
-
-    agent: str  # technical_analyst | fundamentals_analyst | news_analyst | sentiment_analyst
-    bias: Bias
-    items: list[EvidenceItem]
-    confidence: float
-    summary: str
-    # Technical analyst: reaction hypotheses at POC / VA / S/R (consumed by level proposer).
-    level_reactions: list[dict[str, Any]] = field(default_factory=list)
-
-    def to_dict(self) -> dict[str, Any]:
-        d = asdict(self)
-        d["items"] = [asdict(i) for i in self.items]
-        return d
-
-
-@dataclass
-class AnalystTeam:
-    """Four specialist reports consumed by bull/bear researchers."""
-
-    technical: AnalystReport
-    fundamentals: AnalystReport
-    news: AnalystReport
-    sentiment: AnalystReport
-
-    @property
-    def reports(self) -> list[AnalystReport]:
-        return [self.technical, self.fundamentals, self.news, self.sentiment]
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "technical": self.technical.to_dict(),
-            "fundamentals": self.fundamentals.to_dict(),
-            "news": self.news.to_dict(),
-            "sentiment": self.sentiment.to_dict(),
-        }
-
-
-@dataclass
-class AgentEvidence:
-    agent: str
-    direction: Bias
-    items: list[EvidenceItem]
-    confidence: float
-    summary: str
-    provenance_meta: dict[str, Any] = field(default_factory=dict)
-
-    def to_dict(self) -> dict[str, Any]:
-        d = asdict(self)
-        d["items"] = [asdict(i) for i in self.items]
-        return d
-
-
-@dataclass
-class ResearchDebate:
-    bullish: AgentEvidence
-    bearish: AgentEvidence
-    consensus_bias: Bias
-    consensus_strength: float
-    discussion_notes: list[str]
-    debate_meta: dict[str, Any] = field(default_factory=dict)
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "bullish": self.bullish.to_dict(),
-            "bearish": self.bearish.to_dict(),
-            "consensus_bias": self.consensus_bias,
-            "consensus_strength": self.consensus_strength,
-            "discussion_notes": self.discussion_notes,
-            "debate_meta": self.debate_meta,
-        }
-
-
-@dataclass
-class LevelProposal:
-    """LLM proposed trade level, before deterministic validation."""
-
-    direction: Literal["BUY", "SELL"]
-    entry_low: float
-    entry_high: float
-    stop_loss: float
-    take_profits: list[float]
-    setup_type: str
-    reason: str
-    confidence: float
-    invalidation: str = ""
-    path_id: str = ""
-    source: str = "llm"
-    # Bind to technical analyst level_reactions (short order rationale, not full TA).
-    anchor_level: str = ""
-    expected_reaction: str = ""
-    deduction: str = ""
-    reaction_evidence_id: str = ""
-    # Issue #36: claim → fact → quality → eligibility (filled at validation).
-    claim_id: str = ""
-    fact_ids: list[str] = field(default_factory=list)
-    claim_eligibility: str = ""
-    claim_quality: dict[str, Any] = field(default_factory=dict)
-    counterevidence: list[dict[str, Any]] = field(default_factory=list)
-    claim_policy_version: str = ""
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass
-class TransactionProposal:
-    primary_direction: Literal["long", "short", "wait"]
-    signal_indices: list[int]
-    rationale: list[str]
-    debate_bias: Bias
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass
-class RiskReview:
-    profile: RiskProfile
-    approved: bool
-    allowed_signal_indices: list[int]
-    position_scale: float  # 1.0 = full, 0.5 = half
-    notes: list[str]
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass
-class ManagerDecision:
-    action: Literal["execute", "reduce", "wait"]
-    primary_direction: str
-    selected_signal_indices: list[int]
-    confidence: float
-    summary: str
-    position_scale: float = 0.0
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass
 class HeadlineItem:
-    """Structured news headline for Analyst Team payloads."""
+    """Structured news headline retained as background context."""
 
-    source: str  # jin10_flash | jin10_news
+    source: str
     text: str
     time: str = ""
     title: str = ""
@@ -185,7 +40,7 @@ class HeadlineItem:
 
 @dataclass
 class CalendarEvent:
-    """Structured macro calendar row."""
+    """Structured macro-calendar event retained as risk context."""
 
     time: str
     region: str
@@ -201,7 +56,7 @@ class CalendarEvent:
 
 @dataclass
 class MacroQuote:
-    """DXY / yields snapshot for fundamentals analyst."""
+    """DXY or yield snapshot retained as background context."""
 
     name: str
     symbol: str
@@ -253,7 +108,7 @@ class ExternalFactors:
 
 @dataclass
 class MarketContext:
-    """All inputs available to the agent team."""
+    """Frozen inputs used to produce one human-review suggestion."""
 
     enriched: dict[str, pd.DataFrame]
     analyses: dict[str, TimeframeAnalysis]
@@ -278,7 +133,7 @@ class MarketContext:
 
 @dataclass
 class LLMStageTrace:
-    """Per-stage LLM call audit metadata."""
+    """Audit metadata for the optional Advice V2 wording pass."""
 
     stage: str
     model: str
@@ -295,78 +150,6 @@ class LLMStageTrace:
     budget_action: str = "none"
     usage: dict[str, Any] | None = None
     same_model_strategy: bool | None = None
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass
-class StageMeta:
-    """Records which implementation produced a pipeline stage output."""
-
-    source: StageSource
-    fallback_reason: str | None = None
-    llm: LLMStageTrace | None = None
-
-    def to_dict(self) -> dict[str, Any]:
-        d: dict[str, Any] = {"source": self.source}
-        if self.fallback_reason:
-            d["fallback_reason"] = self.fallback_reason
-        if self.llm:
-            d["llm"] = self.llm.to_dict()
-        return d
-
-
-@dataclass
-class AgentPipelineMeta:
-    """Collects per-stage source metadata for agent_trace."""
-
-    stages: dict[str, StageMeta] = field(default_factory=dict)
-
-    def record(self, name: str, meta: StageMeta) -> None:
-        self.stages[name] = meta
-
-    def to_dict(self) -> dict[str, Any]:
-        return {k: v.to_dict() for k, v in self.stages.items()}
-
-
-@dataclass
-class AgentTrace:
-    """Full audit trail — stored in report under agent_trace (UI optional)."""
-
-    context: dict[str, Any]
-    analyst_team: dict[str, Any]
-    debate: dict[str, Any]
-    llm_levels: list[dict[str, Any]]
-    validated_plans: list[dict[str, Any]]
-    proposal: dict[str, Any]
-    risk_reviews: list[dict[str, Any]]
-    decision: dict[str, Any]
-    llm: dict[str, Any] | None = None
-    stage_meta: dict[str, Any] | None = None
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass
-class LLMAnalysis:
-    """Optional LLM narrative layer (default disabled)."""
-
-    enabled: bool = False
-    model: str = ""
-    provider: str = ""
-    market_summary: str = ""
-    trade_thesis: str = ""
-    action_plan: str = ""
-    risks: list[str] = field(default_factory=list)
-    watch_levels: list[str] = field(default_factory=list)
-    confidence: float = 0.0
-    raw_response: str | None = None
-    error: str | None = None
-    narrative_sections: dict[str, Any] = field(default_factory=dict)
-    narrative_section_audit: dict[str, Any] = field(default_factory=dict)
-    top_level_audit: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

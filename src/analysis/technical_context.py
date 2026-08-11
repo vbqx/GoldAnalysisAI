@@ -132,7 +132,7 @@ def support_resistance_context(ctx: MarketContext, *, limit: int = 12) -> dict[s
             label=f"Fib {row['ratio']:.3f} {row['significance']}",
             source="fibonacci",
             timeframe=fib.get("timeframe"),
-            strength=float(row.get("probability", 0.45)),
+            strength=float(row.get("display_weight", 0.45)),
         )
 
     for tf, weight in TF_WEIGHT.items():
