@@ -1,4 +1,4 @@
-# ARC-RUN — 运行上下文与归档
+# ARC-RUN — Run configuration and archives
 
 | 属性 | 内容 |
 |---|---|
@@ -18,7 +18,7 @@
 | [src/run/__init__.py](#unit-3d26d1ec62) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/run/archive/__init__.py](#unit-6c61c7bbf5) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/run/archive/compat.py](#unit-2f300feed2) | 9 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/run/archive/completion.py](#unit-af0b99f0b7) | 3 | 2 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/run/archive/completion.py](#unit-af0b99f0b7) | 4 | 2 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/run/archive/index.py](#unit-969bf3943a) | 7 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/run/archive/prune.py](#unit-038535558b) | 2 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/run/archive/schema.py](#unit-ea2375efd1) | 5 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
@@ -38,9 +38,9 @@
 |---|---|
 | 软件单元 ID | UNIT-3D26D1EC62 |
 | 源码 | [src/run/__init__.py](../../../src/run/__init__.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
@@ -60,9 +60,9 @@
 |---|---|
 | 软件单元 ID | UNIT-6C61C7BBF5 |
 | 源码 | [src/run/archive/__init__.py](../../../src/run/archive/__init__.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/archive/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
@@ -82,9 +82,9 @@
 |---|---|
 | 软件单元 ID | UNIT-2F300FEED2 |
 | 源码 | [src/run/archive/compat.py](../../../src/run/archive/compat.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/compat.py` 的职责，通过 `synthesize_manifest_from_legacy`、`load_manifest`、`inspect_archive`、`normalize_report`、`migrate_fetch_payload`、`migrate_analyses_payload`、`migrate_frame_payload`、`upgrade_manifest_if_needed` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/archive/compat.py` 的职责，通过 `synthesize_manifest_from_legacy`、`load_manifest`、`inspect_archive`、`normalize_report`、`migrate_fetch_payload`、`migrate_analyses_payload`、`migrate_frame_payload`、`upgrade_manifest_if_needed` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 9 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py) |
@@ -200,14 +200,14 @@
 | 参数 | `report`（Any）：分析报告<br>`contract_version`（int）：由 `contract_version` 表示的数值参数；默认值 `REPORT_CONTRACT_VERSION` |
 | 返回 | 返回 `tuple[dict[str, Any], list[str]]` 类型结果 |
 | 职责 | 标准化报告；返回 `tuple[dict[str, Any], list[str]]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `isinstance` → `warnings.append` → `REPORT_TOP_LEVEL_DEFAULTS.items` → `default` → `callable` → `normalized.get` → `sections.get` → `normalized.setdefault`；包含 9 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `isinstance` → `warnings.append` → `REPORT_TOP_LEVEL_DEFAULTS.items` → `default` → `callable` → `normalized.setdefault` → `meta.setdefault`；包含 6 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `tuple[dict[str, Any], list[str]]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | isinstance、warnings.append、dict、REPORT_TOP_LEVEL_DEFAULTS.items、default、callable、normalized.get、sections.get、normalized.setdefault、meta.setdefault |
-| 复杂度 / 风险 | 分支 9；跨度 38 行；中 |
+| 调用依赖 | isinstance、warnings.append、dict、REPORT_TOP_LEVEL_DEFAULTS.items、default、callable、normalized.setdefault、meta.setdefault |
+| 复杂度 / 风险 | 分支 6；跨度 21 行；中 |
 | 测试 / 验证 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py) · 直接动态测试 |
 
 <a id="fun-e54bdf4478"></a>
@@ -217,7 +217,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `migrate_fetch_payload` |
-| 源码位置 | [src/run/archive/compat.py](../../../src/run/archive/compat.py) · `L226` |
+| 源码位置 | [src/run/archive/compat.py](../../../src/run/archive/compat.py) · `L209` |
 | 签名 | `migrate_fetch_payload(raw: Any)` |
 | 参数 | `raw`（Any）：尚未标准化的原始输入 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -239,7 +239,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `migrate_analyses_payload` |
-| 源码位置 | [src/run/archive/compat.py](../../../src/run/archive/compat.py) · `L238` |
+| 源码位置 | [src/run/archive/compat.py](../../../src/run/archive/compat.py) · `L221` |
 | 签名 | `migrate_analyses_payload(raw: Any)` |
 | 参数 | `raw`（Any）：尚未标准化的原始输入 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -261,7 +261,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `migrate_frame_payload` |
-| 源码位置 | [src/run/archive/compat.py](../../../src/run/archive/compat.py) · `L247` |
+| 源码位置 | [src/run/archive/compat.py](../../../src/run/archive/compat.py) · `L230` |
 | 签名 | `migrate_frame_payload(raw: Any)` |
 | 参数 | `raw`（Any）：尚未标准化的原始输入 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -283,7 +283,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `upgrade_manifest_if_needed` |
-| 源码位置 | [src/run/archive/compat.py](../../../src/run/archive/compat.py) · `L256` |
+| 源码位置 | [src/run/archive/compat.py](../../../src/run/archive/compat.py) · `L239` |
 | 签名 | `upgrade_manifest_if_needed(manifest: dict[str, Any], run_id: str, directory: Path)` |
 | 参数 | `manifest`（dict[str, Any]）：由 `manifest` 表示的键值映射<br>`run_id`（str）：对象标识<br>`directory`（Path）：由调用方提供的 `directory` 输入对象 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -308,10 +308,10 @@
 |---|---|
 | 软件单元 ID | UNIT-AF0B99F0B7 |
 | 源码 | [src/run/archive/completion.py](../../../src/run/archive/completion.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/completion.py` 的职责，通过 `generation_step_statuses`、`pipeline_replay_errors`、`assert_pipeline_replay_ready` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
-| 函数 / 高风险函数 | 3 / 2 |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/archive/completion.py` 的职责，通过 `generation_step_statuses`、`required_generation_step_ids`、`pipeline_replay_errors`、`assert_pipeline_replay_ready` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 函数 / 高风险函数 | 4 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py) |
 | 验证状态 | selected |
@@ -325,7 +325,7 @@
 
 #### 函数导航
 
-[generation_step_statuses](#fun-57dfc7a96b) · [pipeline_replay_errors](#fun-d7f6e6e3b1) · [assert_pipeline_replay_ready](#fun-0bb8a53ce4)
+[generation_step_statuses](#fun-57dfc7a96b) · [required_generation_step_ids](#fun-e2414ccd0a) · [pipeline_replay_errors](#fun-d7f6e6e3b1) · [assert_pipeline_replay_ready](#fun-0bb8a53ce4)
 
 <a id="fun-57dfc7a96b"></a>
 
@@ -334,7 +334,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `generation_step_statuses` |
-| 源码位置 | [src/run/archive/completion.py](../../../src/run/archive/completion.py) · `L35` |
+| 源码位置 | [src/run/archive/completion.py](../../../src/run/archive/completion.py) · `L45` |
 | 签名 | `generation_step_statuses(report: dict[str, Any])` |
 | 参数 | `report`（dict[str, Any]）：分析报告 |
 | 返回 | 返回 `dict[str, str]` 类型结果 |
@@ -349,6 +349,28 @@
 | 复杂度 / 风险 | 分支 4；跨度 13 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
+<a id="fun-e2414ccd0a"></a>
+
+#### FUN-E2414CCD0A
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `required_generation_step_ids` |
+| 源码位置 | [src/run/archive/completion.py](../../../src/run/archive/completion.py) · `L60` |
+| 签名 | `required_generation_step_ids(report: dict[str, Any])` |
+| 参数 | `report`（dict[str, Any]）：分析报告 |
+| 返回 | 返回 `tuple[str, ...]` 类型结果 |
+| 职责 | 构建`required_generation_step_ids`；返回 `tuple[str, ...]` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `report.get`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `tuple[str, ...]` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | report.get |
+| 复杂度 / 风险 | 分支 1；跨度 8 行；中 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
 <a id="fun-d7f6e6e3b1"></a>
 
 #### FUN-D7F6E6E3B1
@@ -356,18 +378,18 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `pipeline_replay_errors` |
-| 源码位置 | [src/run/archive/completion.py](../../../src/run/archive/completion.py) · `L50` |
+| 源码位置 | [src/run/archive/completion.py](../../../src/run/archive/completion.py) · `L70` |
 | 签名 | `pipeline_replay_errors(report: dict[str, Any], manifest: dict[str, Any] \| None=None)` |
 | 参数 | `report`（dict[str, Any]）：分析报告<br>`manifest`（dict[str, Any] \| None）：由 `manifest` 表示的键值映射；默认值 `None` |
 | 返回 | 返回 `list[str]` 类型结果 |
 | 职责 | 构建`pipeline_replay_errors`；返回 `list[str]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `get` → `lower` → `strip` → `summary.get` → `errors.append` → `generation_step_statuses` → `step_map.get`；包含 6 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `get` → `lower` → `strip` → `summary.get` → `errors.append` → `generation_step_statuses` → `required_generation_step_ids` → `step_map.get`；包含 6 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `list[str]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | get、lower、strip、str、summary.get、errors.append、generation_step_statuses、step_map.get |
+| 调用依赖 | get、lower、strip、str、summary.get、errors.append、generation_step_statuses、required_generation_step_ids、step_map.get |
 | 复杂度 / 风险 | 分支 6；跨度 26 行；高 |
 | 测试 / 验证 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py) · 直接动态测试 |
 
@@ -378,7 +400,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `assert_pipeline_replay_ready` |
-| 源码位置 | [src/run/archive/completion.py](../../../src/run/archive/completion.py) · `L78` |
+| 源码位置 | [src/run/archive/completion.py](../../../src/run/archive/completion.py) · `L98` |
 | 签名 | `assert_pipeline_replay_ready(report: dict[str, Any])` |
 | 参数 | `report`（dict[str, Any]）：分析报告 |
 | 返回 | 无返回值（None） |
@@ -403,9 +425,9 @@
 |---|---|
 | 软件单元 ID | UNIT-969BF3943A |
 | 源码 | [src/run/archive/index.py](../../../src/run/archive/index.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/index.py` 的职责，通过 `index_path`、`load_index`、`save_index`、`upsert_index_entry`、`remove_index_entries`、`list_index_entries`、`rebuild_index_from_disk` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/archive/index.py` 的职责，通过 `index_path`、`load_index`、`save_index`、`upsert_index_entry`、`remove_index_entries`、`list_index_entries`、`rebuild_index_from_disk` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 7 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py) |
@@ -579,9 +601,9 @@
 |---|---|
 | 软件单元 ID | UNIT-038535558B |
 | 源码 | [src/run/archive/prune.py](../../../src/run/archive/prune.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/prune.py` 的职责，通过 `prune_archives` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/archive/prune.py` 的职责，通过 `prune_archives` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py) |
@@ -651,9 +673,9 @@
 |---|---|
 | 软件单元 ID | UNIT-EA2375EFD1 |
 | 源码 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/schema.py` 的职责，通过 `CompatibilityLevel`、`ArchiveInspection`、`app_build_version`、`artifact_envelope`、`unwrap_artifact`、`build_manifest` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/archive/schema.py` 的职责，通过 `CompatibilityLevel`、`ArchiveInspection`、`app_build_version`、`artifact_envelope`、`unwrap_artifact`、`build_manifest` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 5 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) |
@@ -676,7 +698,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ArchiveInspection.loadable` |
-| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L84` |
+| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L71` |
 | 签名 | `ArchiveInspection.loadable(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `bool` 类型结果 |
@@ -698,7 +720,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `app_build_version` |
-| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L88` |
+| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L75` |
 | 签名 | `app_build_version()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `str` 类型结果 |
@@ -720,7 +742,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `artifact_envelope` |
-| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L106` |
+| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L93` |
 | 签名 | `artifact_envelope(*, kind: str, artifact_version: int, payload: Any)` |
 | 参数 | `kind`（str）：类别标识<br>`artifact_version`（int）：由 `artifact_version` 表示的数值参数<br>`payload`（Any）：结构化载荷 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -742,7 +764,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `unwrap_artifact` |
-| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L114` |
+| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L101` |
 | 签名 | `unwrap_artifact(raw: Any, *, kind: str, default_version: int)` |
 | 参数 | `raw`（Any）：尚未标准化的原始输入<br>`kind`（str）：类别标识<br>`default_version`（int）：由 `default_version` 表示的数值参数 |
 | 返回 | 返回 `tuple[int, Any]` 类型结果 |
@@ -764,7 +786,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_manifest` |
-| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L133` |
+| 源码位置 | [src/run/archive/schema.py](../../../src/run/archive/schema.py) · `L120` |
 | 签名 | `build_manifest(*, run_id: str, saved_at: str \| None=None, run_config: dict[str, Any] \| None=None, summary: dict[str, Any] \| None=None, legacy: dict[str, Any] \| None=None)` |
 | 参数 | `run_id`（str）：对象标识<br>`saved_at`（str \| None）：事件或数据时间；默认值 `None`<br>`run_config`（dict[str, Any] \| None）：运行配置；默认值 `None`<br>`summary`（dict[str, Any] \| None）：摘要内容；默认值 `None`<br>`legacy`（dict[str, Any] \| None）：由 `legacy` 表示的键值映射；默认值 `None` |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -789,9 +811,9 @@
 |---|---|
 | 软件单元 ID | UNIT-D3D34BC712 |
 | 源码 | [src/run/archive/store.py](../../../src/run/archive/store.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/store.py` 的职责，通过 `archives_root`、`run_dir`、`allocate_run_id`、`inspect_run_archive`、`list_archives`、`archives_exist`、`archive_label`、`encode_analysis` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/archive/store.py` 的职责，通过 `archives_root`、`run_dir`、`allocate_run_id`、`inspect_run_archive`、`list_archives`、`archives_exist`、`archive_label`、`encode_analysis` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 40 / 15 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) |
@@ -1031,14 +1053,14 @@
 | 参数 | `meta`（dict[str, Any]）：审计或处理元数据 |
 | 返回 | 返回 `str` 类型结果 |
 | 职责 | 归档`label`；返回 `str` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `meta.get` → `format_utc8` → `get` → `isinstance` → `bars.get`；包含 5 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `meta.get` → `format_utc8` → `archived_config.get` → `isinstance` → `bars.get`；包含 5 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | str、meta.get、format_utc8、get、float、isinstance、bars.get |
-| 复杂度 / 风险 | 分支 5；跨度 20 行；高 |
+| 调用依赖 | str、meta.get、format_utc8、archived_config.get、float、isinstance、bars.get |
+| 复杂度 / 风险 | 分支 5；跨度 21 行；高 |
 | 测试 / 验证 | [tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) · 直接动态测试 |
 
 <a id="fun-9ae985d283"></a>
@@ -1048,7 +1070,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_ts_to_str` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L184` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L185` |
 | 签名 | `_ts_to_str(value: Any)` |
 | 参数 | `value`（Any）：待处理值 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1070,7 +1092,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_ts_from_str` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L188` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L189` |
 | 签名 | `_ts_from_str(value: str \| None)` |
 | 参数 | `value`（str \| None）：待处理值 |
 | 返回 | 返回 `pd.Timestamp \| None` 类型结果 |
@@ -1092,7 +1114,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_encode_order_block` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L194` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L195` |
 | 签名 | `_encode_order_block(row: OrderBlock)` |
 | 参数 | `row`（OrderBlock）：当前记录行 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1114,7 +1136,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_decode_order_block` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L204` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L205` |
 | 签名 | `_decode_order_block(payload: dict[str, Any])` |
 | 参数 | `payload`（dict[str, Any]）：结构化载荷 |
 | 返回 | 返回 `OrderBlock` 类型结果 |
@@ -1136,7 +1158,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_encode_fvg` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L214` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L215` |
 | 签名 | `_encode_fvg(row: FairValueGap)` |
 | 参数 | `row`（FairValueGap）：当前记录行 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1158,7 +1180,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_decode_fvg` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L224` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L225` |
 | 签名 | `_decode_fvg(payload: dict[str, Any])` |
 | 参数 | `payload`（dict[str, Any]）：结构化载荷 |
 | 返回 | 返回 `FairValueGap` 类型结果 |
@@ -1180,7 +1202,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_encode_structure_event` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L234` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L235` |
 | 签名 | `_encode_structure_event(row: StructureEvent)` |
 | 参数 | `row`（StructureEvent）：当前记录行 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1202,7 +1224,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_decode_structure_event` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L245` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L246` |
 | 签名 | `_decode_structure_event(payload: dict[str, Any])` |
 | 参数 | `payload`（dict[str, Any]）：结构化载荷 |
 | 返回 | 返回 `StructureEvent` 类型结果 |
@@ -1224,7 +1246,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_encode_liquidity` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L256` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L257` |
 | 签名 | `_encode_liquidity(row: LiquidityZone)` |
 | 参数 | `row`（LiquidityZone）：当前记录行 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1246,7 +1268,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_decode_liquidity` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L266` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L267` |
 | 签名 | `_decode_liquidity(payload: dict[str, Any])` |
 | 参数 | `payload`（dict[str, Any]）：结构化载荷 |
 | 返回 | 返回 `LiquidityZone` 类型结果 |
@@ -1268,7 +1290,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `encode_analysis` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L276` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L277` |
 | 签名 | `encode_analysis(analysis: TimeframeAnalysis)` |
 | 参数 | `analysis`（TimeframeAnalysis）：当前分析结果 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1290,7 +1312,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `decode_analysis` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L299` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L300` |
 | 签名 | `decode_analysis(payload: dict[str, Any])` |
 | 参数 | `payload`（dict[str, Any]）：结构化载荷 |
 | 返回 | 返回 `TimeframeAnalysis` 类型结果 |
@@ -1312,7 +1334,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_frame_to_json` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L322` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L323` |
 | 签名 | `_frame_to_json(df: pd.DataFrame)` |
 | 参数 | `df`（pd.DataFrame）：输入数据表 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1334,7 +1356,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_frame_from_json` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L334` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L335` |
 | 签名 | `_frame_from_json(payload: dict[str, Any])` |
 | 参数 | `payload`（dict[str, Any]）：结构化载荷 |
 | 返回 | 返回 `pd.DataFrame` 类型结果 |
@@ -1356,7 +1378,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_external_to_json` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L340` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L341` |
 | 签名 | `_external_to_json(external: ExternalFactors)` |
 | 参数 | `external`（ExternalFactors）：由调用方提供的 `external` 输入对象 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1378,7 +1400,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_external_from_json` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L355` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L356` |
 | 签名 | `_external_from_json(payload: dict[str, Any])` |
 | 参数 | `payload`（dict[str, Any]）：结构化载荷 |
 | 返回 | 返回 `ExternalFactors` 类型结果 |
@@ -1400,7 +1422,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_fetch_payload` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L404` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L405` |
 | 签名 | `_fetch_payload(fetched: DataFetchResult)` |
 | 参数 | `fetched`（DataFetchResult）：数据获取结果 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1422,7 +1444,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `load_fetch` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L414` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L415` |
 | 签名 | `load_fetch(run_id: str)` |
 | 参数 | `run_id`（str）：对象标识 |
 | 返回 | 返回 `DataFetchResult` 类型结果 |
@@ -1444,7 +1466,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `load_enriched` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L432` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L433` |
 | 签名 | `load_enriched(run_id: str)` |
 | 参数 | `run_id`（str）：对象标识 |
 | 返回 | 返回 `dict[str, pd.DataFrame]` 类型结果 |
@@ -1466,7 +1488,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `load_analyses` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L449` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L450` |
 | 签名 | `load_analyses(run_id: str, enriched: dict[str, pd.DataFrame])` |
 | 参数 | `run_id`（str）：对象标识<br>`enriched`（dict[str, pd.DataFrame]）：已补充指标的行情数据 |
 | 返回 | 返回 `dict[str, TimeframeAnalysis]` 类型结果 |
@@ -1488,7 +1510,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `load_archive_meta` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L468` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L469` |
 | 签名 | `load_archive_meta(run_id: str)` |
 | 参数 | `run_id`（str）：对象标识 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1510,7 +1532,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `load_report` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L479` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L480` |
 | 签名 | `load_report(run_id: str)` |
 | 参数 | `run_id`（str）：对象标识 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1532,7 +1554,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `load_bundle` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L489` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L490` |
 | 签名 | `load_bundle(run_id: str)` |
 | 参数 | `run_id`（str）：对象标识 |
 | 返回 | 返回 `tuple[dict[str, Any], dict[str, pd.DataFrame], dict[str, TimeframeAnalysis]]` 类型结果 |
@@ -1554,7 +1576,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `load_archive_5m_bars` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L530` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L531` |
 | 签名 | `load_archive_5m_bars(run_id: str)` |
 | 参数 | `run_id`（str）：对象标识 |
 | 返回 | 返回 `pd.DataFrame` 类型结果 |
@@ -1576,7 +1598,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_failure_payload` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L538` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L539` |
 | 签名 | `_failure_payload(reason: str, *, step: str \| None=None)` |
 | 参数 | `reason`（str）：判定或拒绝原因<br>`step`（str \| None）：由调用方提供的 `step` 输入对象；默认值 `None` |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1598,7 +1620,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_stub_failure_report` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L546` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L547` |
 | 签名 | `_stub_failure_report(*, run_config: RunConfig, reason: str, generation_steps: list[dict] \| None=None, llm_io: list[dict] \| None=None, current_price: float \| None=None)` |
 | 参数 | `run_config`（RunConfig）：运行配置<br>`reason`（str）：判定或拒绝原因<br>`generation_steps`（list[dict] \| None）：执行步骤集合；默认值 `None`<br>`llm_io`（list[dict] \| None）：由 `llm_io` 表示的输入集合；默认值 `None`<br>`current_price`（float \| None）：当前市场价格；默认值 `None` |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1620,7 +1642,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_persist_archive_folder` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L574` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L575` |
 | 签名 | `_persist_archive_folder(run_id: str, *, run_config: RunConfig, summary: dict[str, Any], report: dict[str, Any], fetched: DataFetchResult \| None=None, enriched: dict[str, pd.DataFrame] \| None=None, analyses: dict[str, TimeframeAnalysis] \| None=None, failure: dict[str, Any] \| None=None)` |
 | 参数 | `run_id`（str）：对象标识<br>`run_config`（RunConfig）：运行配置<br>`summary`（dict[str, Any]）：摘要内容<br>`report`（dict[str, Any]）：分析报告<br>`fetched`（DataFetchResult \| None）：数据获取结果；默认值 `None`<br>`enriched`（dict[str, pd.DataFrame] \| None）：已补充指标的行情数据；默认值 `None`<br>`analyses`（dict[str, TimeframeAnalysis] \| None）：各时间框架分析结果；默认值 `None`<br>`failure`（dict[str, Any] \| None）：由 `failure` 表示的键值映射；默认值 `None` |
 | 返回 | 返回 `Path` 类型结果 |
@@ -1642,7 +1664,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `archive_failure_run` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L678` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L679` |
 | 签名 | `archive_failure_run(run_id: str, reason: str, *, run_config: RunConfig, elapsed_s: float, fetched: DataFetchResult \| None=None, enriched: dict[str, pd.DataFrame] \| None=None, analyses: dict[str, TimeframeAnalysis] \| None=None, report: dict[str, Any] \| None=None, failure_step: str \| None=None)` |
 | 参数 | `run_id`（str）：对象标识<br>`reason`（str）：判定或拒绝原因<br>`run_config`（RunConfig）：运行配置<br>`elapsed_s`（float）：由 `elapsed_s` 表示的数值参数<br>`fetched`（DataFetchResult \| None）：数据获取结果；默认值 `None`<br>`enriched`（dict[str, pd.DataFrame] \| None）：已补充指标的行情数据；默认值 `None`<br>`analyses`（dict[str, TimeframeAnalysis] \| None）：各时间框架分析结果；默认值 `None`<br>`report`（dict[str, Any] \| None）：分析报告；默认值 `None`<br>`failure_step`（str \| None）：由调用方提供的 `failure_step` 输入对象；默认值 `None` |
 | 返回 | 返回 `Path \| None` 类型结果 |
@@ -1664,7 +1686,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `load_forensic_bundle` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L750` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L751` |
 | 签名 | `load_forensic_bundle(run_id: str)` |
 | 参数 | `run_id`（str）：对象标识 |
 | 返回 | 返回 `tuple[dict[str, Any], dict[str, pd.DataFrame], dict[str, TimeframeAnalysis]]` 类型结果 |
@@ -1686,7 +1708,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `archive_run` |
-| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L809` |
+| 源码位置 | [src/run/archive/store.py](../../../src/run/archive/store.py) · `L810` |
 | 签名 | `archive_run(run_id: str, *, fetched: DataFetchResult, report: dict[str, Any], enriched: dict[str, pd.DataFrame], analyses: dict[str, TimeframeAnalysis], run_config: RunConfig, elapsed_s: float)` |
 | 参数 | `run_id`（str）：对象标识<br>`fetched`（DataFetchResult）：数据获取结果<br>`report`（dict[str, Any]）：分析报告<br>`enriched`（dict[str, pd.DataFrame]）：已补充指标的行情数据<br>`analyses`（dict[str, TimeframeAnalysis]）：各时间框架分析结果<br>`run_config`（RunConfig）：运行配置<br>`elapsed_s`（float）：由 `elapsed_s` 表示的数值参数 |
 | 返回 | 返回 `Path` 类型结果 |
@@ -1711,9 +1733,9 @@
 |---|---|
 | 软件单元 ID | UNIT-3365BE69B6 |
 | 源码 | [src/run/archive/transfer.py](../../../src/run/archive/transfer.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/archive/transfer.py` 的职责，通过 `export_archive_zip`、`import_archive_zip` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/archive/transfer.py` 的职责，通过 `export_archive_zip`、`import_archive_zip` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py) |
@@ -1784,12 +1806,12 @@
 |---|---|
 | 软件单元 ID | UNIT-E124606847 |
 | 源码 | [src/run/config.py](../../../src/run/config.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/config.py` 的职责，通过 `RunConfig`、`coerce_run_config`、`run_config_widget_state`、`is_advanced_run_config`、`default_panel_run_config`、`run_config_from_env`、`run_config_for_mode`、`apply_run_config` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/config.py` 的职责，通过 `RunConfig`、`coerce_run_config`、`run_config_widget_state`、`is_advanced_run_config`、`default_panel_run_config`、`run_config_from_env`、`run_config_for_mode`、`apply_run_config` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 11 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/regression/test_fixes.py](../../../tests/regression/test_fixes.py)、[tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../../tests/unit/test_run_config_panel.py)、[tests/unit/test_streamlit_ensure_report.py](../../../tests/unit/test_streamlit_ensure_report.py) |
+| 动态测试 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../../tests/unit/test_run_config_panel.py)、[tests/unit/test_streamlit_ensure_report.py](../../../tests/unit/test_streamlit_ensure_report.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -1803,19 +1825,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `RunConfig.normalized` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L49` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L22` |
 | 签名 | `RunConfig.normalized(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `'RunConfig'` 类型结果 |
 | 职责 | 生成`normalized`结果；返回 `'RunConfig'` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `strip` → `RunConfig` → `ANALYST_ONLY_ALIASES.get` → `lower`；包含 4 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `strip` → `RunConfig`；包含 2 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `'RunConfig'` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | strip、RunConfig、ANALYST_ONLY_ALIASES.get、lower、bool |
-| 复杂度 / 风险 | 分支 4；跨度 40 行；中 |
+| 调用依赖 | strip、str、RunConfig、bool |
+| 复杂度 / 风险 | 分支 2；跨度 11 行；中 |
 | 测试 / 验证 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../../tests/unit/test_run_config_panel.py) · 直接动态测试 |
 
 <a id="fun-f162ed7246"></a>
@@ -1825,7 +1847,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `RunConfig.to_dict` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L90` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L34` |
 | 签名 | `RunConfig.to_dict(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[str, object]` 类型结果 |
@@ -1847,19 +1869,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `RunConfig.fingerprint` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L93` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L37` |
 | 签名 | `RunConfig.fingerprint(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `str` 类型结果 |
 | 职责 | 生成`fingerprint`文本；返回 `str` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `self.normalized` → `json.dumps` → `hexdigest` → `hashlib.sha256` → `raw.encode` → `cfg.to_dict`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `json.dumps` → `self.to_dict` → `hexdigest` → `hashlib.sha256` → `raw.encode`；不包含显式控制分支。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | self.normalized、json.dumps、hexdigest、hashlib.sha256、raw.encode、cfg.to_dict |
-| 复杂度 / 风险 | 分支 1；跨度 7 行；中 |
+| 调用依赖 | json.dumps、self.to_dict、hexdigest、hashlib.sha256、raw.encode |
+| 复杂度 / 风险 | 分支 0；跨度 3 行；中 |
 | 测试 / 验证 | [tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../../tests/unit/test_run_config_panel.py) · 直接动态测试 |
 
 <a id="fun-b640f9deec"></a>
@@ -1869,19 +1891,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `RunConfig.from_dict` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L102` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L42` |
 | 签名 | `RunConfig.from_dict(cls, data: dict[str, Any] \| None)` |
 | 参数 | `data`（dict[str, Any] \| None）：输入数据 |
 | 返回 | 返回 `'RunConfig'` 类型结果 |
 | 职责 | 根据`dict`构建`当前对象`；返回 `'RunConfig'` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `RunConfig` → `fields` → `data.items` → `normalized` → `cls`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `cls` → `fields` → `migrated.items` → `filtered.get` → `normalized`；包含 3 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `'RunConfig'` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | RunConfig、fields、data.items、normalized、cls |
-| 复杂度 / 风险 | 分支 1；跨度 6 行；中 |
+| 调用依赖 | cls、dict、fields、migrated.items、filtered.get、normalized |
+| 复杂度 / 风险 | 分支 3；跨度 13 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-f263af19a6"></a>
@@ -1891,7 +1913,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `coerce_run_config` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L110` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L57` |
 | 签名 | `coerce_run_config(value: object)` |
 | 参数 | `value`（object）：待处理值 |
 | 返回 | 返回 `RunConfig \| None` 类型结果 |
@@ -1903,7 +1925,7 @@
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | isinstance、value.normalized、RunConfig.from_dict |
-| 复杂度 / 风险 | 分支 2；跨度 7 行；中 |
+| 复杂度 / 风险 | 分支 2；跨度 6 行；中 |
 | 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
 
 <a id="fun-bb1b3b8b1f"></a>
@@ -1913,20 +1935,20 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `run_config_widget_state` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L126` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L65` |
 | 签名 | `run_config_widget_state(config: RunConfig)` |
 | 参数 | `config`（RunConfig）：运行配置 |
 | 返回 | 返回 `dict[str, object]` 类型结果 |
 | 职责 | 执行`config_widget_state`；返回 `dict[str, object]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `config.normalized` → `run_config_for_mode` → `cfg.fingerprint` → `preset.fingerprint` → `_MODE_UI_LABELS.get`；包含 2 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `config.normalized`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `dict[str, object]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | config.normalized、run_config_for_mode、cfg.fingerprint、preset.fingerprint、bool、_MODE_UI_LABELS.get |
-| 复杂度 / 风险 | 分支 2；跨度 33 行；中 |
-| 测试 / 验证 | [tests/regression/test_fixes.py](../../../tests/regression/test_fixes.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
+| 调用依赖 | config.normalized |
+| 复杂度 / 风险 | 分支 1；跨度 7 行；中 |
+| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
 
 <a id="fun-6f8a6a5aa4"></a>
 
@@ -1935,19 +1957,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `is_advanced_run_config` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L161` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L74` |
 | 签名 | `is_advanced_run_config(config: RunConfig)` |
 | 参数 | `config`（RunConfig）：运行配置 |
 | 返回 | 返回 `bool` 类型结果 |
 | 职责 | 判断`advanced_run_config`；返回 `bool` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `config.normalized` → `run_config_for_mode` → `cfg.fingerprint` → `preset.fingerprint`；不包含显式控制分支。 |
+| 处理逻辑 | 直接通过表达式、字段访问或常量完成处理；不包含显式控制分支。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `bool` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | config.normalized、run_config_for_mode、cfg.fingerprint、preset.fingerprint |
-| 复杂度 / 风险 | 分支 0；跨度 4 行；中 |
+| 调用依赖 | 无直接调用依赖 |
+| 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
 | 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
 
 <a id="fun-3913f92b96"></a>
@@ -1957,20 +1979,20 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `default_panel_run_config` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L167` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L78` |
 | 签名 | `default_panel_run_config()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `RunConfig` 类型结果 |
 | 职责 | 执行`default_panel_config`；返回 `RunConfig` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `run_config_for_mode`；不包含显式控制分支。 |
+| 处理逻辑 | 按源码执行顺序经过 `RunConfig`；不包含显式控制分支。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `RunConfig` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | run_config_for_mode |
-| 复杂度 / 风险 | 分支 0；跨度 3 行；中 |
-| 测试 / 验证 | [tests/regression/test_fixes.py](../../../tests/regression/test_fixes.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
+| 调用依赖 | RunConfig |
+| 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
+| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
 
 <a id="fun-168d3dbada"></a>
 
@@ -1979,19 +2001,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `run_config_from_env` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L172` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L82` |
 | 签名 | `run_config_from_env()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `RunConfig` 类型结果 |
 | 职责 | 根据`env`构建运行配置；返回 `RunConfig` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `normalized` → `RunConfig`；不包含显式控制分支。 |
+| 处理逻辑 | 按源码执行顺序经过 `normalized` → `RunConfig`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `RunConfig` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | normalized、RunConfig |
-| 复杂度 / 风险 | 分支 0；跨度 17 行；中 |
+| 调用依赖 | bool、normalized、RunConfig |
+| 复杂度 / 风险 | 分支 1；跨度 5 行；中 |
 | 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
 
 <a id="fun-529864dac4"></a>
@@ -2001,9 +2023,9 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `run_config_for_mode` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L191` |
-| 签名 | `run_config_for_mode(mode: AgentMode, *, llm_enabled: bool=True, llm_analyst_only: str='')` |
-| 参数 | `mode`（AgentMode）：运行或分析模式<br>`llm_enabled`（bool）：控制对应行为是否启用的布尔值；默认值 `True`<br>`llm_analyst_only`（str）：由 `llm_analyst_only` 表示的文本或标识；默认值 `''` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L89` |
+| 签名 | `run_config_for_mode(mode: str, *, llm_enabled: bool=True, llm_analyst_only: str='')` |
+| 参数 | `mode`（str）：运行或分析模式<br>`llm_enabled`（bool）：控制对应行为是否启用的布尔值；默认值 `True`<br>`llm_analyst_only`（str）：由 `llm_analyst_only` 表示的文本或标识；默认值 `''` |
 | 返回 | 返回 `RunConfig` 类型结果 |
 | 职责 | 执行`config_mode`；返回 `RunConfig` 类型结果。 |
 | 处理逻辑 | 按源码执行顺序经过 `normalized` → `RunConfig`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
@@ -2013,7 +2035,7 @@
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | normalized、RunConfig |
-| 复杂度 / 风险 | 分支 1；跨度 17 行；中 |
+| 复杂度 / 风险 | 分支 1；跨度 9 行；中 |
 | 测试 / 验证 | [tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../../tests/unit/test_run_config_panel.py)、[tests/unit/test_streamlit_ensure_report.py](../../../tests/unit/test_streamlit_ensure_report.py) · 直接动态测试 |
 
 <a id="fun-4a55d80b54"></a>
@@ -2023,7 +2045,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `apply_run_config` |
-| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L210` |
+| 源码位置 | [src/run/config.py](../../../src/run/config.py) · `L100` |
 | 签名 | `apply_run_config(run_config: RunConfig)` |
 | 参数 | `run_config`（RunConfig）：运行配置 |
 | 返回 | 无返回值（None） |
@@ -2035,8 +2057,8 @@
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | set_run_config、run_config.normalized |
-| 复杂度 / 风险 | 分支 0；跨度 5 行；中 |
-| 测试 / 验证 | [tests/regression/test_fixes.py](../../../tests/regression/test_fixes.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
+| 复杂度 / 风险 | 分支 0；跨度 4 行；中 |
+| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
 
 <a id="unit-8a8bc190aa"></a>
 
@@ -2048,17 +2070,17 @@
 |---|---|
 | 软件单元 ID | UNIT-8A8BC190AA |
 | 源码 | [src/run/context.py](../../../src/run/context.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/context.py` 的职责，通过 `set_run_config`、`reset_run_config`、`get_run_config`、`run_config_scope`、`agent_mode`、`llm_narrative_enabled` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/context.py` 的职责，通过 `set_run_config`、`reset_run_config`、`get_run_config`、`run_config_scope`、`generation_mode`、`llm_advisor_enabled` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 6 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_config_summary.py](../../../tests/unit/test_archive_config_summary.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_audit_summary.py](../../../tests/unit/test_audit_summary.py)、[tests/unit/test_debate_parallel.py](../../../tests/unit/test_debate_parallel.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_llm_trade_stages.py](../../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_report_invariant_gate.py](../../../tests/unit/test_report_invariant_gate.py)、[tests/unit/test_report_invariants.py](../../../tests/unit/test_report_invariants.py)、[tests/unit/test_research_parallel.py](../../../tests/unit/test_research_parallel.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../../tests/unit/test_run_config_panel.py) |
+| 动态测试 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) |
 | 验证状态 | selected |
 
 #### 函数导航
 
-[set_run_config](#fun-2ed9157cf0) · [reset_run_config](#fun-68bfb62aad) · [get_run_config](#fun-30b017175d) · [run_config_scope](#fun-d24ed90856) · [agent_mode](#fun-7d87b82d39) · [llm_narrative_enabled](#fun-9f09ace833)
+[set_run_config](#fun-2ed9157cf0) · [reset_run_config](#fun-68bfb62aad) · [get_run_config](#fun-30b017175d) · [run_config_scope](#fun-d24ed90856) · [generation_mode](#fun-3caa01a6d9) · [llm_advisor_enabled](#fun-133165c18d)
 
 <a id="fun-2ed9157cf0"></a>
 
@@ -2148,18 +2170,18 @@
 | 复杂度 / 风险 | 分支 1；跨度 7 行；中 |
 | 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
 
-<a id="fun-7d87b82d39"></a>
+<a id="fun-3caa01a6d9"></a>
 
-#### FUN-7D87B82D39
+#### FUN-3CAA01A6D9
 
 | 设计项 | 说明 |
 |---|---|
-| 函数 | `agent_mode` |
+| 函数 | `generation_mode` |
 | 源码位置 | [src/run/context.py](../../../src/run/context.py) · `L40` |
-| 签名 | `agent_mode()` |
+| 签名 | `generation_mode()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `str` 类型结果 |
-| 职责 | 生成`agent_mode`文本；返回 `str` 类型结果。 |
+| 职责 | 生成`generation_mode`文本；返回 `str` 类型结果。 |
 | 处理逻辑 | 按源码执行顺序经过 `get_run_config`；不包含显式控制分支。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
@@ -2168,20 +2190,20 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | get_run_config |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_config_summary.py](../../../tests/unit/test_archive_config_summary.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_audit_summary.py](../../../tests/unit/test_audit_summary.py)、[tests/unit/test_debate_parallel.py](../../../tests/unit/test_debate_parallel.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_llm_trade_stages.py](../../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_report_invariant_gate.py](../../../tests/unit/test_report_invariant_gate.py)、[tests/unit/test_report_invariants.py](../../../tests/unit/test_report_invariants.py)、[tests/unit/test_research_parallel.py](../../../tests/unit/test_research_parallel.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../../tests/unit/test_run_config_panel.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
 
-<a id="fun-9f09ace833"></a>
+<a id="fun-133165c18d"></a>
 
-#### FUN-9F09ACE833
+#### FUN-133165C18D
 
 | 设计项 | 说明 |
 |---|---|
-| 函数 | `llm_narrative_enabled` |
+| 函数 | `llm_advisor_enabled` |
 | 源码位置 | [src/run/context.py](../../../src/run/context.py) · `L44` |
-| 签名 | `llm_narrative_enabled()` |
+| 签名 | `llm_advisor_enabled()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `bool` 类型结果 |
-| 职责 | 判断`llm_narrative_enabled`条件是否成立；返回 `bool` 类型结果。 |
+| 职责 | 判断`llm_advisor_enabled`条件是否成立；返回 `bool` 类型结果。 |
 | 处理逻辑 | 按源码执行顺序经过 `get_run_config`；不包含显式控制分支。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `bool` 类型结果；静态扫描未发现直接外部副作用 |
@@ -2202,9 +2224,9 @@
 |---|---|
 | 软件单元 ID | UNIT-7DF4993AB3 |
 | 源码 | [src/run/pipeline_run.py](../../../src/run/pipeline_run.py) |
-| 架构组件 | ARC-RUN — 运行上下文与归档 |
-| 职责 | 实现“运行上下文与归档”组件中 `src/run/pipeline_run.py` 的职责，通过 `set_current_run_id`、`get_current_run_id` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-002](../SWE.1-software-requirements.md#swr-rep-002)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
+| 架构组件 | ARC-RUN — Run configuration and archives |
+| 职责 | 实现“Run configuration and archives”组件中 `src/run/pipeline_run.py` 的职责，通过 `set_current_run_id`、`get_current_run_id` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |

@@ -13,9 +13,9 @@
 
 | 属性 | 内容 |
 |---|---|
-| 基线 ID | ASPICE-CM-2026-07-17 |
-| 状态 | agreed |
-| 发布引用 | refs/tags/aspice-software-domain-release-2026-07-18 |
+| 基线 ID | ASPICE-CM-ADVICE-V2-2026-08-12 |
+| 状态 | candidate-verified-local |
+| 发布引用 | working-tree-2026-08-12 |
 | 负责人角色 | configuration-manager |
 
 ## 变更控制

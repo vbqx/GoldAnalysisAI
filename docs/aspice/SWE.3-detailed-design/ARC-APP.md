@@ -1,4 +1,4 @@
-# ARC-APP — 应用入口与运行配置
+# ARC-APP — Application entry and run selection
 
 | 属性 | 内容 |
 |---|---|
@@ -16,10 +16,8 @@
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
 | [app.py](#unit-13cce7fd07) | 1 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [run_app.py](#unit-b2a1584dad) | 13 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [run_app.py](#unit-b2a1584dad) | 13 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [views/1_机构级分析报告.py](#unit-02d5d8e12e) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [views/2_短线策略.py](#unit-0e03ccecca) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
-| [views/3_LLM决策链.py](#unit-74cd83898f) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [views/4_外部数据.py](#unit-1fe6319d7a) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 
 <a id="unit-13cce7fd07"></a>
@@ -32,7 +30,7 @@
 |---|---|
 | 软件单元 ID | UNIT-13CCE7FD07 |
 | 源码 | [app.py](../../../app.py) |
-| 架构组件 | ARC-APP — 应用入口与运行配置 |
+| 架构组件 | ARC-APP — Application entry and run selection |
 | 职责 | GoldAnalysisAI — Streamlit 入口（纯导航，不显示为侧边栏页面）。 |
 | 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 1 / 0 |
@@ -76,12 +74,12 @@
 |---|---|
 | 软件单元 ID | UNIT-B2A1584DAD |
 | 源码 | [run_app.py](../../../run_app.py) |
-| 架构组件 | ARC-APP — 应用入口与运行配置 |
-| 职责 | 实现“应用入口与运行配置”组件中 `run_app.py` 的职责，通过 `load_dotenv`、`init_dev_env`、`ensure_streamlit_config`、`resolve_python`、`stop_stale_streamlit`、`parse_args`、`main` 提供该模块的公开能力。 |
+| 架构组件 | ARC-APP — Application entry and run selection |
+| 职责 | 实现“Application entry and run selection”组件中 `run_app.py` 的职责，通过 `load_dotenv`、`init_dev_env`、`ensure_streamlit_config`、`resolve_python`、`stop_stale_streamlit`、`parse_args`、`main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 13 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) |
-| 动态测试 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) |
+| 动态测试 | — |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -372,7 +370,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | os.chdir、parse_args、init_dev_env、load_dotenv、ensure_streamlit_config、int、os.environ.get、stop_stale_streamlit、resolve_python、subprocess.run、str、print、subprocess.call |
 | 复杂度 / 风险 | 分支 4；跨度 49 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-02d5d8e12e"></a>
 
@@ -384,52 +382,8 @@
 |---|---|
 | 软件单元 ID | UNIT-02D5D8E12E |
 | 源码 | [views/1_机构级分析报告.py](../../../views/1_机构级分析报告.py) |
-| 架构组件 | ARC-APP — 应用入口与运行配置 |
-| 职责 | 机构级分析报告 — 主页面。 |
-| 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
-| 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) |
-| 动态测试 | — |
-| 验证状态 | selected |
-
-#### 函数导航
-
-本模块没有函数或方法定义。
-
-<a id="unit-0e03ccecca"></a>
-
-### UNIT-0E03CCECCA
-
-**模块**：`views/2_短线策略.py`（软件单元详细设计）
-
-| 属性 | 内容 |
-|---|---|
-| 软件单元 ID | UNIT-0E03CCECCA |
-| 源码 | [views/2_短线策略.py](../../../views/2_短线策略.py) |
-| 架构组件 | ARC-APP — 应用入口与运行配置 |
-| 职责 | 短线策略图 — 独立页面。 |
-| 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
-| 函数 / 高风险函数 | 0 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) |
-| 动态测试 | — |
-| 验证状态 | selected |
-
-#### 函数导航
-
-本模块没有函数或方法定义。
-
-<a id="unit-74cd83898f"></a>
-
-### UNIT-74CD83898F
-
-**模块**：`views/3_LLM决策链.py`（软件单元详细设计）
-
-| 属性 | 内容 |
-|---|---|
-| 软件单元 ID | UNIT-74CD83898F |
-| 源码 | [views/3_LLM决策链.py](../../../views/3_LLM决策链.py) |
-| 架构组件 | ARC-APP — 应用入口与运行配置 |
-| 职责 | LLM 决策链 — 独立页面。 |
+| 架构组件 | ARC-APP — Application entry and run selection |
+| 职责 | Advice V2 — 人工审核建议主页面。 |
 | 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) |
@@ -450,7 +404,7 @@
 |---|---|
 | 软件单元 ID | UNIT-1FE6319D7A |
 | 源码 | [views/4_外部数据.py](../../../views/4_外部数据.py) |
-| 架构组件 | ARC-APP — 应用入口与运行配置 |
+| 架构组件 | ARC-APP — Application entry and run selection |
 | 职责 | 外部数据 — 新闻、日历、DXY、社媒；fetch 完成后即可查看。 |
 | 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 0 / 0 |

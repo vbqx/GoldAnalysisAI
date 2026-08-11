@@ -1,12 +1,12 @@
-schema_version: 1
-baseline_id: ASPICE-VER-2026-07-17
+schema_version: 2
+baseline_id: ASPICE-VER-ADVICE-V2-2026-08-12
 status: agreed
 owner_role: verification-lead
 selection_policy:
-  release_scope: 所有修改过的源码、文档、配置和测试，以及其追溯闭包。
-  regression_rule: unit、regression、docs、trace 和 static 为离线必选；integration 按受影响接口选择；live external 独立运行。
-  entry_criteria: 依赖可用、工作区范围明确、追溯数据通过 schema 校验。
-  exit_criteria: 必选措施通过；失败已有 SUP.9 Issue；结果绑定 Git SHA、环境和用例版本。
+  release_scope: Advice V2 source, tests, configuration and controlled documentation.
+  regression_rule: Unit, regression, documentation, trace and static measures block release; live supplier health is classified separately.
+  entry_criteria: Requirements, architecture and interfaces are agreed and deterministic fixtures are available.
+  exit_criteria: Every requirement has an accepted verification disposition and no blocking failure remains.
 measures:
   - id: VM-UNIT
     level: SWE.4
@@ -24,43 +24,36 @@ measures:
     result_record: docs/aspice/records/verification/latest.md
   - id: VM-INTEGRATION-PIPELINE
     level: SWE.5
-    technique: deterministic cross-component report trust-chain integration
-    command: python -m pytest tests/integration/test_offline_report_contract.py -m integration
+    technique: deterministic Advice V2 cross-component contract integration
+    command: python -m pytest tests/unit/test_advice_v2.py tests/unit/test_orchestrator_hooks.py
     pass_fail: pytest exit code 0 within declared timeout
-    environment: frozen fixtures; no network, paid LLM, or MT5
+    environment: frozen fixtures; no network or paid LLM
     result_record: docs/aspice/records/verification/latest.md
   - id: VM-INTEGRATION-EXTERNAL
     level: SWE.5
     technique: live supplier health smoke
     command: python tests/run.py --external
     pass_fail: result classified as pass, supplier unavailable, or software failure; only software failure blocks release
-    environment: network required; not part of deterministic offline gate
+    environment: network required; separate from deterministic offline gate
     result_record: runtime ledger or dedicated live-smoke record
-  - id: VM-BACKTEST
-    level: SWE.5
-    technique: point-in-time simulation with frozen fixtures
-    command: python -m pytest tests/unit/test_backtest_*.py
-    pass_fail: pytest exit code 0 and no future-data assertion violation
-    environment: no network
-    result_record: docs/aspice/records/verification/latest.md
   - id: VM-DOCS
     level: SWE.6
-    technique: document structure, link and sample synchronization tests
-    command: python -m pytest tests/regression/test_doc_pipeline_sync.py tests/regression/test_docs_structure.py tests/regression/test_export_sample_report.py
-    pass_fail: pytest exit code 0
+    technique: documentation structure, links, pipeline and sample synchronization
+    command: python tests/run.py --regression
+    pass_fail: documentation regression tests exit 0
     environment: no network
     result_record: docs/aspice/records/verification/latest.md
   - id: VM-TRACE
     level: SWE.1-SWE.6
-    technique: bidirectional traceability and document register validation
+    technique: bidirectional traceability and document-register validation
     command: python scripts/check_aspice_assets.py --check and python scripts/generate_aspice_software_evidence.py --check
-    pass_fail: exit code 0, no orphan or dangling identifier
+    pass_fail: exit code 0 with no orphan or dangling identifier
     environment: no network; PyYAML available
     result_record: docs/aspice/records/verification/latest.md
   - id: VM-STATIC
     level: SWE.4
     technique: compile and patch hygiene
-    command: python -m compileall -q src app.py run_app.py scripts && git diff --check
+    command: python -m compileall -q src app.py run_app.py scripts and git diff --check
     pass_fail: both commands exit code 0
     environment: no network
     result_record: docs/aspice/records/verification/latest.md
@@ -68,22 +61,21 @@ measures:
     level: SWE.6
     technique: Streamlit visual and interaction acceptance
     command: python run_app.py
-    pass_fail: applicable UI catalog cases pass with screenshots/notes
+    pass_fail: Advice V2 UI catalog cases pass with screenshots or review notes
     environment: supported browser at desktop and mobile widths
-    result_record: docs/aspice/records/reviews/gui/streamlit-acceptance-2026-07-08.md
+    result_record: docs/aspice/records/reviews/gui/advice-v2-acceptance-2026-08-12.md
   - id: VM-CONFIG
     level: SUP.8
-    technique: configuration item, lock and SBOM consistency
+    technique: configuration item, dependency lock and SBOM consistency
     command: python scripts/check_aspice_assets.py --check
-    pass_fail: all controlled paths exist and dependency lock equals SBOM component versions
+    pass_fail: controlled paths exist and dependency lock equals SBOM versions
     environment: no network
     result_record: docs/aspice/records/verification/latest.md
 requirements:
-  VM-UNIT: [SWR-CORE-001, SWR-CORE-002, SWR-DATA-001, SWR-DATA-002, SWR-DATA-003, SWR-ANA-001, SWR-ANA-002, SWR-ANA-003, SWR-AGT-001, SWR-LLM-001, SWR-LLM-002, SWR-LLM-003, SWR-REP-001, SWR-REP-002, SWR-REP-003, SWR-REP-004, SWR-ARC-001, SWR-ARC-002, SWR-BT-001, SWR-UI-001, SWR-UI-002, SWR-CFG-001, SWR-NFR-001, SWR-NFR-002, SWR-NFR-003]
-  VM-REGRESSION: [SWR-CORE-001, SWR-CORE-002, SWR-DATA-003, SWR-ANA-001, SWR-ANA-002, SWR-ANA-003, SWR-LLM-002, SWR-LLM-003, SWR-REP-001, SWR-REP-002, SWR-REP-003, SWR-REP-004, SWR-ARC-001, SWR-ARC-002, SWR-NFR-002, SWR-NFR-003]
-  VM-INTEGRATION-PIPELINE: [SWR-CORE-001, SWR-AGT-001, SWR-LLM-001]
+  VM-UNIT: [SWR-CORE-001, SWR-CORE-002, SWR-DATA-001, SWR-DATA-002, SWR-DATA-003, SWR-ANA-001, SWR-ADV-001, SWR-ADV-002, SWR-ADV-003, SWR-ADV-004, SWR-LLM-001, SWR-LLM-002, SWR-REP-001, SWR-ARC-001, SWR-ARC-002, SWR-UI-001, SWR-UI-002, SWR-CFG-001, SWR-NFR-001, SWR-NFR-002, SWR-NFR-003]
+  VM-REGRESSION: [SWR-CORE-001, SWR-CORE-002, SWR-DATA-003, SWR-ANA-001, SWR-ADV-001, SWR-ADV-002, SWR-ADV-003, SWR-ADV-004, SWR-LLM-002, SWR-REP-001, SWR-ARC-001, SWR-ARC-002, SWR-NFR-002, SWR-NFR-003]
+  VM-INTEGRATION-PIPELINE: [SWR-CORE-001, SWR-ADV-001, SWR-ADV-002, SWR-ADV-003, SWR-LLM-001]
   VM-INTEGRATION-EXTERNAL: [SWR-DATA-001, SWR-DATA-002, SWR-NFR-001]
-  VM-BACKTEST: [SWR-BT-001]
   VM-DOCS: [SWR-REP-001, SWR-NFR-003]
   VM-TRACE: [SWR-NFR-003, SWR-NFR-004]
   VM-STATIC: [SWR-NFR-003]

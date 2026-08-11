@@ -1,0 +1,68 @@
+schema_version: 2
+result_id: ASPICE-SWE-VER-ADVICE-V2-2026-08-12
+status: verified-local
+scope: Advice V2 re-architecture and V1 removal
+baseline_ref: working-tree-2026-08-12
+verified_candidate_ref: working-tree-2026-08-12
+verified_candidate_commit: pending
+business_code_base_commit: git-parent
+business_code_change: Advice V2 replacement
+environment:
+  os: Windows local verification
+  python: CPython 3.12
+  network: disabled for deterministic gate
+  controls: [offline unit and regression fixtures]
+remote_verification: {}
+measures:
+  - id: VM-UNIT
+    outcome: pass
+    selected: true
+    result: 159 passed
+    command: python tests/run.py --unit
+  - id: VM-REGRESSION
+    outcome: pass
+    selected: true
+    result: 20 passed
+    command: python tests/run.py --regression
+  - id: VM-INTEGRATION-PIPELINE
+    outcome: pass
+    selected: true
+    result: Advice V2 engine, orchestration and legacy replay contracts passed in the offline suite
+    command: python tests/run.py
+  - id: VM-INTEGRATION-EXTERNAL
+    outcome: not-selected
+    selected: false
+    result: live supplier availability is outside the deterministic refactor gate
+    command: python tests/run.py --external
+  - id: VM-DOCS
+    outcome: pass
+    selected: true
+    result: documentation, sample report and pipeline synchronization tests passed
+    command: python tests/run.py --regression
+  - id: VM-TRACE
+    outcome: pass
+    selected: true
+    result: 22 requirements, 111 units and 604 functions; no blocking requirement or unit gaps
+    command: ASPICE generators and asset validator with --check
+  - id: VM-STATIC
+    outcome: pass
+    selected: true
+    result: Python compilation and patch whitespace checks passed
+    command: python -m compileall -q src app.py run_app.py scripts; git diff --check
+  - id: VM-MANUAL-UI
+    outcome: not-selected
+    selected: false
+    result: UI contract has automated coverage; interactive visual smoke was not executed in this gate
+    command: python run_app.py
+  - id: VM-CONFIG
+    outcome: pass
+    selected: true
+    result: controlled paths, dependency lock, SBOM, document register and schema assets are consistent
+    command: python scripts/check_aspice_assets.py --check
+deviations:
+  - id: DEV-LIVE-SUPPLIER-NOT-SELECTED
+    disposition: accepted-by-scope
+    rationale: The deterministic refactor gate uses fixtures; live availability is checked separately.
+  - id: DEV-MANUAL-UI-NOT-SELECTED
+    disposition: accepted-by-scope
+    rationale: Automated UI contracts passed; a visual smoke remains a release activity.

@@ -2,39 +2,49 @@
 
 ## 1. 适用范围
 
-本基线只对 Automotive SPICE 软件工程过程组作出完成性结论：SWE.1、SWE.2、SWE.3、
-SWE.4、SWE.5 和 SWE.6。SUP、MAN、ACQ、SPL、SYS、HWE、MLE、PIM 与 REU 不在本轮
-完成性声明中；其中配置、问题和变更记录仅作为软件工程证据的支撑信息。
+本基线覆盖 Automotive SPICE 软件工程过程 SWE.1～SWE.6，并以 SUP.8 配置管理证据支撑变更追溯。它是项目内部的软件工程符合性基线，不冒充认可评估师实施的正式能力等级评估。
 
-软件发布范围包括 `app.py`、`run_app.py`、`views/`、`src/` 和随产品维护的 `scripts/`。
-一个 Python 模块定义为一个 software unit；模块内每个函数/方法都必须映射到该 unit，并在
-逐函数 as-built 设计表中记录静态接口、行为、异常、外部影响、并发、风险和验证处置。
+本次受控变更是 Advice V2 重构：产品从 V1 多阶段决策报告调整为“生成一条可供人工确认的交易建议”。变更范围包括 `app.py`、`views/`、`src/`、`tests/`、`scripts/`、`.env.example` 和相关文档。V1 删除属于已批准范围，不适用“业务代码零差异”的文档整改规则。
 
-## 2. 不修改功能代码的整改边界
+软件单元以 Python 模块为边界；每个函数或方法必须归属一个单元，并记录设计、风险和验证处置。历史评审记录保留原时点事实，但不得定义当前架构。
 
-本轮只允许修改 `docs/`、`tests/`、`scripts/` 中的治理工具和 `.github/workflows/`。
-禁止修改 `src/`、`views/`、`app.py` 与 `run_app.py`。发布前必须用 Git 路径差异再次证明该
-边界；若业务代码出现差异，软件域关闭审核自动失败。
+## 2. Advice V2 产品边界
 
-## 3. SWE.1–SWE.6 关闭条件
+- 输出供人工审核，不自动下单，不授权仓位。
+- 一次最多一个主建议；无合格机会时输出 `WAIT` 或 `AVOID`。
+- 方向、关注区、失效价、目标和证据由确定性逻辑拥有。
+- LLM 只能润色允许的文字字段，失败或越界时回退确定性结果。
+- 旧归档只用保存的数据重建 Advice V2，不重新获取外部数据或调用 LLM。
+
+## 3. SWE.1～SWE.6 关闭条件
 
 | 过程 | 关闭条件 | 主要证据 |
 |---|---|---|
-| SWE.1 | 发布需求属性完整，均有架构和验证正向链接，反向无孤儿 | [软件需求](../SWE.1-software-requirements.md)、[双向追溯](../traceability.md) |
-| SWE.2 | 组件、接口、模式和动态行为受控，并与需求双向一致 | [软件架构](../SWE.2-architecture/software-architecture.md)、[IT](../SWE.5-integration-testing.md) |
-| SWE.3 | 所有 unit/function 有稳定 ID；全部函数有 as-built 设计字段；公开/高风险设计可审查 | [软件详细设计](../SWE.3-detailed-design/software-detailed-design.md) |
-| SWE.4 | 每个 unit 有选定验证措施；高风险 unit 有直接或受控组件级动态证据；无未处置阻断项 | [UT](../SWE.4-unit-testing.md)、JUnit 结果 |
-| SWE.5 | 集成顺序、接口、前置条件、桩、超时、资源、用例和结果均受控 | [IT](../SWE.5-integration-testing.md)、离线 integration JUnit |
-| SWE.6 | 每条软件需求均有验证措施和结果；发布验证绑定 Git、配置、环境和用例版本 | [VT](../SWE.6-validation-testing.md)、[最新结果](../records/verification/latest.md) |
+| SWE.1 | 每条需求具有来源、优先级、接受准则、架构分配和验证措施 | [软件需求](../SWE.1-software-requirements.md)、[追溯](../traceability.md) |
+| SWE.2 | Advice V2 组件、接口、运行模式和故障降级与需求一致 | [软件架构](../SWE.2-architecture/software-architecture.md)、[建议专题](../SWE.2-architecture/human-review-advice.md) |
+| SWE.3 | 所有当前源码单元和函数具有稳定 ID、设计字段与验证处置 | [软件详细设计](../SWE.3-detailed-design/software-detailed-design.md) |
+| SWE.4 | 每个软件单元选择验证措施，高风险逻辑具有直接或组件级动态证据 | [单元测试](../SWE.4-unit-testing.md) |
+| SWE.5 | 数据、分析、建议、LLM、报告和归档接口具有顺序、桩、超时和结果 | [集成测试](../SWE.5-integration-testing.md) |
+| SWE.6 | 每条需求均有接受结果；未选择的实时或人工活动具有明确偏差处置 | [验证测试](../SWE.6-validation-testing.md)、[最新结果](../records/verification/latest.md) |
 
-## 4. 关闭规则
+## 4. 本地候选关闭规则
 
-只有以下检查全部通过才能关闭软件域问题单：
+满足以下条件可标记为 `verified-local`：
 
-1. 两个 ASPICE 生成器以 `--check` 返回 0，且无 orphan、dangling 或 blocking-gap。
-2. 完整 unit、regression 和确定性 integration 通过，并由 CI 保存 JUnit。
-3. 发布需求覆盖率、unit 验证选择率、函数设计记录率均为 100%。
-4. `git diff` 证明业务代码零修改。
-5. 基线提交和 tag 已发布，远端 CI 通过，Issue 留有提交、tag、测试和偏差证据。
+1. ASPICE 资产、软件证据和可读文档三项 `--check` 均返回 0。
+2. 离线 unit 与 regression 全部通过，Advice V2 关键集成契约有自动化证据。
+3. 需求覆盖、软件单元验证选择和函数设计记录无 `blocking-gap`。
+4. `git diff --check` 与 Python 编译通过。
+5. 业务代码差异与 Advice V2 变更范围一致；删除项和兼容边界有评审记录。
+6. 未执行的实时供应商或人工视觉活动在验证结果中标记为 `not-selected`，不得表述为通过。
 
-该关闭审核是项目的软件工程证据审查，不冒充由认可评估师实施的正式能力等级评估。
+## 5. 发布关闭规则
+
+`verified-local` 不等于已发布。发布关闭还要求：
+
+1. 变更提交到可追溯 commit，并完成评审批准。
+2. 远端 CI 通过并保存测试证据。
+3. 需要发布视觉验收时执行 `python run_app.py` 完成人工冒烟。
+4. 建立发布 tag 或等价不可变引用，并将 SUP.8 的候选基线更新为正式基线。
+
+当前候选状态见 [验证基线](../records/verification/latest.md)。

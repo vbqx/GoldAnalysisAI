@@ -1,4 +1,4 @@
-# ARC-INDICATORS — 指标计算
+# ARC-INDICATORS — Technical indicator enrichment
 
 | 属性 | 内容 |
 |---|---|
@@ -29,8 +29,8 @@
 |---|---|
 | 软件单元 ID | UNIT-7D2CF26834 |
 | 源码 | [src/indicators/__init__.py](../../../src/indicators/__init__.py) |
-| 架构组件 | ARC-INDICATORS — 指标计算 |
-| 职责 | 实现“指标计算”组件中 `src/indicators/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 架构组件 | ARC-INDICATORS — Technical indicator enrichment |
+| 职责 | 实现“Technical indicator enrichment”组件中 `src/indicators/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
 | 关联需求 | [SWR-ANA-001](../SWE.1-software-requirements.md#swr-ana-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
@@ -51,12 +51,12 @@
 |---|---|
 | 软件单元 ID | UNIT-2F8C299C5B |
 | 源码 | [src/indicators/technical.py](../../../src/indicators/technical.py) |
-| 架构组件 | ARC-INDICATORS — 指标计算 |
-| 职责 | 实现“指标计算”组件中 `src/indicators/technical.py` 的职责，通过 `add_emas`、`add_vwap`、`add_atr`、`add_rsi`、`add_macd`、`add_adx`、`enrich`、`indicator_values` 提供该模块的公开能力。 |
+| 架构组件 | ARC-INDICATORS — Technical indicator enrichment |
+| 职责 | 实现“Technical indicator enrichment”组件中 `src/indicators/technical.py` 的职责，通过 `add_emas`、`add_vwap`、`add_atr`、`add_rsi`、`add_macd`、`add_adx`、`enrich`、`indicator_values` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-ANA-001](../SWE.1-software-requirements.md#swr-ana-001) |
 | 函数 / 高风险函数 | 10 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_debate_parallel.py](../../../tests/unit/test_debate_parallel.py)、[tests/unit/test_financial_review.py](../../../tests/unit/test_financial_review.py)、[tests/unit/test_llm_payload_funnel.py](../../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_facts.py](../../../tests/unit/test_narrative_facts.py)、[tests/unit/test_report_facts.py](../../../tests/unit/test_report_facts.py)、[tests/unit/test_research_parallel.py](../../../tests/unit/test_research_parallel.py)、[tests/unit/test_signal_dedup.py](../../../tests/unit/test_signal_dedup.py) |
+| 动态测试 | [tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -75,15 +75,15 @@
 | 参数 | `df`（pd.DataFrame）：输入数据表<br>`periods`（tuple[int, ...]）：由调用方提供的 `periods` 输入对象；默认值 `(20, 50, 610)` |
 | 返回 | 返回 `pd.DataFrame` 类型结果 |
 | 职责 | 添加`emas`；返回 `pd.DataFrame` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `df.copy` → `mean` → `ewm`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `df.copy` → `mean` → `ewm`；包含 2 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `pd.DataFrame` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | df.copy、mean、ewm |
-| 复杂度 / 风险 | 分支 1；跨度 5 行；中 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
+| 复杂度 / 风险 | 分支 2；跨度 8 行；中 |
+| 测试 / 验证 | [tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py) · 直接动态测试 |
 
 <a id="fun-c3db0f8450"></a>
 
@@ -92,7 +92,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `add_vwap` |
-| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L17` |
+| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L20` |
 | 签名 | `add_vwap(df: pd.DataFrame)` |
 | 参数 | `df`（pd.DataFrame）：输入数据表 |
 | 返回 | 返回 `pd.DataFrame` 类型结果 |
@@ -114,7 +114,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `add_atr` |
-| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L27` |
+| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L30` |
 | 签名 | `add_atr(df: pd.DataFrame, period: int=14)` |
 | 参数 | `df`（pd.DataFrame）：输入数据表<br>`period`（int）：计算周期长度；默认值 `14` |
 | 返回 | 返回 `pd.DataFrame` 类型结果 |
@@ -136,7 +136,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `add_rsi` |
-| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L42` |
+| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L45` |
 | 签名 | `add_rsi(df: pd.DataFrame, period: int=14)` |
 | 参数 | `df`（pd.DataFrame）：输入数据表<br>`period`（int）：计算周期长度；默认值 `14` |
 | 返回 | 返回 `pd.DataFrame` 类型结果 |
@@ -158,7 +158,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `add_macd` |
-| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L55` |
+| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L58` |
 | 签名 | `add_macd(df: pd.DataFrame, *, fast: int=12, slow: int=26, signal: int=9)` |
 | 参数 | `df`（pd.DataFrame）：输入数据表<br>`fast`（int）：由 `fast` 表示的数值参数；默认值 `12`<br>`slow`（int）：由 `slow` 表示的数值参数；默认值 `26`<br>`signal`（int）：当前交易信号；默认值 `9` |
 | 返回 | 返回 `pd.DataFrame` 类型结果 |
@@ -180,7 +180,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `add_adx` |
-| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L71` |
+| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L74` |
 | 签名 | `add_adx(df: pd.DataFrame, period: int=14)` |
 | 参数 | `df`（pd.DataFrame）：输入数据表<br>`period`（int）：计算周期长度；默认值 `14` |
 | 返回 | 返回 `pd.DataFrame` 类型结果 |
@@ -202,7 +202,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `enrich` |
-| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L95` |
+| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L98` |
 | 签名 | `enrich(df: pd.DataFrame)` |
 | 参数 | `df`（pd.DataFrame）：输入数据表 |
 | 返回 | 返回 `pd.DataFrame` 类型结果 |
@@ -215,7 +215,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | add_adx、add_macd、add_rsi、add_atr、add_vwap、add_emas |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_debate_parallel.py](../../../tests/unit/test_debate_parallel.py)、[tests/unit/test_llm_payload_funnel.py](../../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_facts.py](../../../tests/unit/test_narrative_facts.py)、[tests/unit/test_research_parallel.py](../../../tests/unit/test_research_parallel.py)、[tests/unit/test_signal_dedup.py](../../../tests/unit/test_signal_dedup.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-d44171a8a2"></a>
 
@@ -224,7 +224,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `indicator_values` |
-| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L99` |
+| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L102` |
 | 签名 | `indicator_values(row: pd.Series)` |
 | 参数 | `row`（pd.Series）：当前记录行 |
 | 返回 | 返回 `dict[str, float \| None]` 类型结果 |
@@ -246,7 +246,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ema_relation` |
-| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L109` |
+| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L112` |
 | 签名 | `ema_relation(price: float, row: pd.Series)` |
 | 参数 | `price`（float）：当前或待评估价格<br>`row`（pd.Series）：当前记录行 |
 | 返回 | 返回 `dict[str, str]` 类型结果 |
@@ -259,7 +259,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | pd.isna、float |
 | 复杂度 / 风险 | 分支 4；跨度 14 行；中 |
-| 测试 / 验证 | [tests/unit/test_financial_review.py](../../../tests/unit/test_financial_review.py)、[tests/unit/test_report_facts.py](../../../tests/unit/test_report_facts.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py) · 直接动态测试 |
 
 <a id="fun-6537a68fb4"></a>
 
@@ -268,7 +268,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `fibonacci_levels` |
-| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L125` |
+| 源码位置 | [src/indicators/technical.py](../../../src/indicators/technical.py) · `L128` |
 | 签名 | `fibonacci_levels(swing_high: float, swing_low: float)` |
 | 参数 | `swing_high`（float）：摆动高点价格<br>`swing_low`（float）：摆动低点价格 |
 | 返回 | 返回 `list[dict]` 类型结果 |
@@ -280,8 +280,8 @@
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | levels.append、round |
-| 复杂度 / 风险 | 分支 1；跨度 21 行；中 |
-| 测试 / 验证 | [tests/unit/test_financial_review.py](../../../tests/unit/test_financial_review.py) · 直接动态测试 |
+| 复杂度 / 风险 | 分支 1；跨度 23 行；中 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-d35a8017fe"></a>
 
@@ -293,12 +293,12 @@
 |---|---|
 | 软件单元 ID | UNIT-D35A8017FE |
 | 源码 | [src/indicators/verify.py](../../../src/indicators/verify.py) |
-| 架构组件 | ARC-INDICATORS — 指标计算 |
-| 职责 | 实现“指标计算”组件中 `src/indicators/verify.py` 的职责，通过 `indicator_snapshot`、`indicator_table_rows` 提供该模块的公开能力。 |
+| 架构组件 | ARC-INDICATORS — Technical indicator enrichment |
+| 职责 | 实现“Technical indicator enrichment”组件中 `src/indicators/verify.py` 的职责，通过 `indicator_snapshot`、`indicator_table_rows` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-ANA-001](../SWE.1-software-requirements.md#swr-ana-001) |
 | 函数 / 高风险函数 | 2 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_financial_review.py](../../../tests/unit/test_financial_review.py)、[tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py) |
+| 动态测试 | [tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -317,15 +317,15 @@
 | 参数 | `df`（pd.DataFrame）：输入数据表<br>`timeframe`（str）：行情时间框架 |
 | 返回 | 返回 `dict` 类型结果 |
 | 职责 | 构建指标快照；返回 `dict` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `round` → `pd.notna` → `ema_relation` → `row.update` → `indicator_values` → `sum` → `fillna` → `notes.append`；包含 13 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `round` → `pd.notna` → `ema_relation` → `row.update` → `indicator_values` → `sum` → `fillna` → `notes.append`；包含 15 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `dict` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | float、len、str、round、pd.notna、ema_relation、row.update、indicator_values、int、sum、fillna、notes.append、abs、row.get |
-| 复杂度 / 风险 | 分支 13；跨度 58 行；中 |
-| 测试 / 验证 | [tests/unit/test_financial_review.py](../../../tests/unit/test_financial_review.py)、[tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py) · 直接动态测试 |
+| 复杂度 / 风险 | 分支 15；跨度 62 行；中 |
+| 测试 / 验证 | [tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py) · 直接动态测试 |
 
 <a id="fun-44ba63c6e8"></a>
 
@@ -334,7 +334,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `indicator_table_rows` |
-| 源码位置 | [src/indicators/verify.py](../../../src/indicators/verify.py) · `L70` |
+| 源码位置 | [src/indicators/verify.py](../../../src/indicators/verify.py) · `L74` |
 | 签名 | `indicator_table_rows(snapshots: list[dict])` |
 | 参数 | `snapshots`（list[dict]）：由 `snapshots` 表示的输入集合 |
 | 返回 | 返回 `list[dict]` 类型结果 |

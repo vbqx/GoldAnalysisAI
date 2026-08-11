@@ -1,12 +1,7 @@
-# 流水线进度步骤权威列表 — 文档与 CI 同步的唯一数据源
-# prog.start() 的 key 须与 orchestrator.py、fetch_pipeline.py 一致
-# 新增阶段时请同步更新相关 Markdown 文档
-
-version: 1
+version: 2
 sources:
   - src/core/orchestrator.py
   - src/data/fetch_pipeline.py
-
 steps:
   - id: fetch
     label: 数据拉取
@@ -14,94 +9,39 @@ steps:
     function: fetch_all_data
     uses_llm: false
     progress: true
-
   - id: indicators
     label: 计算技术指标
     module: src/indicators/technical.py
     function: enrich
     uses_llm: false
     progress: true
-
-  - id: ict
-    label: ICT 结构分析
+  - id: structure
+    label: 提取市场结构
     module: src/analysis/ict_pa.py
     function: analyze_timeframe
     uses_llm: false
     progress: true
-
-  - id: analyst_team
-    label: 分析师团队
-    module: src/agents/analysts/
-    function: run_analyst_team
-    uses_llm: optional
+  - id: advice
+    label: 生成人工审核建议
+    module: src/advice/engine.py
+    function: build_advice_packet
+    uses_llm: optional-wording-only
     progress: true
-
-  - id: bullish
-    label: 看多研究
-    module: src/agents/factory.py
-    function: run_bullish
-    uses_llm: optional
-    progress: true
-
-  - id: bearish
-    label: 看空研究
-    module: src/agents/factory.py
-    function: run_bearish
-    uses_llm: optional
-    progress: true
-
-  - id: debate
-    label: 多空辩论
-    module: src/agents/factory.py
-    function: run_debate
-    uses_llm: optional
-    progress: true
-
-  - id: trader
-    label: 交易员提案
-    module: src/agents/factory.py
-    function: run_trader
-    uses_llm: optional
-    progress: true
-
-  - id: risk
-    label: 风控审核
-    module: src/agents/factory.py
-    function: run_risk
-    uses_llm: optional
-    progress: true
-
-  - id: manager
-    label: 经理决策
-    module: src/agents/factory.py
-    function: run_manager
-    uses_llm: optional
-    progress: true
-
   - id: report
-    label: 组装报告
-    module: src/analysis/report_engine.py
-    function: build_report
+    label: 组装人工审核卡
+    module: src/advice/report.py
+    function: build_advice_report
     uses_llm: false
     progress: true
-
-  - id: llm_narrative
-    label: LLM 报告文案
-    module: src/llm/analyst.py
-    function: run_llm_analysis
-    uses_llm: optional
-    progress: true
-
   - id: archive
     label: 运行归档
     module: src/run/archive/store.py
     function: archive_run
     uses_llm: false
     progress: false
-
 replay:
   entry: src/viz/replay_loader.py::load_replay_bundle
   storage: .cache/run_archives/
   uses_llm: false
   uses_fetch: false
-  note: UI 回放仅 load_bundle，不重跑流水线
+  note: V2 reports load directly; legacy archives rebuild V2 from stored data and analyses.

@@ -1,4 +1,4 @@
-# ARC-TOOLS — 开发、审核与运维工具
+# ARC-TOOLS — Development and ASPICE tooling
 
 | 属性 | 内容 |
 |---|---|
@@ -17,21 +17,18 @@
 |---|---|---|---|---|
 | [scripts/chart_compare_test.py](#unit-670f7f7454) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
 | [scripts/check_aspice_assets.py](#unit-de82d6e44b) | 23 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/check_mt5_connection.py](#unit-d4b396b36e) | 1 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/check_mt5_connection.py](#unit-d4b396b36e) | 1 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
 | [scripts/close_fixed_issues.py](#unit-9572f90802) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
-| [scripts/compare_pa_5m_tv.py](#unit-b4a1accfa2) | 1 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/compare_pa_tv.py](#unit-8e5050cae9) | 2 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/compare_pa_5m_tv.py](#unit-b4a1accfa2) | 1 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
 | [scripts/create_system_test_issues.py](#unit-eefb367071) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
-| [scripts/estimate_llm_tokens.py](#unit-3fa67ae3bf) | 3 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/export_sample_report.py](#unit-2781538ff5) | 3 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/export_sample_report.py](#unit-2781538ff5) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
 | [scripts/generate_aspice_readable_docs.py](#unit-44da65110b) | 23 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
 | [scripts/generate_aspice_software_evidence.py](#unit-70ee096332) | 23 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/inspect_archive.py](#unit-37e036c51b) | 6 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/inspect_archive.py](#unit-37e036c51b) | 6 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
 | [scripts/regression_test.py](#unit-ebde8e6443) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
-| [scripts/replay_llm_narrative.py](#unit-3960e281ab) | 4 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
 | [scripts/run_pipeline_test.py](#unit-d538889607) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
-| [scripts/show_utf8.py](#unit-8f71f01664) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
-| [scripts/test_live_fetch.py](#unit-c913c2495c) | 2 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) | selected |
+| [scripts/show_utf8.py](#unit-8f71f01664) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
+| [scripts/test_live_fetch.py](#unit-c913c2495c) | 2 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
 | [scripts/test_llm_json_fix.py](#unit-76c5f6645c) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) | selected |
 
 <a id="unit-670f7f7454"></a>
@@ -44,8 +41,8 @@
 |---|---|
 | 软件单元 ID | UNIT-670F7F7454 |
 | 源码 | [scripts/chart_compare_test.py](../../../scripts/chart_compare_test.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/chart_compare_test.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/chart_compare_test.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
@@ -66,12 +63,12 @@
 |---|---|
 | 软件单元 ID | UNIT-DE82D6E44B |
 | 源码 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/check_aspice_assets.py` 的职责，通过 `stable_id`、`read_yaml`、`rel`、`source_files`、`document_files`、`document_classification`、`document_title`、`markdown_anchors` 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/check_aspice_assets.py` 的职责，通过 `stable_id`、`read_yaml`、`rel`、`source_files`、`document_files`、`document_classification`、`document_title`、`markdown_anchors` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 23 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py)、[tests/unit/test_golden_report_benchmark.py](../../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_report_reliability.py](../../../tests/unit/test_report_reliability.py) |
+| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -142,7 +139,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | as_posix、path.relative_to |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_golden_report_benchmark.py](../../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_report_reliability.py](../../../tests/unit/test_report_reliability.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-6175ef47cc"></a>
 
@@ -332,14 +329,14 @@
 | 参数 | `path`（Path）：文件或目录路径 |
 | 返回 | 返回 `str` 类型结果 |
 | 职责 | 生成源码所属架构组件文本；返回 `str` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `rel` → `value.startswith`；包含 10 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `rel` → `value.startswith`；包含 9 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | rel、value.startswith |
-| 复杂度 / 风险 | 分支 10；跨度 23 行；中 |
+| 复杂度 / 风险 | 分支 9；跨度 21 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-f9f01026c2"></a>
@@ -349,7 +346,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `module_doc` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L288` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L286` |
 | 签名 | `module_doc(tree: ast.AST, component_name: str, source_path: str)` |
 | 参数 | `tree`（ast.AST）：由调用方提供的 `tree` 输入对象<br>`component_name`（str）：对象名称<br>`source_path`（str）：文件或目录路径 |
 | 返回 | 返回 `str` 类型结果 |
@@ -371,7 +368,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_units` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L302` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L300` |
 | 签名 | `build_units(arch: dict[str, Any])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型 |
 | 返回 | 返回 `tuple[list[dict[str, str]], list[dict[str, str]]]` 类型结果 |
@@ -383,7 +380,7 @@
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | source_files、rel、component_for、ast.parse、path.read_text、stable_id、join、units.append、module_doc、ast.walk、ast.iter_child_nodes、isinstance、parents.get、owners.append、reversed、functions.append、str、node.name.startswith、sorted、int |
-| 复杂度 / 风险 | 分支 8；跨度 57 行；中 |
+| 复杂度 / 风险 | 分支 8；跨度 58 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-2ceb1f60f7"></a>
@@ -393,7 +390,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_trace_rows` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L361` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L360` |
 | 签名 | `build_trace_rows(reqs: dict[str, Any], units: list[dict[str, str]])` |
 | 参数 | `reqs`（dict[str, Any]）：由 `reqs` 表示的键值映射<br>`units`（list[dict[str, str]]）：由 `units` 表示的输入集合 |
 | 返回 | 返回 `list[dict[str, str]]` 类型结果 |
@@ -415,7 +412,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `dependency_outputs` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L382` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L381` |
 | 签名 | `dependency_outputs(report: dict[str, Any])` |
 | 参数 | `report`（dict[str, Any]）：分析报告 |
 | 返回 | 返回 `tuple[str, str]` 类型结果 |
@@ -437,7 +434,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `csv_text` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L419` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L418` |
 | 签名 | `csv_text(rows: list[dict[str, str]])` |
 | 参数 | `rows`（list[dict[str, str]]）：记录行集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -459,7 +456,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `process_index` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L429` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L428` |
 | 签名 | `process_index(rows: list[dict[str, str]])` |
 | 参数 | `rows`（list[dict[str, str]]）：记录行集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -481,7 +478,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `expected_outputs` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L455` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L454` |
 | 签名 | `expected_outputs()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[Path, str]` 类型结果 |
@@ -503,7 +500,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `validate_model` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L480` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L479` |
 | 签名 | `validate_model(*, allow_generated_missing: bool=False)` |
 | 参数 | `allow_generated_missing`（bool）：控制对应行为是否启用的布尔值；默认值 `False` |
 | 返回 | 返回 `list[str]` 类型结果 |
@@ -525,7 +522,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `write_outputs` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L546` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L545` |
 | 签名 | `write_outputs(outputs: dict[Path, str])` |
 | 参数 | `outputs`（dict[Path, str]）：由 `outputs` 表示的键值映射 |
 | 返回 | 无返回值（None） |
@@ -547,7 +544,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `check_outputs` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L553` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L552` |
 | 签名 | `check_outputs(outputs: dict[Path, str])` |
 | 参数 | `outputs`（dict[Path, str]）：由 `outputs` 表示的键值映射 |
 | 返回 | 返回 `list[str]` 类型结果 |
@@ -569,7 +566,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `main` |
-| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L578` |
+| 源码位置 | [scripts/check_aspice_assets.py](../../../scripts/check_aspice_assets.py) · `L577` |
 | 签名 | `main()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `int` 类型结果 |
@@ -582,7 +579,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | argparse.ArgumentParser、parser.add_mutually_exclusive_group、group.add_argument、parser.parse_args、validate_model、expected_outputs、print、join、write_outputs、len、errors.extend、check_outputs、build_units、read_yaml、document_files |
 | 复杂度 / 风险 | 分支 3；跨度 27 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-d4b396b36e"></a>
 
@@ -594,12 +591,12 @@
 |---|---|
 | 软件单元 ID | UNIT-D4B396B36E |
 | 源码 | [scripts/check_mt5_connection.py](../../../scripts/check_mt5_connection.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/check_mt5_connection.py` 的职责，通过 `main` 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/check_mt5_connection.py` 的职责，通过 `main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
+| 动态测试 | — |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -626,7 +623,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | MT5Config、get_mt5_provider、print、provider.account_info、info.get、provider.shutdown |
 | 复杂度 / 风险 | 分支 2；跨度 27 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-9572f90802"></a>
 
@@ -638,8 +635,8 @@
 |---|---|
 | 软件单元 ID | UNIT-9572F90802 |
 | 源码 | [scripts/close_fixed_issues.py](../../../scripts/close_fixed_issues.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/close_fixed_issues.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/close_fixed_issues.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
@@ -660,19 +657,19 @@
 |---|---|
 | 软件单元 ID | UNIT-B4A1ACCFA2 |
 | 源码 | [scripts/compare_pa_5m_tv.py](../../../scripts/compare_pa_5m_tv.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/compare_pa_5m_tv.py` 的职责，通过 `main` 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/compare_pa_5m_tv.py` 的职责，通过 `main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 1 / 1 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
+| 动态测试 | — |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [main](#fun-406938ab22) | 执行 `scripts/compare_pa_5m_tv.py` 的主流程；可能影响外部接口；无返回值（None）。 | 外部接口 I/O | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| [main](#fun-406938ab22) | 执行 `scripts/compare_pa_5m_tv.py` 的主流程；可能影响外部接口；无返回值（None）。 | 外部接口 I/O | — |
 
 #### 函数导航
 
@@ -698,79 +695,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | fetch_all_data、enrich、fetched.raw.items、float、print、analyze_dgt_price_action、build_price_action_summaries、vp.get、lvl.get、analyze_timeframe、round |
 | 复杂度 / 风险 | 分支 4；跨度 29 行；高 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
-
-<a id="unit-8e5050cae9"></a>
-
-### UNIT-8E5050CAE9
-
-**模块**：`scripts/compare_pa_tv.py`（软件单元详细设计）
-
-| 属性 | 内容 |
-|---|---|
-| 软件单元 ID | UNIT-8E5050CAE9 |
-| 源码 | [scripts/compare_pa_tv.py](../../../scripts/compare_pa_tv.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/compare_pa_tv.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
-| 函数 / 高风险函数 | 2 / 1 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
-| 验证状态 | selected |
-
-#### 高风险设计评审清单
-
-| 函数 | 职责 | 副作用 | 验证 |
-|---|---|---|---|
-| [main](#fun-d24395608c) | 执行 `scripts/compare_pa_tv.py` 的主流程；可能影响外部接口；无返回值（None）。 | 外部接口 I/O | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
-
-#### 函数导航
-
-[_delta](#fun-818471ea1d) · [main](#fun-d24395608c)
-
-<a id="fun-818471ea1d"></a>
-
-#### FUN-818471EA1D
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `_delta` |
-| 源码位置 | [scripts/compare_pa_tv.py](../../../scripts/compare_pa_tv.py) · `L26` |
-| 签名 | `_delta(ours: float \| None, tv: float)` |
-| 参数 | `ours`（float \| None）：由调用方提供的 `ours` 输入对象<br>`tv`（float）：由 `tv` 表示的数值参数 |
-| 返回 | 返回 `str` 类型结果 |
-| 职责 | 生成差值文本；返回 `str` 类型结果。 |
-| 处理逻辑 | 直接通过表达式、字段访问或常量完成处理；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | 无直接调用依赖 |
-| 复杂度 / 风险 | 分支 1；跨度 4 行；低 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
-
-<a id="fun-d24395608c"></a>
-
-#### FUN-D24395608C
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `main` |
-| 源码位置 | [scripts/compare_pa_tv.py](../../../scripts/compare_pa_tv.py) · `L32` |
-| 签名 | `main()` |
-| 参数 | 无显式输入参数 |
-| 返回 | 无返回值（None） |
-| 职责 | 执行 `scripts/compare_pa_tv.py` 的主流程；可能影响外部接口；无返回值（None）。 |
-| 处理逻辑 | 按源码执行顺序经过 `fetch_all_data` → `enrich` → `fetched.raw.items` → `print` → `df15.tail` → `analyze_dgt_price_action` → `_delta` → `build_volume_profile`；包含 7 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束；外部客户端、凭据、网络和超时策略已按运行配置准备 |
-| 后置条件 | 无返回值（None）；可观察变化限于外部接口 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 外部接口 I/O |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | fetch_all_data、enrich、fetched.raw.items、float、print、df15.tail、analyze_dgt_price_action、_delta、build_volume_profile、len、build_price_action_summaries、get、pa.get、vp.get、abs、x.get、analyze_timeframe、generate_trading_signals、sentiment_score |
-| 复杂度 / 风险 | 分支 7；跨度 81 行；高 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
 
 <a id="unit-eefb367071"></a>
 
@@ -782,8 +707,8 @@
 |---|---|
 | 软件单元 ID | UNIT-EEFB367071 |
 | 源码 | [scripts/create_system_test_issues.py](../../../scripts/create_system_test_issues.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/create_system_test_issues.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/create_system_test_issues.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
@@ -793,94 +718,6 @@
 #### 函数导航
 
 本模块没有函数或方法定义。
-
-<a id="unit-3fa67ae3bf"></a>
-
-### UNIT-3FA67AE3BF
-
-**模块**：`scripts/estimate_llm_tokens.py`（软件单元详细设计）
-
-| 属性 | 内容 |
-|---|---|
-| 软件单元 ID | UNIT-3FA67AE3BF |
-| 源码 | [scripts/estimate_llm_tokens.py](../../../scripts/estimate_llm_tokens.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/estimate_llm_tokens.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
-| 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
-| 验证状态 | selected |
-
-#### 函数导航
-
-[_sys](#fun-85a3e4b3a3) · [_est](#fun-487ef18d78) · [main](#fun-7143a40322)
-
-<a id="fun-85a3e4b3a3"></a>
-
-#### FUN-85A3E4B3A3
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `_sys` |
-| 源码位置 | [scripts/estimate_llm_tokens.py](../../../scripts/estimate_llm_tokens.py) · `L39` |
-| 签名 | `_sys(mod: str)` |
-| 参数 | `mod`（str）：由 `mod` 表示的文本或标识 |
-| 返回 | 返回 `str` 类型结果 |
-| 职责 | 生成`sys`文本；返回 `str` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `getattr` → `importlib.import_module`；不包含显式控制分支。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | getattr、importlib.import_module |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
-
-<a id="fun-487ef18d78"></a>
-
-#### FUN-487EF18D78
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `_est` |
-| 源码位置 | [scripts/estimate_llm_tokens.py](../../../scripts/estimate_llm_tokens.py) · `L43` |
-| 签名 | `_est(chars: int)` |
-| 参数 | `chars`（int）：由 `chars` 表示的数值参数 |
-| 返回 | 返回 `int` 类型结果 |
-| 职责 | 计算`est`；返回 `int` 类型结果。 |
-| 处理逻辑 | 直接通过表达式、字段访问或常量完成处理；不包含显式控制分支。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `int` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | int |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
-
-<a id="fun-7143a40322"></a>
-
-#### FUN-7143A40322
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `main` |
-| 源码位置 | [scripts/estimate_llm_tokens.py](../../../scripts/estimate_llm_tokens.py) · `L47` |
-| 签名 | `main()` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `int` 类型结果 |
-| 职责 | 执行 `scripts/estimate_llm_tokens.py` 的主流程；返回 `int` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `_sample_context` → `run_analyst_team` → `run_bullish_researcher` → `run_bearish_researcher` → `run_debate` → `compute_trading_signals` → `run_trader_agent` → `run_risk_team`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `int` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | _sample_context、run_analyst_team、run_bullish_researcher、run_bearish_researcher、run_debate、compute_trading_signals、run_trader_agent、run_risk_team、len、run_manager、build_report、_sys、technical_analyst_payload、fundamentals_analyst_payload、news_analyst_payload、sentiment_analyst_payload、research_payload、debate_payload、trader_payload、risk_payload |
-| 复杂度 / 风险 | 分支 1；跨度 57 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
 
 <a id="unit-2781538ff5"></a>
 
@@ -892,61 +729,39 @@
 |---|---|
 | 软件单元 ID | UNIT-2781538FF5 |
 | 源码 | [scripts/export_sample_report.py](../../../scripts/export_sample_report.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | Export a脱敏 sample report JSON for docs/aspice/SWE.3-detailed-design/reference/examples/ (no network)。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/export_sample_report.py` 的职责，通过 `build_sample`、`main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
-| 函数 / 高风险函数 | 3 / 0 |
+| 函数 / 高风险函数 | 2 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py)、[tests/unit/test_debate_parallel.py](../../../tests/unit/test_debate_parallel.py)、[tests/unit/test_llm_payload_funnel.py](../../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_facts.py](../../../tests/unit/test_narrative_facts.py)、[tests/unit/test_research_parallel.py](../../../tests/unit/test_research_parallel.py)、[tests/unit/test_signal_dedup.py](../../../tests/unit/test_signal_dedup.py) |
+| 动态测试 | [tests/regression/test_export_sample_report.py](../../../tests/regression/test_export_sample_report.py) |
 | 验证状态 | selected |
 
 #### 函数导航
 
-[_sanitize](#fun-a27c77a1d3) · [_sample_context](#fun-b0ffdeb50d) · [main](#fun-8b24cef8e4)
+[build_sample](#fun-f2014ebc32) · [main](#fun-8b24cef8e4)
 
-<a id="fun-a27c77a1d3"></a>
+<a id="fun-f2014ebc32"></a>
 
-#### FUN-A27C77A1D3
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `_sanitize` |
-| 源码位置 | [scripts/export_sample_report.py](../../../scripts/export_sample_report.py) · `L43` |
-| 签名 | `_sanitize(obj)` |
-| 参数 | `obj`（实现约定类型）：由调用方提供的 `obj` 输入对象 |
-| 返回 | 返回实现分支产生的结果（源码未标注类型） |
-| 职责 | 生成可序列化安全值结果；返回实现分支产生的结果（源码未标注类型）。 |
-| 处理逻辑 | 按源码执行顺序经过 `isinstance` → `math.isnan` → `math.isinf` → `round` → `abs` → `_sanitize` → `obj.items`；包含 5 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回实现分支产生的结果（源码未标注类型）；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | isinstance、math.isnan、math.isinf、round、abs、_sanitize、obj.items |
-| 复杂度 / 风险 | 分支 5；跨度 10 行；低 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
-
-<a id="fun-b0ffdeb50d"></a>
-
-#### FUN-B0FFDEB50D
+#### FUN-F2014EBC32
 
 | 设计项 | 说明 |
 |---|---|
-| 函数 | `_sample_context` |
-| 源码位置 | [scripts/export_sample_report.py](../../../scripts/export_sample_report.py) · `L55` |
-| 签名 | `_sample_context()` |
+| 函数 | `build_sample` |
+| 源码位置 | [scripts/export_sample_report.py](../../../scripts/export_sample_report.py) · `L14` |
+| 签名 | `build_sample()` |
 | 参数 | 无显式输入参数 |
-| 返回 | 返回 `MarketContext` 类型结果 |
-| 职责 | 生成`sample_context`结果；返回 `MarketContext` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `pd.date_range` → `pd.Series` → `to_numpy` → `range` → `pd.DataFrame` → `enrich` → `analyze_timeframe` → `round`；不包含显式控制分支。 |
+| 返回 | 返回 `dict` 类型结果 |
+| 职责 | 构建`sample`；返回 `dict` 类型结果。 |
+| 处理逻辑 | 直接通过表达式、字段访问或常量完成处理；不包含显式控制分支。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `MarketContext` 类型结果；静态扫描未发现直接外部副作用 |
+| 后置条件 | 返回 `dict` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | pd.date_range、pd.Series、to_numpy、range、pd.DataFrame、enrich、analyze_timeframe、round、float、ExternalFactors、HeadlineItem、MacroQuote、MarketContext |
-| 复杂度 / 风险 | 分支 0；跨度 61 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_debate_parallel.py](../../../tests/unit/test_debate_parallel.py)、[tests/unit/test_llm_payload_funnel.py](../../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_facts.py](../../../tests/unit/test_narrative_facts.py)、[tests/unit/test_research_parallel.py](../../../tests/unit/test_research_parallel.py)、[tests/unit/test_signal_dedup.py](../../../tests/unit/test_signal_dedup.py) · 直接动态测试 |
+| 调用依赖 | 无直接调用依赖 |
+| 复杂度 / 风险 | 分支 0；跨度 65 行；中 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-8b24cef8e4"></a>
 
@@ -955,20 +770,20 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `main` |
-| 源码位置 | [scripts/export_sample_report.py](../../../scripts/export_sample_report.py) · `L118` |
+| 源码位置 | [scripts/export_sample_report.py](../../../scripts/export_sample_report.py) · `L81` |
 | 签名 | `main()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `int` 类型结果 |
 | 职责 | 执行 `scripts/export_sample_report.py` 的主流程；可能影响文件系统；返回 `int` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `_sample_context` → `AgentPipelineMeta` → `run_analyst_team` → `run_bullish_researcher` → `run_bearish_researcher` → `run_debate` → `compute_trading_signals` → `run_trader_agent`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `OUTPUT.parent.mkdir` → `OUTPUT.write_text` → `json.dumps` → `build_sample` → `print` → `as_posix` → `OUTPUT.relative_to`；不包含显式控制分支。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束；相关路径满足读取或写入权限及目录边界 |
 | 后置条件 | 返回 `int` 类型结果；可观察变化限于文件系统 |
-| 显式异常 | RuntimeError |
+| 显式异常 | 未发现显式 raise |
 | 副作用 | 文件系统读写 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | _sample_context、AgentPipelineMeta、run_analyst_team、run_bullish_researcher、run_bearish_researcher、run_debate、compute_trading_signals、run_trader_agent、run_risk_team、len、run_manager、build_report、get、report.get、isinstance、math.isnan、RuntimeError、pipeline_meta.to_dict、m.to_dict、build_rule_narrative_sections |
-| 复杂度 / 风险 | 分支 1；跨度 60 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
+| 调用依赖 | OUTPUT.parent.mkdir、OUTPUT.write_text、json.dumps、build_sample、print、as_posix、OUTPUT.relative_to |
+| 复杂度 / 风险 | 分支 0；跨度 5 行；中 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-44da65110b"></a>
 
@@ -980,12 +795,12 @@
 |---|---|
 | 软件单元 ID | UNIT-44DA65110B |
 | 源码 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/generate_aspice_readable_docs.py` 的职责，通过 `expected_outputs`、`main` 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/generate_aspice_readable_docs.py` 的职责，通过 `expected_outputs`、`main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 23 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -1275,7 +1090,7 @@
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
-| 复杂度 / 风险 | 分支 0；跨度 133 行；中 |
+| 复杂度 / 风险 | 分支 0；跨度 75 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-73cd1d7b70"></a>
@@ -1285,7 +1100,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_architecture_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L286` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L229` |
 | 签名 | `_architecture_doc(arch: dict[str, Any], units: list[dict[str, str]])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型<br>`units`（list[dict[str, str]]）：由 `units` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1307,7 +1122,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_design_outputs` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L353` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L296` |
 | 签名 | `_design_outputs(arch: dict[str, Any], units: list[dict[str, str]], functions: list[dict[str, str]], verification: dict[str, dict[str, str]])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型<br>`units`（list[dict[str, str]]）：由 `units` 表示的输入集合<br>`functions`（list[dict[str, str]]）：由 `functions` 表示的输入集合<br>`verification`（dict[str, dict[str, str]]）：验证证据或验证配置 |
 | 返回 | 返回 `dict[Path, str]` 类型结果 |
@@ -1329,7 +1144,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_unit_section` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L446` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L389` |
 | 签名 | `_unit_section(unit: dict[str, str], functions: list[dict[str, str]], verification: dict[str, str], component_name: str, *, root_prefix: str='../../', aspice_prefix: str='')` |
 | 参数 | `unit`（dict[str, str]）：由 `unit` 表示的键值映射<br>`functions`（list[dict[str, str]]）：由 `functions` 表示的输入集合<br>`verification`（dict[str, str]）：验证证据或验证配置<br>`component_name`（str）：对象名称<br>`root_prefix`（str）：由 `root_prefix` 表示的文本或标识；默认值 `'../../'`<br>`aspice_prefix`（str）：由 `aspice_prefix` 表示的文本或标识；默认值 `''` |
 | 返回 | 返回 `list[str]` 类型结果 |
@@ -1351,7 +1166,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_unit_verification_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L533` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L476` |
 | 签名 | `_unit_verification_doc(arch: dict[str, Any], rows: list[dict[str, str]])` |
 | 参数 | `arch`（dict[str, Any]）：软件架构模型<br>`rows`（list[dict[str, str]]）：记录行集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1373,7 +1188,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_integration_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L559` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L502` |
 | 签名 | `_integration_doc(plan: dict[str, Any], measures: dict[str, Any])` |
 | 参数 | `plan`（dict[str, Any]）：由 `plan` 表示的键值映射<br>`measures`（dict[str, Any]）：由 `measures` 表示的键值映射 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1395,7 +1210,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_qualification_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L595` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L538` |
 | 签名 | `_qualification_doc(measures: dict[str, Any], coverage: list[dict[str, str]])` |
 | 参数 | `measures`（dict[str, Any]）：由 `measures` 表示的键值映射<br>`coverage`（list[dict[str, str]]）：由 `coverage` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1417,7 +1232,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_configuration_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L621` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L564` |
 | 签名 | `_configuration_doc(cm: dict[str, Any])` |
 | 参数 | `cm`（dict[str, Any]）：由 `cm` 表示的键值映射 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1439,7 +1254,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_traceability_doc` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L639` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L582` |
 | 签名 | `_traceability_doc(reqs: dict[str, Any], coverage: list[dict[str, str]])` |
 | 参数 | `reqs`（dict[str, Any]）：由 `reqs` 表示的键值映射<br>`coverage`（list[dict[str, str]]）：由 `coverage` 表示的输入集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1461,19 +1276,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `expected_outputs` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L649` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L592` |
 | 签名 | `expected_outputs()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[Path, str]` 类型结果 |
 | 职责 | 构建预期生成产物；返回 `dict[Path, str]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `_yaml` → `_csv` → `_design_outputs`；不包含显式控制分支。 |
+| 处理逻辑 | 按源码执行顺序经过 `_yaml` → `_csv` → `_design_outputs` → `_requirements_doc` → `_architecture_doc` → `_unit_verification_doc` → `_integration_doc` → `_qualification_doc`；不包含显式控制分支。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `dict[Path, str]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | _yaml、_csv、_design_outputs |
-| 复杂度 / 风险 | 分支 0；跨度 13 行；中 |
+| 调用依赖 | _yaml、_csv、_design_outputs、_requirements_doc、_architecture_doc、_unit_verification_doc、_integration_doc、_qualification_doc、_configuration_doc、_traceability_doc |
+| 复杂度 / 风险 | 分支 0；跨度 20 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-1ea9f2053e"></a>
@@ -1483,7 +1298,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `main` |
-| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L664` |
+| 源码位置 | [scripts/generate_aspice_readable_docs.py](../../../scripts/generate_aspice_readable_docs.py) · `L614` |
 | 签名 | `main()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `int` 类型结果 |
@@ -1496,7 +1311,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | argparse.ArgumentParser、parser.add_mutually_exclusive_group、mode.add_argument、parser.parse_args、expected_outputs、outputs.items、path.parent.mkdir、path.write_text、path.exists、errors.append、as_posix、path.relative_to、path.read_text、print、join、len |
 | 复杂度 / 风险 | 分支 5；跨度 22 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-70ee096332"></a>
 
@@ -1508,12 +1323,12 @@
 |---|---|
 | 软件单元 ID | UNIT-70EE096332 |
 | 源码 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/generate_aspice_software_evidence.py` 的职责，通过 `expected_outputs`、`main` 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/generate_aspice_software_evidence.py` 的职责，通过 `expected_outputs`、`main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 23 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -1527,7 +1342,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_rel` |
-| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L41` |
+| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L42` |
 | 签名 | `_rel(path: Path)` |
 | 参数 | `path`（Path）：文件或目录路径 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1549,7 +1364,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_stable_id` |
-| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L45` |
+| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L46` |
 | 签名 | `_stable_id(prefix: str, value: str)` |
 | 参数 | `prefix`（str）：由 `prefix` 表示的文本或标识<br>`value`（str）：待处理值 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1571,7 +1386,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_source_files` |
-| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L50` |
+| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L51` |
 | 签名 | `_source_files()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `list[Path]` 类型结果 |
@@ -1593,7 +1408,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_test_corpus` |
-| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L61` |
+| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L62` |
 | 签名 | `_test_corpus()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[str, str]` 类型结果 |
@@ -1615,7 +1430,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_token_references` |
-| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L71` |
+| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L72` |
 | 签名 | `_token_references(token: str, corpus: dict[str, str])` |
 | 参数 | `token`（str）：标记或认证令牌<br>`corpus`（dict[str, str]）：由 `corpus` 表示的键值映射 |
 | 返回 | 返回 `list[str]` 类型结果 |
@@ -1637,7 +1452,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_component_for` |
-| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L76` |
+| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L77` |
 | 签名 | `_component_for(path: str)` |
 | 参数 | `path`（str）：文件或目录路径 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1649,7 +1464,7 @@
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | path.startswith |
-| 复杂度 / 风险 | 分支 3；跨度 17 行；低 |
+| 复杂度 / 风险 | 分支 3；跨度 16 行；低 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-6e9b981dfb"></a>
@@ -1994,14 +1809,14 @@
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `tuple[dict[Path, str], dict[str, int]]` 类型结果 |
 | 职责 | 构建预期生成产物；返回 `tuple[dict[Path, str], dict[str, int]]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `yaml.safe_load` → `ARCH_PATH.read_text` → `REQ_PATH.read_text` → `RESULT_PATH.read_text` → `_test_corpus` → `defaultdict` → `_source_files` → `_rel`；包含 18 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `yaml.safe_load` → `ARCH_PATH.read_text` → `REQ_PATH.read_text` → `RESULT_PATH.read_text` → `_test_corpus` → `defaultdict` → `_source_files` → `_rel`；包含 17 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `tuple[dict[Path, str], dict[str, int]]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | yaml.safe_load、ARCH_PATH.read_text、REQ_PATH.read_text、RESULT_PATH.read_text、_test_corpus、defaultdict、_source_files、_rel、_stable_id、_component_for、ast.parse、source.read_text、ast.walk、ast.iter_child_nodes、replace、path.removesuffix、update、_token_references、isinstance、_qualname |
-| 复杂度 / 风险 | 分支 18；跨度 141 行；中 |
+| 复杂度 / 风险 | 分支 17；跨度 139 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-9c060dbc51"></a>
@@ -2011,7 +1826,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `main` |
-| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L601` |
+| 源码位置 | [scripts/generate_aspice_software_evidence.py](../../../scripts/generate_aspice_software_evidence.py) · `L599` |
 | 签名 | `main()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `int` 类型结果 |
@@ -2024,7 +1839,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | argparse.ArgumentParser、parser.add_mutually_exclusive_group、mode.add_argument、parser.parse_args、expected_outputs、outputs.items、path.write_text、path.exists、errors.append、_rel、path.read_text、print、join |
 | 复杂度 / 风险 | 分支 7；跨度 26 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-37e036c51b"></a>
 
@@ -2036,12 +1851,12 @@
 |---|---|
 | 软件单元 ID | UNIT-37E036C51B |
 | 源码 | [scripts/inspect_archive.py](../../../scripts/inspect_archive.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/inspect_archive.py` 的职责，通过 `main` 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/inspect_archive.py` 的职责，通过 `main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 6 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
+| 动态测试 | — |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -2178,7 +1993,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | argparse.ArgumentParser、parser.add_subparsers、sub.add_parser、list_p.add_argument、list_p.set_defaults、inspect_p.add_argument、inspect_p.set_defaults、validate_p.add_argument、validate_p.set_defaults、export_p.add_argument、export_p.set_defaults、import_p.add_argument、import_p.set_defaults、parser.parse_args、args.func |
 | 复杂度 / 风险 | 分支 0；跨度 29 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-ebde8e6443"></a>
 
@@ -2190,8 +2005,8 @@
 |---|---|
 | 软件单元 ID | UNIT-EBDE8E6443 |
 | 源码 | [scripts/regression_test.py](../../../scripts/regression_test.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/regression_test.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/regression_test.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
@@ -2201,116 +2016,6 @@
 #### 函数导航
 
 本模块没有函数或方法定义。
-
-<a id="unit-3960e281ab"></a>
-
-### UNIT-3960E281AB
-
-**模块**：`scripts/replay_llm_narrative.py`（软件单元详细设计）
-
-| 属性 | 内容 |
-|---|---|
-| 软件单元 ID | UNIT-3960E281AB |
-| 源码 | [scripts/replay_llm_narrative.py](../../../scripts/replay_llm_narrative.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/replay_llm_narrative.py` 的职责，通过 `main` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
-| 函数 / 高风险函数 | 4 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py)、[tests/unit/test_replay_llm_narrative.py](../../../tests/unit/test_replay_llm_narrative.py) |
-| 验证状态 | selected |
-
-#### 函数导航
-
-[_load_json](#fun-2a9ad18e99) · [_load_llm_payload](#fun-0b702bf5f4) · [_print_audit](#fun-89b0c24609) · [main](#fun-06a7e09133)
-
-<a id="fun-2a9ad18e99"></a>
-
-#### FUN-2A9AD18E99
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `_load_json` |
-| 源码位置 | [scripts/replay_llm_narrative.py](../../../scripts/replay_llm_narrative.py) · `L18` |
-| 签名 | `_load_json(path: Path)` |
-| 参数 | `path`（Path）：文件或目录路径 |
-| 返回 | 返回 `dict` 类型结果 |
-| 职责 | 加载JSON 数据；返回 `dict` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `json.loads` → `path.read_text`；不包含显式控制分支。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | json.loads、path.read_text |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
-
-<a id="fun-0b702bf5f4"></a>
-
-#### FUN-0B702BF5F4
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `_load_llm_payload` |
-| 源码位置 | [scripts/replay_llm_narrative.py](../../../scripts/replay_llm_narrative.py) · `L22` |
-| 签名 | `_load_llm_payload(report: dict, llm_path: Path \| None)` |
-| 参数 | `report`（dict）：分析报告<br>`llm_path`（Path \| None）：文件或目录路径 |
-| 返回 | 返回 `dict` 类型结果 |
-| 职责 | 加载LLM 阶段载荷；返回 `dict` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `_load_json` → `isinstance` → `SystemExit` → `report.get` → `llm.get` → `json.loads`；包含 3 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | SystemExit |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | _load_json、isinstance、SystemExit、report.get、llm.get、json.loads |
-| 复杂度 / 风险 | 分支 3；跨度 13 行；低 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
-
-<a id="fun-89b0c24609"></a>
-
-#### FUN-89B0C24609
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `_print_audit` |
-| 源码位置 | [scripts/replay_llm_narrative.py](../../../scripts/replay_llm_narrative.py) · `L37` |
-| 签名 | `_print_audit(result)` |
-| 参数 | `result`（实现约定类型）：处理结果 |
-| 返回 | 无返回值（None） |
-| 职责 | 执行`print_audit`处理；无返回值（None）。 |
-| 处理逻辑 | 按源码执行顺序经过 `print` → `get` → `section.get` → `audit.get` → `top.get` → `items` → `sum`；包含 6 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 无返回值（None）；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | print、get、section.get、audit.get、top.get、items、sum、len |
-| 复杂度 / 风险 | 分支 6；跨度 27 行；低 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
-
-<a id="fun-06a7e09133"></a>
-
-#### FUN-06A7E09133
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `main` |
-| 源码位置 | [scripts/replay_llm_narrative.py](../../../scripts/replay_llm_narrative.py) · `L66` |
-| 签名 | `main()` |
-| 参数 | 无显式输入参数 |
-| 返回 | 无返回值（None） |
-| 职责 | 执行 `scripts/replay_llm_narrative.py` 的主流程；无返回值（None）。 |
-| 处理逻辑 | 按源码执行顺序经过 `argparse.ArgumentParser` → `parser.add_argument` → `parser.parse_args` → `_load_json` → `report.get` → `build_rule_narrative_sections` → `_load_llm_payload` → `validate_llm_payload`；包含 2 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 无返回值（None）；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | argparse.ArgumentParser、parser.add_argument、parser.parse_args、_load_json、report.get、build_rule_narrative_sections、_load_llm_payload、validate_llm_payload、_print_audit、apply_llm_to_report、print |
-| 复杂度 / 风险 | 分支 2；跨度 32 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
 
 <a id="unit-d538889607"></a>
 
@@ -2322,8 +2027,8 @@
 |---|---|
 | 软件单元 ID | UNIT-D538889607 |
 | 源码 | [scripts/run_pipeline_test.py](../../../scripts/run_pipeline_test.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/run_pipeline_test.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/run_pipeline_test.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
@@ -2344,12 +2049,12 @@
 |---|---|
 | 软件单元 ID | UNIT-8F71F01664 |
 | 源码 | [scripts/show_utf8.py](../../../scripts/show_utf8.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/show_utf8.py` 的职责，通过 `parse_args`、`main` 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/show_utf8.py` 的职责，通过 `parse_args`、`main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
+| 动态测试 | — |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -2398,7 +2103,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | sys.stdout.reconfigure、parse_args、Path、path.read_text、text.splitlines、max、min、len、range、print |
 | 复杂度 / 风险 | 分支 1；跨度 11 行；中 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-c913c2495c"></a>
 
@@ -2410,19 +2115,19 @@
 |---|---|
 | 软件单元 ID | UNIT-C913C2495C |
 | 源码 | [scripts/test_live_fetch.py](../../../scripts/test_live_fetch.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/test_live_fetch.py` 的职责，通过 `main` 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/test_live_fetch.py` 的职责，通过 `main` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 2 / 1 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit) |
-| 动态测试 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |
+| 动态测试 | — |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [main](#fun-9c22b2b4e5) | 执行 `scripts/test_live_fetch.py` 的主流程；可能影响外部接口；返回 `int` 类型结果。 | 外部接口 I/O | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) |
+| [main](#fun-9c22b2b4e5) | 执行 `scripts/test_live_fetch.py` 的主流程；可能影响外部接口；返回 `int` 类型结果。 | 外部接口 I/O | — |
 
 #### 函数导航
 
@@ -2470,7 +2175,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | print、fetch_dxy_impact、_block、fetch_jin10_bundle、len、fetch_jin10_quote、fetch_jin10_kline、fetch_social_sentiment、merge_external、fetch_external、NewsDataSource、FundamentalsDataSource、SocialDataSource、sum、dxy_refs.get、bool、social_refs.get |
 | 复杂度 / 风险 | 分支 1；跨度 72 行；高 |
-| 测试 / 验证 | [tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-76c5f6645c"></a>
 
@@ -2482,8 +2187,8 @@
 |---|---|
 | 软件单元 ID | UNIT-76C5F6645C |
 | 源码 | [scripts/test_llm_json_fix.py](../../../scripts/test_llm_json_fix.py) |
-| 架构组件 | ARC-TOOLS — 开发、审核与运维工具 |
-| 职责 | 实现“开发、审核与运维工具”组件中 `scripts/test_llm_json_fix.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 架构组件 | ARC-TOOLS — Development and ASPICE tooling |
+| 职责 | 实现“Development and ASPICE tooling”组件中 `scripts/test_llm_json_fix.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
 | 关联需求 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static) |

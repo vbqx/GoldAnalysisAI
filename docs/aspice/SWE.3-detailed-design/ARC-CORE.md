@@ -1,4 +1,4 @@
-# ARC-CORE — 主编排与进度
+# ARC-CORE — Advice pipeline orchestration
 
 | 属性 | 内容 |
 |---|---|
@@ -16,15 +16,15 @@
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
 | [src/__init__.py](#unit-b141e8a708) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/config.py](#unit-f43788fe2b) | 5 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/config.py](#unit-f43788fe2b) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/core/__init__.py](#unit-21570b9deb) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/orchestrator.py](#unit-aa59bf5421) | 1 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/orchestrator.py](#unit-aa59bf5421) | 2 | 2 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/core/orchestrator_hooks.py](#unit-d0bec20560) | 4 | 3 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/core/parallel.py](#unit-d85010dca2) | 3 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/core/progress.py](#unit-0dc607ab64) | 31 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/core/run_config.py](#unit-4bd152d87b) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/core/run_context.py](#unit-338f795d63) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/core/types.py](#unit-d5eb6e2a98) | 21 | 2 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/core/types.py](#unit-d5eb6e2a98) | 7 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/log.py](#unit-a91501b8ca) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/pipeline.py](#unit-ba3f06e87a) | 1 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 
@@ -38,9 +38,9 @@
 |---|---|
 | 软件单元 ID | UNIT-B141E8A708 |
 | 源码 | [src/__init__.py](../../../src/__init__.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
@@ -60,17 +60,17 @@
 |---|---|
 | 软件单元 ID | UNIT-F43788FE2B |
 | 源码 | [src/config.py](../../../src/config.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/config.py` 的职责，通过 `short_model_name`、`llm_sidebar_models` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
-| 函数 / 高风险函数 | 5 / 0 |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/config.py` 的职责，通过 `short_model_name` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 函数 / 高风险函数 | 2 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/regression/test_fixes.py](../../../tests/regression/test_fixes.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_mt5_provider.py](../../../tests/unit/test_mt5_provider.py) |
+| 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_mt5_provider.py](../../../tests/unit/test_mt5_provider.py) |
 | 验证状态 | selected |
 
 #### 函数导航
 
-[_load_dotenv](#fun-f4d8ffcbf2) · [short_model_name](#fun-9eb4bec26a) · [llm_sidebar_models](#fun-9f79e7b13e) · [_stage_flag](#fun-d31153bd15) · [_stage_flag_or](#fun-09dea713ba)
+[_load_dotenv](#fun-f4d8ffcbf2) · [short_model_name](#fun-9eb4bec26a)
 
 <a id="fun-f4d8ffcbf2"></a>
 
@@ -90,7 +90,7 @@
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 共享状态变更 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | resolve、Path、env_path.exists、splitlines、env_path.read_text、line.strip、line.startswith、line.split、os.environ.setdefault、key.strip、val.strip |
+| 调用依赖 | resolve、Path、env_path.exists、splitlines、env_path.read_text、line.strip、line.startswith、line.split、os.environ.setdefault、key.strip、value.strip |
 | 复杂度 / 风险 | 分支 3；跨度 10 行；低 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
@@ -101,7 +101,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `short_model_name` |
-| 源码位置 | [src/config.py](../../../src/config.py) · `L145` |
+| 源码位置 | [src/config.py](../../../src/config.py) · `L104` |
 | 签名 | `short_model_name(model: str)` |
 | 参数 | `model`（str）：模型名称或模型对象 |
 | 返回 | 返回 `str` 类型结果 |
@@ -116,72 +116,6 @@
 | 复杂度 / 风险 | 分支 1；跨度 2 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
-<a id="fun-9f79e7b13e"></a>
-
-#### FUN-9F79E7B13E
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `llm_sidebar_models` |
-| 源码位置 | [src/config.py](../../../src/config.py) · `L149` |
-| 签名 | `llm_sidebar_models()` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `str` 类型结果 |
-| 职责 | 生成`llm_sidebar_models`文本；返回 `str` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `short_model_name` → `parts.append` → `join`；包含 2 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | short_model_name、parts.append、join |
-| 复杂度 / 风险 | 分支 2；跨度 15 行；中 |
-| 测试 / 验证 | [tests/regression/test_fixes.py](../../../tests/regression/test_fixes.py) · 直接动态测试 |
-
-<a id="fun-d31153bd15"></a>
-
-#### FUN-D31153BD15
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `_stage_flag` |
-| 源码位置 | [src/config.py](../../../src/config.py) · `L166` |
-| 签名 | `_stage_flag(name: str)` |
-| 参数 | `name`（str）：对象名称 |
-| 返回 | 返回 `bool` 类型结果 |
-| 职责 | 判断`stage_flag`条件是否成立；返回 `bool` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `lower` → `os.getenv`；不包含显式控制分支。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `bool` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | lower、os.getenv |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
-
-<a id="fun-09dea713ba"></a>
-
-#### FUN-09DEA713BA
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `_stage_flag_or` |
-| 源码位置 | [src/config.py](../../../src/config.py) · `L181` |
-| 签名 | `_stage_flag_or(name: str, default: bool)` |
-| 参数 | `name`（str）：对象名称<br>`default`（bool）：控制对应行为是否启用的布尔值 |
-| 返回 | 返回 `bool` 类型结果 |
-| 职责 | 判断`stage_flag_or`条件是否成立；返回 `bool` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `_stage_flag`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `bool` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | _stage_flag |
-| 复杂度 / 风险 | 分支 1；跨度 4 行；低 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
-
 <a id="unit-21570b9deb"></a>
 
 ### UNIT-21570B9DEB
@@ -192,9 +126,9 @@
 |---|---|
 | 软件单元 ID | UNIT-21570B9DEB |
 | 源码 | [src/core/__init__.py](../../../src/core/__init__.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/core/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/core/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
@@ -214,23 +148,46 @@
 |---|---|
 | 软件单元 ID | UNIT-AA59BF5421 |
 | 源码 | [src/core/orchestrator.py](../../../src/core/orchestrator.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/core/orchestrator.py` 的职责，通过 `run_trade_agent_pipeline` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
-| 函数 / 高风险函数 | 1 / 1 |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/core/orchestrator.py` 的职责，通过 `run_advice_pipeline`、`run_trade_agent_pipeline` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 函数 / 高风险函数 | 2 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) |
+| 动态测试 | [tests/unit/test_advice_architecture_smoke.py](../../../tests/unit/test_advice_architecture_smoke.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [run_trade_agent_pipeline](#fun-67d665990e) | 执行交易分析 Agent 完整流水线；可能影响外部接口、共享状态；返回 `tuple[dict, dict, dict]` 类型结果。 | 外部接口 I/O；共享状态变更 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) |
+| [run_advice_pipeline](#fun-0b6e09d42e) | 执行`advice_pipeline`；可能影响外部接口、共享状态；返回 `tuple[dict, dict, dict]` 类型结果。 | 外部接口 I/O；共享状态变更 | [tests/unit/test_advice_architecture_smoke.py](../../../tests/unit/test_advice_architecture_smoke.py) |
+| [run_trade_agent_pipeline](#fun-67d665990e) | 执行交易分析 Agent 完整流水线；返回 `tuple[dict, dict, dict]` 类型结果。 | 未检测到直接副作用 | — |
 
 #### 函数导航
 
-[run_trade_agent_pipeline](#fun-67d665990e)
+[run_advice_pipeline](#fun-0b6e09d42e) · [run_trade_agent_pipeline](#fun-67d665990e)
+
+<a id="fun-0b6e09d42e"></a>
+
+#### FUN-0B6E09D42E
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `run_advice_pipeline` |
+| 源码位置 | [src/core/orchestrator.py](../../../src/core/orchestrator.py) · `L27` |
+| 签名 | `run_advice_pipeline()` |
+| 参数 | 无显式输入参数 |
+| 返回 | 返回 `tuple[dict, dict, dict]` 类型结果 |
+| 职责 | 执行`advice_pipeline`；可能影响外部接口、共享状态；返回 `tuple[dict, dict, dict]` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `begin_pipeline_run` → `get_progress` → `fetch_market_data` → `publish_external_snapshot` → `prog.start` → `run_parallel` → `enrich` → `raw.items`；包含 4 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束；外部客户端、凭据、网络和超时策略已按运行配置准备 |
+| 后置条件 | 返回 `tuple[dict, dict, dict]` 类型结果；可观察变化限于外部接口、共享状态 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 外部接口 I/O；共享状态变更 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | begin_pipeline_run、get_progress、fetch_market_data、publish_external_snapshot、prog.start、run_parallel、enrich、raw.items、prog.done、analyze_timeframe、assemble_market_context、log.info、build_advice_packet、normalized、get_run_config、enhance_advice、log.warning、prog.stage_io、json.dumps、ctx.to_dict |
+| 复杂度 / 风险 | 分支 4；跨度 80 行；高 |
+| 测试 / 验证 | [tests/unit/test_advice_architecture_smoke.py](../../../tests/unit/test_advice_architecture_smoke.py) · 直接动态测试 |
 
 <a id="fun-67d665990e"></a>
 
@@ -239,20 +196,20 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `run_trade_agent_pipeline` |
-| 源码位置 | [src/core/orchestrator.py](../../../src/core/orchestrator.py) · `L46` |
+| 源码位置 | [src/core/orchestrator.py](../../../src/core/orchestrator.py) · `L110` |
 | 签名 | `run_trade_agent_pipeline()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `tuple[dict, dict, dict]` 类型结果 |
-| 职责 | 执行交易分析 Agent 完整流水线；可能影响外部接口、共享状态；返回 `tuple[dict, dict, dict]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `begin_pipeline_run` → `get_progress` → `fetch_market_data` → `publish_external_snapshot` → `log.debug` → `raw.items` → `prog.start` → `run_parallel`；包含 20 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束；外部客户端、凭据、网络和超时策略已按运行配置准备 |
-| 后置条件 | 返回 `tuple[dict, dict, dict]` 类型结果；可观察变化限于外部接口、共享状态 |
+| 职责 | 执行交易分析 Agent 完整流水线；返回 `tuple[dict, dict, dict]` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `run_advice_pipeline`；不包含显式控制分支。 |
+| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `tuple[dict, dict, dict]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
-| 副作用 | 外部接口 I/O；共享状态变更 |
+| 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | begin_pipeline_run、get_progress、fetch_market_data、publish_external_snapshot、log.debug、len、raw.items、prog.start、run_parallel、enrich、prog.done、list、enriched.keys、analyze_timeframe、analyses.items、assemble_market_context、log.info、AgentPipelineMeta、agent_factory.run_analyst_team、agent_factory.research_uses_parallel_llm |
-| 复杂度 / 风险 | 分支 20；跨度 371 行；高 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) · 直接动态测试 |
+| 调用依赖 | run_advice_pipeline |
+| 复杂度 / 风险 | 分支 0；跨度 2 行；高 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-d0bec20560"></a>
 
@@ -264,20 +221,20 @@
 |---|---|
 | 软件单元 ID | UNIT-D0BEC20560 |
 | 源码 | [src/core/orchestrator_hooks.py](../../../src/core/orchestrator_hooks.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/core/orchestrator_hooks.py` 的职责，通过 `begin_pipeline_run`、`fetch_market_data`、`publish_external_snapshot`、`finalize_pipeline_archive` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/core/orchestrator_hooks.py` 的职责，通过 `begin_pipeline_run`、`fetch_market_data`、`publish_external_snapshot`、`finalize_pipeline_archive` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 4 / 3 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) |
+| 动态测试 | [tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [begin_pipeline_run](#fun-dd1340f890) | 执行`begin_pipeline`；返回 `tuple[str, float]` 类型结果。 | 未检测到直接副作用 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) |
-| [fetch_market_data](#fun-06f77b71cb) | 获取`market_data`；可能影响外部接口；返回 `DataFetchResult` 类型结果。 | 外部接口 I/O | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) |
+| [begin_pipeline_run](#fun-dd1340f890) | 执行`begin_pipeline`；返回 `tuple[str, float]` 类型结果。 | 未检测到直接副作用 | [tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) |
+| [fetch_market_data](#fun-06f77b71cb) | 获取`market_data`；可能影响外部接口；返回 `DataFetchResult` 类型结果。 | 外部接口 I/O | [tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) |
 | [finalize_pipeline_archive](#fun-e9ab4f388f) | 归档`finalize_pipeline`；无返回值（None）。 | 未检测到直接副作用 | [tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) |
 
 #### 函数导航
@@ -304,7 +261,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | allocate_run_id、set_current_run_id、log.info、time.perf_counter |
 | 复杂度 / 风险 | 分支 0；跨度 7 行；高 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) · 直接动态测试 |
 
 <a id="fun-06f77b71cb"></a>
 
@@ -326,7 +283,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | fetch_all_data |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；高 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) · 直接动态测试 |
 
 <a id="fun-d2656c49ea"></a>
 
@@ -382,12 +339,12 @@
 |---|---|
 | 软件单元 ID | UNIT-D85010DCA2 |
 | 源码 | [src/core/parallel.py](../../../src/core/parallel.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/core/parallel.py` 的职责，通过 `ParallelTaskError`、`run_parallel` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/core/parallel.py` 的职责，通过 `ParallelTaskError`、`run_parallel` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 3 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_parallel.py](../../../tests/unit/test_parallel.py) |
+| 动态测试 | [tests/unit/test_parallel.py](../../../tests/unit/test_parallel.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -414,7 +371,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | join、sorted、__init__、super |
 | 复杂度 / 风险 | 分支 0；跨度 4 行；低 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-f68413bb73"></a>
 
@@ -458,7 +415,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | worker_ctx.run |
 | 复杂度 / 风险 | 分支 1；跨度 9 行；低 |
-| 测试 / 验证 | [tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-0dc607ab64"></a>
 
@@ -470,12 +427,12 @@
 |---|---|
 | 软件单元 ID | UNIT-0DC607AB64 |
 | 源码 | [src/core/progress.py](../../../src/core/progress.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/core/progress.py` 的职责，通过 `PipelineProgressStep`、`PipelineProgressState`、`LLMIORecord`、`ProgressReporter`、`NoOpProgressReporter`、`get_progress`、`set_progress`、`reset_progress` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/core/progress.py` 的职责，通过 `PipelineProgressStep`、`PipelineProgressState`、`LLMIORecord`、`ProgressReporter`、`NoOpProgressReporter`、`get_progress`、`set_progress`、`reset_progress` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 31 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/integration/test_coherence.py](../../../tests/integration/test_coherence.py)、[tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/integration/test_pipeline.py](../../../tests/integration/test_pipeline.py)、[tests/regression/test_doc_pipeline_sync.py](../../../tests/regression/test_doc_pipeline_sync.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py)、[tests/unit/test_financial_review.py](../../../tests/unit/test_financial_review.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_golden_report_benchmark.py](../../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py)、[tests/unit/test_live_progress_ui.py](../../../tests/unit/test_live_progress_ui.py)、[tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_trade_stages.py](../../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_manager_authorization.py](../../../tests/unit/test_manager_authorization.py)、[tests/unit/test_module_sync_telemetry.py](../../../tests/unit/test_module_sync_telemetry.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_progress.py](../../../tests/unit/test_progress.py)、[tests/unit/test_report_invariants.py](../../../tests/unit/test_report_invariants.py)、[tests/unit/test_risk_gates.py](../../../tests/unit/test_risk_gates.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_streamlit_ensure_report.py](../../../tests/unit/test_streamlit_ensure_report.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) |
+| 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/integration/test_pipeline.py](../../../tests/integration/test_pipeline.py)、[tests/regression/test_doc_pipeline_sync.py](../../../tests/regression/test_doc_pipeline_sync.py)、[tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py)、[tests/unit/test_live_progress_ui.py](../../../tests/unit/test_live_progress_ui.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_module_sync_telemetry.py](../../../tests/unit/test_module_sync_telemetry.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_progress.py](../../../tests/unit/test_progress.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_streamlit_ensure_report.py](../../../tests/unit/test_streamlit_ensure_report.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
@@ -539,7 +496,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.__init__` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L109` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L105` |
 | 签名 | `ProgressReporter.__init__(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 无返回值（None） |
@@ -552,7 +509,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | PipelineProgressState、threading.RLock |
 | 复杂度 / 风险 | 分支 0；跨度 5 行；低 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-71a259922f"></a>
 
@@ -561,7 +518,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.set_external_snapshot` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L115` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L111` |
 | 签名 | `ProgressReporter.set_external_snapshot(self, data: dict[str, Any])` |
 | 参数 | `data`（dict[str, Any]）：输入数据 |
 | 返回 | 无返回值（None） |
@@ -583,7 +540,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.start` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L119` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L115` |
 | 签名 | `ProgressReporter.start(self, step_id: str, label: str, detail: str='')` |
 | 参数 | `step_id`（str）：对象标识<br>`label`（str）：展示或分类标签<br>`detail`（str）：详细说明文本；默认值 `''` |
 | 返回 | 无返回值（None） |
@@ -596,7 +553,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | self._finish_all_running、PipelineProgressStep、time.perf_counter、self.state.steps.append、self._on_change |
 | 复杂度 / 风险 | 分支 0；跨度 7 行；中 |
-| 测试 / 验证 | [tests/regression/test_doc_pipeline_sync.py](../../../tests/regression/test_doc_pipeline_sync.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_chart_projections.py](../../../tests/unit/test_chart_projections.py)、[tests/unit/test_llm_trade_stages.py](../../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_progress.py](../../../tests/unit/test_progress.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/regression/test_doc_pipeline_sync.py](../../../tests/regression/test_doc_pipeline_sync.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_progress.py](../../../tests/unit/test_progress.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
 
 <a id="fun-a57d337b7d"></a>
 
@@ -605,7 +562,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.start_sibling` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L127` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L123` |
 | 签名 | `ProgressReporter.start_sibling(self, step_id: str, label: str, detail: str='')` |
 | 参数 | `step_id`（str）：对象标识<br>`label`（str）：展示或分类标签<br>`detail`（str）：详细说明文本；默认值 `''` |
 | 返回 | 无返回值（None） |
@@ -627,7 +584,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.update` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L135` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L131` |
 | 签名 | `ProgressReporter.update(self, step_id: str, *, detail: str \| None=None, label: str \| None=None)` |
 | 参数 | `step_id`（str）：对象标识<br>`detail`（str \| None）：详细说明文本；默认值 `None`<br>`label`（str \| None）：展示或分类标签；默认值 `None` |
 | 返回 | 无返回值（None） |
@@ -640,7 +597,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | self._find、self._on_change |
 | 复杂度 / 风险 | 分支 3；跨度 9 行；中 |
-| 测试 / 验证 | [tests/regression/test_doc_pipeline_sync.py](../../../tests/regression/test_doc_pipeline_sync.py)、[tests/unit/test_golden_report_benchmark.py](../../../tests/unit/test_golden_report_benchmark.py)、[tests/unit/test_risk_gates.py](../../../tests/unit/test_risk_gates.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/regression/test_doc_pipeline_sync.py](../../../tests/regression/test_doc_pipeline_sync.py) · 直接动态测试 |
 
 <a id="fun-5e62a87f3a"></a>
 
@@ -649,7 +606,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.done` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L145` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L141` |
 | 签名 | `ProgressReporter.done(self, step_id: str, detail: str='')` |
 | 参数 | `step_id`（str）：对象标识<br>`detail`（str）：详细说明文本；默认值 `''` |
 | 返回 | 无返回值（None） |
@@ -662,7 +619,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | self._find、self._elapsed_since_step_start、self._on_change |
 | 复杂度 / 风险 | 分支 2；跨度 9 行；中 |
-| 测试 / 验证 | [tests/integration/test_pipeline.py](../../../tests/integration/test_pipeline.py)、[tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_live_progress_ui.py](../../../tests/unit/test_live_progress_ui.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_streamlit_ensure_report.py](../../../tests/unit/test_streamlit_ensure_report.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_live_progress_ui.py](../../../tests/unit/test_live_progress_ui.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_streamlit_ensure_report.py](../../../tests/unit/test_streamlit_ensure_report.py) · 直接动态测试 |
 
 <a id="fun-59b596d460"></a>
 
@@ -671,7 +628,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.fail` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L155` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L151` |
 | 签名 | `ProgressReporter.fail(self, step_id: str, detail: str='')` |
 | 参数 | `step_id`（str）：对象标识<br>`detail`（str）：详细说明文本；默认值 `''` |
 | 返回 | 无返回值（None） |
@@ -684,7 +641,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | self._find、self._elapsed_since_step_start、self._on_change |
 | 复杂度 / 风险 | 分支 1；跨度 8 行；中 |
-| 测试 / 验证 | [tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_report_invariants.py](../../../tests/unit/test_report_invariants.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py) · 直接动态测试 |
 
 <a id="fun-1f365c723b"></a>
 
@@ -693,7 +650,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.skip` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L164` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L160` |
 | 签名 | `ProgressReporter.skip(self, step_id: str, label: str, detail: str='')` |
 | 参数 | `step_id`（str）：对象标识<br>`label`（str）：展示或分类标签<br>`detail`（str）：详细说明文本；默认值 `''` |
 | 返回 | 无返回值（None） |
@@ -706,7 +663,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | self.state.steps.append、PipelineProgressStep、self._on_change |
 | 复杂度 / 风险 | 分支 0；跨度 5 行；中 |
-| 测试 / 验证 | [tests/integration/test_coherence.py](../../../tests/integration/test_coherence.py)、[tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py) · 直接动态测试 |
 
 <a id="fun-40fa2599e6"></a>
 
@@ -715,7 +672,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.snapshot` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L170` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L166` |
 | 签名 | `ProgressReporter.snapshot(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `list[dict[str, Any]]` 类型结果 |
@@ -728,7 +685,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | self.state.to_dict |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/integration/test_coherence.py](../../../tests/integration/test_coherence.py)、[tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_financial_review.py](../../../tests/unit/test_financial_review.py)、[tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py)、[tests/unit/test_manager_authorization.py](../../../tests/unit/test_manager_authorization.py)、[tests/unit/test_module_sync_telemetry.py](../../../tests/unit/test_module_sync_telemetry.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_progress.py](../../../tests/unit/test_progress.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py)、[tests/unit/test_module_sync_telemetry.py](../../../tests/unit/test_module_sync_telemetry.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_progress.py](../../../tests/unit/test_progress.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
 
 <a id="fun-0cb129ff59"></a>
 
@@ -737,7 +694,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.llm_io_snapshot` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L173` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L169` |
 | 签名 | `ProgressReporter.llm_io_snapshot(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `list[dict[str, Any]]` 类型结果 |
@@ -750,7 +707,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | r.to_dict |
 | 复杂度 / 风险 | 分支 0；跨度 3 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_module_sync_telemetry.py](../../../tests/unit/test_module_sync_telemetry.py)、[tests/unit/test_progress.py](../../../tests/unit/test_progress.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_module_sync_telemetry.py](../../../tests/unit/test_module_sync_telemetry.py)、[tests/unit/test_progress.py](../../../tests/unit/test_progress.py) · 直接动态测试 |
 
 <a id="fun-2b8326fbcd"></a>
 
@@ -759,7 +716,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.stage_io` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L177` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L173` |
 | 签名 | `ProgressReporter.stage_io(self, stage: str, *, input_text: str, output_text: str, latency_ms: int \| None=None, label: str \| None=None)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`input_text`（str）：输入文本<br>`output_text`（str）：输入文本<br>`latency_ms`（int \| None）：延迟毫秒数；默认值 `None`<br>`label`（str \| None）：展示或分类标签；默认值 `None` |
 | 返回 | 无返回值（None） |
@@ -781,7 +738,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.llm_begin` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L201` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L197` |
 | 签名 | `ProgressReporter.llm_begin(self, stage: str, model: str, messages: list[dict[str, str]], *, telemetry: dict[str, Any] \| None=None)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`model`（str）：模型名称或模型对象<br>`messages`（list[dict[str, str]]）：消息序列<br>`telemetry`（dict[str, Any] \| None）：遥测记录；默认值 `None` |
 | 返回 | 无返回值（None） |
@@ -803,19 +760,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.llm_note_attempt` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L231` |
-| 签名 | `ProgressReporter.llm_note_attempt(self, stage: str, *, attempt: int, reason: str, error: str \| None=None, latency_ms: int \| None=None)` |
-| 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`attempt`（int）：由 `attempt` 表示的数值参数<br>`reason`（str）：判定或拒绝原因<br>`error`（str \| None）：错误信息或异常对象；默认值 `None`<br>`latency_ms`（int \| None）：延迟毫秒数；默认值 `None` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L227` |
+| 签名 | `ProgressReporter.llm_note_attempt(self, stage: str, *, attempt: int, reason: str, error: str \| None=None, latency_ms: int \| None=None, usage: dict[str, int] \| None=None)` |
+| 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`attempt`（int）：由 `attempt` 表示的数值参数<br>`reason`（str）：判定或拒绝原因<br>`error`（str \| None）：错误信息或异常对象；默认值 `None`<br>`latency_ms`（int \| None）：延迟毫秒数；默认值 `None`<br>`usage`（dict[str, int] \| None）：由 `usage` 表示的键值映射；默认值 `None` |
 | 返回 | 无返回值（None） |
 | 职责 | 执行`llm_note_attempt`处理；无返回值（None）。 |
-| 处理逻辑 | 按源码执行顺序经过 `self._find_llm` → `rec.attempts.append`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `self._find_llm` → `rec.attempts.append`；包含 2 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 无返回值（None）；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | self._find_llm、rec.attempts.append |
-| 复杂度 / 风险 | 分支 1；跨度 22 行；中 |
+| 调用依赖 | self._find_llm、dict、rec.attempts.append |
+| 复杂度 / 风险 | 分支 2；跨度 24 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-5665b88765"></a>
@@ -825,7 +782,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.run_llm_stream` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L254` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L252` |
 | 签名 | `ProgressReporter.run_llm_stream(self, stage: str, chunk_iter)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`chunk_iter`（实现约定类型）：由调用方提供的 `chunk_iter` 输入对象 |
 | 返回 | 返回 `str` 类型结果 |
@@ -847,7 +804,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter.llm_end` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L262` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L260` |
 | 签名 | `ProgressReporter.llm_end(self, stage: str, output: str, *, error: str \| None=None, latency_ms: int \| None=None, telemetry: dict[str, Any] \| None=None)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`output`（str）：输出对象或输出路径<br>`error`（str \| None）：错误信息或异常对象；默认值 `None`<br>`latency_ms`（int \| None）：延迟毫秒数；默认值 `None`<br>`telemetry`（dict[str, Any] \| None）：遥测记录；默认值 `None` |
 | 返回 | 无返回值（None） |
@@ -869,7 +826,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._new_llm_record` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L288` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L286` |
 | 签名 | `ProgressReporter._new_llm_record(self, stage: str, label: str, model: str, messages: list[dict[str, str]], tel: dict[str, Any])` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`label`（str）：展示或分类标签<br>`model`（str）：模型名称或模型对象<br>`messages`（list[dict[str, str]]）：消息序列<br>`tel`（dict[str, Any]）：由 `tel` 表示的键值映射 |
 | 返回 | 返回 `LLMIORecord` 类型结果 |
@@ -891,7 +848,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._apply_telemetry` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L301` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L299` |
 | 签名 | `ProgressReporter._apply_telemetry(rec: LLMIORecord, tel: dict[str, Any])` |
 | 参数 | `rec`（LLMIORecord）：由调用方提供的 `rec` 输入对象<br>`tel`（dict[str, Any]）：由 `tel` 表示的键值映射 |
 | 返回 | 无返回值（None） |
@@ -913,7 +870,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._find_llm` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L325` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L323` |
 | 签名 | `ProgressReporter._find_llm(self, stage: str)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识 |
 | 返回 | 返回 `LLMIORecord \| None` 类型结果 |
@@ -935,7 +892,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._on_llm_begin` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L331` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L329` |
 | 签名 | `ProgressReporter._on_llm_begin(self, stage: str, model: str, messages: list[dict[str, str]], label: str)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`model`（str）：模型名称或模型对象<br>`messages`（list[dict[str, str]]）：消息序列<br>`label`（str）：展示或分类标签 |
 | 返回 | 无返回值（None） |
@@ -957,7 +914,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._on_llm_chunk` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L334` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L332` |
 | 签名 | `ProgressReporter._on_llm_chunk(self, stage: str, chunk: str)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`chunk`（str）：由 `chunk` 表示的文本或标识 |
 | 返回 | 无返回值（None） |
@@ -979,7 +936,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._on_llm_end` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L340` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L338` |
 | 签名 | `ProgressReporter._on_llm_end(self, stage: str, output: str, *, error: str \| None=None)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`output`（str）：输出对象或输出路径<br>`error`（str \| None）：错误信息或异常对象；默认值 `None` |
 | 返回 | 无返回值（None） |
@@ -1001,7 +958,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._find` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L343` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L341` |
 | 签名 | `ProgressReporter._find(self, step_id: str)` |
 | 参数 | `step_id`（str）：对象标识 |
 | 返回 | 返回 `PipelineProgressStep \| None` 类型结果 |
@@ -1023,7 +980,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._finish_all_running` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L349` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L347` |
 | 签名 | `ProgressReporter._finish_all_running(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 无返回值（None） |
@@ -1045,7 +1002,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._finish_running` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L355` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L353` |
 | 签名 | `ProgressReporter._finish_running(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 无返回值（None） |
@@ -1067,7 +1024,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._elapsed_since_step_start` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L362` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L360` |
 | 签名 | `ProgressReporter._elapsed_since_step_start(self, step: PipelineProgressStep)` |
 | 参数 | `step`（PipelineProgressStep）：由调用方提供的 `step` 输入对象 |
 | 返回 | 返回 `int \| None` 类型结果 |
@@ -1089,7 +1046,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ProgressReporter._on_change` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L367` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L365` |
 | 签名 | `ProgressReporter._on_change(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 无返回值（None） |
@@ -1111,7 +1068,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `get_progress` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L378` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L376` |
 | 签名 | `get_progress()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `ProgressReporter` 类型结果 |
@@ -1124,7 +1081,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | _progress_ctx.get |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-6b37902476"></a>
 
@@ -1133,7 +1090,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `set_progress` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L382` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L380` |
 | 签名 | `set_progress(reporter: ProgressReporter \| None)` |
 | 参数 | `reporter`（ProgressReporter \| None）：由调用方提供的 `reporter` 输入对象 |
 | 返回 | 返回实现分支产生的结果（源码未标注类型） |
@@ -1146,7 +1103,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | _progress_ctx.set |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/integration/test_pipeline.py](../../../tests/integration/test_pipeline.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/integration/test_pipeline.py](../../../tests/integration/test_pipeline.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
 
 <a id="fun-f2934a14dd"></a>
 
@@ -1155,7 +1112,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `reset_progress` |
-| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L386` |
+| 源码位置 | [src/core/progress.py](../../../src/core/progress.py) · `L384` |
 | 签名 | `reset_progress(token)` |
 | 参数 | `token`（实现约定类型）：标记或认证令牌 |
 | 返回 | 无返回值（None） |
@@ -1168,7 +1125,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | _progress_ctx.reset |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/integration/test_pipeline.py](../../../tests/integration/test_pipeline.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_llm_provider_usage.py](../../../tests/unit/test_llm_provider_usage.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/integration/test_pipeline.py](../../../tests/integration/test_pipeline.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
 
 <a id="unit-4bd152d87b"></a>
 
@@ -1180,9 +1137,9 @@
 |---|---|
 | 软件单元 ID | UNIT-4BD152D87B |
 | 源码 | [src/core/run_config.py](../../../src/core/run_config.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/core/run_config.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/core/run_config.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_run_config_panel.py](../../../tests/unit/test_run_config_panel.py)、[tests/unit/test_streamlit_ensure_report.py](../../../tests/unit/test_streamlit_ensure_report.py) |
@@ -1202,9 +1159,9 @@
 |---|---|
 | 软件单元 ID | UNIT-338F795D63 |
 | 源码 | [src/core/run_context.py](../../../src/core/run_context.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/core/run_context.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/core/run_context.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) |
@@ -1224,222 +1181,17 @@
 |---|---|
 | 软件单元 ID | UNIT-D5EB6E2A98 |
 | 源码 | [src/core/types.py](../../../src/core/types.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/core/types.py` 的职责，通过 `EvidenceItem`、`AnalystReport`、`AnalystTeam`、`AgentEvidence`、`ResearchDebate`、`LevelProposal`、`TransactionProposal`、`RiskReview` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
-| 函数 / 高风险函数 | 21 / 2 |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/core/types.py` 的职责，通过 `EvidenceItem`、`HeadlineItem`、`CalendarEvent`、`MacroQuote`、`ExternalFactors`、`MarketContext`、`LLMStageTrace` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 函数 / 高风险函数 | 7 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/integration/test_coherence.py](../../../tests/integration/test_coherence.py)、[tests/regression/test_docs_structure.py](../../../tests/regression/test_docs_structure.py)、[tests/unit/test_agent_chain.py](../../../tests/unit/test_agent_chain.py)、[tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_audit_summary.py](../../../tests/unit/test_audit_summary.py)、[tests/unit/test_calendar_empty.py](../../../tests/unit/test_calendar_empty.py)、[tests/unit/test_claim_eligibility.py](../../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_debate_coherence.py](../../../tests/unit/test_debate_coherence.py)、[tests/unit/test_debate_parallel.py](../../../tests/unit/test_debate_parallel.py)、[tests/unit/test_evidence_provenance.py](../../../tests/unit/test_evidence_provenance.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py)、[tests/unit/test_financial_review.py](../../../tests/unit/test_financial_review.py)、[tests/unit/test_llm_context_compact.py](../../../tests/unit/test_llm_context_compact.py)、[tests/unit/test_llm_context_fact_refs.py](../../../tests/unit/test_llm_context_fact_refs.py)、[tests/unit/test_llm_levels.py](../../../tests/unit/test_llm_levels.py)、[tests/unit/test_llm_payload_funnel.py](../../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_llm_trade_stages.py](../../../tests/unit/test_llm_trade_stages.py)、[tests/unit/test_manager_authorization.py](../../../tests/unit/test_manager_authorization.py)、[tests/unit/test_narrative_authorization.py](../../../tests/unit/test_narrative_authorization.py)、[tests/unit/test_narrative_facts.py](../../../tests/unit/test_narrative_facts.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_research_parallel.py](../../../tests/unit/test_research_parallel.py)、[tests/unit/test_risk_gates.py](../../../tests/unit/test_risk_gates.py)、[tests/unit/test_risk_gates_trigger.py](../../../tests/unit/test_risk_gates_trigger.py)、[tests/unit/test_rule_chain_stability.py](../../../tests/unit/test_rule_chain_stability.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_signal_dedup.py](../../../tests/unit/test_signal_dedup.py)、[tests/unit/test_source_labels.py](../../../tests/unit/test_source_labels.py)、[tests/unit/test_technical_context_lux.py](../../../tests/unit/test_technical_context_lux.py)、[tests/unit/test_trader_sentiment.py](../../../tests/unit/test_trader_sentiment.py) |
+| 动态测试 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py)、[tests/unit/test_technical_context_lux.py](../../../tests/unit/test_technical_context_lux.py) |
 | 验证状态 | selected |
-
-#### 高风险设计评审清单
-
-| 函数 | 职责 | 副作用 | 验证 |
-|---|---|---|---|
-| [AgentPipelineMeta.record](#fun-9f425d9994) | 执行`record`处理；无返回值（None）。 | 未检测到直接副作用 | [tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
-| [AgentPipelineMeta.to_dict](#fun-fc7d17553e) | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 | 未检测到直接副作用 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) |
 
 #### 函数导航
 
-[AnalystReport.to_dict](#fun-1a5c4973e8) · [AnalystTeam.reports](#fun-11d5edef39) · [AnalystTeam.to_dict](#fun-d1937786ae) · [AgentEvidence.to_dict](#fun-3104427770) · [ResearchDebate.to_dict](#fun-378c040696) · [LevelProposal.to_dict](#fun-78898fe309) · [TransactionProposal.to_dict](#fun-cbd371affe) · [RiskReview.to_dict](#fun-1d042f655d) · [ManagerDecision.to_dict](#fun-f763a5c226) · [HeadlineItem.to_dict](#fun-1f2e0f588a) · [CalendarEvent.to_dict](#fun-5a0e6a3977) · [CalendarEvent.display](#fun-4654e9b6a5) · [MacroQuote.to_dict](#fun-0b81375e45) · [ExternalFactors.to_dict](#fun-b52c340615) · [MarketContext.to_dict](#fun-6449e7e08e) · [LLMStageTrace.to_dict](#fun-a2365082b2) · [StageMeta.to_dict](#fun-870ca31bac) · [AgentPipelineMeta.record](#fun-9f425d9994) · [AgentPipelineMeta.to_dict](#fun-fc7d17553e) · [AgentTrace.to_dict](#fun-e1230024c0) · [LLMAnalysis.to_dict](#fun-0ed4ada825)
-
-<a id="fun-1a5c4973e8"></a>
-
-#### FUN-1A5C4973E8
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `AnalystReport.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L41` |
-| 签名 | `AnalystReport.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `asdict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | asdict |
-| 复杂度 / 风险 | 分支 0；跨度 4 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-11d5edef39"></a>
-
-#### FUN-11D5EDEF39
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `AnalystTeam.reports` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L57` |
-| 签名 | `AnalystTeam.reports(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `list[AnalystReport]` 类型结果 |
-| 职责 | 构建`reports`；返回 `list[AnalystReport]` 类型结果。 |
-| 处理逻辑 | 直接通过表达式、字段访问或常量完成处理；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `list[AnalystReport]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | 无直接调用依赖 |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/integration/test_coherence.py](../../../tests/integration/test_coherence.py)、[tests/regression/test_docs_structure.py](../../../tests/regression/test_docs_structure.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_evidence_provenance.py](../../../tests/unit/test_evidence_provenance.py) · 直接动态测试 |
-
-<a id="fun-d1937786ae"></a>
-
-#### FUN-D1937786AE
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `AnalystTeam.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L60` |
-| 签名 | `AnalystTeam.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `self.technical.to_dict` → `self.fundamentals.to_dict` → `self.news.to_dict` → `self.sentiment.to_dict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | self.technical.to_dict、self.fundamentals.to_dict、self.news.to_dict、self.sentiment.to_dict |
-| 复杂度 / 风险 | 分支 0；跨度 7 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-3104427770"></a>
-
-#### FUN-3104427770
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `AgentEvidence.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L78` |
-| 签名 | `AgentEvidence.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `asdict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | asdict |
-| 复杂度 / 风险 | 分支 0；跨度 4 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-378c040696"></a>
-
-#### FUN-378C040696
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `ResearchDebate.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L93` |
-| 签名 | `ResearchDebate.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `self.bullish.to_dict` → `self.bearish.to_dict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | self.bullish.to_dict、self.bearish.to_dict |
-| 复杂度 / 风险 | 分支 0；跨度 9 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-78898fe309"></a>
-
-#### FUN-78898FE309
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `LevelProposal.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L132` |
-| 签名 | `LevelProposal.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `asdict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | asdict |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-cbd371affe"></a>
-
-#### FUN-CBD371AFFE
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `TransactionProposal.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L143` |
-| 签名 | `TransactionProposal.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `asdict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | asdict |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-1d042f655d"></a>
-
-#### FUN-1D042F655D
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `RiskReview.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L155` |
-| 签名 | `RiskReview.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `asdict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | asdict |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-f763a5c226"></a>
-
-#### FUN-F763A5C226
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `ManagerDecision.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L168` |
-| 签名 | `ManagerDecision.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `asdict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | asdict |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
+[HeadlineItem.to_dict](#fun-1f2e0f588a) · [CalendarEvent.to_dict](#fun-5a0e6a3977) · [CalendarEvent.display](#fun-4654e9b6a5) · [MacroQuote.to_dict](#fun-0b81375e45) · [ExternalFactors.to_dict](#fun-b52c340615) · [MarketContext.to_dict](#fun-6449e7e08e) · [LLMStageTrace.to_dict](#fun-a2365082b2)
 
 <a id="fun-1f2e0f588a"></a>
 
@@ -1448,7 +1200,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `HeadlineItem.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L182` |
+| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L37` |
 | 签名 | `HeadlineItem.to_dict(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1470,7 +1222,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `CalendarEvent.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L195` |
+| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L50` |
 | 签名 | `CalendarEvent.to_dict(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1492,7 +1244,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `CalendarEvent.display` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L198` |
+| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L53` |
 | 签名 | `CalendarEvent.display(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1505,7 +1257,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | strip |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_source_labels.py](../../../tests/unit/test_source_labels.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-0b81375e45"></a>
 
@@ -1514,7 +1266,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `MacroQuote.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L214` |
+| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L69` |
 | 签名 | `MacroQuote.to_dict(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1536,7 +1288,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `ExternalFactors.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L231` |
+| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L86` |
 | 签名 | `ExternalFactors.to_dict(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1558,7 +1310,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `MarketContext.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L267` |
+| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L122` |
 | 签名 | `MarketContext.to_dict(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -1580,118 +1332,8 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `LLMStageTrace.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L299` |
+| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L154` |
 | 签名 | `LLMStageTrace.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `asdict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | asdict |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-870ca31bac"></a>
-
-#### FUN-870CA31BAC
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `StageMeta.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L311` |
-| 签名 | `StageMeta.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `self.llm.to_dict`；包含 2 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | self.llm.to_dict |
-| 复杂度 / 风险 | 分支 2；跨度 7 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-9f425d9994"></a>
-
-#### FUN-9F425D9994
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `AgentPipelineMeta.record` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L326` |
-| 签名 | `AgentPipelineMeta.record(self, name: str, meta: StageMeta)` |
-| 参数 | `name`（str）：对象名称<br>`meta`（StageMeta）：审计或处理元数据 |
-| 返回 | 无返回值（None） |
-| 职责 | 执行`record`处理；无返回值（None）。 |
-| 处理逻辑 | 直接通过表达式、字段访问或常量完成处理；不包含显式控制分支。 |
-| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 无返回值（None）；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | 无直接调用依赖 |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；高 |
-| 测试 / 验证 | [tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) · 直接动态测试 |
-
-<a id="fun-fc7d17553e"></a>
-
-#### FUN-FC7D17553E
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `AgentPipelineMeta.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L329` |
-| 签名 | `AgentPipelineMeta.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `v.to_dict` → `self.stages.items`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | v.to_dict、self.stages.items |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；高 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-e1230024c0"></a>
-
-#### FUN-E1230024C0
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `AgentTrace.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L348` |
-| 签名 | `AgentTrace.to_dict(self)` |
-| 参数 | 无显式输入参数 |
-| 返回 | 返回 `dict[str, Any]` 类型结果 |
-| 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `asdict`；不包含显式控制分支。 |
-| 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
-| 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
-| 显式异常 | 未发现显式 raise |
-| 副作用 | 未检测到直接副作用 |
-| 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | asdict |
-| 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_run_config.py](../../../tests/unit/test_run_config.py) · 直接动态测试 |
-
-<a id="fun-0ed4ada825"></a>
-
-#### FUN-0ED4ADA825
-
-| 设计项 | 说明 |
-|---|---|
-| 函数 | `LLMAnalysis.to_dict` |
-| 源码位置 | [src/core/types.py](../../../src/core/types.py) · `L371` |
-| 签名 | `LLMAnalysis.to_dict(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
 | 职责 | 将当前对象转换为可序列化字典；返回 `dict[str, Any]` 类型结果。 |
@@ -1715,9 +1357,9 @@
 |---|---|
 | 软件单元 ID | UNIT-A91501B8CA |
 | 源码 | [src/log.py](../../../src/log.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/log.py` 的职责，通过 `setup_logging`、`get_logger` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/log.py` 的职责，通过 `setup_logging`、`get_logger` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 2 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | — |
@@ -1781,9 +1423,9 @@
 |---|---|
 | 软件单元 ID | UNIT-BA3F06E87A |
 | 源码 | [src/pipeline.py](../../../src/pipeline.py) |
-| 架构组件 | ARC-CORE — 主编排与进度 |
-| 职责 | 实现“主编排与进度”组件中 `src/pipeline.py` 的职责，通过 `run_analysis` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-REP-003](../SWE.1-software-requirements.md#swr-rep-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| 架构组件 | ARC-CORE — Advice pipeline orchestration |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/pipeline.py` 的职责，通过 `run_analysis` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 1 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 动态测试 | [tests/integration/test_pipeline.py](../../../tests/integration/test_pipeline.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py) |
@@ -1805,12 +1447,12 @@
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `tuple[dict, dict, dict]` 类型结果 |
 | 职责 | 执行`analysis`；返回 `tuple[dict, dict, dict]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `log.debug` → `run_trade_agent_pipeline`；不包含显式控制分支。 |
+| 处理逻辑 | 按源码执行顺序经过 `log.debug` → `run_advice_pipeline`；不包含显式控制分支。 |
 | 前置条件 | 无需调用方提供显式参数；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `tuple[dict, dict, dict]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | log.debug、run_trade_agent_pipeline |
+| 调用依赖 | log.debug、run_advice_pipeline |
 | 复杂度 / 风险 | 分支 0；跨度 3 行；中 |
 | 测试 / 验证 | [tests/integration/test_pipeline.py](../../../tests/integration/test_pipeline.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py) · 直接动态测试 |

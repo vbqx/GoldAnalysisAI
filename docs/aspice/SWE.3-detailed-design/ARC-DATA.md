@@ -1,4 +1,4 @@
-# ARC-DATA — 行情与外部数据
+# ARC-DATA — Market and external data
 
 | 属性 | 内容 |
 |---|---|
@@ -17,13 +17,13 @@
 |---|---|---|---|---|
 | [src/data/__init__.py](#unit-5c9ecc73e4) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
 | [src/data/aggregator.py](#unit-d3b9beaac0) | 4 | 3 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/calendar_utils.py](#unit-f5d8bd410b) | 3 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/calendar_utils.py](#unit-f5d8bd410b) | 3 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
 | [src/data/context_builder.py](#unit-24843ac961) | 10 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/external_format.py](#unit-05079ecc27) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/external_format.py](#unit-05079ecc27) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
 | [src/data/fetch_pipeline.py](#unit-2b33a302fc) | 7 | 5 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/fetcher.py](#unit-5c3b60e30a) | 7 | 2 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/fetcher.py](#unit-5c3b60e30a) | 8 | 2 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
 | [src/data/mt5.py](#unit-52888d723d) | 13 | 5 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
-| [src/data/news_topics.py](#unit-c335b8f5cf) | 1 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
+| [src/data/news_topics.py](#unit-c335b8f5cf) | 1 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
 | [src/data/proxy_env.py](#unit-0f842b8ece) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
 | [src/data/run_archive.py](#unit-ea7e4f88fe) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
 | [src/data/run_archive_compat.py](#unit-023a37a1e9) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) | selected |
@@ -56,9 +56,9 @@
 |---|---|
 | 软件单元 ID | UNIT-5C9ECC73E4 |
 | 源码 | [src/data/__init__.py](../../../src/data/__init__.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | — |
@@ -78,9 +78,9 @@
 |---|---|
 | 软件单元 ID | UNIT-D3B9BEAAC0 |
 | 源码 | [src/data/aggregator.py](../../../src/data/aggregator.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/aggregator.py` 的职责，通过 `merge_external`、`collect_evidence`、`assemble_market_context`、`build_market_context` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/aggregator.py` 的职责，通过 `merge_external`、`collect_evidence`、`assemble_market_context`、`build_market_context` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 4 / 3 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py) |
@@ -154,13 +154,13 @@
 | 参数 | `enriched`（dict[str, pd.DataFrame]）：已补充指标的行情数据<br>`analyses`（dict[str, TimeframeAnalysis]）：各时间框架分析结果<br>`external`（ExternalFactors）：由调用方提供的 `external` 输入对象<br>`source_label`（str）：展示或分类标签 |
 | 返回 | 返回 `MarketContext` 类型结果 |
 | 职责 | 生成`assemble_market_context`结果；返回 `MarketContext` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `daily_metrics` → `MarketContext` → `finalize_market_context`；不包含显式控制分支。 |
+| 处理逻辑 | 按源码执行顺序经过 `market_metrics` → `MarketContext` → `finalize_market_context`；不包含显式控制分支。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `MarketContext` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | daily_metrics、MarketContext、float、finalize_market_context |
+| 调用依赖 | market_metrics、MarketContext、float、finalize_market_context |
 | 复杂度 / 风险 | 分支 0；跨度 19 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
@@ -196,12 +196,12 @@
 |---|---|
 | 软件单元 ID | UNIT-F5D8BD410B |
 | 源码 | [src/data/calendar_utils.py](../../../src/data/calendar_utils.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/calendar_utils.py` 的职责，通过 `parse_event_time`、`filter_upcoming_calendar_events`、`calendar_to_risk_text` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/calendar_utils.py` 的职责，通过 `parse_event_time`、`filter_upcoming_calendar_events`、`calendar_to_risk_text` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 3 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_narrative_authorization.py](../../../tests/unit/test_narrative_authorization.py) |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
+| 动态测试 | — |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -250,7 +250,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | datetime.now、parse_event_time、total_seconds、kept.append |
 | 复杂度 / 风险 | 分支 3；跨度 12 行；中 |
-| 测试 / 验证 | [tests/unit/test_narrative_authorization.py](../../../tests/unit/test_narrative_authorization.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-d55bebcd6f"></a>
 
@@ -284,12 +284,12 @@
 |---|---|
 | 软件单元 ID | UNIT-24843AC961 |
 | 源码 | [src/data/context_builder.py](../../../src/data/context_builder.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/context_builder.py` 的职责，通过 `build_market_position`、`build_spot_cross_check`、`build_event_countdown`、`build_jin10_kline_summary`、`build_derived_context`、`compute_context_stats`、`finalize_market_context` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/context_builder.py` 的职责，通过 `build_market_position`、`build_spot_cross_check`、`build_event_countdown`、`build_jin10_kline_summary`、`build_derived_context`、`compute_context_stats`、`finalize_market_context` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 10 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_narrative_authorization.py](../../../tests/unit/test_narrative_authorization.py) |
+| 动态测试 | [tests/unit/test_advice_architecture_smoke.py](../../../tests/unit/test_advice_architecture_smoke.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
@@ -309,7 +309,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_market_position` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L44` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L46` |
 | 签名 | `build_market_position(enriched: dict[str, pd.DataFrame], price: float)` |
 | 参数 | `enriched`（dict[str, pd.DataFrame]）：已补充指标的行情数据<br>`price`（float）：当前或待评估价格 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -331,7 +331,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_spot_cross_check` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L68` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L70` |
 | 签名 | `build_spot_cross_check(tv_price: float, quote: dict[str, Any] \| None)` |
 | 参数 | `tv_price`（float）：当前或待评估价格<br>`quote`（dict[str, Any] \| None）：由 `quote` 表示的键值映射 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -344,7 +344,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | float、quote.get、abs、round |
 | 复杂度 / 风险 | 分支 3；跨度 19 行；中 |
-| 测试 / 验证 | — · 静态分析与组件级验证 |
+| 测试 / 验证 | [tests/unit/test_advice_architecture_smoke.py](../../../tests/unit/test_advice_architecture_smoke.py) · 直接动态测试 |
 
 <a id="fun-bc16d7a171"></a>
 
@@ -353,7 +353,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_event_countdown` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L89` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L91` |
 | 签名 | `build_event_countdown(events: list[CalendarEvent])` |
 | 参数 | `events`（list[CalendarEvent]）：事件集合 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -375,7 +375,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_jin10_kline_summary` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L117` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L119` |
 | 签名 | `build_jin10_kline_summary(bars: list[dict[str, Any]], tv_price: float)` |
 | 参数 | `bars`（list[dict[str, Any]]）：K 线记录集合<br>`tv_price`（float）：当前或待评估价格 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -388,7 +388,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | float、last.get、first.get、abs、len、round |
 | 复杂度 / 风险 | 分支 6；跨度 26 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-21a4a84fe5"></a>
 
@@ -397,7 +397,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `build_derived_context` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L145` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L147` |
 | 签名 | `build_derived_context(ctx: MarketContext)` |
 | 参数 | `ctx`（MarketContext）：运行上下文 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -419,7 +419,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `compute_context_stats` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L181` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L183` |
 | 签名 | `compute_context_stats(ctx: MarketContext)` |
 | 参数 | `ctx`（MarketContext）：运行上下文 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -441,19 +441,19 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_technical_input_stats` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L202` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L204` |
 | 签名 | `_technical_input_stats(ctx: MarketContext)` |
 | 参数 | `ctx`（MarketContext）：运行上下文 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
 | 职责 | 构建`technical_input_stats`；返回 `dict[str, Any]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `ctx.enriched.items` → `support_resistance_context` → `pd.notna` → `ctx.analyses.items` → `bars.get` → `indicator_ready.get` → `_volume_nonzero_ratio` → `ctx.enriched.get`；包含 3 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `ctx.enriched.items` → `support_resistance_context` → `_INDICATOR_MIN_BARS.get` → `pd.notna` → `ctx.analyses.items` → `bars.get` → `indicator_ready.get` → `_volume_nonzero_ratio`；包含 3 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `dict[str, Any]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | len、ctx.enriched.items、support_resistance_context、pd.notna、ctx.analyses.items、bars.get、indicator_ready.get、_volume_nonzero_ratio、ctx.enriched.get、sorted、set、sum、ctx.analyses.values、sr.get、technical_quality |
-| 复杂度 / 风险 | 分支 3；跨度 52 行；中 |
+| 调用依赖 | len、ctx.enriched.items、support_resistance_context、_INDICATOR_MIN_BARS.get、pd.notna、ctx.analyses.items、bars.get、indicator_ready.get、_volume_nonzero_ratio、ctx.enriched.get、sorted、set、sum、ctx.analyses.values、sr.get、technical_quality |
+| 复杂度 / 风险 | 分支 3；跨度 58 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-12577f43a5"></a>
@@ -463,7 +463,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_volume_nonzero_ratio` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L256` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L264` |
 | 签名 | `_volume_nonzero_ratio(df: pd.DataFrame \| None)` |
 | 参数 | `df`（pd.DataFrame \| None）：输入数据表 |
 | 返回 | 返回 `float` 类型结果 |
@@ -485,7 +485,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_analyst_input_stats` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L263` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L271` |
 | 签名 | `_analyst_input_stats(ctx: MarketContext)` |
 | 参数 | `ctx`（MarketContext）：运行上下文 |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -507,7 +507,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `finalize_market_context` |
-| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L317` |
+| 源码位置 | [src/data/context_builder.py](../../../src/data/context_builder.py) · `L325` |
 | 签名 | `finalize_market_context(ctx: MarketContext)` |
 | 参数 | `ctx`（MarketContext）：运行上下文 |
 | 返回 | 返回 `MarketContext` 类型结果 |
@@ -520,7 +520,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | filter_upcoming_calendar_events、sync_external_legacy_fields、build_derived_context、compute_context_stats |
 | 复杂度 / 风险 | 分支 0；跨度 8 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-05079ecc27"></a>
 
@@ -532,12 +532,12 @@
 |---|---|
 | 软件单元 ID | UNIT-05079ECC27 |
 | 源码 | [src/data/external_format.py](../../../src/data/external_format.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/external_format.py` 的职责，通过 `headlines_to_strings`、`sync_external_legacy_fields` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/external_format.py` 的职责，通过 `headlines_to_strings`、`sync_external_legacy_fields` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 2 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_narrative_authorization.py](../../../tests/unit/test_narrative_authorization.py) |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
+| 动态测试 | — |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -586,7 +586,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | headlines_to_strings、filter_upcoming_calendar_events、len、log.info、calendar_to_risk_text |
 | 复杂度 / 风险 | 分支 3；跨度 9 行；中 |
-| 测试 / 验证 | [tests/unit/test_narrative_authorization.py](../../../tests/unit/test_narrative_authorization.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-2b33a302fc"></a>
 
@@ -598,22 +598,22 @@
 |---|---|
 | 软件单元 ID | UNIT-2B33A302FC |
 | 源码 | [src/data/fetch_pipeline.py](../../../src/data/fetch_pipeline.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/fetch_pipeline.py` 的职责，通过 `DataFetchResult`、`fetch_external_bundle`、`fetch_all_data` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/fetch_pipeline.py` 的职责，通过 `DataFetchResult`、`fetch_external_bundle`、`fetch_all_data` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 7 / 5 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) |
+| 动态测试 | [tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [_fetch_news_external](#fun-112152936c) | 获取`news_external`；可能影响外部接口；返回 `ExternalFactors` 类型结果。 | 外部接口 I/O | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) |
-| [_fetch_social_external](#fun-da07c46547) | 获取`social_external`；可能影响外部接口；返回 `ExternalFactors` 类型结果。 | 外部接口 I/O | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) |
-| [_fetch_fundamentals_external](#fun-984c9019fc) | 获取`fundamentals_external`；可能影响外部接口；返回 `ExternalFactors` 类型结果。 | 外部接口 I/O | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) |
-| [fetch_external_bundle](#fun-6df80aee05) | 获取`external_bundle`；可能影响外部接口；返回 `ExternalFactors` 类型结果。 | 外部接口 I/O | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) |
+| [_fetch_news_external](#fun-112152936c) | 获取`news_external`；可能影响外部接口；返回 `ExternalFactors` 类型结果。 | 外部接口 I/O | — |
+| [_fetch_social_external](#fun-da07c46547) | 获取`social_external`；可能影响外部接口；返回 `ExternalFactors` 类型结果。 | 外部接口 I/O | — |
+| [_fetch_fundamentals_external](#fun-984c9019fc) | 获取`fundamentals_external`；可能影响外部接口；返回 `ExternalFactors` 类型结果。 | 外部接口 I/O | — |
+| [fetch_external_bundle](#fun-6df80aee05) | 获取`external_bundle`；可能影响外部接口；返回 `ExternalFactors` 类型结果。 | 外部接口 I/O | — |
 | [fetch_all_data](#fun-d6c382b005) | 获取`all_data`；可能影响外部接口、共享状态；返回 `DataFetchResult` 类型结果。 | 外部接口 I/O；共享状态变更 | [tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py) |
 
 #### 函数导航
@@ -684,7 +684,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | fetch_external、NewsDataSource |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；高 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-da07c46547"></a>
 
@@ -706,7 +706,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | fetch_external、SocialDataSource |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；高 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-984c9019fc"></a>
 
@@ -728,7 +728,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | fetch_external、FundamentalsDataSource |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；高 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-6df80aee05"></a>
 
@@ -750,7 +750,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | ThreadPoolExecutor、pool.submit、fut_news.result、fut_social.result、fut_fund.result、_fetch_news_external、_fetch_fundamentals_external、_fetch_social_external、merge_external |
 | 复杂度 / 风险 | 分支 1；跨度 15 行；高 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-d6c382b005"></a>
 
@@ -784,10 +784,10 @@
 |---|---|
 | 软件单元 ID | UNIT-5C3B60E30A |
 | 源码 | [src/data/fetcher.py](../../../src/data/fetcher.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/fetcher.py` 的职责，通过 `clear_cache`、`get_active_source`、`fetch_multi_timeframe`、`fetch_all`、`daily_metrics`、`utc8_now`、`format_utc8` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
-| 函数 / 高风险函数 | 7 / 2 |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/fetcher.py` 的职责，通过 `clear_cache`、`get_active_source`、`fetch_multi_timeframe`、`fetch_all`、`daily_metrics`、`market_metrics`、`utc8_now`、`format_utc8` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 函数 / 高风险函数 | 8 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
@@ -801,7 +801,7 @@
 
 #### 函数导航
 
-[clear_cache](#fun-f5cfdcfe8d) · [get_active_source](#fun-e9ad7716d7) · [fetch_multi_timeframe](#fun-d6fbd9beaa) · [fetch_all](#fun-1bb0e91f10) · [daily_metrics](#fun-5a69f43861) · [utc8_now](#fun-f3d127c2a7) · [format_utc8](#fun-782624f6ed)
+[clear_cache](#fun-f5cfdcfe8d) · [get_active_source](#fun-e9ad7716d7) · [fetch_multi_timeframe](#fun-d6fbd9beaa) · [fetch_all](#fun-1bb0e91f10) · [daily_metrics](#fun-5a69f43861) · [market_metrics](#fun-8a157cccad) · [utc8_now](#fun-f3d127c2a7) · [format_utc8](#fun-782624f6ed)
 
 <a id="fun-f5cfdcfe8d"></a>
 
@@ -913,6 +913,28 @@
 | 复杂度 / 风险 | 分支 2；跨度 28 行；中 |
 | 测试 / 验证 | [tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py) · 直接动态测试 |
 
+<a id="fun-8a157cccad"></a>
+
+#### FUN-8A157CCCAD
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `market_metrics` |
+| 源码位置 | [src/data/fetcher.py](../../../src/data/fetcher.py) · `L68` |
+| 签名 | `market_metrics(df_1d: pd.DataFrame, df_5m: pd.DataFrame)` |
+| 参数 | `df_1d`（pd.DataFrame）：由调用方提供的 `df_1d` 输入对象<br>`df_5m`（pd.DataFrame）：5 分钟 OHLCV 数据表 |
+| 返回 | 返回 `dict` 类型结果 |
+| 职责 | 构建`market_metrics`；返回 `dict` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `daily_metrics` → `date` → `pd.Timestamp` → `max` → `min` → `metrics.update`；包含 5 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `dict` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | daily_metrics、float、date、pd.Timestamp、max、min、metrics.update |
+| 复杂度 / 风险 | 分支 5；跨度 35 行；中 |
+| 测试 / 验证 | [tests/unit/test_indicators.py](../../../tests/unit/test_indicators.py) · 直接动态测试 |
+
 <a id="fun-f3d127c2a7"></a>
 
 #### FUN-F3D127C2A7
@@ -920,7 +942,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `utc8_now` |
-| 源码位置 | [src/data/fetcher.py](../../../src/data/fetcher.py) · `L71` |
+| 源码位置 | [src/data/fetcher.py](../../../src/data/fetcher.py) · `L108` |
 | 签名 | `utc8_now()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 返回 `datetime` 类型结果 |
@@ -942,7 +964,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `format_utc8` |
-| 源码位置 | [src/data/fetcher.py](../../../src/data/fetcher.py) · `L75` |
+| 源码位置 | [src/data/fetcher.py](../../../src/data/fetcher.py) · `L112` |
 | 签名 | `format_utc8(iso_value: object, *, fmt: str='%Y-%m-%d %H:%M')` |
 | 参数 | `iso_value`（object）：待处理值<br>`fmt`（str）：由 `fmt` 表示的文本或标识；默认值 `'%Y-%m-%d %H:%M'` |
 | 返回 | 返回 `str` 类型结果 |
@@ -967,19 +989,19 @@
 |---|---|
 | 软件单元 ID | UNIT-52888D723D |
 | 源码 | [src/data/mt5.py](../../../src/data/mt5.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/mt5.py` 的职责，通过 `MT5Config`、`MT5Provider`、`MT5UnavailableError`、`DisabledMT5Provider`、`MetaTrader5Provider`、`get_mt5_provider` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/mt5.py` 的职责，通过 `MT5Config`、`MT5Provider`、`MT5UnavailableError`、`DisabledMT5Provider`、`MetaTrader5Provider`、`get_mt5_provider` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 13 / 5 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_mt5_provider.py](../../../tests/unit/test_mt5_provider.py) |
+| 动态测试 | [tests/unit/test_mt5_provider.py](../../../tests/unit/test_mt5_provider.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [MetaTrader5Provider.__init__](#fun-efaf091f3b) | 初始化当前类实例并建立字段约束；无返回值（None）。 | 未检测到直接副作用 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) |
+| [MetaTrader5Provider.__init__](#fun-efaf091f3b) | 初始化当前类实例并建立字段约束；无返回值（None）。 | 未检测到直接副作用 | — |
 | [MetaTrader5Provider.is_available](#fun-d4e9736d8a) | 判断`available`；返回 `bool` 类型结果。 | 未检测到直接副作用 | [tests/unit/test_mt5_provider.py](../../../tests/unit/test_mt5_provider.py) |
 | [MetaTrader5Provider.account_info](#fun-2c7542532d) | 构建交易账户信息；返回 `dict[str, object]` 类型结果。 | 未检测到直接副作用 | [tests/unit/test_mt5_provider.py](../../../tests/unit/test_mt5_provider.py) |
 | [MetaTrader5Provider.shutdown](#fun-573d1aeba3) | 执行`shutdown`处理；无返回值（None）。 | 未检测到直接副作用 | — |
@@ -1075,7 +1097,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-142d9a85d4"></a>
 
@@ -1163,7 +1185,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | MT5Config、MT5UnavailableError |
 | 复杂度 / 风险 | 分支 1；跨度 8 行；高 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-d4e9736d8a"></a>
 
@@ -1285,12 +1307,12 @@
 |---|---|
 | 软件单元 ID | UNIT-C335B8F5CF |
 | 源码 | [src/data/news_topics.py](../../../src/data/news_topics.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/news_topics.py` 的职责，通过 `cluster_headline_topics` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/news_topics.py` 的职责，通过 `cluster_headline_topics` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 1 / 0 |
-| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
+| 动态测试 | — |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -1317,7 +1339,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | item.text.lower、any、k.lower、append、buckets.items、topics.append、len、topics.sort、int |
 | 复杂度 / 风险 | 分支 5；跨度 27 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-0f842b8ece"></a>
 
@@ -1329,9 +1351,9 @@
 |---|---|
 | 软件单元 ID | UNIT-0F842B8ECE |
 | 源码 | [src/data/proxy_env.py](../../../src/data/proxy_env.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/proxy_env.py` 的职责，通过 `read_system_proxy`、`apply_system_proxy` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/proxy_env.py` 的职责，通过 `read_system_proxy`、`apply_system_proxy` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 2 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | — |
@@ -1395,9 +1417,9 @@
 |---|---|
 | 软件单元 ID | UNIT-EA7E4F88FE |
 | 源码 | [src/data/run_archive.py](../../../src/data/run_archive.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/run_archive.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) |
@@ -1417,9 +1439,9 @@
 |---|---|
 | 软件单元 ID | UNIT-023A37A1E9 |
 | 源码 | [src/data/run_archive_compat.py](../../../src/data/run_archive_compat.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive_compat.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/run_archive_compat.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | — |
@@ -1439,9 +1461,9 @@
 |---|---|
 | 软件单元 ID | UNIT-7BFC490988 |
 | 源码 | [src/data/run_archive_index.py](../../../src/data/run_archive_index.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive_index.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/run_archive_index.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py) |
@@ -1461,9 +1483,9 @@
 |---|---|
 | 软件单元 ID | UNIT-DAD8BC5B0F |
 | 源码 | [src/data/run_archive_prune.py](../../../src/data/run_archive_prune.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive_prune.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/run_archive_prune.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py) |
@@ -1483,9 +1505,9 @@
 |---|---|
 | 软件单元 ID | UNIT-767BF49F25 |
 | 源码 | [src/data/run_archive_schema.py](../../../src/data/run_archive_schema.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/run_archive_schema.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/run_archive_schema.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) |
@@ -1505,9 +1527,9 @@
 |---|---|
 | 软件单元 ID | UNIT-C3952C43CB |
 | 源码 | [src/data/sources/__init__.py](../../../src/data/sources/__init__.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/__init__.py` 的职责，通过 模块内部实现 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | — |
@@ -1527,9 +1549,9 @@
 |---|---|
 | 软件单元 ID | UNIT-C590FCE576 |
 | 源码 | [src/data/sources/_http.py](../../../src/data/sources/_http.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/_http.py` 的职责，通过 `post_json`、`get_json`、`get_text` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/_http.py` 的职责，通过 `post_json`、`get_json`、`get_text` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 3 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_http_helpers.py](../../../tests/unit/test_http_helpers.py) |
@@ -1622,12 +1644,12 @@
 |---|---|
 | 软件单元 ID | UNIT-0DF4638D5E |
 | 源码 | [src/data/sources/base.py](../../../src/data/sources/base.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/base.py` 的职责，通过 `DataSource` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/base.py` 的职责，通过 `DataSource` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 1 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) |
+| 动态测试 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -1654,7 +1676,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_archive_compat.py](../../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_pipeline_progress_headline.py](../../../tests/unit/test_pipeline_progress_headline.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) · 直接动态测试 |
 
 <a id="unit-1fa1bdf5ba"></a>
 
@@ -1666,9 +1688,9 @@
 |---|---|
 | 软件单元 ID | UNIT-1FA1BDF5BA |
 | 源码 | [src/data/sources/dxy.py](../../../src/data/sources/dxy.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/dxy.py` 的职责，通过 `fetch_dxy_impact` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/dxy.py` 的职责，通过 `fetch_dxy_impact` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 1 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
@@ -1716,12 +1738,12 @@
 |---|---|
 | 软件单元 ID | UNIT-EC9B21793D |
 | 源码 | [src/data/sources/fundamentals.py](../../../src/data/sources/fundamentals.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/fundamentals.py` 的职责，通过 `FundamentalsDataSource`、`macro_quotes_to_evidence`、`external_macro_evidence` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/fundamentals.py` 的职责，通过 `FundamentalsDataSource`、`macro_quotes_to_evidence`、`external_macro_evidence` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 4 / 3 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
+| 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
@@ -1834,9 +1856,9 @@
 |---|---|
 | 软件单元 ID | UNIT-4D4D8A02C7 |
 | 源码 | [src/data/sources/gold_relevance.py](../../../src/data/sources/gold_relevance.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/gold_relevance.py` 的职责，通过 `matches_gold_headline`、`is_gold_macro_event` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/gold_relevance.py` 的职责，通过 `matches_gold_headline`、`is_gold_macro_event` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 2 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
@@ -1900,12 +1922,12 @@
 |---|---|
 | 软件单元 ID | UNIT-7020937074 |
 | 源码 | [src/data/sources/jin10_feed.py](../../../src/data/sources/jin10_feed.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/jin10_feed.py` 的职责，通过 `Jin10NewsBundle`、`fetch_jin10_flash`、`fetch_jin10_articles`、`fetch_jin10_calendar`、`fetch_jin10_risk_events`、`fetch_jin10_bundle`、`fetch_jin10_quote`、`fetch_jin10_kline` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/jin10_feed.py` 的职责，通过 `Jin10NewsBundle`、`fetch_jin10_flash`、`fetch_jin10_articles`、`fetch_jin10_calendar`、`fetch_jin10_risk_events`、`fetch_jin10_bundle`、`fetch_jin10_quote`、`fetch_jin10_kline` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 23 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py)、[tests/unit/test_fact_registry.py](../../../tests/unit/test_fact_registry.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) |
+| 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
@@ -1939,7 +1961,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_fact_registry.py](../../../tests/unit/test_fact_registry.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py) · 直接动态测试 |
 
 <a id="fun-0424648ecf"></a>
 
@@ -2335,7 +2357,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | strip、jin10_call_tool、_cached、isinstance、data.get |
 | 复杂度 / 风险 | 分支 4；跨度 20 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-67ef031b31"></a>
 
@@ -2401,7 +2423,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | strip、jin10_call_tool、_cached、isinstance、data.get、_normalize_kline_bars |
 | 复杂度 / 风险 | 分支 6；跨度 34 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-c4acab9575"></a>
 
@@ -2435,12 +2457,12 @@
 |---|---|
 | 软件单元 ID | UNIT-927BB1749D |
 | 源码 | [src/data/sources/jin10_mcp_client.py](../../../src/data/sources/jin10_mcp_client.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
+| 架构组件 | ARC-DATA — Market and external data |
 | 职责 | Jin10 (金十数据) official MCP client — JSON-RPC over SSE。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 10 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py) |
+| 动态测试 | [tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
@@ -2518,7 +2540,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
 | 复杂度 / 风险 | 分支 0；跨度 6 行；低 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-45a198880a"></a>
 
@@ -2672,7 +2694,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | call_tool、get_jin10_client |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) · 直接动态测试 |
 
 <a id="unit-fe5c27c113"></a>
 
@@ -2684,12 +2706,12 @@
 |---|---|
 | 软件单元 ID | UNIT-FE5C27C113 |
 | 源码 | [src/data/sources/macro.py](../../../src/data/sources/macro.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/macro.py` 的职责，通过 `fetch_dxy_quote`、`fetch_us10y_quote`、`fetch_macro_quotes` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/macro.py` 的职责，通过 `fetch_dxy_quote`、`fetch_us10y_quote`、`fetch_macro_quotes` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 5 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
+| 动态测试 | [tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
@@ -2811,7 +2833,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | fn、quotes.append |
 | 复杂度 / 风险 | 分支 2；跨度 7 行；中 |
-| 测试 / 验证 | [tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) · 直接动态测试 |
 
 <a id="unit-603339624c"></a>
 
@@ -2823,12 +2845,12 @@
 |---|---|
 | 软件单元 ID | UNIT-603339624C |
 | 源码 | [src/data/sources/market.py](../../../src/data/sources/market.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/market.py` 的职责，通过 `MarketDataSource` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/market.py` 的职责，通过 `MarketDataSource` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 2 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
+| 动态测试 | [tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
 | 验证状态 | selected |
 
 #### 函数导航
@@ -2855,7 +2877,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
-| 测试 / 验证 | [tests/unit/test_aspice_high_risk_contracts.py](../../../tests/unit/test_aspice_high_risk_contracts.py) · 直接动态测试 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="fun-eeff26c071"></a>
 
@@ -2889,9 +2911,9 @@
 |---|---|
 | 软件单元 ID | UNIT-58D6F95301 |
 | 源码 | [src/data/sources/news.py](../../../src/data/sources/news.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/news.py` 的职责，通过 `external_to_evidence`、`NewsDataSource` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/news.py` 的职责，通过 `external_to_evidence`、`NewsDataSource` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 4 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
@@ -3006,9 +3028,9 @@
 |---|---|
 | 软件单元 ID | UNIT-BA8DF8A829 |
 | 源码 | [src/data/sources/social.py](../../../src/data/sources/social.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/social.py` 的职责，通过 `SocialDataSource` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/social.py` 的职责，通过 `SocialDataSource` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 3 / 3 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
@@ -3102,9 +3124,9 @@
 |---|---|
 | 软件单元 ID | UNIT-B05F7AFFA4 |
 | 源码 | [src/data/sources/social_feed.py](../../../src/data/sources/social_feed.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/sources/social_feed.py` 的职责，通过 `parse_tv_ideas`、`parse_tv_minds`、`fetch_social_sentiment` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/sources/social_feed.py` 的职责，通过 `parse_tv_ideas`、`parse_tv_minds`、`fetch_social_sentiment` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 11 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py) |
@@ -3372,12 +3394,12 @@
 |---|---|
 | 软件单元 ID | UNIT-C1711535CA |
 | 源码 | [src/data/tradingview.py](../../../src/data/tradingview.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/tradingview.py` 的职责，通过 `get_last_error`、`reset_client`、`compute_price_drift_1d`、`fetch_symbol_daily`、`fetch_multi_timeframe`、`source_label` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/tradingview.py` 的职责，通过 `get_last_error`、`reset_client`、`compute_price_drift_1d`、`fetch_symbol_daily`、`fetch_multi_timeframe`、`source_label` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 15 / 4 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
-| 动态测试 | [tests/unit/test_agent_chain.py](../../../tests/unit/test_agent_chain.py)、[tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_claim_eligibility.py](../../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_debate_parallel.py](../../../tests/unit/test_debate_parallel.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py)、[tests/unit/test_llm_levels.py](../../../tests/unit/test_llm_levels.py)、[tests/unit/test_llm_payload_funnel.py](../../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_authorization.py](../../../tests/unit/test_narrative_authorization.py)、[tests/unit/test_narrative_facts.py](../../../tests/unit/test_narrative_facts.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_research_parallel.py](../../../tests/unit/test_research_parallel.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_signal_dedup.py](../../../tests/unit/test_signal_dedup.py)、[tests/unit/test_technical_context_lux.py](../../../tests/unit/test_technical_context_lux.py)、[tests/unit/test_trader_sentiment.py](../../../tests/unit/test_trader_sentiment.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) |
+| 动态测试 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_external_sources.py](../../../tests/unit/test_external_sources.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_technical_context_lux.py](../../../tests/unit/test_technical_context_lux.py)、[tests/unit/test_tradingview_retry.py](../../../tests/unit/test_tradingview_retry.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
@@ -3721,7 +3743,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
 | 复杂度 / 风险 | 分支 1；跨度 3 行；中 |
-| 测试 / 验证 | [tests/unit/test_agent_chain.py](../../../tests/unit/test_agent_chain.py)、[tests/unit/test_analyst_input_density.py](../../../tests/unit/test_analyst_input_density.py)、[tests/unit/test_analyst_team.py](../../../tests/unit/test_analyst_team.py)、[tests/unit/test_analyst_team_llm.py](../../../tests/unit/test_analyst_team_llm.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_claim_eligibility.py](../../../tests/unit/test_claim_eligibility.py)、[tests/unit/test_debate_parallel.py](../../../tests/unit/test_debate_parallel.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_llm_levels.py](../../../tests/unit/test_llm_levels.py)、[tests/unit/test_llm_payload_funnel.py](../../../tests/unit/test_llm_payload_funnel.py)、[tests/unit/test_narrative_authorization.py](../../../tests/unit/test_narrative_authorization.py)、[tests/unit/test_narrative_facts.py](../../../tests/unit/test_narrative_facts.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_research_parallel.py](../../../tests/unit/test_research_parallel.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_signal_dedup.py](../../../tests/unit/test_signal_dedup.py)、[tests/unit/test_technical_context_lux.py](../../../tests/unit/test_technical_context_lux.py)、[tests/unit/test_trader_sentiment.py](../../../tests/unit/test_trader_sentiment.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py)、[tests/unit/test_archive_optimizations.py](../../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_external_data_view.py](../../../tests/unit/test_external_data_view.py)、[tests/unit/test_orchestrator_hooks.py](../../../tests/unit/test_orchestrator_hooks.py)、[tests/unit/test_run_archive.py](../../../tests/unit/test_run_archive.py)、[tests/unit/test_technical_context_lux.py](../../../tests/unit/test_technical_context_lux.py) · 直接动态测试 |
 
 <a id="unit-62a1aff305"></a>
 
@@ -3733,9 +3755,9 @@
 |---|---|
 | 软件单元 ID | UNIT-62A1AFF305 |
 | 源码 | [src/data/url_redact.py](../../../src/data/url_redact.py) |
-| 架构组件 | ARC-DATA — 行情与外部数据 |
-| 职责 | 实现“行情与外部数据”组件中 `src/data/url_redact.py` 的职责，通过 `redact_url` 提供该模块的公开能力。 |
-| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 架构组件 | ARC-DATA — Market and external data |
+| 职责 | 实现“Market and external data”组件中 `src/data/url_redact.py` 的职责，通过 `redact_url` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 1 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-EXTERNAL](../SWE.5-integration-testing.md#vm-integration-external) |
 | 动态测试 | [tests/unit/test_url_redact.py](../../../tests/unit/test_url_redact.py) |

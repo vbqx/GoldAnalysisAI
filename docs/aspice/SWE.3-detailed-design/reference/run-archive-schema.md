@@ -1,43 +1,23 @@
-# Run archive replay contract
+# Advice V2 运行归档与回放契约
 
-Each pipeline run is stored under `.cache/run_archives/<run_id>/`.
+每次运行保存在 `.cache/run_archives/<run_id>/`。
 
-## Layout (schema v2)
+| 文件 | 回放作用 |
+|---|---|
+| `manifest.json` | 归档 schema、状态、配置和制品版本。 |
+| `report.json` | Advice V2 报告；新归档必需。 |
+| `enriched/{tf}.json` | 指标补全后的多周期数据。 |
+| `analyses.json` | 时间周期结构分析。 |
+| `fetch.json` | 外部数据和原始抓取摘要。 |
 
-| File | Required for replay | Version field |
-|------|---------------------|---------------|
-| `manifest.json` | yes | `schema_version` |
-| `report.json` | yes | contract in manifest |
-| `enriched/{tf}.json` | yes | artifact envelope |
-| `analyses.json` | no (rebuilt fallback) | artifact envelope |
-| `fetch.json` | no | artifact envelope |
-| `meta.json` | no (legacy index) | deprecated index |
+`report_contract_version=2` 对应 `artifact_kind=human_review_advice` 和 `artifact_version=2`。
 
-## Versioning rules
+## 回放规则
 
-1. **`schema_version`** (manifest): bump when folder layout or manifest shape changes. Add a migration in `src/run/archive/compat.py`.
-2. **`artifact_version`** (per file envelope): bump when fetch/frame/analysis payload shape changes independently.
-3. **`report_contract_version`** (manifest.replay): bump when required report top-level keys change. Reader fills defaults via `normalize_report()`.
+1. V2 归档直接加载同一份报告，不重新抓取数据，不调用 LLM。
+2. V1 归档不再显示旧 `signals` 或 `agent_trace`；回放器使用已保存的 enriched 数据、analyses 和 external 快照重建 Advice V2。
+3. 缺少重建所需市场数据的旧归档返回明确诊断，不把 V1 内容伪装成当前建议。
+4. 更高的未知 schema 版本阻止加载；可兼容的缺字段归档以 degraded 状态加载。
+5. 新写入先完成制品，再原子写入最终 manifest。
 
-## Reader behaviour
-
-- Missing `manifest.json` → synthesize from legacy v1 (`meta.json` only) and optionally write upgraded manifest.
-- Unknown JSON fields → preserved (never strip).
-- Missing report keys → defaults + `archive_replay_warnings` on replay.
-- Schema newer than reader → **incompatible** (block load).
-- Schema older / partial artifacts → **degraded** (load with warnings).
-
-## Producer
-
-New runs write artifacts first, then `manifest.json` last with `summary.pipeline_status: complete`.
-Only runs whose `meta.generation_steps` are all terminal (`done` / `skipped` / `error`) are archived and replayable.
-Interrupted writes without a final manifest are not listed for replay.
-
-See `src/run/archive/schema.py` and `src/run/archive/completion.py`.
-
-## Changing this contract
-
-1. Bump the appropriate version constant.
-2. Implement `migrate_*` for the artifact or manifest.
-3. Add a unit test with a frozen legacy folder under `tests/fixtures/run_archives/`.
-4. Document the change in this file.
+布局或契约变更必须提升对应版本、增加兼容测试并更新本文档。
