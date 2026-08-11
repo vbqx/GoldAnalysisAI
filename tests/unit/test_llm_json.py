@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from src.agents.llm.base import _parse_llm_json
+from src.llm.stage import _parse_llm_json
 
 
 def test_valid_json() -> None:

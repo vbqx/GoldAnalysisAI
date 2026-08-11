@@ -1,4 +1,4 @@
-"""Rule-mode pipeline coherence check — structure vs debate vs signals vs indicators."""
+"""Rule-mode Advice V2 coherence check — suggestion, geometry, evidence and indicators."""
 
 from __future__ import annotations
 

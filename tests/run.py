@@ -36,7 +36,7 @@ def main() -> int:
     group.add_argument("--regression", action="store_true", help="regression tests only")
     group.add_argument("--integration", action="store_true", help="integration tests only (slow)")
     group.add_argument("--external", action="store_true", help="live News/DXY/Social API smoke tests")
-    group.add_argument("--financial", action="store_true", help="financial review tests (FIN-*) only")
+    group.add_argument("--financial", action="store_true", help="Advice V2 financial-content tests only")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -48,7 +48,7 @@ def main() -> int:
     if args.regression:
         return _pytest([str(TESTS / "regression"), *common, "-m", "regression"])
     if args.financial:
-        return _pytest([str(TESTS / "unit" / "test_financial_review.py"), *common, "-m", "financial"])
+        return _pytest([str(TESTS / "unit" / "test_advice_v2.py"), *common])
     if args.integration:
         return _pytest([str(TESTS / "integration"), *common, "-m", "integration"])
     if args.external:

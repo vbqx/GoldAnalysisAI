@@ -124,13 +124,7 @@ def test_architecture_docs_keep_human_readable_visual_flows() -> None:
     required_mermaid_counts = {
         "software-architecture.md": 5,
         "system-overview.md": 2,
-        "analyst-context.md": 1,
-        "backtesting.md": 3,
-        "chart-layers.md": 1,
-        "llm-agents.md": 2,
-        "report-trust.md": 1,
-        "health-review.md": 1,
-        "smc-pa-narrative.md": 1,
+        "human-review-advice.md": 2,
         "technical-analysis.md": 1,
     }
     architecture_dir = ROOT / "docs" / "aspice" / "SWE.2-architecture"
@@ -141,19 +135,5 @@ def test_architecture_docs_keep_human_readable_visual_flows() -> None:
         actual = text.count("```mermaid")
         if actual < minimum:
             problems.append(f"{filename}: expected >= {minimum} Mermaid diagrams, got {actual}")
-
-    backtesting = (architecture_dir / "backtesting.md").read_text(encoding="utf-8")
-    stale_english_headings = [
-        "# Backtesting Design",
-        "## Backtest Layers",
-        "## Current MVP Scope",
-        "## Target LLM Full Pipeline Replay",
-        "## Limitations",
-    ]
-    problems.extend(
-        f"backtesting.md: untranslated heading {heading}"
-        for heading in stale_english_headings
-        if heading in backtesting
-    )
 
     assert not problems, "Architecture readability regressions:\n" + "\n".join(problems)

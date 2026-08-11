@@ -26,13 +26,14 @@ def _minimal_archive(tmp_path, monkeypatch, *, run_id: str | None = None) -> str
         {"Open": close, "High": close + 1, "Low": close - 1, "Close": close, "Volume": 100},
         index=idx,
     )
-    fetched = DataFetchResult(raw={"5m": df}, external=ExternalFactors(), source_label="test")
+    timeframes = {tf: df.copy() for tf in ("5m", "15m", "1h", "4h", "1d")}
+    fetched = DataFetchResult(raw=timeframes, external=ExternalFactors(), source_label="test")
     archive_run(
         run_id,
         fetched=fetched,
         report=report_for_archive(),
-        enriched={"5m": df},
-        analyses={"5m": analyze_timeframe(df, "5m")},
+        enriched=timeframes,
+        analyses={tf: analyze_timeframe(frame, tf) for tf, frame in timeframes.items()},
         run_config=run_config_for_mode("rule"),
         elapsed_s=1.0,
     )
@@ -104,30 +105,21 @@ def test_load_replay_bundle_gate(tmp_path, monkeypatch) -> None:
     assert "5m" in analyses
 
 
-def test_narrative_facts_single_builder() -> None:
-    from src.analysis.narrative_facts import build_narrative_facts_for_llm
-
-    report = {
-        "metrics": {"current_price": 2650.0},
-        "signals": [],
-        "liquidity": [],
-        "timeframes": {},
-        "sentiment": {},
-        "conclusion": {},
-        "meta": {},
-    }
-    facts = build_narrative_facts_for_llm(report)
-    assert "context_levels" in facts
-    assert "combination_rules" in facts
-
-
-def test_run_backtest_from_archive(tmp_path, monkeypatch) -> None:
-    from src.backtest.engine import run_backtest_from_archive
+def test_legacy_replay_rebuilds_without_fetch_snapshot(tmp_path, monkeypatch) -> None:
+    from src.viz.replay_loader import load_replay_bundle
 
     run_id = _minimal_archive(tmp_path, monkeypatch)
-    result = run_backtest_from_archive(run_id)
-    assert result.diagnostics["source_run_id"] == run_id
-    assert result.diagnostics["archive_contract"] == "run_archive_v2"
+    run_dir = tmp_path / run_id
+    (run_dir / "fetch.json").unlink()
+
+    cfg = RunConfig(replay_mode=True, replay_run_id=run_id).normalized()
+    report, enriched, analyses = load_replay_bundle(cfg)
+
+    assert report["artifact_kind"] == "human_review_advice"
+    assert report["meta"]["rebuilt_from_legacy_archive"] is True
+    assert any("外部背景快照不可用" in item for item in report["meta"]["archive_replay_warnings"])
+    assert "5m" in enriched
+    assert "5m" in analyses
 
 
 def test_prune_archives_by_size_mb(tmp_path, monkeypatch) -> None:

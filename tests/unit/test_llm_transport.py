@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from requests.exceptions import ChunkedEncodingError
 
-from src.agents.llm.base import stream_llm_json
+from src.llm.stage import stream_llm_json
 from src.core.progress import ProgressReporter, reset_progress, set_progress
 from src.llm.client import LLMClient, LLMClientError
 
@@ -34,8 +34,8 @@ def test_stream_llm_json_retries_transport(monkeypatch: pytest.MonkeyPatch) -> N
         return '{"items": [], "confidence": 0.5, "summary": "ok"}'
 
     sleeps: list[float] = []
-    monkeypatch.setattr("src.agents.llm.base._stream_once", lambda *a, **k: fake_stream())
-    monkeypatch.setattr("src.agents.llm.base.time.sleep", lambda s: sleeps.append(s))
+    monkeypatch.setattr("src.llm.stage._stream_once", lambda *a, **k: fake_stream())
+    monkeypatch.setattr("src.llm.stage.time.sleep", lambda s: sleeps.append(s))
 
     reporter = ProgressReporter()
     token = set_progress(reporter)
@@ -61,8 +61,8 @@ def test_stream_llm_json_raises_after_exhausted_retries(monkeypatch: pytest.Monk
     def always_fail(*_args, **_kwargs):
         raise LLMClientError("LLM 流式读取失败: down")
 
-    monkeypatch.setattr("src.agents.llm.base._stream_once", always_fail)
-    monkeypatch.setattr("src.agents.llm.base.time.sleep", lambda _s: None)
+    monkeypatch.setattr("src.llm.stage._stream_once", always_fail)
+    monkeypatch.setattr("src.llm.stage.time.sleep", lambda _s: None)
 
     reporter = ProgressReporter()
     token = set_progress(reporter)

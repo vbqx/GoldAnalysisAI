@@ -4,7 +4,8 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from src.data.fetcher import daily_metrics
+from src.data.fetcher import daily_metrics, market_metrics
+from src.indicators.technical import add_emas
 from src.indicators.verify import indicator_snapshot, indicator_table_rows
 
 
@@ -45,9 +46,40 @@ def test_daily_high_low_bounds() -> None:
     assert m["daily_high"] >= m["current_price"] >= m["daily_low"]
 
 
+def test_market_metrics_uses_latest_5m_snapshot_and_completed_daily_close() -> None:
+    daily_idx = pd.date_range("2026-01-01", periods=2, freq="1D", tz="UTC")
+    daily = pd.DataFrame(
+        {
+            "Open": [4190.0, 4200.0],
+            "High": [4210.0, 4220.0],
+            "Low": [4180.0, 4190.0],
+            "Close": [4200.0, 4210.0],
+            "Volume": [1, 1],
+        },
+        index=daily_idx,
+    )
+    intraday_idx = pd.date_range("2026-01-03", periods=2, freq="5min", tz="UTC")
+    intraday = pd.DataFrame(
+        {
+            "Open": [4210.0, 4212.0],
+            "High": [4214.0, 4216.0],
+            "Low": [4208.0, 4211.0],
+            "Close": [4212.0, 4215.0],
+            "Volume": [1, 1],
+        },
+        index=intraday_idx,
+    )
+    metrics = market_metrics(daily, intraday)
+    assert metrics["current_price"] == 4215.0
+    assert metrics["prev_close"] == 4210.0
+    assert metrics["daily_change"] == 5.0
+    assert metrics["daily_high"] == 4216.0
+    assert metrics["daily_low"] == 4208.0
+
+
 def test_indicator_snapshot_has_ema_vwap() -> None:
     """IND-10: indicator_snapshot 输出 EMA/VWAP 字段."""
-    snap = indicator_snapshot(_sample_ohlcv(200), "5m")
+    snap = indicator_snapshot(_sample_ohlcv(610), "5m")
     assert snap["timeframe"] == "5m"
     for key in ("EMA20", "EMA50", "EMA610", "VWAP", "EMA20_diff", "VWAP_diff"):
         assert key in snap
@@ -65,6 +97,16 @@ def test_ema610_insufficient_history_note() -> None:
     """IND-12: bars<610 时 EMA610 历史不足提示."""
     snap = indicator_snapshot(_sample_ohlcv(100), "5m")
     assert any("610" in n for n in snap["notes"])
+    assert "EMA610" not in snap
+    assert snap["ema_relation"]["EMA610"] == "N/A"
+
+
+def test_ema610_requires_full_history() -> None:
+    """IND-12: 609 根时为空，610 根边界才首次就绪。"""
+    short = add_emas(_sample_ohlcv(609).drop(columns=["EMA20", "EMA50", "EMA610"]))
+    ready = add_emas(_sample_ohlcv(610).drop(columns=["EMA20", "EMA50", "EMA610"]))
+    assert pd.isna(short.iloc[-1]["EMA610"])
+    assert pd.notna(ready.iloc[-1]["EMA610"])
 
 
 def test_vwap_deviation_note() -> None:

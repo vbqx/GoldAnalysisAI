@@ -58,7 +58,7 @@ def test_finalize_pipeline_archive_calls_archive_run_with_normalized_config() ->
     report = {"metrics": {"current_price": 2650.0}, "meta": {}}
     enriched = {"5m": fetched.raw["5m"]}
     analyses: dict = {}
-    cfg = RunConfig(agent_mode="llm", llm_enabled=True, llm_stage_trader=True)
+    cfg = RunConfig(generation_mode="llm", llm_enabled=True)
     with patch("src.core.orchestrator_hooks.archive_run") as archive_run:
         finalize_pipeline_archive(
             "20260712T100000Z",
@@ -91,4 +91,4 @@ def test_finalize_pipeline_archive_uses_thread_run_config_when_none() -> None:
             elapsed_s=1.0,
             run_config=None,
         )
-    assert archive_run.call_args.kwargs["run_config"].agent_mode == "rule"
+    assert archive_run.call_args.kwargs["run_config"].generation_mode == "rule"

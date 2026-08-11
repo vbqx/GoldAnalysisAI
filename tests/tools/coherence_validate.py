@@ -1,15 +1,11 @@
-"""Shared rule-mode pipeline coherence validation (FIN-INT-03)."""
+"""Shared Advice V2 coherence validation."""
 
 from __future__ import annotations
 
 from typing import Any
 
 from src.analysis.ict_pa import TimeframeAnalysis
-from src.indicators.verify import indicator_snapshot, indicator_table_rows
-
-
-def _bias_score(bias: str) -> int:
-    return {"bearish": -1, "neutral": 0, "bullish": 1}.get(bias, 0)
+from src.indicators.verify import indicator_snapshot
 
 
 def validate_pipeline_coherence(
@@ -17,124 +13,60 @@ def validate_pipeline_coherence(
     data: dict[str, Any],
     analyses: dict[str, TimeframeAnalysis],
 ) -> tuple[list[str], list[str], dict[str, Any]]:
-    """Return (issues, notes, summary) for a completed pipeline run."""
     issues: list[str] = []
     notes: list[str] = []
+    advice = report.get("advice", {})
+    decision = advice.get("decision")
+    setup = advice.get("primary_setup")
 
-    price = report["metrics"]["current_price"]
-    sentiment = report["sentiment"]
-    conclusion = report["conclusion"]
-    trace = report.get("agent_trace", {})
-    debate = trace.get("debate", {})
-    team = trace.get("analyst_team", {})
+    if report.get("artifact_kind") != "human_review_advice" or report.get("artifact_version") != 2:
+        issues.append("report is not an Advice V2 artifact")
+    if decision not in {"WAIT", "WATCH_LONG", "WATCH_SHORT", "AVOID"}:
+        issues.append(f"invalid advice decision: {decision}")
+    if not advice.get("audit", {}).get("passed"):
+        issues.append("advice deterministic audit did not pass")
+    if decision in {"WAIT", "AVOID"} and setup is not None:
+        issues.append("non-watch decision contains a primary setup")
+    if decision in {"WATCH_LONG", "WATCH_SHORT"} and setup is None:
+        issues.append("watch decision is missing a primary setup")
 
-    for tf in ("5m", "15m"):
-        snap = indicator_snapshot(data[tf], tf)
-        for col in ("RSI14", "MACD", "ADX14", "ATR14", "EMA20", "VWAP"):
-            if col not in snap:
-                issues.append(f"指标校验缺失 {tf}.{col}")
-    notes.append(
-        f"指标校验列: {list(indicator_table_rows([indicator_snapshot(data['5m'], '5m')])[0].keys())}"
-    )
+    if setup:
+        zone = setup["attention_zone"]
+        low, high = float(zone["low"]), float(zone["high"])
+        invalidation = float(setup["invalidation_level"])
+        targets = [float(value) for value in setup.get("targets", [])]
+        if setup["direction"] == "BUY":
+            if decision != "WATCH_LONG" or invalidation >= low or any(target <= high for target in targets):
+                issues.append("BUY setup geometry or decision is inconsistent")
+        elif setup["direction"] == "SELL":
+            if decision != "WATCH_SHORT" or invalidation <= high or any(target >= low for target in targets):
+                issues.append("SELL setup geometry or decision is inconsistent")
+        else:
+            issues.append("primary setup has invalid direction")
+        evidence_ids = {row.get("evidence_id") for row in advice.get("evidence", [])}
+        if not set(setup.get("evidence_ids", [])) <= evidence_ids:
+            issues.append("primary setup references missing evidence")
+        if not setup.get("confirmation_checklist"):
+            issues.append("primary setup lacks a human confirmation checklist")
 
-    tech = team.get("technical", {})
-    d1_trend = analyses["1d"].trend
-    if d1_trend == "bearish" and tech.get("bias") not in ("bearish", "neutral"):
-        issues.append(f"1d trend={d1_trend} 但技术分析师 bias={tech.get('bias')}")
-    if d1_trend == "bullish" and tech.get("bias") not in ("bullish", "neutral"):
-        issues.append(f"1d trend={d1_trend} 但技术分析师 bias={tech.get('bias')}")
+    for timeframe in ("5m", "15m"):
+        snapshot = indicator_snapshot(data[timeframe], timeframe)
+        missing = [name for name in ("RSI14", "MACD", "ADX14", "ATR14", "EMA20", "VWAP") if name not in snapshot]
+        if missing:
+            issues.append(f"{timeframe} indicator snapshot missing: {', '.join(missing)}")
 
-    if sentiment["bearish"] >= sentiment["bullish"]:
-        if "偏空" not in conclusion.get("market_sentiment", "") and "空" not in conclusion.get(
-            "direction_summary", ""
-        ):
-            issues.append("空头情绪占优但结论未体现偏空")
-    else:
-        if "偏多" not in conclusion.get("market_sentiment", "") and "多" not in conclusion.get(
-            "direction_summary", ""
-        ):
-            issues.append("多头情绪占优但结论未体现偏多")
-
-    debate_bias = debate.get("consensus_bias", "")
-    sent_bias = "bearish" if sentiment["bearish"] >= sentiment["bullish"] else "bullish"
-    if _bias_score(debate_bias) * _bias_score(sent_bias) < 0:
-        issues.append(
-            f"辩论共识 {debate_bias} 与结构情绪主导 {sent_bias} "
-            f"({sentiment['bearish']:.0f}/{sentiment['bullish']:.0f}/{sentiment['ranging']:.0f}) 方向相反"
-        )
-
-    bull_conf = float(trace.get("bullish", {}).get("confidence", 0) or 0)
-    bear_conf = float(trace.get("bearish", {}).get("confidence", 0) or 0)
-    if bear_conf > bull_conf + 0.1 and debate_bias != "bearish":
-        issues.append(f"看空置信 {bear_conf:.0%} > 看多 {bull_conf:.0%} 但辩论非 bearish")
-    if bull_conf > bear_conf + 0.1 and debate_bias != "bullish":
-        issues.append(f"看多置信 {bull_conf:.0%} > 看空 {bear_conf:.0%} 但辩论非 bullish")
-
-    for sig in report.get("signals", []):
-        label = sig.get("name") or sig.get("title") or sig.get("direction", "?")
-        entry_mid = (sig["entry_low"] + sig["entry_high"]) / 2
-        if sig["direction"] == "SELL":
-            if sig["take_profits"] and sig["take_profits"][0] > entry_mid:
-                issues.append(
-                    f"做空信号 {label}: TP1 {sig['take_profits'][0]} 高于入场 {entry_mid:.2f}"
-                )
-            if sig["stop_loss"] < entry_mid:
-                issues.append(
-                    f"做空信号 {label}: SL {sig['stop_loss']} 低于入场 {entry_mid:.2f}"
-                )
-            if price >= sig["stop_loss"] and sig.get("status") != "invalid":
-                issues.append(
-                    f"做空信号 {label}: 当前价 {price:.2f} 已越过止损 {sig['stop_loss']} 但未标记 invalid"
-                )
-        if sig["direction"] == "BUY":
-            if sig["take_profits"] and sig["take_profits"][0] < entry_mid:
-                issues.append(
-                    f"做多信号 {label}: TP1 {sig['take_profits'][0]} 低于入场 {entry_mid:.2f}"
-                )
-            if price <= sig["stop_loss"] and sig.get("status") != "invalid":
-                issues.append(
-                    f"做多信号 {label}: 当前价 {price:.2f} 已跌破止损 {sig['stop_loss']} 但未标记 invalid"
-                )
-
-    for plan in report.get("strategy_plans", []):
-        label = plan.get("name") or "strategy_plan"
-        stop = plan.get("stop_loss")
-        try:
-            stop_f = float(stop)
-        except (TypeError, ValueError):
-            continue
-        if plan.get("theme") == "short" and price >= stop_f:
-            issues.append(f"策略摘要 {label}: 当前价 {price:.2f} 已越过止损 {stop_f:.2f}")
-        if plan.get("theme") == "long" and price <= stop_f:
-            issues.append(f"策略摘要 {label}: 当前价 {price:.2f} 已跌破止损 {stop_f:.2f}")
-
-    swing_high = report["chart"]["swing_high"]
-    swing_low = report["chart"]["swing_low"]
-    for proj in report.get("projections", []):
-        prices = [s["price"] for s in proj["steps"]]
-        if max(prices) > swing_high + (swing_high - swing_low) * 0.5:
-            issues.append(f"路径 {proj['name']} 目标价超出 swing 合理范围: {max(prices)}")
-        if min(prices) < swing_low - (swing_high - swing_low) * 0.5:
-            issues.append(f"路径 {proj['name']} 目标价超出 swing 合理范围: {min(prices)}")
-
-    proposal = trace.get("proposal", {})
-    if sentiment["bearish"] >= sentiment["bullish"] and proposal.get("primary_direction") == "long":
-        if debate_bias != "bullish" or float(debate.get("consensus_strength", 0) or 0) < 0.6:
-            issues.append("结构偏空但交易员主方向为 long（F-014）")
+    legacy_keys = sorted({"signals", "agent_trace", "validated_plans", "projections"} & report.keys())
+    if legacy_keys:
+        issues.append("legacy V1 keys remain: " + ", ".join(legacy_keys))
 
     summary = {
-        "price": price,
-        "sentiment": sentiment,
-        "conclusion_mood": conclusion.get("market_sentiment"),
-        "debate": {"bias": debate_bias, "strength": debate.get("consensus_strength")},
-        "analyst_team": {
-            k: team.get(k, {}).get("bias")
-            for k in ("technical", "fundamentals", "news", "sentiment")
-        },
-        "structure": {tf: analyses[tf].trend for tf in ("1d", "4h", "1h", "15m", "5m")},
-        "bull_conf": bull_conf,
-        "bear_conf": bear_conf,
-        "signals": len(report.get("signals", [])),
+        "artifact_version": report.get("artifact_version"),
+        "price": report.get("metrics", {}).get("current_price"),
+        "decision": decision,
+        "bias": advice.get("bias"),
+        "confidence": advice.get("confidence"),
+        "has_primary_setup": setup is not None,
+        "structure": {timeframe: analyses[timeframe].trend for timeframe in ("1d", "4h", "1h", "15m", "5m")},
         "issues": issues,
         "notes": notes,
     }

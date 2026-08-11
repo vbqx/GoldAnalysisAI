@@ -1,128 +1,30 @@
-# GoldAnalysisAI 测试体系
+# 测试系统
 
-测试代码、用例目录与开发工具与业务代码 (`src/`) 分离，统一放在 `tests/` 下。测试分层的权威说明见 [docs/aspice/governance/verification-strategy.md](../docs/aspice/governance/verification-strategy.md)。
+默认门禁离线运行：
 
-## 目录结构
-
-```
-tests/
-├── testing-system.md         # 测试体系、分层与执行说明
-├── run.py                    # 统一入口：自动测试脚本
-├── dashboard.py              # Streamlit 测试面板 UI
-├── runner.py                 # 测试运行引擎（CLI + UI 共用）
-├── conftest.py               # pytest 配置
-├── _bootstrap.py             # 路径 / .env 引导
-├── _archive_helpers.py       # 归档测试共享构造器
-├── _run_config_helpers.py    # 运行配置测试共享辅助
-├── cases/
-│   ├── test-case-guide.md    # 用例维护说明
-│   ├── test-plan.md          # 分层测试设计（UI→指标→功能→性能）
-│   └── catalog.yaml          # 用例目录（ID、优先级、是否自动化）
-├── fixtures/                 # 冻结报告、回放和外部数据样本
-├── unit/                     # 单元测试（无网络，秒级）
-├── integration/              # 集成测试（完整流水线，~2–3 分钟）
-├── regression/               # 回归测试（Issue 修复项、约定检查）
-├── tools/                    # 开发辅助（非 pytest 用例）
-│   ├── chart_compare.py      # 生成对比用 HTML
-│   ├── coherence_check.py    # 规则模式流水线一致性检查
-│   └── github/               # Issue 批量创建/关单
-└── reports/                  # 测试输出边界：默认 gitignore，只保留人工挑选审计报告和 .gitkeep
-    └── .gitkeep
+```powershell
+python tests/run.py
 ```
 
-## 快速开始
+常用范围：
 
-```bash
-# 安装开发依赖（含 pytest）
-pip install -r requirements-dev.txt
+| 命令 | 范围 |
+|---|---|
+| `python tests/run.py --unit` | 全部单元测试 |
+| `python tests/run.py --regression` | 文档、样例和 ASPICE 回归 |
+| `python tests/run.py --financial` | Advice V2 内容与审计测试 |
+| `python tests/run.py --integration` | 慢速端到端集成 |
+| `python tests/run.py --external` | 真实外部供应商健康检查 |
+| `python tests/run.py --full` | 所有测试 |
 
-# fast：单元 + 回归（无网络，日常门禁）
-python tests/run.py --fast
+核心 Advice V2 契约位于 `tests/unit/test_advice_v2.py`。测试要求：最多一个首选方案、WAIT/AVOID 不带方案、几何与证据通过审计、LLM 不改变数字、报告无 V1 顶层键。
 
-# scenario：按功能域专项
-python tests/run.py --financial
-python tests/run.py --external
+ASPICE 证据检查：
 
-# release：含流水线集成（需 TradingView + .env）
-python tests/run.py --full
-
-# 仅单元 / 仅回归 / 仅集成
-python tests/run.py --unit
-python tests/run.py --regression
-python tests/run.py --integration
+```powershell
+python scripts/check_aspice_assets.py --check
+python scripts/generate_aspice_software_evidence.py --check
+python scripts/generate_aspice_readable_docs.py --check
 ```
 
-等价 pytest 命令：
-
-```bash
-pytest tests/unit tests/regression -q          # 快速（含外部源 + Analyst LLM + 信号去重 + TV 重试）
-pytest tests/unit/test_external_sources.py -v
-pytest tests/unit/test_signal_dedup.py -v
-pytest tests/unit/test_analyst_team_llm.py -v
-pytest tests/unit/test_tradingview_retry.py -v
-pytest tests/unit/test_financial_review.py -m financial -v
-pytest tests/integration -m integration -q   # slow
-```
-
-## 测试面板 UI
-
-浏览器中实时查看 pytest 进度、通过/失败统计与流水线日志：
-
-```bash
-streamlit run tests/dashboard.py --server.port 8502
-```
-
-打开 http://localhost:8502 ，选择套件后点击「开始」。支持 **快速**、**金融 Review（FIN-*）**、**集成** 等套件；界面约 1 秒刷新。
-
-## 三层测试
-
-| 层级 | 命令 | 用途 |
-|------|------|------|
-| fast | `python tests/run.py --fast` | 日常门禁：单元 + 回归，无网络 |
-| scenario | `python tests/run.py --financial` / `--external` / 指定 pytest | 本轮触及模块专项 |
-| release | `python tests/run.py --full` + UI 冒烟 + 外部 API | 发版前完整验收 |
-
-金融 Review 的历史修复路径已归档：[docs/aspice/records/reviews/financial/static-code-review.md §7](../docs/aspice/records/reviews/financial/static-code-review.md#7-修复路径规划2026-06-20)。
-
-## 用例维护
-
-1. 在 [`cases/test-plan.md`](cases/test-plan.md) 设计场景，在 [`cases/catalog.yaml`](cases/catalog.yaml) 登记用例（`UIL-*` / `IND-*` / `FN-*` / `FIN-*` / `PERF-*` / `UT-*` / `IT-*` / `RG-*`）
-2. 在对应子目录实现测试代码
-3. 本地 `python tests/run.py --fast` 验证
-4. 关 Issue 时在评论中引用用例 ID（如 `RG-03`）
-
-## 开发工具
-
-| 命令 | 说明 |
-|------|------|
-| `streamlit run tests/dashboard.py --server.port 8502` | **测试面板 UI**（实时进度与日志） |
-| `python tests/tools/chart_compare.py` | 跑流水线并输出 `_chart_test.html` |
-| `python tests/tools/coherence_check.py` | 规则模式跑完整流水线，校验结构/辩论/信号/指标一致性，输出 `reports/coherence_check.json` |
-| `python tests/tools/financial_review_run.py` | 规则模式实跑快照，输出 `reports/financial_review_snapshot.json`（金融评审用） |
-| `python tests/tools/github/create_issues.py` | 从系统测试报告批量创建 GitHub Issue |
-| `python tests/tools/github/close_issues.py` | 关单并附评论（维护用） |
-
-### 一致性检查（coherence_check）
-
-```bash
-# Windows PowerShell
-$env:AGENT_MODE="rule"; $env:LLM_ENABLED="false"; python tests/tools/coherence_check.py
-
-# Linux/macOS
-AGENT_MODE=rule LLM_ENABLED=false python tests/tools/coherence_check.py
-```
-
-检查项：指标校验字段完整性、1d 结构 vs 技术分析师 bias、情绪 vs 结论、辩论 vs 结构情绪、信号 TP/SL 几何、路径预测价格范围。退出码 `0` 表示无 issue。
-
-> **注意**：`tests/integration/` 通过 `conftest.load_dotenv()` 读取 `.env`，命令行 `$env:AGENT_MODE` 不会自动覆盖模块级配置；集成测试实际行为以 `.env` 为准。规则模式集成验证请使用 `coherence_check.py` 或在测试中显式调用 `apply_run_config()`。
-
-## 与 `scripts/` 的关系
-
-`scripts/` 仅保留向后兼容的薄封装，新测试请一律放入 `tests/`。
-
-| 旧命令 | 新命令 |
-|--------|--------|
-| `python scripts/run_pipeline_test.py` | `python tests/run.py --integration` |
-| `python scripts/test_live_fetch.py` | 外部数据源手动冒烟（或 `python tests/run.py --external`） |
-| `python scripts/test_llm_json_fix.py` | `pytest tests/unit/test_llm_json.py` |
-| `python scripts/regression_test.py` | `python tests/run.py --fast` |
+真实供应商不可用不等同于软件失败；`--external` 单独记录结果，不污染确定性离线门禁。

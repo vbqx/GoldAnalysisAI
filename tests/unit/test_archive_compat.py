@@ -30,8 +30,9 @@ def test_normalize_report_fills_missing_defaults() -> None:
         assert key in normalized
     assert normalized["metrics"]["current_price"] == 2650.0
     assert any("missing" in w for w in warnings)
-    sections = normalized["narrative_sections"]
-    assert set(sections.keys()) == {"market_overview", "liquidity", "4h", "1h", "15m"}
+    assert normalized["artifact_kind"] == "human_review_advice"
+    assert normalized["artifact_version"] == 2
+    assert normalized["advice"] == {}
 
 
 def test_normalize_report_preserves_extra_keys() -> None:
@@ -149,3 +150,43 @@ def test_pipeline_replay_errors_flags_running_step() -> None:
     }
     errors = pipeline_replay_errors(report, manifest={"summary": {"pipeline_status": "complete"}})
     assert any("trader" in err for err in errors)
+
+
+def test_pipeline_replay_errors_accepts_complete_advice_v2_steps() -> None:
+    report = {
+        "artifact_kind": "human_review_advice",
+        "artifact_version": 2,
+        "meta": {
+            "generation_steps": [
+                {"id": step_id, "status": "done"}
+                for step_id in ("fetch", "indicators", "structure", "advice", "report")
+            ]
+        },
+    }
+
+    errors = pipeline_replay_errors(
+        report, manifest={"summary": {"pipeline_status": "complete"}}
+    )
+
+    assert errors == []
+
+
+def test_pipeline_replay_errors_requires_all_advice_v2_steps() -> None:
+    report = {
+        "artifact_kind": "human_review_advice",
+        "artifact_version": 2,
+        "meta": {
+            "generation_steps": [
+                {"id": "fetch", "status": "done"},
+                {"id": "indicators", "status": "done"},
+                {"id": "structure", "status": "done"},
+                {"id": "report", "status": "done"},
+            ]
+        },
+    }
+
+    errors = pipeline_replay_errors(
+        report, manifest={"summary": {"pipeline_status": "complete"}}
+    )
+
+    assert errors == ["generation_steps missing required step: advice"]

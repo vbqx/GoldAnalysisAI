@@ -6,8 +6,7 @@ import pandas as pd
 
 from src.core.types import ExternalFactors, HeadlineItem
 from src.data.fetch_pipeline import DataFetchResult
-from src.viz.dashboard_components import _source_tags
-from src.viz.external_data_view import external_payload_from_report, external_snapshot_from_fetch
+from src.viz.external_data_view import _source_tags, external_payload_from_report, external_snapshot_from_fetch
 
 
 def test_external_snapshot_from_fetch_includes_headlines() -> None:
@@ -38,8 +37,8 @@ def test_external_payload_from_report_merges_calendar() -> None:
     assert payload["news_topics"] == ["美联储"]
 
 
-def test_placeholder_source_renders_orange_tag() -> None:
+def test_source_tags_escape_and_render_sources() -> None:
     html_out = _source_tags(["placeholder", "jin10_flash"])
-    assert "ext-src-placeholder" in html_out
-    assert "占位/回退" in html_out
-    assert "金十快讯" in html_out
+    assert "placeholder" in html_out
+    assert "jin10_flash" in html_out
+    assert "source-tag" in html_out

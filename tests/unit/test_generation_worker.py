@@ -67,7 +67,7 @@ def test_start_generation_replay_failure_sets_job_error(clean_generation_state) 
 
 
 def test_start_generation_live_run_binds_normalized_config(clean_generation_state) -> None:
-    cfg = RunConfig(agent_mode="llm", llm_enabled=True, llm_stage_trader=True)
+    cfg = RunConfig(generation_mode="llm", llm_enabled=True)
     job_key = "sess-3:gen-3"
     gs.create_job("sess-3", "gen-3")
     bundle = ({"metrics": {"current_price": 1.0}, "meta": {}}, {}, {})
