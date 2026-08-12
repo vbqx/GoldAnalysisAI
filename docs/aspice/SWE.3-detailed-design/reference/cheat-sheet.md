@@ -11,6 +11,9 @@
 | 硬性审计 | `src/advice/audit.py` |
 | 报告字段 | `src/advice/report.py`、`src/advice/types.py` |
 | LLM 允许编辑的字段 | `src/advice/llm.py` |
+| 默认 LLM 提供商与模型 | `src/config.py`、`.env.example` |
+| LLM 思考过程页 | `src/viz/llm_process_view.py`、`views/3_LLM思考过程.py` |
+| 生成中 LLM 流式面板 | `src/viz/pipeline_progress.py`、`src/viz/streamlit_common.py` |
 | 主卡片展示 | `src/viz/advice_view.py` |
 | 旧归档重建 | `src/viz/replay_loader.py` |
 
@@ -18,6 +21,7 @@
 
 ```powershell
 python -m pytest tests/unit/test_advice_v2.py -q
+python -m pytest tests/integration/test_offline_report_contract.py -m integration -q
 python tests/run.py
 ```
 

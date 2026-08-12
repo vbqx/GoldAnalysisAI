@@ -51,7 +51,7 @@ items:
     stubs: no external dependency
     timeout_seconds: 30
     resource_target: deterministic and zero network
-    tests: [tests/unit/test_advice_v2.py]
+    tests: [tests/unit/test_advice_v2.py, tests/integration/test_offline_report_contract.py]
     verification_measure_ids: [VM-UNIT, VM-INTEGRATION-PIPELINE]
     result: pass-in-current-baseline
   - id: INT-04-ADVICE-LLM
@@ -75,7 +75,7 @@ items:
     stubs: filesystem redirected to pytest temporary directory
     timeout_seconds: 30
     resource_target: atomic local writes and no network
-    tests: [tests/unit/test_archive_compat.py, tests/unit/test_archive_optimizations.py, tests/unit/test_archive_transfer.py]
+    tests: [tests/unit/test_archive_compat.py, tests/unit/test_archive_optimizations.py, tests/unit/test_archive_transfer.py, tests/integration/test_offline_report_contract.py]
     verification_measure_ids: [VM-UNIT, VM-REGRESSION]
     result: pass-in-current-baseline
   - id: INT-06-REPORT-VIZ
@@ -87,6 +87,6 @@ items:
     stubs: Streamlit rendering uses test doubles where automated
     timeout_seconds: 60
     resource_target: no supplier network
-    tests: [tests/unit/test_external_data_view.py, tests/regression/test_export_sample_report.py]
+    tests: [tests/unit/test_external_data_view.py, tests/unit/test_llm_process_view.py, tests/unit/test_live_llm_process_panel.py, tests/regression/test_export_sample_report.py]
     verification_measure_ids: [VM-UNIT, VM-REGRESSION, VM-MANUAL-UI]
     result: pass-automated;manual-review-required-for-new-baseline

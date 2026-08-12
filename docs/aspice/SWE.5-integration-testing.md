@@ -106,7 +106,7 @@
 | 前置条件 | frozen aligned bullish, bearish, conflicting and stale contexts |
 | 桩 / 隔离 | no external dependency |
 | 超时 / 资源 | 30 秒；deterministic and zero network |
-| 测试 | [tests/unit/test_advice_v2.py](../../tests/unit/test_advice_v2.py) |
+| 测试 | [tests/unit/test_advice_v2.py](../../tests/unit/test_advice_v2.py)、[tests/integration/test_offline_report_contract.py](../../tests/integration/test_offline_report_contract.py) |
 | 验证措施 | [VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-INTEGRATION-PIPELINE](SWE.5-integration-testing.md#vm-integration-pipeline) |
 | 结果 | pass-in-current-baseline |
 
@@ -138,7 +138,7 @@
 | 前置条件 | temporary archive root and deterministic V2 and legacy fixtures |
 | 桩 / 隔离 | filesystem redirected to pytest temporary directory |
 | 超时 / 资源 | 30 秒；atomic local writes and no network |
-| 测试 | [tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py) |
+| 测试 | [tests/unit/test_archive_compat.py](../../tests/unit/test_archive_compat.py)、[tests/unit/test_archive_optimizations.py](../../tests/unit/test_archive_optimizations.py)、[tests/unit/test_archive_transfer.py](../../tests/unit/test_archive_transfer.py)、[tests/integration/test_offline_report_contract.py](../../tests/integration/test_offline_report_contract.py) |
 | 验证措施 | [VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression) |
 | 结果 | pass-in-current-baseline |
 
@@ -154,6 +154,6 @@
 | 前置条件 | frozen Advice V2 report and replay fixtures |
 | 桩 / 隔离 | Streamlit rendering uses test doubles where automated |
 | 超时 / 资源 | 60 秒；no supplier network |
-| 测试 | [tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/regression/test_export_sample_report.py](../../tests/regression/test_export_sample_report.py) |
+| 测试 | [tests/unit/test_external_data_view.py](../../tests/unit/test_external_data_view.py)、[tests/unit/test_llm_process_view.py](../../tests/unit/test_llm_process_view.py)、[tests/unit/test_live_llm_process_panel.py](../../tests/unit/test_live_llm_process_panel.py)、[tests/regression/test_export_sample_report.py](../../tests/regression/test_export_sample_report.py) |
 | 验证措施 | [VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](SWE.6-validation-testing.md#vm-regression)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
 | 结果 | pass-automated;manual-review-required-for-new-baseline |

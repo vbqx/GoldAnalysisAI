@@ -21,7 +21,7 @@
 | ARC-ADVICE | Human-review advice engine | 6 | Reduces source-backed facts to one watch setup or an explicit WAIT/AVOID result, audits geometry and composes artifact version 2. |
 | ARC-LLM | Optional advice wording service | 7 | Calls one configured model with bounded retry and budget policy, validates prose-only output and records telemetry. |
 | ARC-RUN | Run configuration and archives | 12 | Binds immutable run configuration, atomically persists Advice V2 bundles and reconstructs V2 from compatible legacy data. |
-| ARC-VIZ | Human-review presentation | 12 | Presents the compact advice, evidence, audit, uncertainty, external context and replay state without execution controls. |
+| ARC-VIZ | Human-review presentation | 12 | Presents the compact advice, evidence, audit, uncertainty, external context, LLM generation telemetry and replay state without execution controls. |
 | ARC-TOOLS | Development and ASPICE tooling | 15 | Runs connection diagnostics, archive inspection, sample export and deterministic ASPICE generation and validation. |
 
 ## 模块分层图
@@ -339,7 +339,7 @@ flowchart LR
 |---|---|
 | 源码范围 | src/viz/** |
 | 接口规格 | [render_advice](#arc-viz-if-01) |
-| 动态行为 | Presents the compact advice, evidence, audit, uncertainty, external context and replay state without execution controls. |
+| 动态行为 | Presents the compact advice, evidence, audit, uncertainty, external context, LLM generation telemetry and replay state without execution controls. |
 | 关联需求 | [SWR-ADV-002](../SWE.1-software-requirements.md#swr-adv-002)、[SWR-ADV-004](../SWE.1-software-requirements.md#swr-adv-004)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002) |
 | 详细设计 | [查看 12 个软件单元](../SWE.3-detailed-design/ARC-VIZ.md) |
 

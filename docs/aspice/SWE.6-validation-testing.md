@@ -64,7 +64,7 @@
 |---|---|
 | 级别 | SWE.5 |
 | 技术 | deterministic Advice V2 cross-component contract integration |
-| 命令 | python -m pytest tests/unit/test_advice_v2.py tests/unit/test_orchestrator_hooks.py |
+| 命令 | python -m pytest tests/integration/test_offline_report_contract.py -m integration |
 | 通过准则 | pytest exit code 0 within declared timeout |
 | 环境 | frozen fixtures; no network or paid LLM |
 

@@ -33,6 +33,8 @@ flowchart TD
 
 LLM 只能编辑解释文字，不能修改方向、置信等级、关注区、失效位或目标位。历史 V1 报告不会作为当前建议直接显示。
 
+界面另提供 **LLM 思考过程** 页，用于审计生成步骤、Prompt/响应与 `advisor_trace`；该页不恢复 V1 多 Agent 决策链。
+
 ## 稳定入口
 
 `src.pipeline.run_analysis()` 仍返回 `(report, data, analyses)`，但 `report` 已切换到 `artifact_kind=human_review_advice`、`artifact_version=2`。
