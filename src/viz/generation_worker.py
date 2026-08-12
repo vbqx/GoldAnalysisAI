@@ -18,7 +18,7 @@ log = get_logger(__name__)
 _GEN_LOCK = threading.Lock()
 _LIVE_LLM_OUTPUT_CAP = 6000
 _LIVE_LLM_MESSAGE_CAP = 800
-_CHUNK_SYNC_INTERVAL_S = 1.5
+_CHUNK_SYNC_INTERVAL_S = 0.5
 
 
 def _is_streaming_llm_record(rec: dict) -> bool:
@@ -51,9 +51,19 @@ def compact_llm_io_for_live(records: list[dict]) -> list[dict]:
             "same_model_strategy": rec.get("same_model_strategy"),
         }
         if streaming:
-            row["output"] = ""
-            row["stream_chars"] = len(str(rec.get("output") or ""))
-            row["messages"] = []
+            out = str(rec.get("output") or "")
+            row["stream_chars"] = len(out)
+            if len(out) > _LIVE_LLM_OUTPUT_CAP:
+                row["output"] = "…" + out[-_LIVE_LLM_OUTPUT_CAP:]
+            else:
+                row["output"] = out
+            trimmed_msgs: list[dict[str, str]] = []
+            for msg in (rec.get("messages") or [])[:3]:
+                content = str(msg.get("content") or "")
+                if len(content) > _LIVE_LLM_MESSAGE_CAP:
+                    content = content[:_LIVE_LLM_MESSAGE_CAP] + "…"
+                trimmed_msgs.append({"role": str(msg.get("role") or "user"), "content": content})
+            row["messages"] = trimmed_msgs
         else:
             row["output"] = str(rec.get("output") or "")
             trimmed_msgs: list[dict[str, str]] = []

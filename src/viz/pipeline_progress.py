@@ -6,6 +6,7 @@ import streamlit as st
 
 from src.core.progress import PipelineProgressStep, ProgressReporter, StepStatus
 from src.llm.format_io import format_llm_output, format_messages
+from src.llm.narrative_output import format_llm_narrative
 
 
 def format_latency_ms(value: object) -> str:
@@ -132,8 +133,27 @@ def partition_llm_records_for_live(records: list[dict]) -> tuple[list[dict], lis
     return active, completed
 
 
+def render_live_llm_process_panel(live: dict, *, show_steps: bool = True) -> None:
+    """Live pipeline steps plus streaming/completed LLM and rule-stage I/O."""
+    steps = live.get("steps") or []
+    records = live.get("llm_io") or []
+    if show_steps and steps:
+        render_progress_steps(steps, title="当前进度")
+        st.divider()
+    active, completed = partition_llm_records_for_live(records)
+    if active:
+        render_live_llm_streams(active)
+    if completed:
+        if active:
+            st.divider()
+        render_llm_io_history(completed, title="已完成阶段", expand_last=bool(active))
+    if not steps and not active and not completed:
+        headline = live.get("headline") or "等待流水线启动…"
+        st.caption(headline)
+
+
 def render_live_llm_status_lightweight(live: dict) -> None:
-    """Minimal LLM status for waiting UI — no text_area widgets (prevents Streamlit blank-screen)."""
+    """Minimal LLM status fallback when full streaming widgets are disabled."""
     records = live.get("llm_io") or []
     if not records:
         return
@@ -149,7 +169,7 @@ def render_live_llm_status_lightweight(live: dict) -> None:
             chars = len(str(rec.get("output") or ""))
         st.markdown(f"- 🔄 **{label}** · `{model}` · 已输出 {chars} 字符")
     if completed:
-        st.caption(f"已完成 {len(completed)} 个阶段；完整 Prompt / JSON 见生成完成后的「LLM 决策链」。")
+        st.caption(f"已完成 {len(completed)} 个阶段；完整 Prompt / JSON 见「LLM 思考过程」页面。")
 
 
 def render_live_llm_streams(active: list[dict]) -> None:

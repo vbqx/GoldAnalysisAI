@@ -199,35 +199,27 @@ def _resolve_confirmed_run_config() -> RunConfig | None:
 
 
 def _render_waiting_ui(job_key_str: str, *, show_generation_ui: bool) -> None:
-    from src.viz.pipeline_progress import (
-        pipeline_progress_headline,
-        render_live_llm_status_lightweight,
-        render_progress_steps,
-    )
+    from src.viz.pipeline_progress import pipeline_progress_headline, render_live_llm_process_panel
 
-    title = "正在生成人工审核建议…" if show_generation_ui else "正在生成建议…"
-    render_page_hero(
-        title,
-        "正在提取多周期结构、筛选关注区并执行一致性审核",
-    )
-    steps_slot = st.empty()
-    llm_slot = st.empty()
+    if show_generation_ui:
+        title = "正在生成人工审核建议…"
+        subtitle = "正在提取多周期结构、筛选关注区并执行一致性审核"
+    else:
+        title = "正在记录 LLM 思考过程…"
+        subtitle = "下方将实时显示 Prompt 与模型流式输出（启用 LLM 解释增强时）"
+    render_page_hero(title, subtitle)
+    panel_slot = st.empty()
 
-    @st.fragment(run_every=timedelta(milliseconds=1000))
+    @st.fragment(run_every=timedelta(milliseconds=800))
     def _live_poll() -> None:
         try:
             job = get_job(job_key_str, session_id=_session_id())
             live = job.live if job else {}
-            steps = live.get("steps") or []
-            with steps_slot.container():
-                if steps:
-                    render_progress_steps(steps, title="当前进度")
+            with panel_slot.container():
+                if live.get("steps") or live.get("llm_io"):
+                    render_live_llm_process_panel(live)
                 else:
-                    headline = pipeline_progress_headline(steps)
-                    if headline:
-                        st.caption(headline)
-            with llm_slot.container():
-                render_live_llm_status_lightweight(live)
+                    st.caption(live.get("headline") or pipeline_progress_headline([]) or "流水线启动中…")
             if job and (job.result is not None or job.error is not None):
                 st.rerun()
         except Exception as exc:

@@ -18,6 +18,7 @@
 | [src/llm/__init__.py](#unit-598812089b) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/llm/client.py](#unit-d7fd07af44) | 10 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/llm/format_io.py](#unit-deb0d517c6) | 3 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/llm/narrative_output.py](#unit-fbf77b94fb) | 5 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/llm/router.py](#unit-6568b95afa) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/llm/stage.py](#unit-31083eb5d0) | 6 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/llm/stage_policy.py](#unit-e488978a91) | 8 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
@@ -59,14 +60,14 @@
 | 关联需求 | [SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 10 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_http_helpers.py](../../../tests/unit/test_http_helpers.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_pipeline_progress_live.py](../../../tests/unit/test_pipeline_progress_live.py) |
+| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_http_helpers.py](../../../tests/unit/test_http_helpers.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_pipeline_progress_live.py](../../../tests/unit/test_pipeline_progress_live.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [LLMClient.chat_stream](#fun-b2c894bd12) | 生成`chat_stream`文本；可能影响外部接口；返回 `Iterator[str]` 类型结果。 | 外部接口 I/O | [tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) |
+| [LLMClient.chat_stream](#fun-b2c894bd12) | 生成`chat_stream`文本；可能影响外部接口；返回 `Iterator[str]` 类型结果。 | 外部接口 I/O | [tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) |
 
 #### 函数导航
 
@@ -136,7 +137,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
 | 复杂度 / 风险 | 分支 0；跨度 3 行；中 |
-| 测试 / 验证 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_http_helpers.py](../../../tests/unit/test_http_helpers.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_pipeline_progress_live.py](../../../tests/unit/test_pipeline_progress_live.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_http_helpers.py](../../../tests/unit/test_http_helpers.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_pipeline_progress_live.py](../../../tests/unit/test_pipeline_progress_live.py) · 直接动态测试 |
 
 <a id="fun-6281d0133f"></a>
 
@@ -238,15 +239,15 @@
 | 参数 | `messages`（list[dict[str, str]]）：消息序列<br>`temperature`（float）：模型采样温度；默认值 `0.3`<br>`response_format`（dict[str, str] \| None）：由 `response_format` 表示的键值映射；默认值 `None`<br>`include_usage`（bool \| None）：由调用方提供的 `include_usage` 输入对象；默认值 `None` |
 | 返回 | 返回 `Iterator[str]` 类型结果 |
 | 职责 | 生成`chat_stream`文本；可能影响外部接口；返回 `Iterator[str]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `log.debug` → `requests.post` → `self._headers` → `self._request_timeout` → `LLMClientError` → `resp.iter_lines` → `raw.decode` → `isinstance`；包含 11 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `payload.update` → `llm_provider_extra_payload` → `log.debug` → `requests.post` → `self._headers` → `self._request_timeout` → `LLMClientError` → `resp.iter_lines`；包含 11 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束；外部客户端、凭据、网络和超时策略已按运行配置准备 |
 | 后置条件 | 返回 `Iterator[str]` 类型结果；可观察变化限于外部接口 |
 | 显式异常 | LLMClientError |
 | 副作用 | 外部接口 I/O |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | bool、log.debug、requests.post、self._headers、self._request_timeout、LLMClientError、resp.iter_lines、raw.decode、isinstance、str、self._parse_sse_event |
-| 复杂度 / 风险 | 分支 11；跨度 74 行；高 |
-| 测试 / 验证 | [tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) · 直接动态测试 |
+| 调用依赖 | bool、payload.update、llm_provider_extra_payload、log.debug、requests.post、self._headers、self._request_timeout、LLMClientError、resp.iter_lines、raw.decode、isinstance、str、self._parse_sse_event |
+| 复杂度 / 风险 | 分支 11；跨度 77 行；高 |
+| 测试 / 验证 | [tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) · 直接动态测试 |
 
 <a id="fun-feaf06c7c1"></a>
 
@@ -255,7 +256,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `LLMClient.chat` |
-| 源码位置 | [src/llm/client.py](../../../src/llm/client.py) · `L211` |
+| 源码位置 | [src/llm/client.py](../../../src/llm/client.py) · `L214` |
 | 签名 | `LLMClient.chat(self, messages: list[dict[str, str]], *, temperature: float=0.3, response_format: dict[str, str] \| None=None)` |
 | 参数 | `messages`（list[dict[str, str]]）：消息序列<br>`temperature`（float）：模型采样温度；默认值 `0.3`<br>`response_format`（dict[str, str] \| None）：由 `response_format` 表示的键值映射；默认值 `None` |
 | 返回 | 返回 `str` 类型结果 |
@@ -277,7 +278,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `LLMClient.chat_json` |
-| 源码位置 | [src/llm/client.py](../../../src/llm/client.py) · `L230` |
+| 源码位置 | [src/llm/client.py](../../../src/llm/client.py) · `L233` |
 | 签名 | `LLMClient.chat_json(self, messages: list[dict[str, str]], *, temperature: float=0.2)` |
 | 参数 | `messages`（list[dict[str, str]]）：消息序列<br>`temperature`（float）：模型采样温度；默认值 `0.2` |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |
@@ -378,6 +379,138 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | m.get |
 | 复杂度 / 风险 | 分支 0；跨度 2 行；中 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="unit-fbf77b94fb"></a>
+
+### UNIT-FBF77B94FB
+
+**模块**：`src/llm/narrative_output.py`（软件单元详细设计）
+
+| 属性 | 内容 |
+|---|---|
+| 软件单元 ID | UNIT-FBF77B94FB |
+| 源码 | [src/llm/narrative_output.py](../../../src/llm/narrative_output.py) |
+| 架构组件 | ARC-LLM — Optional advice wording service |
+| 职责 | 实现“Optional advice wording service”组件中 `src/llm/narrative_output.py` 的职责，通过 `format_llm_narrative` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
+| 函数 / 高风险函数 | 5 / 0 |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
+| 动态测试 | — |
+| 验证状态 | selected |
+
+#### 函数导航
+
+[_try_parse_json](#fun-5605d6120b) · [_bullet_list](#fun-65868418a4) · [_fmt_advisor_wording](#fun-4cd834dcdc) · [_fmt_generic](#fun-ac5a907908) · [format_llm_narrative](#fun-3b28d5a15c)
+
+<a id="fun-5605d6120b"></a>
+
+#### FUN-5605D6120B
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_try_parse_json` |
+| 源码位置 | [src/llm/narrative_output.py](../../../src/llm/narrative_output.py) · `L10` |
+| 签名 | `_try_parse_json(raw: str)` |
+| 参数 | `raw`（str）：尚未标准化的原始输入 |
+| 返回 | 返回 `dict[str, Any] \| None` 类型结果 |
+| 职责 | 解析`try_json`；返回 `dict[str, Any] \| None` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `strip` → `json.loads` → `isinstance`；包含 3 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `dict[str, Any] \| None` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | strip、json.loads、isinstance |
+| 复杂度 / 风险 | 分支 3；跨度 9 行；低 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-65868418a4"></a>
+
+#### FUN-65868418A4
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_bullet_list` |
+| 源码位置 | [src/llm/narrative_output.py](../../../src/llm/narrative_output.py) · `L21` |
+| 签名 | `_bullet_list(items: list[Any], *, limit: int=8)` |
+| 参数 | `items`（list[Any]）：输入项集合<br>`limit`（int）：返回或处理数量上限；默认值 `8` |
+| 返回 | 返回 `str` 类型结果 |
+| 职责 | 生成`bullet_list`文本；返回 `str` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `escape` → `strip` → `join`；包含 1 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | escape、str、strip、join |
+| 复杂度 / 风险 | 分支 1；跨度 3 行；低 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-4cd834dcdc"></a>
+
+#### FUN-4CD834DCDC
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_fmt_advisor_wording` |
+| 源码位置 | [src/llm/narrative_output.py](../../../src/llm/narrative_output.py) · `L26` |
+| 签名 | `_fmt_advisor_wording(data: dict[str, Any])` |
+| 参数 | `data`（dict[str, Any]）：输入数据 |
+| 返回 | 返回 `str` 类型结果 |
+| 职责 | 生成`fmt_advisor_wording`文本；返回 `str` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `escape` → `data.get` → `_bullet_list` → `parts.append` → `join`；包含 2 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | escape、str、data.get、_bullet_list、list、parts.append、join |
+| 复杂度 / 风险 | 分支 2；跨度 13 行；低 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-ac5a907908"></a>
+
+#### FUN-AC5A907908
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_fmt_generic` |
+| 源码位置 | [src/llm/narrative_output.py](../../../src/llm/narrative_output.py) · `L41` |
+| 签名 | `_fmt_generic(data: dict[str, Any])` |
+| 参数 | `data`（dict[str, Any]）：输入数据 |
+| 返回 | 返回 `str` 类型结果 |
+| 职责 | 生成`fmt_generic`文本；返回 `str` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `escape` → `json.dumps`；不包含显式控制分支。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | escape、json.dumps |
+| 复杂度 / 风险 | 分支 0；跨度 3 行；低 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-3b28d5a15c"></a>
+
+#### FUN-3B28D5A15C
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `format_llm_narrative` |
+| 源码位置 | [src/llm/narrative_output.py](../../../src/llm/narrative_output.py) · `L46` |
+| 签名 | `format_llm_narrative(stage: str, raw: str)` |
+| 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`raw`（str）：尚未标准化的原始输入 |
+| 返回 | 返回 `str` 类型结果 |
+| 职责 | 格式化`llm_narrative`；返回 `str` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `strip` → `_try_parse_json` → `escape` → `_fmt_advisor_wording` → `_fmt_generic`；包含 4 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `str` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | strip、_try_parse_json、escape、len、_fmt_advisor_wording、_fmt_generic |
+| 复杂度 / 风险 | 分支 4；跨度 17 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
 
 <a id="unit-6568b95afa"></a>

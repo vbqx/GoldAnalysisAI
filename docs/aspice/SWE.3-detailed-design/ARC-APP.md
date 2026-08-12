@@ -18,6 +18,7 @@
 | [app.py](#unit-13cce7fd07) | 1 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [run_app.py](#unit-b2a1584dad) | 13 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [views/1_机构级分析报告.py](#unit-02d5d8e12e) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [views/3_LLM思考过程.py](#unit-d2f443bbb9) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [views/4_外部数据.py](#unit-1fe6319d7a) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 
 <a id="unit-13cce7fd07"></a>
@@ -384,6 +385,28 @@
 | 源码 | [views/1_机构级分析报告.py](../../../views/1_机构级分析报告.py) |
 | 架构组件 | ARC-APP — Application entry and run selection |
 | 职责 | Advice V2 — 人工审核建议主页面。 |
+| 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
+| 函数 / 高风险函数 | 0 / 0 |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) |
+| 动态测试 | — |
+| 验证状态 | selected |
+
+#### 函数导航
+
+本模块没有函数或方法定义。
+
+<a id="unit-d2f443bbb9"></a>
+
+### UNIT-D2F443BBB9
+
+**模块**：`views/3_LLM思考过程.py`（软件单元详细设计）
+
+| 属性 | 内容 |
+|---|---|
+| 软件单元 ID | UNIT-D2F443BBB9 |
+| 源码 | [views/3_LLM思考过程.py](../../../views/3_LLM思考过程.py) |
+| 架构组件 | ARC-APP — Application entry and run selection |
+| 职责 | LLM 思考过程 — 流水线步骤与 Prompt/响应审计（生成中自动流式显示）。 |
 | 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) |

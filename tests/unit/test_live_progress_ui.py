@@ -9,27 +9,29 @@ def test_compact_llm_io_strips_streaming_payload() -> None:
     huge = "x" * 50_000
     records = [
         {
-            "stage": "bearish",
-            "label": "看空研究",
-            "model": "deepseek-fast",
+            "stage": "advisor",
+            "label": "建议解释",
+            "model": "gpt-test",
             "latency_ms": None,
             "output": huge,
             "messages": [{"role": "user", "content": "prompt " * 5000}],
         },
         {
-            "stage": "bullish",
-            "label": "看多研究",
-            "model": "deepseek-fast",
+            "stage": "advice",
+            "label": "Advice V2",
+            "model": "规则引擎",
             "latency_ms": 1200,
             "output": "done",
             "messages": [],
+            "kind": "rule",
         },
     ]
 
     compact = compact_llm_io_for_live(records)
 
-    assert compact[0]["output"] == ""
-    assert compact[0]["messages"] == []
+    assert compact[0]["output"].startswith("…")
+    assert len(compact[0]["output"]) <= 6001
+    assert compact[0]["messages"]
     assert compact[0]["stream_chars"] == 50_000
     assert compact[1]["output"] == "done"
     assert "stream_chars" not in compact[1]
