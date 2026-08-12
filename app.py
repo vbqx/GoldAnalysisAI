@@ -73,6 +73,7 @@ pg = st.navigation(
             icon="🎯",
             default=True,
         ),
+        st.Page("views/3_LLM思考过程.py", title="LLM 思考过程", icon="🤖"),
         st.Page("views/4_外部数据.py", title="外部数据", icon="🌐"),
     ]
 )

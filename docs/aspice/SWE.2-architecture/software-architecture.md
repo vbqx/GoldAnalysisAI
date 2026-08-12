@@ -13,15 +13,15 @@
 
 | 组件 | 名称 | 软件单元 | 职责 |
 |---|---|---|---|
-| ARC-APP | Application entry and run selection | 4 | Starts Streamlit, selects deterministic, wording or replay mode, and owns session-level generation state. |
+| ARC-APP | Application entry and run selection | 5 | Starts Streamlit, selects deterministic, wording or replay mode, and owns session-level generation state. |
 | ARC-CORE | Advice pipeline orchestration | 12 | Orders fetch, indicators, structure, advice, report and archive stages and publishes progress and audit metadata. |
 | ARC-DATA | Market and external data | 30 | Acquires, normalizes and aligns market and external inputs while preserving source, error and as-of semantics. |
 | ARC-INDICATORS | Technical indicator enrichment | 3 | Computes reproducible technical columns and input-quality snapshots from timeframe OHLCV frames. |
 | ARC-ANALYSIS | Point-in-time market structure | 12 | Derives PA/ICT structure, support, resistance, liquidity and freshness facts without creating a trade authorization. |
 | ARC-ADVICE | Human-review advice engine | 6 | Reduces source-backed facts to one watch setup or an explicit WAIT/AVOID result, audits geometry and composes artifact version 2. |
-| ARC-LLM | Optional advice wording service | 6 | Calls one configured model with bounded retry and budget policy, validates prose-only output and records telemetry. |
+| ARC-LLM | Optional advice wording service | 7 | Calls one configured model with bounded retry and budget policy, validates prose-only output and records telemetry. |
 | ARC-RUN | Run configuration and archives | 12 | Binds immutable run configuration, atomically persists Advice V2 bundles and reconstructs V2 from compatible legacy data. |
-| ARC-VIZ | Human-review presentation | 11 | Presents the compact advice, evidence, audit, uncertainty, external context and replay state without execution controls. |
+| ARC-VIZ | Human-review presentation | 12 | Presents the compact advice, evidence, audit, uncertainty, external context and replay state without execution controls. |
 | ARC-TOOLS | Development and ASPICE tooling | 15 | Runs connection diagnostics, archive inspection, sample export and deterministic ASPICE generation and validation. |
 
 ## 模块分层图
@@ -117,7 +117,7 @@ flowchart LR
 | 接口规格 | [application entry](#arc-app-if-01) |
 | 动态行为 | Starts Streamlit, selects deterministic, wording or replay mode, and owns session-level generation state. |
 | 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
-| 详细设计 | [查看 4 个软件单元](../SWE.3-detailed-design/ARC-APP.md) |
+| 详细设计 | [查看 5 个软件单元](../SWE.3-detailed-design/ARC-APP.md) |
 
 <a id="arc-app-if-01"></a>
 
@@ -285,7 +285,7 @@ flowchart LR
 | 接口规格 | [advisor wording pass](#arc-llm-if-01) |
 | 动态行为 | Calls one configured model with bounded retry and budget policy, validates prose-only output and records telemetry. |
 | 关联需求 | [SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
-| 详细设计 | [查看 6 个软件单元](../SWE.3-detailed-design/ARC-LLM.md) |
+| 详细设计 | [查看 7 个软件单元](../SWE.3-detailed-design/ARC-LLM.md) |
 
 <a id="arc-llm-if-01"></a>
 
@@ -341,7 +341,7 @@ flowchart LR
 | 接口规格 | [render_advice](#arc-viz-if-01) |
 | 动态行为 | Presents the compact advice, evidence, audit, uncertainty, external context and replay state without execution controls. |
 | 关联需求 | [SWR-ADV-002](../SWE.1-software-requirements.md#swr-adv-002)、[SWR-ADV-004](../SWE.1-software-requirements.md#swr-adv-004)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002) |
-| 详细设计 | [查看 11 个软件单元](../SWE.3-detailed-design/ARC-VIZ.md) |
+| 详细设计 | [查看 12 个软件单元](../SWE.3-detailed-design/ARC-VIZ.md) |
 
 <a id="arc-viz-if-01"></a>
 

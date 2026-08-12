@@ -20,6 +20,7 @@
 | [src/viz/external_data_view.py](#unit-8b3827f5ec) | 7 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [src/viz/generation_state.py](#unit-e27519993b) | 7 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [src/viz/generation_worker.py](#unit-4c9db5733a) | 16 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
+| [src/viz/llm_process_view.py](#unit-4756f86a84) | 6 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [src/viz/page_layout.py](#unit-d8ab5e90b4) | 1 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [src/viz/pipeline_progress.py](#unit-87ec9bc982) | 20 | 1 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
 | [src/viz/replay_loader.py](#unit-a63d87a7bb) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) | selected |
@@ -841,6 +842,160 @@
 | 复杂度 / 风险 | 分支 5；跨度 42 行；中 |
 | 测试 / 验证 | [tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_progress.py](../../../tests/unit/test_progress.py) · 直接动态测试 |
 
+<a id="unit-4756f86a84"></a>
+
+### UNIT-4756F86A84
+
+**模块**：`src/viz/llm_process_view.py`（软件单元详细设计）
+
+| 属性 | 内容 |
+|---|---|
+| 软件单元 ID | UNIT-4756F86A84 |
+| 源码 | [src/viz/llm_process_view.py](../../../src/viz/llm_process_view.py) |
+| 架构组件 | ARC-VIZ — Human-review presentation |
+| 职责 | 实现“Human-review presentation”组件中 `src/viz/llm_process_view.py` 的职责，通过 `render_llm_process_page` 提供该模块的公开能力。 |
+| 关联需求 | [SWR-ADV-002](../SWE.1-software-requirements.md#swr-adv-002)、[SWR-ADV-004](../SWE.1-software-requirements.md#swr-adv-004)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002) |
+| 函数 / 高风险函数 | 6 / 0 |
+| 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) |
+| 动态测试 | [tests/unit/test_llm_process_view.py](../../../tests/unit/test_llm_process_view.py) |
+| 验证状态 | selected |
+
+#### 函数导航
+
+[_meta](#fun-75eb5f61b5) · [_llm_records](#fun-ac8e431b3e) · [_rule_stage_records](#fun-dee902878c) · [_llm_stage_records](#fun-81f59692e6) · [_render_advisor_trace](#fun-ba70001f5d) · [render_llm_process_page](#fun-f2c66853de)
+
+<a id="fun-75eb5f61b5"></a>
+
+#### FUN-75EB5F61B5
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_meta` |
+| 源码位置 | [src/viz/llm_process_view.py](../../../src/viz/llm_process_view.py) · `L13` |
+| 签名 | `_meta(report: dict)` |
+| 参数 | `report`（dict）：分析报告 |
+| 返回 | 返回 `dict` 类型结果 |
+| 职责 | 构建`meta`；返回 `dict` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `report.get`；不包含显式控制分支。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `dict` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | report.get |
+| 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-ac8e431b3e"></a>
+
+#### FUN-AC8E431B3E
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_llm_records` |
+| 源码位置 | [src/viz/llm_process_view.py](../../../src/viz/llm_process_view.py) · `L17` |
+| 签名 | `_llm_records(meta: dict)` |
+| 参数 | `meta`（dict）：审计或处理元数据 |
+| 返回 | 返回 `list[dict]` 类型结果 |
+| 职责 | 构建`llm_records`；返回 `list[dict]` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `meta.get`；不包含显式控制分支。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `list[dict]` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | list、meta.get |
+| 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-dee902878c"></a>
+
+#### FUN-DEE902878C
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_rule_stage_records` |
+| 源码位置 | [src/viz/llm_process_view.py](../../../src/viz/llm_process_view.py) · `L21` |
+| 签名 | `_rule_stage_records(records: list[dict])` |
+| 参数 | `records`（list[dict]）：结构化记录集合 |
+| 返回 | 返回 `list[dict]` 类型结果 |
+| 职责 | 构建`rule_stage_records`；返回 `list[dict]` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `row.get`；不包含显式控制分支。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `list[dict]` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | row.get |
+| 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-81f59692e6"></a>
+
+#### FUN-81F59692E6
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_llm_stage_records` |
+| 源码位置 | [src/viz/llm_process_view.py](../../../src/viz/llm_process_view.py) · `L25` |
+| 签名 | `_llm_stage_records(records: list[dict])` |
+| 参数 | `records`（list[dict]）：结构化记录集合 |
+| 返回 | 返回 `list[dict]` 类型结果 |
+| 职责 | 构建`llm_stage_records`；返回 `list[dict]` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `row.get`；不包含显式控制分支。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `list[dict]` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | row.get |
+| 复杂度 / 风险 | 分支 0；跨度 2 行；低 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-ba70001f5d"></a>
+
+#### FUN-BA70001F5D
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `_render_advisor_trace` |
+| 源码位置 | [src/viz/llm_process_view.py](../../../src/viz/llm_process_view.py) · `L29` |
+| 签名 | `_render_advisor_trace(trace: dict \| None)` |
+| 参数 | `trace`（dict \| None）：Agent 或流水线追踪记录 |
+| 返回 | 无返回值（None） |
+| 职责 | 渲染`advisor_trace`；无返回值（None）。 |
+| 处理逻辑 | 按源码执行顺序经过 `st.caption` → `st.columns` → `metric` → `trace.get` → `st.error` → `st.warning` → `isinstance` → `st.json`；包含 5 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 无返回值（None）；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | st.caption、st.columns、metric、trace.get、int、st.error、str、st.warning、isinstance、st.json、st.expander |
+| 复杂度 / 风险 | 分支 5；跨度 20 行；低 |
+| 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-f2c66853de"></a>
+
+#### FUN-F2C66853DE
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `render_llm_process_page` |
+| 源码位置 | [src/viz/llm_process_view.py](../../../src/viz/llm_process_view.py) · `L51` |
+| 签名 | `render_llm_process_page(report: dict)` |
+| 参数 | `report`（dict）：分析报告 |
+| 返回 | 无返回值（None） |
+| 职责 | 渲染`llm_process_page`；可能影响共享状态；无返回值（None）。 |
+| 处理逻辑 | 按源码执行顺序经过 `_meta` → `report.get` → `meta.get` → `_llm_records` → `render_page_hero` → `st.success` → `advice.get` → `get`；包含 6 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 无返回值（None）；可观察变化限于共享状态 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 共享状态变更 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | _meta、report.get、str、meta.get、_llm_records、render_page_hero、st.success、advice.get、get、st.warning、st.info、st.tabs、render_progress_steps、st.caption、_llm_stage_records、render_llm_io_history、_rule_stage_records、st.markdown、st.code、json.dumps |
+| 复杂度 / 风险 | 分支 6；跨度 79 行；中 |
+| 测试 / 验证 | [tests/unit/test_llm_process_view.py](../../../tests/unit/test_llm_process_view.py) · 直接动态测试 |
+
 <a id="unit-d8ab5e90b4"></a>
 
 ### UNIT-D8AB5E90B4
@@ -920,7 +1075,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `format_latency_ms` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L11` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L12` |
 | 签名 | `format_latency_ms(value: object)` |
 | 参数 | `value`（object）：待处理值 |
 | 返回 | 返回 `str` 类型结果 |
@@ -942,7 +1097,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `pipeline_progress_headline` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L27` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L28` |
 | 签名 | `pipeline_progress_headline(steps: list[dict] \| None)` |
 | 参数 | `steps`（list[dict] \| None）：执行步骤集合 |
 | 返回 | 返回 `str` 类型结果 |
@@ -964,7 +1119,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_format_step` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L50` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L51` |
 | 签名 | `_format_step(step: PipelineProgressStep)` |
 | 参数 | `step`（PipelineProgressStep）：由调用方提供的 `step` 输入对象 |
 | 返回 | 返回 `str` 类型结果 |
@@ -986,7 +1141,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `render_progress_steps` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L66` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L67` |
 | 签名 | `render_progress_steps(steps: list[dict], *, title: str='生成步骤')` |
 | 参数 | `steps`（list[dict]）：执行步骤集合<br>`title`（str）：由 `title` 表示的文本或标识；默认值 `'生成步骤'` |
 | 返回 | 无返回值（None） |
@@ -1008,7 +1163,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_render_llm_io_text` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L82` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L83` |
 | 签名 | `_render_llm_io_text(*, label: str, key: str, text: str, height: int=360)` |
 | 参数 | `label`（str）：展示或分类标签<br>`key`（str）：索引键<br>`text`（str）：输入文本<br>`height`（int）：由 `height` 表示的数值参数；默认值 `360` |
 | 返回 | 无返回值（None） |
@@ -1030,7 +1185,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_render_llm_output_panel` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L95` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L96` |
 | 签名 | `_render_llm_output_panel(*, stage: str, output: str, error: str \| None=None, json_height: int=320, widget_key: str \| None=None)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`output`（str）：输出对象或输出路径<br>`error`（str \| None）：错误信息或异常对象；默认值 `None`<br>`json_height`（int）：由 `json_height` 表示的数值参数；默认值 `320`<br>`widget_key`（str \| None）：索引键；默认值 `None` |
 | 返回 | 无返回值（None） |
@@ -1052,7 +1207,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `is_streaming_llm_record` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L118` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L119` |
 | 签名 | `is_streaming_llm_record(rec: dict)` |
 | 参数 | `rec`（dict）：由 `rec` 表示的键值映射 |
 | 返回 | 返回 `bool` 类型结果 |
@@ -1074,7 +1229,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `partition_llm_records_for_live` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L127` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L128` |
 | 签名 | `partition_llm_records_for_live(records: list[dict])` |
 | 参数 | `records`（list[dict]）：结构化记录集合 |
 | 返回 | 返回 `tuple[list[dict], list[dict]]` 类型结果 |
@@ -1096,7 +1251,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `render_live_llm_status_lightweight` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L135` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L136` |
 | 签名 | `render_live_llm_status_lightweight(live: dict)` |
 | 参数 | `live`（dict）：由 `live` 表示的键值映射 |
 | 返回 | 无返回值（None） |
@@ -1118,7 +1273,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `render_live_llm_streams` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L155` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L156` |
 | 签名 | `render_live_llm_streams(active: list[dict])` |
 | 参数 | `active`（list[dict]）：由 `active` 表示的输入集合 |
 | 返回 | 无返回值（None） |
@@ -1140,7 +1295,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `_filter_llm_io_records` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L191` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L192` |
 | 签名 | `_filter_llm_io_records(records: list[dict])` |
 | 参数 | `records`（list[dict]）：结构化记录集合 |
 | 返回 | 返回 `list[dict]` 类型结果 |
@@ -1162,7 +1317,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `render_llm_io_history` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L210` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L211` |
 | 签名 | `render_llm_io_history(records: list[dict], *, title: str='智能体 I/O', expand_last: bool=False)` |
 | 参数 | `records`（list[dict]）：结构化记录集合<br>`title`（str）：由 `title` 表示的文本或标识；默认值 `'智能体 I/O'`<br>`expand_last`（bool）：控制对应行为是否启用的布尔值；默认值 `False` |
 | 返回 | 无返回值（None） |
@@ -1184,7 +1339,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `StreamlitProgressReporter.__init__` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L263` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L264` |
 | 签名 | `StreamlitProgressReporter.__init__(self, *, progress_slot=None, llm_slot=None)` |
 | 参数 | `progress_slot`（实现约定类型）：由调用方提供的 `progress_slot` 输入对象；默认值 `None`<br>`llm_slot`（实现约定类型）：由调用方提供的 `llm_slot` 输入对象；默认值 `None` |
 | 返回 | 无返回值（None） |
@@ -1206,7 +1361,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `StreamlitProgressReporter._paint` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L271` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L272` |
 | 签名 | `StreamlitProgressReporter._paint(self, headline: str)` |
 | 参数 | `headline`（str）：由 `headline` 表示的文本或标识 |
 | 返回 | 无返回值（None） |
@@ -1228,7 +1383,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `StreamlitProgressReporter._on_change` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L276` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L277` |
 | 签名 | `StreamlitProgressReporter._on_change(self)` |
 | 参数 | 无显式输入参数 |
 | 返回 | 无返回值（None） |
@@ -1250,7 +1405,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `StreamlitProgressReporter._on_llm_begin` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L288` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L289` |
 | 签名 | `StreamlitProgressReporter._on_llm_begin(self, stage: str, model: str, messages: list[dict[str, str]], label: str)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`model`（str）：模型名称或模型对象<br>`messages`（list[dict[str, str]]）：消息序列<br>`label`（str）：展示或分类标签 |
 | 返回 | 无返回值（None） |
@@ -1272,7 +1427,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `StreamlitProgressReporter.run_llm_stream` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L310` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L311` |
 | 签名 | `StreamlitProgressReporter.run_llm_stream(self, stage: str, chunk_iter)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`chunk_iter`（实现约定类型）：由调用方提供的 `chunk_iter` 输入对象 |
 | 返回 | 返回 `str` 类型结果 |
@@ -1294,7 +1449,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `StreamlitProgressReporter.run_llm_stream._gen` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L315` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L316` |
 | 签名 | `StreamlitProgressReporter.run_llm_stream._gen()` |
 | 参数 | 无显式输入参数 |
 | 返回 | 无返回值（隐式 None） |
@@ -1316,7 +1471,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `StreamlitProgressReporter._on_llm_end` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L324` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L325` |
 | 签名 | `StreamlitProgressReporter._on_llm_end(self, stage: str, output: str, *, error: str \| None=None)` |
 | 参数 | `stage`（str）：流水线或 Agent 阶段标识<br>`output`（str）：输出对象或输出路径<br>`error`（str \| None）：错误信息或异常对象；默认值 `None` |
 | 返回 | 无返回值（None） |
@@ -1338,7 +1493,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `StreamlitProgressReporter.complete` |
-| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L347` |
+| 源码位置 | [src/viz/pipeline_progress.py](../../../src/viz/pipeline_progress.py) · `L348` |
 | 签名 | `StreamlitProgressReporter.complete(self, *, ok: bool=True)` |
 | 参数 | `ok`（bool）：控制对应行为是否启用的布尔值；默认值 `True` |
 | 返回 | 无返回值（None） |
