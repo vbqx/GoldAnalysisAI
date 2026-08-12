@@ -59,14 +59,14 @@
 | 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-ADV-001](../SWE.1-software-requirements.md#swr-adv-001)、[SWR-ADV-002](../SWE.1-software-requirements.md#swr-adv-002)、[SWR-ADV-003](../SWE.1-software-requirements.md#swr-adv-003)、[SWR-ADV-004](../SWE.1-software-requirements.md#swr-adv-004)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 1 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
+| 动态测试 | [tests/integration/test_offline_report_contract.py](../../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [audit_advice](#fun-c3bb71e51c) | 生成`audit_advice`结果；返回 `AdviceAudit` 类型结果。 | 未检测到直接副作用 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
+| [audit_advice](#fun-c3bb71e51c) | 生成`audit_advice`结果；返回 `AdviceAudit` 类型结果。 | 未检测到直接副作用 | [tests/integration/test_offline_report_contract.py](../../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
 
 #### 函数导航
 
@@ -92,7 +92,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | violations.append、warnings.append、AdviceAudit、any、max、sorted、set、join |
 | 复杂度 / 风险 | 分支 18；跨度 49 行；高 |
-| 测试 / 验证 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/integration/test_offline_report_contract.py](../../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) · 直接动态测试 |
 
 <a id="unit-56f8ff3b61"></a>
 
@@ -109,7 +109,7 @@
 | 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-ADV-001](../SWE.1-software-requirements.md#swr-adv-001)、[SWR-ADV-002](../SWE.1-software-requirements.md#swr-adv-002)、[SWR-ADV-003](../SWE.1-software-requirements.md#swr-adv-003)、[SWR-ADV-004](../SWE.1-software-requirements.md#swr-adv-004)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 15 / 15 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
+| 动态测试 | [tests/integration/test_offline_report_contract.py](../../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
@@ -130,7 +130,7 @@
 | [_human_checklist](#fun-324d833370) | 构建`human_checklist`；返回 `list[str]` 类型结果。 | 未检测到直接副作用 | — |
 | [_risks](#fun-31108e0f15) | 构建`risks`；返回 `list[str]` 类型结果。 | 未检测到直接副作用 | — |
 | [_no_setup_packet](#fun-5de4f49a87) | 生成`no_setup_packet`结果；返回 `AdvicePacket` 类型结果。 | 未检测到直接副作用 | — |
-| [build_advice_packet](#fun-8b9a1cc80c) | 构建`advice_packet`；返回 `AdvicePacket` 类型结果。 | 未检测到直接副作用 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
+| [build_advice_packet](#fun-8b9a1cc80c) | 构建`advice_packet`；返回 `AdvicePacket` 类型结果。 | 未检测到直接副作用 | [tests/integration/test_offline_report_contract.py](../../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
 
 #### 函数导航
 
@@ -464,7 +464,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | float、_bias、AdviceEvidence、_TF_CN.get、_trend_cn、ctx.analyses.get、_risks、build_data_as_of、ctx.derived.get、freshness.get、_no_setup_packet、list、support_resistance_context、getattr、max、_pick_cluster、_zone_from_cluster、_target_prices、round、enumerate |
 | 复杂度 / 风险 | 分支 17；跨度 168 行；高 |
-| 测试 / 验证 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/integration/test_offline_report_contract.py](../../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) · 直接动态测试 |
 
 <a id="unit-ba683051ba"></a>
 
@@ -623,7 +623,7 @@
 | 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-ADV-001](../SWE.1-software-requirements.md#swr-adv-001)、[SWR-ADV-002](../SWE.1-software-requirements.md#swr-adv-002)、[SWR-ADV-003](../SWE.1-software-requirements.md#swr-adv-003)、[SWR-ADV-004](../SWE.1-software-requirements.md#swr-adv-004)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | 函数 / 高风险函数 | 2 / 2 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
+| 动态测试 | [tests/integration/test_offline_report_contract.py](../../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
@@ -631,7 +631,7 @@
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
 | [_external_context](#fun-063288e260) | 构建`external_context`；返回 `dict[str, Any]` 类型结果。 | 未检测到直接副作用 | — |
-| [build_advice_report](#fun-fc0343e620) | 构建`advice_report`；返回 `dict[str, Any]` 类型结果。 | 未检测到直接副作用 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
+| [build_advice_report](#fun-fc0343e620) | 构建`advice_report`；返回 `dict[str, Any]` 类型结果。 | 未检测到直接副作用 | [tests/integration/test_offline_report_contract.py](../../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) |
 
 #### 函数导航
 
@@ -679,7 +679,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | build_data_as_of、ctx.derived.get、timeframe_context、ctx.analyses.get、format_utc8、isoformat、datetime.now、dict、advice.to_dict、support_resistance_context、_external_context |
 | 复杂度 / 风险 | 分支 0；跨度 34 行；高 |
-| 测试 / 验证 | [tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/integration/test_offline_report_contract.py](../../../tests/integration/test_offline_report_contract.py)、[tests/unit/test_advice_v2.py](../../../tests/unit/test_advice_v2.py) · 直接动态测试 |
 
 <a id="unit-d41345d767"></a>
 
