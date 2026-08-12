@@ -8,29 +8,37 @@ from src.config import llm_provider_extra_payload
 from src.llm.client import LLMClient
 
 
-def test_llm_provider_extra_payload_auto_disables_deepseek_v4_thinking(
+def test_llm_provider_extra_payload_auto_disables_direct_deepseek_v4_thinking(
     monkeypatch,
 ) -> None:
     monkeypatch.delenv("LLM_THINKING", raising=False)
+    monkeypatch.setattr("src.config.LLM_BASE_URL", "https://api.deepseek.com")
     assert llm_provider_extra_payload(model="deepseek-v4-flash") == {
         "thinking": {"type": "disabled"}
     }
-    assert llm_provider_extra_payload(model="gpt-4o-mini") == {}
+
+
+def test_llm_provider_extra_payload_skips_thinking_for_siliconflow(monkeypatch) -> None:
+    monkeypatch.delenv("LLM_THINKING", raising=False)
+    monkeypatch.setattr("src.config.LLM_BASE_URL", "https://api.siliconflow.cn/v1")
+    assert llm_provider_extra_payload(model="deepseek-ai/DeepSeek-V4-Flash") == {}
 
 
 def test_llm_provider_extra_payload_respects_explicit_thinking(monkeypatch) -> None:
     monkeypatch.setenv("LLM_THINKING", "enabled")
-    assert llm_provider_extra_payload(model="gpt-4o-mini") == {
+    monkeypatch.setattr("src.config.LLM_BASE_URL", "https://api.siliconflow.cn/v1")
+    assert llm_provider_extra_payload(model="deepseek-ai/DeepSeek-V4-Flash") == {
         "thinking": {"type": "enabled"}
     }
 
 
-def test_chat_stream_includes_deepseek_thinking_payload(monkeypatch) -> None:
+def test_chat_stream_omits_thinking_payload_on_siliconflow(monkeypatch) -> None:
     monkeypatch.delenv("LLM_THINKING", raising=False)
+    monkeypatch.setattr("src.config.LLM_BASE_URL", "https://api.siliconflow.cn/v1")
     client = LLMClient(
         api_key="k",
-        base_url="https://api.deepseek.com",
-        model="deepseek-v4-flash",
+        base_url="https://api.siliconflow.cn/v1",
+        model="deepseek-ai/DeepSeek-V4-Flash",
         timeout=5,
     )
     resp = MagicMock()
@@ -41,5 +49,5 @@ def test_chat_stream_includes_deepseek_thinking_payload(monkeypatch) -> None:
         list(client.chat_stream([{"role": "user", "content": "hi"}]))
 
     payload = post.call_args.kwargs["json"]
-    assert payload["model"] == "deepseek-v4-flash"
-    assert payload["thinking"] == {"type": "disabled"}
+    assert payload["model"] == "deepseek-ai/DeepSeek-V4-Flash"
+    assert "thinking" not in payload

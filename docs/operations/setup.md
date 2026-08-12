@@ -15,8 +15,8 @@ python run_app.py
 | 变量 | 作用 |
 |---|---|
 | `LLM_ENABLED` | 是否启用一次 Advice V2 文案增强；默认关闭。 |
-| `LLM_API_KEY` / `LLM_BASE_URL` / `LLM_MODEL` | OpenAI-compatible 文案模型；默认 `deepseek-v4-flash` @ `https://api.deepseek.com`。 |
-| `LLM_THINKING` | 可选：`enabled` / `disabled`；留空时对 `deepseek-v4-*` 自动关闭 thinking（更快、更省）。 |
+| `LLM_API_KEY` / `LLM_BASE_URL` / `LLM_MODEL` | OpenAI-compatible 文案模型；默认硅基流动 `deepseek-ai/DeepSeek-V4-Flash`。 |
+| `LLM_THINKING` | 可选：`enabled` / `disabled`；仅直连 `api.deepseek.com` 时生效。 |
 | `LLM_CONNECT_TIMEOUT` / `LLM_READ_TIMEOUT` / `LLM_MAX_RETRIES` | 文案调用边界。 |
 | `RUN_ARCHIVE_MAX_COUNT` / `RUN_ARCHIVE_MAX_MB` | 运行归档保留上限。 |
 | TradingView、Jin10、社交源相关变量 | 行情和外部背景供应商配置。 |

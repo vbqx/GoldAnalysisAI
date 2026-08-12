@@ -128,14 +128,14 @@
 | 参数 | `model`（str \| None）：模型名称或模型对象；默认值 `None` |
 | 返回 | 返回 `dict[str, object]` 类型结果 |
 | 职责 | 构建`llm_provider_extra_payload`；返回 `dict[str, object]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `lower` → `strip` → `os.getenv`；包含 3 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `lower` → `LLM_BASE_URL.lower` → `strip` → `os.getenv`；包含 3 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
 | 后置条件 | 返回 `dict[str, object]` 类型结果；静态扫描未发现直接外部副作用 |
 | 显式异常 | 未发现显式 raise |
 | 副作用 | 未检测到直接副作用 |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | lower、strip、os.getenv |
-| 复杂度 / 风险 | 分支 3；跨度 12 行；中 |
+| 调用依赖 | lower、LLM_BASE_URL.lower、strip、os.getenv |
+| 复杂度 / 风险 | 分支 3；跨度 13 行；中 |
 | 测试 / 验证 | [tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py) · 直接动态测试 |
 
 <a id="unit-21570b9deb"></a>
