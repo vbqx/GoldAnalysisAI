@@ -306,13 +306,13 @@ Replay shall load an Advice V2 report directly or reconstruct Advice V2 from sto
 
 **标题**：Human-review advice interface
 
-The Streamlit application shall make the compact advice card the primary view and provide external-data and replay access without V1 strategy, debate or decision-chain pages.
+The Streamlit application shall make the compact advice card the primary view and provide external-data, optional LLM thinking-process audit and replay access without V1 strategy, debate or decision-chain pages.
 
 | 属性 | 内容 |
 |---|---|
 | 类型 / 优先级 / 状态 | functional / P1 / agreed |
 | 来源 | docs/aspice/records/reviews/financial/advice-v2-rearchitecture-2026-08-12.md |
-| 验证准则 | UI helper tests and manual acceptance cover navigation, generation, replay and advice presentation. |
+| 验证准则 | UI helper tests and manual acceptance cover navigation, generation, replay, advice presentation and LLM telemetry audit. |
 | 运行环境影响 | The application is launched through run_app.py. |
 | 架构组件 | [ARC-APP](SWE.2-architecture/software-architecture.md#arc-app)、[ARC-VIZ](SWE.2-architecture/software-architecture.md#arc-viz) |
 | 验证措施 | [VM-UNIT](SWE.4-unit-testing.md#vm-unit)、[VM-MANUAL-UI](SWE.6-validation-testing.md#vm-manual-ui) |
@@ -340,7 +340,7 @@ The interface shall clearly state that suggestions require human confirmation an
 
 **标题**：Configuration and secret handling
 
-Runtime supplier, LLM, timeout and archive settings shall come from controlled environment configuration, with secrets disabled by default in examples and excluded from reports and logs.
+Runtime supplier, LLM, timeout and archive settings shall come from controlled environment configuration, with secrets disabled by default in examples and excluded from reports and logs; the controlled template documents SiliconFlow DeepSeek-V4-Flash as the default optional wording provider.
 
 | 属性 | 内容 |
 |---|---|

@@ -178,12 +178,12 @@ requirements:
     verification_ids: [VM-UNIT, VM-REGRESSION]
   - id: SWR-UI-001
     title: Human-review advice interface
-    text: The Streamlit application shall make the compact advice card the primary view and provide external-data and replay access without V1 strategy, debate or decision-chain pages.
+    text: The Streamlit application shall make the compact advice card the primary view and provide external-data, optional LLM thinking-process audit and replay access without V1 strategy, debate or decision-chain pages.
     type: functional
     priority: P1
     status: agreed
     source: docs/aspice/records/reviews/financial/advice-v2-rearchitecture-2026-08-12.md
-    verification_criteria: UI helper tests and manual acceptance cover navigation, generation, replay and advice presentation.
+    verification_criteria: UI helper tests and manual acceptance cover navigation, generation, replay, advice presentation and LLM telemetry audit.
     operating_environment_impact: The application is launched through run_app.py.
     architecture_ids: [ARC-APP, ARC-VIZ]
     verification_ids: [VM-UNIT, VM-MANUAL-UI]
@@ -200,7 +200,7 @@ requirements:
     verification_ids: [VM-UNIT, VM-MANUAL-UI]
   - id: SWR-CFG-001
     title: Configuration and secret handling
-    text: Runtime supplier, LLM, timeout and archive settings shall come from controlled environment configuration, with secrets disabled by default in examples and excluded from reports and logs.
+    text: Runtime supplier, LLM, timeout and archive settings shall come from controlled environment configuration, with secrets disabled by default in examples and excluded from reports and logs; the controlled template documents SiliconFlow DeepSeek-V4-Flash as the default optional wording provider.
     type: security
     priority: P0
     status: agreed

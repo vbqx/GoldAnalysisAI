@@ -25,7 +25,7 @@ measures:
   - id: VM-INTEGRATION-PIPELINE
     level: SWE.5
     technique: deterministic Advice V2 cross-component contract integration
-    command: python -m pytest tests/unit/test_advice_v2.py tests/unit/test_orchestrator_hooks.py
+    command: python -m pytest tests/integration/test_offline_report_contract.py -m integration
     pass_fail: pytest exit code 0 within declared timeout
     environment: frozen fixtures; no network or paid LLM
     result_record: docs/aspice/records/verification/latest.md
