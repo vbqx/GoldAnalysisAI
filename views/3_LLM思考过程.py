@@ -1,4 +1,4 @@
-"""LLM 思考过程 — 流水线步骤与 Prompt/响应审计。"""
+"""LLM 思考过程 — 流水线步骤与 Prompt/响应审计（生成中自动流式显示）。"""
 
 from __future__ import annotations
 

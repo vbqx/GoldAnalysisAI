@@ -406,7 +406,7 @@
 | 软件单元 ID | UNIT-D2F443BBB9 |
 | 源码 | [views/3_LLM思考过程.py](../../../views/3_LLM思考过程.py) |
 | 架构组件 | ARC-APP — Application entry and run selection |
-| 职责 | LLM 思考过程 — 流水线步骤与 Prompt/响应审计。 |
+| 职责 | LLM 思考过程 — 流水线步骤与 Prompt/响应审计（生成中自动流式显示）。 |
 | 关联需求 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
 | 函数 / 高风险函数 | 0 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-MANUAL-UI](../SWE.6-validation-testing.md#vm-manual-ui) |

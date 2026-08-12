@@ -13,7 +13,7 @@
 
 SWE.3 采用“一个过程入口、一个组件一份文档”。本页只负责导航，避免把全部函数塞入单个巨型文件。
 
-当前覆盖 **114 个软件单元**、**616 个函数或方法**。函数卡片由受控源码和验证映射生成，不在生成文件中手工修改。
+当前覆盖 **114 个软件单元**、**617 个函数或方法**。函数卡片由受控源码和验证映射生成，不在生成文件中手工修改。
 
 人工维护的关键单元补充设计见 [关键单元设计](./critical-units.md)，接口与 schema 参考见 [详细设计参考](./reference/design-reference.md)。
 
@@ -29,7 +29,7 @@ SWE.3 采用“一个过程入口、一个组件一份文档”。本页只负�
 | [ARC-ADVICE — Human-review advice engine](./ARC-ADVICE.md) | 6 | 24 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-ADV-001](../SWE.1-software-requirements.md#swr-adv-001)、[SWR-ADV-002](../SWE.1-software-requirements.md#swr-adv-002)、[SWR-ADV-003](../SWE.1-software-requirements.md#swr-adv-003)、[SWR-ADV-004](../SWE.1-software-requirements.md#swr-adv-004)、[SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | [ARC-LLM — Optional advice wording service](./ARC-LLM.md) | 7 | 34 | [SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | [ARC-RUN — Run configuration and archives](./ARC-RUN.md) | 12 | 88 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
-| [ARC-VIZ — Human-review presentation](./ARC-VIZ.md) | 12 | 95 | [SWR-ADV-002](../SWE.1-software-requirements.md#swr-adv-002)、[SWR-ADV-004](../SWE.1-software-requirements.md#swr-adv-004)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002) |
+| [ARC-VIZ — Human-review presentation](./ARC-VIZ.md) | 12 | 96 | [SWR-ADV-002](../SWE.1-software-requirements.md#swr-adv-002)、[SWR-ADV-004](../SWE.1-software-requirements.md#swr-adv-004)、[SWR-ARC-002](../SWE.1-software-requirements.md#swr-arc-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-UI-002](../SWE.1-software-requirements.md#swr-ui-002) |
 | [ARC-TOOLS — Development and ASPICE tooling](./ARC-TOOLS.md) | 15 | 83 | [SWR-NFR-003](../SWE.1-software-requirements.md#swr-nfr-003)、[SWR-NFR-004](../SWE.1-software-requirements.md#swr-nfr-004) |
 
 ## 共同契约
