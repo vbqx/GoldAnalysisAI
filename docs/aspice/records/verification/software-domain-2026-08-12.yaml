@@ -1,23 +1,26 @@
 schema_version: 2
 result_id: ASPICE-SWE-VER-ADVICE-V2-2026-08-12
 status: verified-local
-scope: Advice V2 re-architecture and V1 removal
-baseline_ref: working-tree-2026-08-12
-verified_candidate_ref: working-tree-2026-08-12
+scope: Advice V2, LLM thinking-process page, SiliconFlow defaults and offline report contract
+baseline_ref: cursor/restore-decision-chain-2c39
+verified_candidate_ref: cursor/restore-decision-chain-2c39
 verified_candidate_commit: pending
-business_code_base_commit: git-parent
-business_code_change: Advice V2 replacement
+business_code_base_commit: 09b78b6
+business_code_change: LLM process UI, streaming panel, SiliconFlow DeepSeek-V4-Flash defaults
 environment:
-  os: Windows local verification
+  os: Ubuntu local verification and GitHub Actions offline gate
   python: CPython 3.12
   network: disabled for deterministic gate
-  controls: [offline unit and regression fixtures]
-remote_verification: {}
+  controls: [offline unit, regression and report-contract integration fixtures]
+remote_verification:
+  offline_quality_gate:
+    outcome: success
+    result: 190 passed in offline gate after restoring test_offline_report_contract.py
 measures:
   - id: VM-UNIT
     outcome: pass
     selected: true
-    result: 159 passed
+    result: 167 passed
     command: python tests/run.py --unit
   - id: VM-REGRESSION
     outcome: pass
@@ -27,8 +30,8 @@ measures:
   - id: VM-INTEGRATION-PIPELINE
     outcome: pass
     selected: true
-    result: Advice V2 engine, orchestration and legacy replay contracts passed in the offline suite
-    command: python tests/run.py
+    result: 3 passed in tests/integration/test_offline_report_contract.py
+    command: python -m pytest tests/integration/test_offline_report_contract.py -m integration
   - id: VM-INTEGRATION-EXTERNAL
     outcome: not-selected
     selected: false
@@ -42,7 +45,7 @@ measures:
   - id: VM-TRACE
     outcome: pass
     selected: true
-    result: 22 requirements, 111 units and 604 functions; no blocking requirement or unit gaps
+    result: 22 requirements, 114 units and 618 functions; no blocking requirement or unit gaps
     command: ASPICE generators and asset validator with --check
   - id: VM-STATIC
     outcome: pass

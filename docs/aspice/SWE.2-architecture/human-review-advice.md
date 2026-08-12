@@ -46,3 +46,5 @@ sequenceDiagram
 ## LLM 边界
 
 LLM 是可选编辑器，不是决策者。传入模型的是完整确定性建议，输出只接收 `summary`、`market_context`、`rationale`、`confirmation_checklist`、`risks` 和 `uncertainties`。任何新价格、新方案、格式失败或审计失败都会回退到确定性文案。
+
+默认受控配置使用硅基流动 `deepseek-ai/DeepSeek-V4-Flash`；直连 DeepSeek 官方 API 时可通过 `LLM_THINKING` 控制 V4 thinking 模式。`meta.generation_steps`、`meta.llm_io` 与 `advisor_trace` 在 **LLM 思考过程** 页与生成等待面板中展示，供人工审计，不构成新的交易决策。

@@ -70,7 +70,7 @@ components:
     name: Human-review presentation
     source_globs: [src/viz/**]
     static_interfaces: [render_advice]
-    dynamic_behavior: Presents the compact advice, evidence, audit, uncertainty, external context and replay state without execution controls.
+    dynamic_behavior: Presents the compact advice, evidence, audit, uncertainty, external context, LLM generation telemetry and replay state without execution controls.
     requirements: [SWR-ADV-002, SWR-ADV-004, SWR-ARC-002, SWR-UI-001, SWR-UI-002]
   - id: ARC-TOOLS
     name: Development and ASPICE tooling
