@@ -60,14 +60,14 @@
 | 关联需求 | [SWR-LLM-001](../SWE.1-software-requirements.md#swr-llm-001)、[SWR-LLM-002](../SWE.1-software-requirements.md#swr-llm-002)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | 函数 / 高风险函数 | 10 / 1 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_http_helpers.py](../../../tests/unit/test_http_helpers.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_pipeline_progress_live.py](../../../tests/unit/test_pipeline_progress_live.py) |
+| 动态测试 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_http_helpers.py](../../../tests/unit/test_http_helpers.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_pipeline_progress_live.py](../../../tests/unit/test_pipeline_progress_live.py) |
 | 验证状态 | selected |
 
 #### 高风险设计评审清单
 
 | 函数 | 职责 | 副作用 | 验证 |
 |---|---|---|---|
-| [LLMClient.chat_stream](#fun-b2c894bd12) | 生成`chat_stream`文本；可能影响外部接口；返回 `Iterator[str]` 类型结果。 | 外部接口 I/O | [tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) |
+| [LLMClient.chat_stream](#fun-b2c894bd12) | 生成`chat_stream`文本；可能影响外部接口；返回 `Iterator[str]` 类型结果。 | 外部接口 I/O | [tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) |
 
 #### 函数导航
 
@@ -137,7 +137,7 @@
 | 并发约束 | 在调用方线程同步执行 |
 | 调用依赖 | 无直接调用依赖 |
 | 复杂度 / 风险 | 分支 0；跨度 3 行；中 |
-| 测试 / 验证 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_http_helpers.py](../../../tests/unit/test_http_helpers.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_pipeline_progress_live.py](../../../tests/unit/test_pipeline_progress_live.py) · 直接动态测试 |
+| 测试 / 验证 | [tests/regression/test_aspice_assets.py](../../../tests/regression/test_aspice_assets.py)、[tests/unit/test_archive_transfer.py](../../../tests/unit/test_archive_transfer.py)、[tests/unit/test_generation_worker.py](../../../tests/unit/test_generation_worker.py)、[tests/unit/test_http_helpers.py](../../../tests/unit/test_http_helpers.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py)、[tests/unit/test_pipeline_progress_live.py](../../../tests/unit/test_pipeline_progress_live.py) · 直接动态测试 |
 
 <a id="fun-6281d0133f"></a>
 
@@ -239,15 +239,15 @@
 | 参数 | `messages`（list[dict[str, str]]）：消息序列<br>`temperature`（float）：模型采样温度；默认值 `0.3`<br>`response_format`（dict[str, str] \| None）：由 `response_format` 表示的键值映射；默认值 `None`<br>`include_usage`（bool \| None）：由调用方提供的 `include_usage` 输入对象；默认值 `None` |
 | 返回 | 返回 `Iterator[str]` 类型结果 |
 | 职责 | 生成`chat_stream`文本；可能影响外部接口；返回 `Iterator[str]` 类型结果。 |
-| 处理逻辑 | 按源码执行顺序经过 `log.debug` → `requests.post` → `self._headers` → `self._request_timeout` → `LLMClientError` → `resp.iter_lines` → `raw.decode` → `isinstance`；包含 11 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 处理逻辑 | 按源码执行顺序经过 `payload.update` → `llm_provider_extra_payload` → `log.debug` → `requests.post` → `self._headers` → `self._request_timeout` → `LLMClientError` → `resp.iter_lines`；包含 11 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
 | 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束；外部客户端、凭据、网络和超时策略已按运行配置准备 |
 | 后置条件 | 返回 `Iterator[str]` 类型结果；可观察变化限于外部接口 |
 | 显式异常 | LLMClientError |
 | 副作用 | 外部接口 I/O |
 | 并发约束 | 在调用方线程同步执行 |
-| 调用依赖 | bool、log.debug、requests.post、self._headers、self._request_timeout、LLMClientError、resp.iter_lines、raw.decode、isinstance、str、self._parse_sse_event |
-| 复杂度 / 风险 | 分支 11；跨度 74 行；高 |
-| 测试 / 验证 | [tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) · 直接动态测试 |
+| 调用依赖 | bool、payload.update、llm_provider_extra_payload、log.debug、requests.post、self._headers、self._request_timeout、LLMClientError、resp.iter_lines、raw.decode、isinstance、str、self._parse_sse_event |
+| 复杂度 / 风险 | 分支 11；跨度 77 行；高 |
+| 测试 / 验证 | [tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py)、[tests/unit/test_llm_transport.py](../../../tests/unit/test_llm_transport.py) · 直接动态测试 |
 
 <a id="fun-feaf06c7c1"></a>
 
@@ -256,7 +256,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `LLMClient.chat` |
-| 源码位置 | [src/llm/client.py](../../../src/llm/client.py) · `L211` |
+| 源码位置 | [src/llm/client.py](../../../src/llm/client.py) · `L214` |
 | 签名 | `LLMClient.chat(self, messages: list[dict[str, str]], *, temperature: float=0.3, response_format: dict[str, str] \| None=None)` |
 | 参数 | `messages`（list[dict[str, str]]）：消息序列<br>`temperature`（float）：模型采样温度；默认值 `0.3`<br>`response_format`（dict[str, str] \| None）：由 `response_format` 表示的键值映射；默认值 `None` |
 | 返回 | 返回 `str` 类型结果 |
@@ -278,7 +278,7 @@
 | 设计项 | 说明 |
 |---|---|
 | 函数 | `LLMClient.chat_json` |
-| 源码位置 | [src/llm/client.py](../../../src/llm/client.py) · `L230` |
+| 源码位置 | [src/llm/client.py](../../../src/llm/client.py) · `L233` |
 | 签名 | `LLMClient.chat_json(self, messages: list[dict[str, str]], *, temperature: float=0.2)` |
 | 参数 | `messages`（list[dict[str, str]]）：消息序列<br>`temperature`（float）：模型采样温度；默认值 `0.2` |
 | 返回 | 返回 `dict[str, Any]` 类型结果 |

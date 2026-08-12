@@ -164,6 +164,9 @@ class LLMClient:
         if want_usage:
             # OpenAI / SiliconFlow / DeepSeek: final SSE chunk carries usage.
             payload["stream_options"] = {"include_usage": True}
+        from src.config import llm_provider_extra_payload
+
+        payload.update(llm_provider_extra_payload(model=self.model))
 
         log.debug(
             "llm stream model=%s url=%s connect=%.1fs read_idle=%.1fs include_usage=%s",

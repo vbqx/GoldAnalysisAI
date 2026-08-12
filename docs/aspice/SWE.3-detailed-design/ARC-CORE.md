@@ -16,7 +16,7 @@
 | 模块 | 函数 | 高风险 | 验证措施 | 状态 |
 |---|---|---|---|---|
 | [src/__init__.py](#unit-b141e8a708) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
-| [src/config.py](#unit-f43788fe2b) | 2 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
+| [src/config.py](#unit-f43788fe2b) | 3 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/core/__init__.py](#unit-21570b9deb) | 0 | 0 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/core/orchestrator.py](#unit-aa59bf5421) | 2 | 2 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
 | [src/core/orchestrator_hooks.py](#unit-d0bec20560) | 4 | 3 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) | selected |
@@ -61,16 +61,16 @@
 | 软件单元 ID | UNIT-F43788FE2B |
 | 源码 | [src/config.py](../../../src/config.py) |
 | 架构组件 | ARC-CORE — Advice pipeline orchestration |
-| 职责 | 实现“Advice pipeline orchestration”组件中 `src/config.py` 的职责，通过 `short_model_name` 提供该模块的公开能力。 |
+| 职责 | 实现“Advice pipeline orchestration”组件中 `src/config.py` 的职责，通过 `short_model_name`、`llm_provider_extra_payload` 提供该模块的公开能力。 |
 | 关联需求 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
-| 函数 / 高风险函数 | 2 / 0 |
+| 函数 / 高风险函数 | 3 / 0 |
 | 验证措施 | [VM-STATIC](../SWE.6-validation-testing.md#vm-static)、[VM-UNIT](../SWE.4-unit-testing.md#vm-unit)、[VM-REGRESSION](../SWE.6-validation-testing.md#vm-regression)、[VM-INTEGRATION-PIPELINE](../SWE.5-integration-testing.md#vm-integration-pipeline) |
-| 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_mt5_provider.py](../../../tests/unit/test_mt5_provider.py) |
+| 动态测试 | [tests/integration/test_external_apis.py](../../../tests/integration/test_external_apis.py)、[tests/unit/test_llm_client_timeouts.py](../../../tests/unit/test_llm_client_timeouts.py)、[tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py)、[tests/unit/test_llm_stage_policy.py](../../../tests/unit/test_llm_stage_policy.py)、[tests/unit/test_mt5_provider.py](../../../tests/unit/test_mt5_provider.py) |
 | 验证状态 | selected |
 
 #### 函数导航
 
-[_load_dotenv](#fun-f4d8ffcbf2) · [short_model_name](#fun-9eb4bec26a)
+[_load_dotenv](#fun-f4d8ffcbf2) · [short_model_name](#fun-9eb4bec26a) · [llm_provider_extra_payload](#fun-55232b8fbe)
 
 <a id="fun-f4d8ffcbf2"></a>
 
@@ -115,6 +115,28 @@
 | 调用依赖 | model.split |
 | 复杂度 / 风险 | 分支 1；跨度 2 行；中 |
 | 测试 / 验证 | — · 静态分析与组件级验证 |
+
+<a id="fun-55232b8fbe"></a>
+
+#### FUN-55232B8FBE
+
+| 设计项 | 说明 |
+|---|---|
+| 函数 | `llm_provider_extra_payload` |
+| 源码位置 | [src/config.py](../../../src/config.py) · `L108` |
+| 签名 | `llm_provider_extra_payload(*, model: str \| None=None)` |
+| 参数 | `model`（str \| None）：模型名称或模型对象；默认值 `None` |
+| 返回 | 返回 `dict[str, object]` 类型结果 |
+| 职责 | 构建`llm_provider_extra_payload`；返回 `dict[str, object]` 类型结果。 |
+| 处理逻辑 | 按源码执行顺序经过 `lower` → `strip` → `os.getenv`；包含 3 个条件、循环、异常或模式匹配分支，分支结果汇入返回或状态更新。 |
+| 前置条件 | 调用方提供满足参数类型、取值语义和默认值约定的输入；所属软件单元已经初始化并满足关联需求约束 |
+| 后置条件 | 返回 `dict[str, object]` 类型结果；静态扫描未发现直接外部副作用 |
+| 显式异常 | 未发现显式 raise |
+| 副作用 | 未检测到直接副作用 |
+| 并发约束 | 在调用方线程同步执行 |
+| 调用依赖 | lower、strip、os.getenv |
+| 复杂度 / 风险 | 分支 3；跨度 12 行；中 |
+| 测试 / 验证 | [tests/unit/test_llm_config.py](../../../tests/unit/test_llm_config.py) · 直接动态测试 |
 
 <a id="unit-21570b9deb"></a>
 

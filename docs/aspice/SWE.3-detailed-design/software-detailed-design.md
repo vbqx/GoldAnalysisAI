@@ -13,7 +13,7 @@
 
 SWE.3 采用“一个过程入口、一个组件一份文档”。本页只负责导航，避免把全部函数塞入单个巨型文件。
 
-当前覆盖 **114 个软件单元**、**617 个函数或方法**。函数卡片由受控源码和验证映射生成，不在生成文件中手工修改。
+当前覆盖 **114 个软件单元**、**618 个函数或方法**。函数卡片由受控源码和验证映射生成，不在生成文件中手工修改。
 
 人工维护的关键单元补充设计见 [关键单元设计](./critical-units.md)，接口与 schema 参考见 [详细设计参考](./reference/design-reference.md)。
 
@@ -22,7 +22,7 @@ SWE.3 采用“一个过程入口、一个组件一份文档”。本页只负�
 | 架构组件 | 软件单元 | 函数 | 关联需求 |
 |---|---|---|---|
 | [ARC-APP — Application entry and run selection](./ARC-APP.md) | 5 | 14 | [SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-UI-001](../SWE.1-software-requirements.md#swr-ui-001)、[SWR-CFG-001](../SWE.1-software-requirements.md#swr-cfg-001) |
-| [ARC-CORE — Advice pipeline orchestration](./ARC-CORE.md) | 12 | 52 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
+| [ARC-CORE — Advice pipeline orchestration](./ARC-CORE.md) | 12 | 53 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-CORE-002](../SWE.1-software-requirements.md#swr-core-002)、[SWR-REP-001](../SWE.1-software-requirements.md#swr-rep-001)、[SWR-ARC-001](../SWE.1-software-requirements.md#swr-arc-001)、[SWR-NFR-002](../SWE.1-software-requirements.md#swr-nfr-002) |
 | [ARC-DATA — Market and external data](./ARC-DATA.md) | 30 | 135 | [SWR-CORE-001](../SWE.1-software-requirements.md#swr-core-001)、[SWR-DATA-001](../SWE.1-software-requirements.md#swr-data-001)、[SWR-DATA-002](../SWE.1-software-requirements.md#swr-data-002)、[SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-NFR-001](../SWE.1-software-requirements.md#swr-nfr-001) |
 | [ARC-INDICATORS — Technical indicator enrichment](./ARC-INDICATORS.md) | 3 | 12 | [SWR-ANA-001](../SWE.1-software-requirements.md#swr-ana-001) |
 | [ARC-ANALYSIS — Point-in-time market structure](./ARC-ANALYSIS.md) | 12 | 79 | [SWR-DATA-003](../SWE.1-software-requirements.md#swr-data-003)、[SWR-ANA-001](../SWE.1-software-requirements.md#swr-ana-001) |

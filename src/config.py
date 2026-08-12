@@ -86,8 +86,8 @@ LOG_FILE = os.getenv("LOG_FILE", "")
 # Optional Advice V2 prose enhancement
 LLM_ENABLED = os.getenv("LLM_ENABLED", "false").lower() in ("1", "true", "yes")
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
-LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
-LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.deepseek.com")
+LLM_MODEL = os.getenv("LLM_MODEL", "deepseek-v4-flash")
 LLM_TIMEOUT = int(os.getenv("LLM_TIMEOUT", "60"))
 LLM_CONNECT_TIMEOUT = float(os.getenv("LLM_CONNECT_TIMEOUT", str(min(30, LLM_TIMEOUT))))
 LLM_READ_TIMEOUT = float(os.getenv("LLM_READ_TIMEOUT", str(LLM_TIMEOUT)))
@@ -103,6 +103,20 @@ LLM_STAGE_WARN_MS = max(30_000, int(os.getenv("LLM_STAGE_WARN_MS", "120000")))
 
 def short_model_name(model: str) -> str:
     return model.split("/")[-1] if model else "—"
+
+
+def llm_provider_extra_payload(*, model: str | None = None) -> dict[str, object]:
+    """Provider-specific chat/completions fields (e.g. DeepSeek V4 thinking mode)."""
+    model_id = (model or LLM_MODEL).lower()
+    mode = os.getenv("LLM_THINKING", "").strip().lower()
+    if mode in ("enabled", "on", "true", "1", "yes"):
+        return {"thinking": {"type": "enabled"}}
+    if mode in ("disabled", "off", "false", "0", "no"):
+        return {"thinking": {"type": "disabled"}}
+    # V4 Flash defaults to thinking on; advice wording uses fast non-thinking mode.
+    if "deepseek-v4" in model_id:
+        return {"thinking": {"type": "disabled"}}
+    return {}
 
 
 # Run archive retention (0 means unlimited)

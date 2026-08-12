@@ -201,6 +201,7 @@ FUN-6DEDB23061,UNIT-EBF42549F9,src/analysis/tf_snapshot.py,35,_strong_weak_high_
 FUN-C91F12310A,UNIT-EBF42549F9,src/analysis/tf_snapshot.py,62,build_tf_snapshot,public,ARC-ANALYSIS,SWR-DATA-003;SWR-ANA-001,unit/component verification selected by requirement and risk
 FUN-F4D8FFCBF2,UNIT-F43788FE2B,src/config.py,9,_load_dotenv,internal,ARC-CORE,SWR-CORE-001;SWR-CORE-002;SWR-REP-001;SWR-ARC-001;SWR-NFR-002,unit/component verification selected by requirement and risk
 FUN-9EB4BEC26A,UNIT-F43788FE2B,src/config.py,104,short_model_name,public,ARC-CORE,SWR-CORE-001;SWR-CORE-002;SWR-REP-001;SWR-ARC-001;SWR-NFR-002,unit/component verification selected by requirement and risk
+FUN-55232B8FBE,UNIT-F43788FE2B,src/config.py,108,llm_provider_extra_payload,public,ARC-CORE,SWR-CORE-001;SWR-CORE-002;SWR-REP-001;SWR-ARC-001;SWR-NFR-002,unit/component verification selected by requirement and risk
 FUN-0B6E09D42E,UNIT-AA59BF5421,src/core/orchestrator.py,27,run_advice_pipeline,public,ARC-CORE,SWR-CORE-001;SWR-CORE-002;SWR-REP-001;SWR-ARC-001;SWR-NFR-002,unit/component verification selected by requirement and risk
 FUN-67D665990E,UNIT-AA59BF5421,src/core/orchestrator.py,110,run_trade_agent_pipeline,public,ARC-CORE,SWR-CORE-001;SWR-CORE-002;SWR-REP-001;SWR-ARC-001;SWR-NFR-002,unit/component verification selected by requirement and risk
 FUN-DD1340F890,UNIT-D0BEC20560,src/core/orchestrator_hooks.py,15,begin_pipeline_run,public,ARC-CORE,SWR-CORE-001;SWR-CORE-002;SWR-REP-001;SWR-ARC-001;SWR-NFR-002,unit/component verification selected by requirement and risk
@@ -403,8 +404,8 @@ FUN-870C1D436C,UNIT-D7FD07AF44,src/llm/client.py,97,LLMClient._headers,internal,
 FUN-89B4063B63,UNIT-D7FD07AF44,src/llm/client.py,103,LLMClient._parse_sse_event,internal,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
 FUN-C5E317F9C8,UNIT-D7FD07AF44,src/llm/client.py,131,LLMClient._parse_sse_line,internal,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
 FUN-B2C894BD12,UNIT-D7FD07AF44,src/llm/client.py,136,LLMClient.chat_stream,public,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
-FUN-FEAF06C7C1,UNIT-D7FD07AF44,src/llm/client.py,211,LLMClient.chat,public,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
-FUN-CC950A51E1,UNIT-D7FD07AF44,src/llm/client.py,230,LLMClient.chat_json,public,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
+FUN-FEAF06C7C1,UNIT-D7FD07AF44,src/llm/client.py,214,LLMClient.chat,public,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
+FUN-CC950A51E1,UNIT-D7FD07AF44,src/llm/client.py,233,LLMClient.chat_json,public,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
 FUN-9200A4BF77,UNIT-DEB0D517C6,src/llm/format_io.py,9,format_llm_output,public,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
 FUN-0D23896651,UNIT-DEB0D517C6,src/llm/format_io.py,20,format_messages,public,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
 FUN-C67D97C1FE,UNIT-DEB0D517C6,src/llm/format_io.py,32,messages_to_dict,public,ARC-LLM,SWR-LLM-001;SWR-LLM-002;SWR-CFG-001;SWR-NFR-001,unit/component verification selected by requirement and risk
